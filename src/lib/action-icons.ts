@@ -1,0 +1,101 @@
+import {
+  AtSign,
+  Bell,
+  Bookmark,
+  Calendar,
+  Camera,
+  CheckSquare,
+  Clock,
+  Crown,
+  Download,
+  ExternalLink,
+  Flame,
+  Gamepad2,
+  Gift,
+  Globe,
+  Heart,
+  Link2,
+  Lock,
+  Mail,
+  MessageCircle,
+  Music,
+  Newspaper,
+  Play,
+  PlayCircle,
+  Podcast,
+  Radio,
+  Rocket,
+  Rss,
+  Send,
+  Share2,
+  ShoppingBag,
+  Sparkles,
+  Star,
+  ThumbsUp,
+  Trophy,
+  Tv,
+  UserCheck,
+  UserPlus,
+  Users,
+  Video,
+  type LucideIcon,
+} from 'lucide-react'
+
+// Built-in icon set for admin-managed actions. Brand icons (YouTube, Instagram,
+// …) are not part of lucide-react v1, so we offer a curated set of generic
+// icons that read clearly in both the admin panel and the link editor.
+export const ACTION_ICON_OPTIONS: { id: string; label: string; Icon: LucideIcon }[] = [
+  { id: 'link', label: 'Link / visit', Icon: Link2 },
+  { id: 'user_plus', label: 'Follow / subscribe', Icon: UserPlus },
+  { id: 'user_check', label: 'Follow (check)', Icon: UserCheck },
+  { id: 'users', label: 'Community', Icon: Users },
+  { id: 'video', label: 'Video', Icon: Video },
+  { id: 'play', label: 'Play', Icon: Play },
+  { id: 'play_circle', label: 'Watch', Icon: PlayCircle },
+  { id: 'thumbs_up', label: 'Like', Icon: ThumbsUp },
+  { id: 'heart', label: 'Favorite', Icon: Heart },
+  { id: 'star', label: 'Star / rate', Icon: Star },
+  { id: 'bookmark', label: 'Save', Icon: Bookmark },
+  { id: 'share', label: 'Share', Icon: Share2 },
+  { id: 'message', label: 'Chat / server', Icon: MessageCircle },
+  { id: 'music', label: 'Music', Icon: Music },
+  { id: 'podcast', label: 'Podcast', Icon: Podcast },
+  { id: 'tv', label: 'TV / stream', Icon: Tv },
+  { id: 'radio', label: 'Radio', Icon: Radio },
+  { id: 'newspaper', label: 'News / article', Icon: Newspaper },
+  { id: 'mail', label: 'Email', Icon: Mail },
+  { id: 'bell', label: 'Notify', Icon: Bell },
+  { id: 'camera', label: 'Photo', Icon: Camera },
+  { id: 'gamepad', label: 'Game', Icon: Gamepad2 },
+  { id: 'download', label: 'Download', Icon: Download },
+  { id: 'send', label: 'Send', Icon: Send },
+  { id: 'shopping', label: 'Shop', Icon: ShoppingBag },
+  { id: 'gift', label: 'Gift', Icon: Gift },
+  { id: 'trophy', label: 'Reward', Icon: Trophy },
+  { id: 'crown', label: 'Premium', Icon: Crown },
+  { id: 'flame', label: 'Hot', Icon: Flame },
+  { id: 'rocket', label: 'Launch', Icon: Rocket },
+  { id: 'sparkles', label: 'Sparkle', Icon: Sparkles },
+  { id: 'globe', label: 'Website', Icon: Globe },
+  { id: 'at', label: 'Handle', Icon: AtSign },
+  { id: 'rss', label: 'Feed', Icon: Rss },
+  { id: 'clock', label: 'Timed', Icon: Clock },
+  { id: 'calendar', label: 'Event', Icon: Calendar },
+  { id: 'check', label: 'Task', Icon: CheckSquare },
+  { id: 'external', label: 'Open link', Icon: ExternalLink },
+  { id: 'lock', label: 'Locked', Icon: Lock },
+]
+
+export const DEFAULT_ACTION_ICON = 'link'
+
+const ICON_MAP: Record<string, LucideIcon> = Object.fromEntries(
+  ACTION_ICON_OPTIONS.map((option) => [option.id, option.Icon]),
+)
+
+export function isActionIcon(id: string): boolean {
+  return Object.prototype.hasOwnProperty.call(ICON_MAP, id)
+}
+
+export function actionIcon(id: string | null | undefined): LucideIcon {
+  return (id && ICON_MAP[id]) || ICON_MAP[DEFAULT_ACTION_ICON]
+}

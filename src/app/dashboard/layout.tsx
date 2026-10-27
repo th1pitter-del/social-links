@@ -1,0 +1,25 @@
+import { getTranslations } from 'next-intl/server'
+
+import { DashboardShell } from '@/components/dashboard/dashboard-shell'
+import { requireUser } from '@/lib/session'
+import { getSiteSettings } from '@/lib/settings'
+
+export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
+  const session = await requireUser()
+  const site = await getSiteSettings()
+  const t = await getTranslations('dashboard.common')
+
+  return (
+    <DashboardShell
+      user={{
+        id: session.user.id,
+        name: session.user.name ?? t('member'),
+        email: session.user.email ?? '',
+        role: session.user.role ?? 'USER',
+      }}
+      siteName={site.name}
+    >
+      {children}
+    </DashboardShell>
+  )
+}

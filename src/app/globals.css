@@ -1,0 +1,166 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-sans);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  /* Pulse brand palette — static in both themes. */
+  --color-pulse-lime: #d5ff2f;
+  --color-pulse-lime-hover: #c5f522;
+  --color-pulse-lime-soft: #e8ff91;
+  --color-success: #64e69a;
+  --color-error: #ff666d;
+  --color-warning: #f4c66a;
+  /* Lime-derived text color that stays legible on light surfaces. */
+  --color-accent-text: var(--accent-text);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+/*
+ * Pulse light theme — off-white surfaces, white cards, dark text, lime accent.
+ * `--primary` is the lime accent with dark foreground text (dark-on-lime).
+ */
+:root {
+  --background: #f6f7f2;
+  --foreground: #171812;
+  --card: #ffffff;
+  --card-foreground: #171812;
+  --popover: #ffffff;
+  --popover-foreground: #171812;
+  --primary: #c9f72a;
+  --primary-foreground: #171812;
+  --secondary: #f0f1ea;
+  --secondary-foreground: #171812;
+  --muted: #f0f1ea;
+  --muted-foreground: #66685f;
+  --accent: #f0f1ea;
+  --accent-foreground: #171812;
+  --destructive: #e5484f;
+  --border: #e3e5da;
+  --input: #e3e5da;
+  --ring: #a8c61e;
+  --chart-1: #a8c61e;
+  --chart-2: #66685f;
+  --chart-3: #171812;
+  --chart-4: #e5484f;
+  --chart-5: #2fa36b;
+  --accent-text: #5f7a0a;
+  --radius: 0.625rem;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #66685f;
+  --sidebar-primary: #c9f72a;
+  --sidebar-primary-foreground: #171812;
+  --sidebar-accent: #f0f1ea;
+  --sidebar-accent-foreground: #171812;
+  --sidebar-border: #e3e5da;
+  --sidebar-ring: #a8c61e;
+}
+
+/*
+ * Pulse dark theme — near-black backgrounds, charcoal panels, neon-lime accent.
+ */
+.dark {
+  --background: #050505;
+  --foreground: #ffffff;
+  --card: #151614;
+  --card-foreground: #ffffff;
+  --popover: #1d1e1b;
+  --popover-foreground: #ffffff;
+  --primary: #d5ff2f;
+  --primary-foreground: #050505;
+  --secondary: #1d1e1b;
+  --secondary-foreground: #ffffff;
+  --muted: #1d1e1b;
+  --muted-foreground: #92958c;
+  --accent: #1d1e1b;
+  --accent-foreground: #ffffff;
+  --destructive: #ff666d;
+  --border: #292a26;
+  --input: #292a26;
+  --ring: #d5ff2f;
+  --chart-1: #d5ff2f;
+  --chart-2: #92958c;
+  --chart-3: #e5e6e1;
+  --chart-4: #ff666d;
+  --chart-5: #64e69a;
+  --accent-text: #d5ff2f;
+  --sidebar: #090a08;
+  --sidebar-foreground: #92958c;
+  --sidebar-primary: #d5ff2f;
+  --sidebar-primary-foreground: #050505;
+  --sidebar-accent: #1d1e1b;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: #292a26;
+  --sidebar-ring: #d5ff2f;
+}
+
+/*
+ * Admin console scope. Content tokens are NOT overridden here — the admin
+ * area follows the selected theme like the rest of the app. Only permanent,
+ * theme-independent admin tokens live here: the always-dark sidebar
+ * (`#090A08` per the design spec) and the compact radius.
+ */
+.admin-theme {
+  --radius: 0.5rem;
+  --sidebar: #090a08;
+  --sidebar-foreground: #92958c;
+  --sidebar-primary: #d5ff2f;
+  --sidebar-primary-foreground: #050505;
+  --sidebar-accent: #1d1e1b;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: #292a26;
+  --sidebar-ring: #d5ff2f;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
+  }
+}

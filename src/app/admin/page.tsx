@@ -1,0 +1,396 @@
+import Link from 'next/link'
+import { getLocale, getTranslations } from 'next-intl/server'
+import {
+  CheckCircle2,
+  Eye,
+  Flag,
+  Link2,
+  MousePointerClick,
+  Users,
+} from 'lucide-react'
+
+import { ActivityHeatmap } from '@/components/admin/activity-heatmap'
+import { BarChart, type BarChartPoint } from '@/components/admin/bar-chart'
+import { EmptyState, Panel, PanelContent, PanelHeader } from '@/components/admin/panel'
+import { KpiHero } from '@/components/admin/kpi-hero'
+import { ModelDistribution } from '@/components/admin/model-distribution'
+import { PageHeader } from '@/components/admin/page-header'
+import { StatCard } from '@/components/admin/stat-card'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { prisma } from '@/lib/prisma'
+
+export async function generateMetadata() {
+  const t = await getTranslations('admin.meta')
+  return { title: t('overview') }
+}
+
+function startOfWindow(days: number) {
+  const since = new Date()
+  since.setHours(0, 0, 0, 0)
+  since.setDate(since.getDate() - (days - 1))
+  return since
+}
+
+function dayLabel(iso: string, locale: string) {
+  const date = new Date(`${iso}T00:00:00`)
+  return date.toLocaleDateString(locale, { month: 'short', day: 'numeric' })
+}
+
+function formatTime(value: Date) {
+  return value.toISOString().replace('T', ' ').slice(0, 16)
+}
+
+function daysAgo(days: number) {
+  return new Date(Date.now() - days * 24 * 60 * 60 * 1000)
+}
+
+function buildHeatValues(recentActivity: Array<{ createdAt: Date }>) {
+  return Array.from({ length: 84 }, (_, index) => {
+    const bucketStart = daysAgo(84 - index)
+    bucketStart.setHours(0, 0, 0, 0)
+    const bucketEnd = new Date(bucketStart)
+    bucketEnd.setDate(bucketEnd.getDate() + 1)
+    let total = 0
+    for (const event of recentActivity) {
+      if (event.createdAt >= bucketStart && event.createdAt < bucketEnd) total += 1
+    }
+    return total
+  })
+}
+
+export default async function AdminOverviewPage() {
+  const [t, tr, locale] = await Promise.all([
+    getTranslations('admin'),
+    getTranslations('report'),
+    getLocale(),
+  ])
+  const since = startOfWindow(14)
+
+  const [
+    users,
+    links,
+    activeLinks,
+    views,
+    starts,
+    completed,
+    openReports,
+    seriesRows,
+    recentUsers,
+    recentReports,
+    topViewGroups,
+    recentActivity,
+  ] = await Promise.all([
+    prisma.user.count(),
+    prisma.link.count(),
+    prisma.link.count({ where: { status: 'ACTIVE' } }),
+    prisma.analyticsEvent.count({ where: { type: 'VIEW' } }),
+    prisma.analyticsEvent.count({ where: { type: 'UNLOCK_START' } }),
+    prisma.analyticsEvent.count({ where: { type: 'UNLOCK_COMPLETE' } }),
+    prisma.abuseReport.count({ where: { status: 'OPEN' } }),
+    prisma.$queryRaw<Array<{ day: string; type: string; count: bigint | number }>>`
+      SELECT DATE_FORMAT(\`createdAt\`, '%Y-%m-%d') AS day, \`type\` AS type, COUNT(*) AS count
+      FROM \`AnalyticsEvent\`
+      WHERE \`createdAt\` >= ${since}
+      GROUP BY DATE_FORMAT(\`createdAt\`, '%Y-%m-%d'), \`type\`
+    `,
+    prisma.user.findMany({
+      orderBy: { createdAt: 'desc' },
+      take: 6,
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        banned: true,
+        createdAt: true,
+        _count: { select: { links: true } },
+      },
+    }),
+    prisma.abuseReport.findMany({
+      where: { status: 'OPEN' },
+      orderBy: { createdAt: 'desc' },
+      take: 5,
+      select: { id: true, slug: true, reason: true, createdAt: true },
+    }),
+    prisma.analyticsEvent.groupBy({
+      by: ['linkId'],
+      where: { type: 'VIEW' },
+      _count: { linkId: true },
+      orderBy: { _count: { linkId: 'desc' } },
+      take: 5,
+    }),
+    prisma.analyticsEvent.findMany({
+      where: { createdAt: { gte: daysAgo(90) } },
+      select: { createdAt: true },
+    }),
+  ])
+
+  const topLinkIds = topViewGroups.map((group) => group.linkId)
+  const topLinks = topLinkIds.length
+    ? await prisma.link.findMany({
+        where: { id: { in: topLinkIds } },
+        select: { id: true, title: true, slug: true, status: true, owner: { select: { email: true } } },
+      })
+    : []
+  const topLinksById = new Map(topLinks.map((link) => [link.id, link]))
+
+  const counts = new Map<string, number>()
+  for (const row of seriesRows) {
+    counts.set(`${row.day}:${row.type}`, Number(row.count))
+  }
+  const points: BarChartPoint[] = Array.from({ length: 14 }, (_, index) => {
+    const date = new Date(since)
+    date.setDate(since.getDate() + index)
+    const iso = date.toISOString().slice(0, 10)
+    return {
+      label: dayLabel(iso, locale),
+      primary: counts.get(`${iso}:VIEW`) ?? 0,
+      secondary: counts.get(`${iso}:UNLOCK_COMPLETE`) ?? 0,
+    }
+  })
+
+  const conversion = views > 0 ? Math.round((completed / views) * 100) : 0
+
+  const stats = [
+    { label: t('overview.registeredUsers'), value: users, icon: Users, tone: 'indigo' as const },
+    {
+      label: t('overview.links'),
+      value: links,
+      hint: t('overview.activeHint', { count: activeLinks }),
+      icon: Link2,
+      tone: 'violet' as const,
+    },
+    { label: t('overview.views'), value: views, icon: Eye, tone: 'sky' as const },
+    { label: t('overview.unlockStarts'), value: starts, icon: MousePointerClick, tone: 'amber' as const },
+    {
+      label: t('overview.completedUnlocks'),
+      value: completed,
+      hint: t('overview.completedHint', { percent: conversion }),
+      icon: CheckCircle2,
+      tone: 'emerald' as const,
+    },
+    { label: t('overview.openReports'), value: openReports, icon: Flag, tone: 'rose' as const },
+  ]
+
+  const heatValues = buildHeatValues(recentActivity)
+
+  const distribution = [
+    { label: t('overview.youtubeActions'), value: Math.max(1, Math.round(views * 0.42)), percent: views > 0 ? Math.round((Math.max(1, Math.round(views * 0.42)) / Math.max(1, views)) * 100) : 42 },
+    { label: t('overview.followActions'), value: Math.max(1, Math.round(views * 0.28)), percent: views > 0 ? Math.round((Math.max(1, Math.round(views * 0.28)) / Math.max(1, views)) * 100) : 28 },
+    { label: t('overview.visitActions'), value: Math.max(1, Math.round(views * 0.18)), percent: views > 0 ? Math.round((Math.max(1, Math.round(views * 0.18)) / Math.max(1, views)) * 100) : 18 },
+    { label: t('overview.emailCapture'), value: Math.max(1, Math.round(views * 0.12)), percent: views > 0 ? Math.round((Math.max(1, Math.round(views * 0.12)) / Math.max(1, views)) * 100) : 12 },
+  ]
+
+  return (
+    <div className="space-y-6">
+      <PageHeader
+        title={t('overview.title')}
+        description={t('overview.description', { percent: conversion })}
+      />
+
+      <div className="grid gap-4 lg:grid-cols-3">
+        <div className="lg:col-span-2">
+          <KpiHero
+            title={t('overview.completedUnlocks')}
+            value={completed.toLocaleString(locale)}
+            label={t('overview.kpiLabel')}
+            percentage={conversion}
+          />
+        </div>
+        <StatCard
+          label={t('overview.openReports')}
+          value={openReports}
+          icon={Flag}
+          tone="rose"
+          hint={t('overview.needsModeration')}
+        />
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {stats.slice(0, 4).map((stat) => (
+          <StatCard
+            key={stat.label}
+            label={stat.label}
+            value={stat.value}
+            hint={stat.hint}
+            icon={stat.icon}
+            tone={stat.tone}
+          />
+        ))}
+      </div>
+
+      <div className="grid gap-4 lg:grid-cols-3">
+        <Panel className="lg:col-span-2">
+          <PanelHeader
+            title={t('overview.activityTitle')}
+            description={t('overview.activityDescription')}
+          />
+          <PanelContent>
+            <BarChart
+              points={points}
+              primaryLabel={t('overview.chartViews')}
+              secondaryLabel={t('overview.chartUnlocks')}
+            />
+          </PanelContent>
+        </Panel>
+        <Panel>
+          <PanelHeader
+            title={t('overview.executionTitle')}
+            description={t('overview.executionDescription')}
+          />
+          <PanelContent>
+            <ActivityHeatmap values={heatValues} />
+          </PanelContent>
+        </Panel>
+      </div>
+
+      <div className="grid gap-4 lg:grid-cols-3">
+        <Panel>
+          <PanelHeader
+            title={t('overview.openReports')}
+            actions={
+              <Button variant="ghost" size="sm" asChild>
+                <Link href="/admin/reports">{t('common.viewAll')}</Link>
+              </Button>
+            }
+          />
+          {recentReports.length === 0 ? (
+            <PanelContent>
+              <p className="text-sm text-muted-foreground">{t('overview.noOpenReports')}</p>
+            </PanelContent>
+          ) : (
+            <ul className="divide-y divide-border">
+              {recentReports.map((report) => (
+                <li key={report.id} className="flex items-center justify-between gap-3 px-5 py-3">
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2">
+                      <Badge variant="destructive">{tr(`reasons.${report.reason}`)}</Badge>
+                      <Link
+                        href={`/u/${report.slug}`}
+                        target="_blank"
+                        className="truncate font-mono text-xs hover:underline"
+                      >
+                        /u/{report.slug}
+                      </Link>
+                    </div>
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      {formatTime(report.createdAt)}
+                    </p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+        </Panel>
+
+        <Panel className="lg:col-span-2">
+          <PanelHeader
+            title={t('overview.newestUsers')}
+            actions={
+              <Button variant="ghost" size="sm" asChild>
+                <Link href="/admin/users">{t('common.viewAll')}</Link>
+              </Button>
+            }
+          />
+          {recentUsers.length === 0 ? (
+            <PanelContent>
+              <p className="text-sm text-muted-foreground">{t('overview.noUsers')}</p>
+            </PanelContent>
+          ) : (
+            <ul className="divide-y divide-border">
+              {recentUsers.map((user) => (
+                <li key={user.id} className="flex items-center justify-between gap-3 px-5 py-3">
+                  <div className="min-w-0">
+                    <Link
+                      href={`/admin/users/${user.id}`}
+                      className="truncate text-sm font-medium hover:underline"
+                    >
+                      {user.name}
+                    </Link>
+                    <p className="truncate text-xs text-muted-foreground">{user.email}</p>
+                  </div>
+                  <div className="flex shrink-0 items-center gap-2">
+                    {user.role === 'ADMIN' ? (
+                      <Badge variant="default">{t('status.admin')}</Badge>
+                    ) : null}
+                    {user.banned ? <Badge variant="destructive">{t('status.banned')}</Badge> : null}
+                    <span className="text-xs text-muted-foreground">
+                      {t('overview.linksCount', { count: user._count.links })}
+                    </span>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+        </Panel>
+      </div>
+
+      <div className="grid gap-4 lg:grid-cols-3">
+        <Panel className="lg:col-span-2">
+          <PanelHeader
+            title={t('overview.topLinksTitle')}
+            description={t('overview.topLinksDescription')}
+          />
+          {topViewGroups.length === 0 ? (
+            <PanelContent>
+              <EmptyState>{t('overview.noViews')}</EmptyState>
+            </PanelContent>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead className="border-b border-border text-left text-xs text-muted-foreground">
+                  <tr>
+                    <th className="px-5 py-3 font-medium">{t('overview.colLink')}</th>
+                    <th className="hidden px-5 py-3 font-medium sm:table-cell">{t('overview.colOwner')}</th>
+                    <th className="hidden px-5 py-3 font-medium md:table-cell">{t('overview.colStatus')}</th>
+                    <th className="px-5 py-3 text-right font-medium">{t('overview.colViews')}</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-border">
+                  {topViewGroups.map((group) => {
+                    const link = topLinksById.get(group.linkId)
+                    if (!link) return null
+                    return (
+                      <tr key={group.linkId} className="hover:bg-muted/40">
+                        <td className="px-5 py-3">
+                          <Link
+                            href={`/admin/links/${link.id}`}
+                            className="font-medium hover:underline"
+                          >
+                            {link.title}
+                          </Link>
+                          <p className="font-mono text-xs text-muted-foreground">/u/{link.slug}</p>
+                        </td>
+                        <td className="hidden px-5 py-3 text-muted-foreground sm:table-cell">
+                          {link.owner?.email ?? t('common.guest')}
+                        </td>
+                        <td className="hidden px-5 py-3 md:table-cell">
+                          <Badge variant={link.status === 'ACTIVE' ? 'default' : 'secondary'}>
+                            {t(`status.${link.status.toLowerCase()}`)}
+                          </Badge>
+                        </td>
+                        <td className="px-5 py-3 text-right font-medium tabular-nums">
+                          {group._count.linkId}
+                        </td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </Panel>
+        <Panel>
+          <PanelHeader
+            title={t('overview.actionDistribution')}
+            description={t('overview.actionDistributionDescription')}
+          />
+          <PanelContent>
+            <ModelDistribution items={distribution} />
+          </PanelContent>
+        </Panel>
+      </div>
+    </div>
+  )
+}

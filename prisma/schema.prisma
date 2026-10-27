@@ -1,0 +1,401 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String
+  email         String    @unique
+  emailVerified Boolean   @default(false)
+  image         String?   @db.Text
+  role          UserRole  @default(USER)
+  banned        Boolean   @default(false)
+  banReason     String?   @db.Text
+  banExpires    DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  sessions Session[]
+  accounts Account[]
+  links    Link[]
+  media    MediaAsset[]
+  files    StoredFile[]
+  unlocks  UserUnlock[]
+  profile  Profile?
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?  @db.Text
+
+  // Set by the better-auth admin plugin when an admin impersonates a user.
+  impersonatedBy String?
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Account {
+  id                    String    @id @default(cuid())
+  accountId             String
+  providerId            String
+  accessToken           String?   @db.Text
+  refreshToken          String?   @db.Text
+  idToken               String?   @db.Text
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?   @db.Text
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Verification {
+  id         String   @id @default(cuid())
+  identifier String
+  value      String   @db.Text
+  expiresAt  DateTime
+  createdAt  DateTime? @default(now())
+  updatedAt  DateTime? @updatedAt
+
+  @@index([identifier])
+}
+
+enum LinkContentType {
+  URL
+  TEXT
+  FILE
+}
+
+enum LinkStatus {
+  DRAFT
+  ACTIVE
+  DISABLED
+}
+
+enum ActionVerification {
+  AUTO_PROMPT
+  USER_CONFIRMED
+  EMAIL_SUBMITTED
+}
+
+model Link {
+  id           String          @id @default(cuid())
+  ownerId      String?
+  guestToken   String?
+  slug         String          @unique
+  title        String
+  description  String?         @db.Text
+  coverImage   String?         @db.Text
+  status       LinkStatus      @default(DRAFT)
+  contentType  LinkContentType
+  targetUrl    String?         @db.Text
+  textContent  String?         @db.Text
+  fileId       String?
+  expiresAt    DateTime?
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+
+  owner       User?          @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  file        StoredFile?    @relation(fields: [fileId], references: [id], onDelete: SetNull)
+  actions     LinkAction[]
+  unlocks     UnlockSession[]
+  events      AnalyticsEvent[]
+  emailLeads  EmailLead[]
+  abuseReports AbuseReport[]
+  userUnlocks UserUnlock[]
+
+  @@index([ownerId])
+  @@index([guestToken])
+  @@index([fileId])
+}
+
+model LinkAction {
+  id            String             @id @default(cuid())
+  linkId        String
+  type          String
+  label         String?
+  target        String             @db.Text
+  verification  ActionVerification @default(AUTO_PROMPT)
+  position      Int                @default(0)
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+
+  link        Link                    @relation(fields: [linkId], references: [id], onDelete: Cascade)
+  option      ActionOption            @relation(fields: [type], references: [key], onDelete: Restrict)
+  completions UnlockActionCompletion[]
+
+  @@index([linkId, position])
+}
+
+enum UnlockStatus {
+  PENDING
+  VERIFIED
+  EXPIRED
+}
+
+model UnlockSession {
+  id            String        @id
+  linkId        String
+  status        UnlockStatus  @default(PENDING)
+  ipHash        String?
+  userAgent     String?       @db.Text
+  referrer      String?       @db.Text
+  expiresAt     DateTime
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  link        Link                   @relation(fields: [linkId], references: [id], onDelete: Cascade)
+  completions UnlockActionCompletion[]
+  events      AnalyticsEvent[]
+
+  @@index([linkId])
+}
+
+model UnlockActionCompletion {
+  id              String   @id @default(cuid())
+  unlockSessionId String
+  linkActionId    String
+  completedAt     DateTime @default(now())
+
+  unlockSession UnlockSession @relation(fields: [unlockSessionId], references: [id], onDelete: Cascade)
+  linkAction    LinkAction    @relation(fields: [linkActionId], references: [id], onDelete: Cascade)
+
+  @@unique([unlockSessionId, linkActionId])
+}
+
+enum AnalyticsEventType {
+  VIEW
+  UNLOCK_START
+  ACTION_DONE
+  UNLOCK_COMPLETE
+}
+
+model AnalyticsEvent {
+  id              String             @id @default(cuid())
+  linkId          String
+  unlockSessionId String?
+  type            AnalyticsEventType
+  ipHash          String?
+  userAgent       String?            @db.Text
+  referrer        String?            @db.Text
+  createdAt       DateTime           @default(now())
+
+  link          Link           @relation(fields: [linkId], references: [id], onDelete: Cascade)
+  unlockSession UnlockSession? @relation(fields: [unlockSessionId], references: [id], onDelete: SetNull)
+
+  @@index([linkId, type])
+  @@index([linkId, createdAt])
+}
+
+model EmailLead {
+  id        String   @id @default(cuid())
+  linkId    String
+  email     String
+  consentAt DateTime @default(now())
+  createdAt DateTime @default(now())
+
+  link Link @relation(fields: [linkId], references: [id], onDelete: Cascade)
+
+  @@unique([linkId, email])
+  @@index([linkId])
+}
+
+model RateLimitBucket {
+  key         String   @id
+  count       Int      @default(0)
+  windowStart DateTime
+  expiresAt   DateTime
+
+  @@index([expiresAt])
+}
+
+enum AbuseReason {
+  SPAM
+  MALWARE
+  ILLEGAL
+  COPYRIGHT
+  IMPERSONATION
+  OTHER
+}
+
+enum AbuseReportStatus {
+  OPEN
+  RESOLVED
+  DISMISSED
+}
+
+model AbuseReport {
+  id          String            @id @default(cuid())
+  linkId      String
+  slug        String
+  reason      AbuseReason
+  details     String            @db.Text
+  reporterEmail String?
+  status      AbuseReportStatus @default(OPEN)
+  resolutionNote String?        @db.Text
+  reporterIpHash String?
+  resolvedAt  DateTime?
+  resolvedBy  String?
+  createdAt   DateTime          @default(now())
+
+  link Link @relation(fields: [linkId], references: [id], onDelete: Cascade)
+
+  @@index([status, createdAt])
+  @@index([linkId])
+}
+
+model Setting {
+  key       String @id
+  value     String @db.Text
+  updatedAt DateTime @updatedAt
+  updatedBy String?
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  actorId   String
+  actorName String?
+  actorEmail String?
+  action    String
+  targetType String?
+  targetId   String?
+  details   String?  @db.Text
+  ipHash    String?
+  createdAt DateTime @default(now())
+
+  @@index([action, createdAt])
+  @@index([targetType, targetId])
+}
+
+enum ActionBehavior {
+  URL
+  EMAIL
+}
+
+model Platform {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  label     String
+  icon      String   @default("globe")
+  enabled   Boolean  @default(true)
+  position  Int      @default(0)
+  system    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  actionOptions ActionOption[]
+
+  @@index([position])
+}
+
+model ActionOption {
+  key       String         @id
+  label     String
+  platformId String?
+  platform  Platform?      @relation(fields: [platformId], references: [id], onDelete: SetNull)
+  icon      String         @default("link")
+  behavior  ActionBehavior @default(URL)
+  enabled   Boolean        @default(true)
+  position  Int            @default(0)
+  system    Boolean        @default(false)
+  updatedBy String?
+  updatedAt DateTime       @updatedAt
+
+  actions LinkAction[]
+
+  @@index([position])
+  @@index([platformId])
+}
+
+model MediaAsset {
+  id        String   @id @default(cuid())
+  ownerId   String
+  filename  String
+  mimeType  String
+  size      Int
+  createdAt DateTime @default(now())
+
+  owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  @@index([ownerId])
+}
+
+model StoredFile {
+  id        String   @id @default(cuid())
+  ownerId   String
+  filename  String
+  mimeType  String
+  size      Int
+  createdAt DateTime @default(now())
+
+  owner User   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  links Link[]
+
+  @@index([ownerId])
+}
+
+model UserUnlock {
+  id         String   @id @default(cuid())
+  userId     String
+  linkId     String
+  unlockedAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  link Link @relation(fields: [linkId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, linkId])
+  @@index([userId, unlockedAt])
+}
+
+model Profile {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  handle      String   @unique
+  displayName String?
+  bio         String?  @db.Text
+  avatarUrl   String?  @db.Text
+  published   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  links BioLink[]
+
+  @@index([handle])
+}
+
+model BioLink {
+  id        String   @id @default(cuid())
+  profileId String
+  label     String
+  url       String   @db.Text
+  position  Int      @default(0)
+  createdAt DateTime @default(now())
+
+  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@index([profileId, position])
+}
