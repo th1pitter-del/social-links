@@ -115,7 +115,7 @@ export default async function UnlockPage({ params, searchParams }: PageProps) {
 
 function toSteps(link: PublicUnlockLink): UnlockStepPreview[] {
   return link.actions.map((action) => ({
-    label: action.label?.trim() || action.type,
+    label: action.label?.trim() || action.optionLabel || action.type,
     platform: action.platform,
     icon: action.icon,
     behavior: action.behavior,

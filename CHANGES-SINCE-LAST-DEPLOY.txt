@@ -1,0 +1,149 @@
+CHANGES SINCE LAST DEPLOY
+Project: social-links (Link Unlocker)
+Production before these changes: https://social-links-rust-six.vercel.app
+Last deployed commit: 0931384 "Wire the tagline and content policy settings into real surfaces"
+Written: 2026-10-31
+
+=====================================================================
+1. UNLOCK FLOW UPDATES IN PLACE (no more manual reload)
+=====================================================================
+Symptom: on /u/[slug], after completing a step the visitor had to reload the
+page to see the counters/progress change.
+
+Cause: the server actions were asymmetric. claimContent() called
+revalidatePath(), so the page refreshed only at the very end; startUnlock() and
+markActionComplete() recorded events but never revalidated, so the RSC props
+(view counts, completion state) served to the browser stayed stale until a
+reload.
+
+Fix: src/components/unlock/unlock-experience.tsx
+ - handleStart() now calls router.refresh() after applying the new state, so the
+   public counters update the moment a session starts.
+ - Added loadedTokenRef so that route refresh does not re-fetch a token that was
+   already created/loaded locally (prevents a refresh loop and keeps the
+   ?token= resume path intact).
+
+Verified in the browser: full funnel (start -> action -> claim) updates with
+zero manual reloads, and reopening the URL with ?token= still resumes.
+
+=====================================================================
+2. SECURITY: SHARE LINKS NO LONGER LEAK THE VISITOR'S SESSION TOKEN
+=====================================================================
+The share / tweet buttons on the unlock page used window.location.href, which -
+once an unlock had started - contained ?token=<session token>. Anyone the
+visitor shared to would inherit that visitor's unlock progress.
+
+Fix: src/components/unlock/unlock-experience.tsx
+ - useShareUrl(slug) now rebuilds the canonical URL from origin + slug
+   ("${window.location.origin}/u/${slug}") instead of echoing the address bar.
+
+=====================================================================
+3. NO RAW IDENTIFIERS ON SCREEN
+=====================================================================
+Before a step was started, the label fell back to the DB action key, so
+visitors saw "YOUTUBE_SUBSCRIBE".
+
+Fix:
+ - src/lib/unlock.ts  PublicAction now carries optionLabel (the catalog's
+   human name for the action type).
+ - src/app/u/[slug]/page.tsx  toSteps() label order is now:
+   creator's custom label -> catalog label -> raw type (last resort).
+
+=====================================================================
+4. PARTNER LINKS IN THE PUBLIC HEADER (guests and signed-in users)
+=====================================================================
+Two external links added to the public header for both states:
+ - Video Compressor  https://www.videocompressor4you.com/   color #5182EF
+ - Video Downloader  https://www.downloadsocialmediavideo.com/  color #4CBA95
+Both open in a new tab with rel="noopener noreferrer"; both keep their brand
+colour at rest and dim to 75% on hover. Internal links have no target attribute.
+
+=====================================================================
+5. HEADER MADE RESPONSIVE ACROSS ALL SCREEN WIDTHS
+=====================================================================
+New file: src/components/site-nav.tsx, split into two exports so the header can
+place them independently:
+ - SiteNavLinks  the inline row, shown from xl (1280px) up, text-only.
+ - SiteNavMenu   the hamburger + dropdown, shown below xl.
+
+src/components/site-header.tsx
+ - The hamburger is now the LAST child of the actions group, so it sits flush at
+   the right end of the header instead of floating in the centre of the row.
+ - Brand name is protected against long, admin-set names: the brand link is
+   min-w-0 and the name span truncates, so a long name shrinks with an ellipsis
+   rather than pushing the nav and account actions out of the row.
+ - Dashboard / Admin / Sign-out are icon-only (aria-label + title kept) because
+   labelled buttons plus five nav labels need 1222-1322px, which can never fit
+   inside the header's max-w-[1200px].
+
+Why the inline row is text-only: measured live, adding icons to it needs 1191px
+against a hard 1168px budget (the row is capped by max-w-[1200px], so a wider
+monitor buys nothing). Text-only fits in every locale:
+   es 1108 / pt-br 1081 / en 998 / ar 860  (budget 1168)
+
+Breakpoint check (needed vs available, worst locale):
+   320px user  281 / 288     640px user  528 / 608
+   320px guest 230 / 288     768px user  536 / 736
+Medium screens (sm/md/lg, i.e. everything under 1280px) use the hamburger, which
+is the fallback you approved.
+
+=====================================================================
+6. DROPDOWN MENU POLISH
+=====================================================================
+ - Icons per item: ListChecks (how it works), Sparkles (features),
+   CircleHelp (FAQ), Minimize2 (compressor), Download (downloader).
+   Icons are resolved by key inside the client component because a Server
+   Component cannot pass a component reference across the client boundary
+   (doing so threw "Functions cannot be passed directly to Client Components"
+   and 500'd the page).
+ - 4px gap between items (measured: gaps [4,4,4,4], menu height 144 -> 164).
+ - Hover highlight added. The items are rendered with asChild, so Radix's own
+   focus:bg-accent styling never applied - pointer hover does not focus them.
+   Confirmed by measurement: the hovered row's background was rgba(0,0,0,0).
+   The menu rows now carry their own rounded-md hover:bg-accent, and the partner
+   links keep their brand colour while hovering.
+
+=====================================================================
+7. TRANSLATIONS
+=====================================================================
+Added nav.videoCompressor, nav.videoDownloader and nav.menu to all four
+catalogues (messages/en.json, es.json, pt-br.json, ar.json).
+   en      Video Compressor / Video Downloader / Menu
+   es      Comprimir vídeo / Descargar vídeo / Menú
+   pt-br   Compactar vídeo / Baixar vídeo / Menu
+   ar      ضاغط الفيديو / منزّل الفيديو / القائمة   (RTL verified in header)
+
+=====================================================================
+FILES TOUCHED
+=====================================================================
+  src/components/site-nav.tsx          (new)
+  src/components/site-header.tsx
+  src/components/unlock/unlock-experience.tsx
+  src/lib/unlock.ts
+  src/app/u/[slug]/page.tsx
+  messages/en.json, messages/es.json, messages/pt-br.json, messages/ar.json
+
+NOT touched on purpose: the logged-in dashboard shell has its own header, so the
+partner links do not appear there; and the admin panels are unchanged.
+
+=====================================================================
+VERIFICATION
+=====================================================================
+  npx tsc --noEmit        clean
+  npx eslint (changed)    clean
+  npm run build           exit 0, "Compiled successfully", no warnings
+  Browser: header/menu measured live at 1073px plus computed intrinsic widths for
+  every breakpoint and locale; dropdown opened with a real click and its items,
+  colours, targets, gaps and hover background read from computed styles.
+
+=====================================================================
+OUTSTANDING / FOR YOUR ATTENTION
+=====================================================================
+ 1. Local dev test data left behind: link "ddddd" gained VIEW 3->6,
+    UNLOCK_START 3->6, ACTION_DONE 1->3, UNLOCK_COMPLETE 1->3 and 3 extra
+    sessions from the unlock-flow testing. The cloud DB was never written to.
+    Say the word and I will clear those rows.
+ 2. The Vercel token and the production TiDB connection string that appeared in
+    an earlier chat still need rotating.
+ 3. Production media uploads cannot persist on serverless, and the email/webhook
+    env vars are still missing on the Vercel project (see earlier notes).

@@ -7,6 +7,8 @@ export type PublicAction = {
   id: string
   type: string
   label: string | null
+  /** Catalog name for the action, used when the creator left `label` empty. */
+  optionLabel: string | null
   target: string
   position: number
   behavior: 'URL' | 'EMAIL'
@@ -80,6 +82,7 @@ export async function getPublicUnlockLink(slug: string): Promise<PublicUnlockLin
       const option = catalog.get(action.type)
       return {
         ...action,
+        optionLabel: option?.label ?? null,
         behavior: option?.behavior ?? 'URL',
         icon: option?.icon ?? 'link',
         platform: option?.platform ?? null,

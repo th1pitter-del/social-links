@@ -1,7 +1,8 @@
 'use client'
 
-import { useCallback, useEffect, useState, useSyncExternalStore } from 'react'
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import { CheckCircle2, Download, ExternalLink, Eye, FileText, Loader2, Lock, Mail, Share2, Unlock } from 'lucide-react'
 
@@ -46,11 +47,14 @@ type StepAction = {
 
 const emptySubscribe = () => () => {}
 
-/** Reads the current page URL without a set-state-in-effect round trip. */
-function useShareUrl() {
+/**
+ * The canonical URL visitors share. Deliberately rebuilt from the origin plus
+ * the slug so a visitor never publishes their session token through a share.
+ */
+function useShareUrl(slug: string) {
   return useSyncExternalStore(
     emptySubscribe,
-    () => window.location.href,
+    () => `${window.location.origin}/u/${slug}`,
     () => '',
   )
 }
@@ -81,14 +85,18 @@ export function UnlockExperience({
   steps?: UnlockStepPreview[]
 }) {
   const t = useTranslations('unlock')
+  const router = useRouter()
   const [state, setState] = useState<UnlockState | null>(null)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [email, setEmail] = useState('')
   const [consent, setConsent] = useState(false)
   const [claimed, setClaimed] = useState<ClaimedContent>(null)
-  const shareUrl = useShareUrl()
+  const shareUrl = useShareUrl(slug)
+  /** Token already loaded or created locally; keeps a route refresh from re-fetching it. */
+  const loadedTokenRef = useRef<string | null>(null)
   const applyState = useCallback((next: UnlockState) => {
+    loadedTokenRef.current = next.token
     setState(next)
     const url = new URL(window.location.href)
     url.searchParams.set('token', next.token)
@@ -96,10 +104,11 @@ export function UnlockExperience({
   }, [])
 
   useEffect(() => {
-    if (!initialToken) return
+    if (!initialToken || initialToken === loadedTokenRef.current) return
     let cancelled = false
     void getUnlockState(initialToken).then((next) => {
       if (!cancelled && next) {
+        loadedTokenRef.current = next.token
         setState(next)
         const url = new URL(window.location.href)
         url.searchParams.set('token', next.token)
@@ -121,6 +130,10 @@ export function UnlockExperience({
       return
     }
     applyState(result.state)
+    // Starting a session records a view server-side, so the public counters on
+    // this page are now stale. Refresh them in place instead of waiting for
+    // the visitor to reload.
+    router.refresh()
   }
 
   async function handleAction(actionId: string, target: string, isEmail: boolean) {
