@@ -26,7 +26,7 @@ export async function SiteHeader() {
   const links: SiteNavLink[] = [
     { href: '/#how-it-works', label: nav('howItWorks'), icon: 'listChecks' },
     { href: '/#features', label: nav('features'), icon: 'sparkles' },
-    { href: '/faq', label: nav('faq'), icon: 'circleHelp' },
+    { href: '/faq', label: nav('faqShort'), icon: 'circleHelp' },
     {
       href: 'https://www.videocompressor4you.com/',
       label: nav('videoCompressor'),

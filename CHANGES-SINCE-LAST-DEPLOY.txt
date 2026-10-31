@@ -63,8 +63,10 @@ colour at rest and dim to 75% on hover. Internal links have no target attribute.
 =====================================================================
 New file: src/components/site-nav.tsx, split into two exports so the header can
 place them independently:
- - SiteNavLinks  the inline row, shown from xl (1280px) up, text-only.
+ - SiteNavLinks  the inline row with icons, shown from xl (1280px) up.
  - SiteNavMenu   the hamburger + dropdown, shown below xl.
+Both render the same NavAnchor, so the icons and colours are identical in the
+row and in the dropdown.
 
 src/components/site-header.tsx
  - The hamburger is now the LAST child of the actions group, so it sits flush at
@@ -76,10 +78,16 @@ src/components/site-header.tsx
    labelled buttons plus five nav labels need 1222-1322px, which can never fit
    inside the header's max-w-[1200px].
 
-Why the inline row is text-only: measured live, adding icons to it needs 1191px
-against a hard 1168px budget (the row is capped by max-w-[1200px], so a wider
-monitor buys nothing). Text-only fits in every locale:
-   es 1108 / pt-br 1081 / en 998 / ar 860  (budget 1168)
+Why the inline row needed a shorter FAQ label: measured live, icons in that row
+pushed it to 1191px against a hard 1168px budget (the row is capped by
+max-w-[1200px], so a wider monitor buys nothing). Rather than drop the icons,
+the header now uses a new key nav.faqShort ("FAQ" in every locale) instead of
+the long "Perguntas frequentes"/"الأسئلة الشائعة"; the footer keeps nav.faq.
+Re-measured with icons and the short label, full header row, worst locale first
+(budget 1168, and these counts even include the menu button, which is hidden at
+xl, so the real numbers are smaller):
+   en 1108 / es 1106 / pt-br 1079 / ar 935
+pt-br re-measured with the menu button actually hidden: 1026.
 
 Breakpoint check (needed vs available, worst locale):
    320px user  281 / 288     640px user  528 / 608
@@ -91,27 +99,40 @@ is the fallback you approved.
 6. DROPDOWN MENU POLISH
 =====================================================================
  - Icons per item: ListChecks (how it works), Sparkles (features),
-   CircleHelp (FAQ), Minimize2 (compressor), Download (downloader).
+   CircleHelp (FAQ), Minimize2 (compressor), Download (downloader). They render
+   in the dropdown AND in the inline desktop row (measured: 1 svg per anchor).
    Icons are resolved by key inside the client component because a Server
    Component cannot pass a component reference across the client boundary
    (doing so threw "Functions cannot be passed directly to Client Components"
    and 500'd the page).
  - 4px gap between items (measured: gaps [4,4,4,4], menu height 144 -> 164).
- - Hover highlight added. The items are rendered with asChild, so Radix's own
-   focus:bg-accent styling never applied - pointer hover does not focus them.
-   Confirmed by measurement: the hovered row's background was rgba(0,0,0,0).
-   The menu rows now carry their own rounded-md hover:bg-accent, and the partner
-   links keep their brand colour while hovering.
+ - Hover highlight on the dropdown rows. The items are rendered with asChild, so
+   Radix's own focus:bg-accent styling never applied - pointer hover does not
+   focus them. Confirmed by measurement: the hovered row's background was
+   rgba(0,0,0,0).
+   The first fix used hover:bg-accent and still showed nothing in dark mode. Root
+   cause: in this theme, --accent and --popover are the SAME value (#1d1e1b), so
+   the highlight painted the menu's own colour - i.e. nothing. (bg-foreground/10
+   was also tried and computes to oklab(0 0 0 / 0) - transparent - because it
+   color-mixes a var token.) The surfaces are now spelled out from design-spec
+   hover tokens: hover:bg-[#f0f1ea] dark:hover:bg-[#2a2b27].
+   Measured with a real pointer hover, both themes:
+     dark   hovered rgb(42, 43, 39)  vs menu rgb(29, 30, 27)  -> distinct
+     light  hovered rgb(240, 241, 234) vs menu rgb(255, 255, 255) -> distinct
+   Partner links keep their brand colour while hovering (measured
+   Compactar video: bg rgb(240, 241, 234) with text at 75% alpha).
 
 =====================================================================
 7. TRANSLATIONS
 =====================================================================
 Added nav.videoCompressor, nav.videoDownloader and nav.menu to all four
-catalogues (messages/en.json, es.json, pt-br.json, ar.json).
-   en      Video Compressor / Video Downloader / Menu
-   es      Comprimir vídeo / Descargar vídeo / Menú
-   pt-br   Compactar vídeo / Baixar vídeo / Menu
-   ar      ضاغط الفيديو / منزّل الفيديو / القائمة   (RTL verified in header)
+catalogues (messages/en.json, es.json, pt-br.json, ar.json), then nav.faqShort
+for the header only:
+   en      Video Compressor / Video Downloader / Menu / FAQ
+   es      Comprimir vídeo / Descargar vídeo / Menú / FAQ
+   pt-br   Compactar vídeo / Baixar vídeo / Menu / FAQ
+   ar      ضاغط الفيديو / منزّل الفيديو / القائمة / الأسئلة
+nav.faq (the long form) is untouched because the footer still uses it.
 
 =====================================================================
 FILES TOUCHED
@@ -134,11 +155,19 @@ VERIFICATION
   npm run build           exit 0, "Compiled successfully", no warnings
   Browser: header/menu measured live at 1073px plus computed intrinsic widths for
   every breakpoint and locale; dropdown opened with a real click and its items,
-  colours, targets, gaps and hover background read from computed styles.
+  colours, targets, gaps and hover background read from computed styles in BOTH
+  themes (the theme was switched through the header toggle, then restored to
+  dark - the stored preference is unchanged).
 
 =====================================================================
 OUTSTANDING / FOR YOUR ATTENTION
 =====================================================================
+ 0. Known issue I did NOT change (outside this request): src/components/ui/
+    dropdown-menu.tsx styles every menu item with focus:bg-accent, and since
+    --accent equals --popover in dark mode, hover/focus highlights are invisible
+    in EVERY dropdown in the app (dashboard, admin, language switcher), not just
+    the header. Say the word and I will fix the shared component once instead of
+    patching each call site.
  1. Local dev test data left behind: link "ddddd" gained VIEW 3->6,
     UNLOCK_START 3->6, ACTION_DONE 1->3, UNLOCK_COMPLETE 1->3 and 3 extra
     sessions from the unlock-flow testing. The cloud DB was never written to.

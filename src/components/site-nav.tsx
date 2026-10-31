@@ -54,14 +54,16 @@ function NavAnchor({
 }) {
   const Icon = navIcons[link.icon]
   const classes = cn(
-    'flex items-center gap-1.5 whitespace-nowrap transition-colors',
-    // asChild makes these anchors the items themselves, and pointer hover does not
-    // focus them, so the menu row needs its own highlight rather than Radix's.
-    inMenu && 'rounded-md hover:bg-accent',
+    'flex items-center gap-1.5 whitespace-nowrap rounded-md transition-colors',
+    // asChild makes these anchors the items themselves and pointer hover does not
+    // focus them, so the row needs its own highlight. Theme tokens are useless here:
+    // --accent equals --popover in dark mode (#1d1e1b) and bg-foreground/10 computes
+    // to transparent, so the surfaces are spelled out (design-spec hover tokens).
+    inMenu && 'hover:bg-[#f0f1ea] dark:hover:bg-[#2a2b27]',
     link.toneClass ?? 'hover:text-foreground',
     className,
   )
-  const content = inMenu ? <Icon className="size-4 shrink-0" aria-hidden="true" /> : null
+  const content = <Icon className="size-4 shrink-0" aria-hidden="true" />
 
   if (link.external) {
     return (
@@ -80,11 +82,7 @@ function NavAnchor({
   )
 }
 
-/**
- * The header links as an inline row, text-only: with icons the widest locale set
- * needs 1191px and the row is capped at 1168px by max-w-[1200px], so a bigger
- * screen cannot buy room. SiteNavMenu carries the same links, with icons, below xl.
- */
+/** The header links as an inline row, from xl up. */
 export function SiteNavLinks({ links, menuLabel }: { links: SiteNavLink[]; menuLabel: string }) {
   return (
     <nav
