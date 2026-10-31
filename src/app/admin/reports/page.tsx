@@ -7,6 +7,7 @@ import { PageHeader } from '@/components/admin/page-header'
 import { ReportRowActions } from '@/components/admin/report-row-actions'
 import { Badge } from '@/components/ui/badge'
 import { prisma } from '@/lib/prisma'
+import { getSiteSettings } from '@/lib/settings'
 
 export async function generateMetadata() {
   const t = await getTranslations('admin.meta')
@@ -29,7 +30,11 @@ export default async function AdminReportsPage({
 }: {
   searchParams: Promise<{ filter?: string }>
 }) {
-  const [t, tr] = await Promise.all([getTranslations('admin'), getTranslations('report')])
+  const [t, tr, site] = await Promise.all([
+    getTranslations('admin'),
+    getTranslations('report'),
+    getSiteSettings(),
+  ])
   const { filter: rawFilter } = await searchParams
   const filter = parseFilter(rawFilter)
 
@@ -97,6 +102,15 @@ export default async function AdminReportsPage({
           { label: t('reports.filterAll'), href: buildHref('all'), active: filter === 'all' },
         ]}
       />
+
+      {site.contentPolicy ? (
+        <Panel>
+          <PanelHeader title={tr('policyTitle')} />
+          <PanelContent className="whitespace-pre-line text-sm text-muted-foreground">
+            {site.contentPolicy}
+          </PanelContent>
+        </Panel>
+      ) : null}
 
       {filter === 'open' ? (
         openReports.length === 0 ? (

@@ -7,6 +7,7 @@ import { SiteFooter } from '@/components/site-footer'
 import { SiteHeader } from '@/components/site-header'
 import { Button } from '@/components/ui/button'
 import { prisma } from '@/lib/prisma'
+import { getSiteSettings } from '@/lib/settings'
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('report')
@@ -24,12 +25,12 @@ export default async function ReportPage({
   const { link } = await searchParams
   const slug = (link ?? '').trim().toLowerCase()
   const t = await getTranslations('report')
+  const site = await getSiteSettings()
 
   const exists =
     slug.length > 0 && slug.length <= 64
       ? await prisma.link.findUnique({ where: { slug }, select: { id: true } })
       : null
-
   return (
     <>
       <SiteHeader />
@@ -52,6 +53,15 @@ export default async function ReportPage({
             </div>
           )}
         </div>
+
+        {site.contentPolicy ? (
+          <section className="mt-10 rounded-2xl border bg-muted/30 p-5">
+            <h2 className="text-sm font-semibold">{t('policyTitle')}</h2>
+            <p className="mt-2 whitespace-pre-line text-sm text-muted-foreground">
+              {site.contentPolicy}
+            </p>
+          </section>
+        ) : null}
       </main>
       <SiteFooter />
     </>

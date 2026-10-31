@@ -254,6 +254,8 @@ export const getSettingMap = cache(async (): Promise<Record<string, string>> => 
 export type SiteSettings = {
   name: string
   tagline: string
+  /** True when an admin saved `site.tagline`; otherwise the localized default is in use. */
+  hasCustomTagline: boolean
   /** Admin-managed custom logo (`/api/media/<id>` or http(s) URL); '' = built-in mark. */
   logoUrl: string
   /** Admin-managed favicon URL; '' = the shipped favicon.ico. */
@@ -264,9 +266,11 @@ export type SiteSettings = {
 
 export const getSiteSettings = cache(async (): Promise<SiteSettings> => {
   const [map, defaults] = await Promise.all([getSettingMap(), getLocalizedDefaults()])
+  const tagline = map['site.tagline']?.trim() ?? ''
   return {
     name: map['site.name']?.trim() || defaults.name,
-    tagline: map['site.tagline']?.trim() || defaults.tagline,
+    tagline: tagline || defaults.tagline,
+    hasCustomTagline: tagline.length > 0,
     logoUrl: isMediaOrHttpUrl(map['site.logoUrl']) ? (map['site.logoUrl'] as string) : '',
     faviconUrl: isMediaOrHttpUrl(map['site.faviconUrl']) ? (map['site.faviconUrl'] as string) : '',
     allowedPlatforms: (map['rules.socialPlatforms'] ?? '')

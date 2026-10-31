@@ -7,10 +7,12 @@ import { admin } from 'better-auth/plugins'
 import { getTranslations } from 'next-intl/server'
 
 import { prisma } from '@/lib/prisma'
+import { DEFAULT_SITE_NAME, getSiteSettings } from '@/lib/settings'
 import { sendMail } from '@/lib/mailer'
 
 export const auth = betterAuth({
-  appName: 'Link Unlocker',
+  // Static fallback only; the brand name in delivered mail follows `site.name`.
+  appName: DEFAULT_SITE_NAME,
   baseURL: process.env.BETTER_AUTH_URL ?? 'http://localhost:3000',
   secret: process.env.BETTER_AUTH_SECRET,
   database: prismaAdapter(prisma, {
@@ -22,10 +24,10 @@ export const auth = betterAuth({
     // Password recovery is delivered through EMAIL_WEBHOOK_URL when configured.
     // Without it the reset URL is only written to the server log (development).
     sendResetPassword: async ({ user, url }) => {
-      const t = await getTranslations('email')
+      const [t, site] = await Promise.all([getTranslations('email'), getSiteSettings()])
       const delivered = await sendMail({
         to: user.email,
-        subject: t('resetPasswordSubject'),
+        subject: t('resetPasswordSubject', { site: site.name }),
         text: t('resetPasswordBody', { name: user.name, url }),
         type: 'password_reset',
         url,

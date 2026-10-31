@@ -283,7 +283,8 @@
     },
     "notFoundTitle": "Não conseguimos encontrar esse link",
     "notFoundBody": "Abra a página de desbloqueio e use seu link para denunciar, ou verifique o endereço.",
-    "notFoundCta": "Ir para o início"
+    "notFoundCta": "Ir para o início",
+    "policyTitle": "Política de conteúdo"
   },
   "site": {
     "name": "Link Unlocker",
@@ -717,6 +718,7 @@
         },
         "site_tagline": {
           "label": "Slogan",
+          "hint": "Exibido no rodapé e usado como descrição padrão da página.",
           "placeholder": "Desbloqueie conteúdo concluindo uma tarefa rápida"
         },
         "theme_light_primary": {
@@ -776,7 +778,7 @@
         },
         "rules_contentPolicy": {
           "label": "Política de conteúdo",
-          "hint": "Texto simples, sem Markdown."
+          "hint": "Texto simples exibido na página de denúncias e para os moderadores."
         },
         "site_logoUrl": {
           "label": "Logotipo",
@@ -1210,7 +1212,7 @@
     "buttonFallback": "Botão"
   },
   "email": {
-    "resetPasswordSubject": "Redefina a sua senha do Link Unlocker",
+    "resetPasswordSubject": "Redefina a sua senha do {site}",
     "resetPasswordBody": "Olá {name},\n\nRedefina a sua senha usando este link (válido por uma hora):\n{url}\n\nSe você não solicitou isso, ignore este e-mail."
   }
 }

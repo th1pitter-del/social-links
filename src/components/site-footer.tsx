@@ -36,7 +36,9 @@ export async function SiteFooter({
               <BrandMark className="size-5" src={site.logoUrl || null} />
               {site.name}
             </div>
-            <p className="max-w-xs text-sm text-muted-foreground">{t('tagline')}</p>
+            <p className="max-w-xs text-sm text-muted-foreground">
+              {site.hasCustomTagline ? site.tagline : t('tagline')}
+            </p>
           </div>
         ) : null}
         <nav

@@ -674,10 +674,11 @@
     },
     "notFoundTitle": "We could not find that link",
     "notFoundBody": "Open the unlock page and use its report link, or check the address for typos.",
-    "notFoundCta": "Go to homepage"
+    "notFoundCta": "Go to homepage",
+    "policyTitle": "Content policy"
   },
   "email": {
-    "resetPasswordSubject": "Reset your Link Unlocker password",
+    "resetPasswordSubject": "Reset your {site} password",
     "resetPasswordBody": "Hi {name},\n\nReset your password using this link (valid for one hour):\n{url}\n\nIf you did not request this, you can ignore this email."
   },
   "site": {
@@ -1112,6 +1113,7 @@
         },
         "site_tagline": {
           "label": "Tagline",
+          "hint": "Shown in the footer and used as the default page description.",
           "placeholder": "Unlock content by completing a quick task"
         },
         "theme_light_primary": {
@@ -1171,7 +1173,7 @@
         },
         "rules_contentPolicy": {
           "label": "Content policy",
-          "hint": "Markdown-free plain text."
+          "hint": "Plain text shown on the report page and to moderators reviewing reports."
         },
         "site_logoUrl": {
           "label": "Logo",

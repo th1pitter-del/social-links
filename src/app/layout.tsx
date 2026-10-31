@@ -24,6 +24,7 @@ const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
 export async function generateMetadata(): Promise<Metadata> {
   const site = await getSiteSettings()
   const t = await getTranslations('meta')
+  const description = site.hasCustomTagline ? site.tagline : t('description')
 
   return {
     metadataBase: new URL(appUrl),
@@ -31,7 +32,7 @@ export async function generateMetadata(): Promise<Metadata> {
       default: `${site.name} — ${t('title')}`,
       template: `%s · ${site.name}`,
     },
-    description: t('description'),
+    description,
     // Single source of truth for the tab icon: the admin upload when set, the
     // shipped `public/favicon.ico` otherwise. Keeping it in metadata avoids a
     // second file-convention `<link rel="icon">` outranking the admin value.
@@ -39,7 +40,7 @@ export async function generateMetadata(): Promise<Metadata> {
     openGraph: {
       type: 'website',
       title: `${site.name} — ${t('title')}`,
-      description: t('description'),
+      description,
       url: appUrl,
       siteName: site.name,
     },
