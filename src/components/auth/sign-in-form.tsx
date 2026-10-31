@@ -5,6 +5,8 @@ import Link from 'next/link'
 import { useTranslations } from 'next-intl'
 import { Loader2, Sparkles } from 'lucide-react'
 
+import { AuthNotice, FieldErrorText } from '@/components/auth/auth-messages'
+import { PasswordField } from '@/components/auth/password-field'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -25,6 +27,7 @@ export function SignInForm({
   const t = useTranslations('auth.signIn')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const emailError = state.fieldErrors?.email
 
   function applyDemoCredential(demoEmail: string, demoPassword: string) {
     setEmail(demoEmail)
@@ -33,11 +36,7 @@ export function SignInForm({
 
   return (
     <form action={formAction} className="space-y-5">
-      {reset ? (
-        <p className="rounded-lg border border-emerald-500/30 bg-emerald-500/5 px-3 py-2 text-sm text-emerald-700 dark:text-emerald-400">
-          {t('resetSuccess')}
-        </p>
-      ) : null}
+      {reset ? <AuthNotice tone="success">{t('resetSuccess')}</AuthNotice> : null}
 
       {/* Empty means "no explicit target" so the action can land by role. */}
       <input type="hidden" name="redirectTo" value={redirectTo ?? ''} />
@@ -52,34 +51,31 @@ export function SignInForm({
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          aria-invalid={emailError ? true : undefined}
+          aria-describedby={emailError ? 'email-error' : undefined}
         />
-        {state.fieldErrors?.email ? (
-          <p className="text-xs text-destructive">{state.fieldErrors.email}</p>
-        ) : null}
+        <FieldErrorText id="email-error" message={emailError} />
       </div>
 
-      <div className="space-y-2">
-        <div className="flex items-center justify-between">
-          <Label htmlFor="password">{t('password')}</Label>
-          <Link href="/forgot-password" className="text-xs text-muted-foreground hover:text-foreground">
+      <PasswordField
+        id="password"
+        name="password"
+        label={t('password')}
+        value={password}
+        onChange={setPassword}
+        autoComplete="current-password"
+        error={state.fieldErrors?.password}
+        action={
+          <Link
+            href="/forgot-password"
+            className="text-xs text-muted-foreground transition-colors hover:text-foreground"
+          >
             {t('forgot')}
           </Link>
-        </div>
-        <Input
-          id="password"
-          name="password"
-          type="password"
-          autoComplete="current-password"
-          required
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        {state.fieldErrors?.password ? (
-          <p className="text-xs text-destructive">{state.fieldErrors.password}</p>
-        ) : null}
-      </div>
+        }
+      />
 
-      {state.error ? <p className="text-sm text-destructive">{state.error}</p> : null}
+      {state.error ? <AuthNotice tone="error">{state.error}</AuthNotice> : null}
 
       <Button type="submit" className="w-full" disabled={pending}>
         {pending ? <Loader2 className="animate-spin" /> : null}

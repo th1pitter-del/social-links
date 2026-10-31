@@ -104,17 +104,22 @@
       "completedUnlocks": "Completed unlocks",
       "conversionFromViews": "{percent}% conversion from recorded views",
       "heatmapTitle": "Activity heatmap",
-      "heatmapDescription": "Last 90 days",
+      "heatmapDescription": "Last 84 days",
       "recentLinks": "Recent links",
       "noLinksYet": "You have not created any links yet.",
       "createFirstLink": "Create your first link",
       "sessionsCount": "{count} sessions",
       "actionMix": "Action mix",
-      "actionMixDescription": "Estimated by recent activity",
-      "youtubeActions": "YouTube actions",
-      "followActions": "Follow actions",
-      "visitActions": "Visit actions",
-      "emailCapture": "Email capture"
+      "actionMixDescription": "Completed action steps by platform",
+      "funnelTitle": "Unlock funnel",
+      "funnelDescription": "Recorded events, all time",
+      "funnelEmpty": "No views recorded yet. The funnel fills in as visitors arrive.",
+      "continuedFrom": "{percent}% of {from}",
+      "createdOn": "Created {date}",
+      "expiresOn": "Expires {date}",
+      "eventsCount": "{count} events",
+      "completedSteps": "{count} completed steps",
+      "actionMixEmpty": "No visitor has completed an action step yet."
     },
     "links": {
       "title": "My links",
@@ -138,14 +143,20 @@
       "statViews": "Views",
       "statStarts": "Unlock starts",
       "statCompleted": "Completed unlocks",
-      "conversionHint": "{percent}% conversion",
+      "funnelTitle": "From visit to unlock",
+      "funnelDescription": "Every count is an event stored for this link.",
+      "shareOfViews": "{percent}% of views",
+      "shareOfStarts": "{percent}% of starts",
+      "noVisits": "No visits recorded yet.",
       "publicUrl": "Public unlock URL",
       "leadsTitle": "Collected email addresses",
       "leadsDescription": "Only you can see or export addresses collected through this link.",
       "noLeads": "No addresses collected yet.",
       "colEmail": "Email",
       "colConsent": "Consent given",
-      "hiddenAction": "{label} (hidden)"
+      "hiddenAction": "{label} (hidden)",
+      "activityTitle": "Views and completed unlocks",
+      "lastDays": "Last {days} days"
     },
     "analytics": {
       "title": "Analytics",
@@ -350,6 +361,7 @@
     "signIn": "Sign in",
     "signUp": "Sign up",
     "dashboard": "Dashboard",
+    "account": "Account",
     "getStarted": "Get started",
     "createLink": "Create your link",
     "language": "Language",
@@ -368,6 +380,7 @@
     "videoCompressor": "Video Compressor",
     "videoDownloader": "Video Downloader",
     "menu": "Menu",
+    "sections": "Navigation",
     "contact": "Contact",
     "privacy": "Privacy",
     "terms": "Terms"
@@ -410,7 +423,18 @@
       "stepDone": "Subscribe on YouTube",
       "completed": "Completed",
       "stepNext": "Final required action",
-      "required": "Required · verified when completed"
+      "required": "Required · verified when completed",
+      "diagramTitle": "What happens between the click and the content",
+      "nodes": {
+        "visitor": "Visitor opens",
+        "visitorDetail": "One short URL — no app and no account needed to start.",
+        "action": "Action taken",
+        "actionDetail": "They follow, subscribe, watch or listen wherever the action points.",
+        "verify": "Server verifies",
+        "verifyDetail": "A step only counts once our server can confirm it.",
+        "deliver": "Content delivered",
+        "deliverDetail": "A signed link with an expiry hands over the destination."
+      }
     },
     "featuresTitle": "Everything you need, for free",
     "features": {
@@ -450,13 +474,33 @@
     "verificationNote": "Some actions can be prompted but not automatically verified by the platform. We label each action honestly instead of claiming a verification we cannot perform.",
     "ctaTitle": "Start sharing locked links today",
     "ctaBody": "Free for creators. No premium tiers, no subscription billing.",
-    "ctaButton": "Create your link"
+    "ctaButton": "Create your link",
+    "stepsIntro": "Three moves, and your audience only ever sees the one they are on.",
+    "demo": {
+      "label": "Example link — simulated preview",
+      "linkTitle": "Unreleased teaser track",
+      "linkBody": "Gone from the public feed the moment it rotates.",
+      "revealLabel": "Where the link lands",
+      "revealValue": "example.com/artist/teaser",
+      "sampleContent": "The full mix runs 3:42 — take it before it goes away.",
+      "tag": "Simulated"
+    },
+    "funnel": {
+      "views": "Views",
+      "unlocks": "Unlock starts",
+      "completed": "Completed"
+    },
+    "supportedActionsBody": "Switched on for this deployment. Pick a platform to see what a link can ask for."
   },
   "auth": {
     "layout": {
       "agreementBefore": "By continuing you agree to our",
       "and": "and",
       "agreementAfter": "."
+    },
+    "password": {
+      "show": "Show password",
+      "hide": "Hide password"
     },
     "signIn": {
       "title": "Welcome back",
@@ -583,6 +627,16 @@
     "collectsEmailLong": "Collects an email address",
     "opensNewTab": "Opens in a new tab",
     "startUnlocking": "Start unlocking",
+    "previewAfterUnlock": "After the last step",
+    "previewOpen": "Open",
+    "previewDownload": "Download",
+    "previewNoDestination": "Add a destination to see what the visitor receives.",
+    "previewExpires": "Expires {date}",
+    "readyHeading": "Before you publish",
+    "readyCount": "{done} of {total} filled in",
+    "readyTitle": "A title",
+    "readyDestination": "A destination",
+    "readySteps": "At least one step",
     "willBeLiveAt": "Your link will be live at /u/{slug}",
     "previewNote": "This is how visitors will see your link."
   },
@@ -780,7 +834,9 @@
       "disable": "Disable",
       "unban": "Unban",
       "ban": "Ban",
-      "selected": "{count} selected"
+      "selected": "{count} selected",
+      "clearFilters": "Clear filters",
+      "loading": "Loading…"
     },
     "overview": {
       "title": "Platform overview",
@@ -799,8 +855,10 @@
       "activityDescription": "Daily view and completed-unlock events.",
       "chartViews": "Views",
       "chartUnlocks": "Unlocks",
+      "chartDays": "{days} days",
+      "chartShareOfTotal": "{percent}% of the period total",
       "executionTitle": "Execution activity",
-      "executionDescription": "Last 90 days heatmap",
+      "executionDescription": "Last 84 days heatmap",
       "heatmapLess": "Less",
       "heatmapMore": "More",
       "heatmapTooltip": "{count} events",
@@ -816,11 +874,10 @@
       "colStatus": "Status",
       "colViews": "Views",
       "actionDistribution": "Action distribution",
-      "actionDistributionDescription": "Usage mix by action type",
-      "youtubeActions": "YouTube actions",
-      "followActions": "Follow actions",
-      "visitActions": "Visit actions",
-      "emailCapture": "Email capture"
+      "actionDistributionDescription": "Completed action steps by platform",
+      "heatmapSummary": "{count} events over {days} days",
+      "actionMixEmpty": "No visitor has completed an action step yet.",
+      "completedSteps": "{count} completed steps"
     },
     "audit": {
       "title": "Audit log",
@@ -906,7 +963,8 @@
       "colEvents": "Events",
       "colActions": "Actions",
       "bulkEnabledToast": "{count} link(s) enabled.",
-      "bulkDisabledToast": "{count} link(s) disabled."
+      "bulkDisabledToast": "{count} link(s) disabled.",
+      "emptyList": "No links yet."
     },
     "linkDetail": {
       "backToLinks": "← All links",
@@ -970,7 +1028,8 @@
       "colStatus": "Status",
       "colActions": "Actions",
       "bulkBannedToast": "{count} user(s) banned.",
-      "bulkUnbannedToast": "{count} user(s) unbanned."
+      "bulkUnbannedToast": "{count} user(s) unbanned.",
+      "emptyList": "No users yet."
     },
     "userDetail": {
       "backToUsers": "← All users",
@@ -1218,5 +1277,21 @@
         "tooLarge": "File is too large. Maximum size is {maxMb} MB."
       }
     }
+  },
+  "motion": {
+    "phase": "Phase {current} of {total}",
+    "pause": "Pause",
+    "play": "Play",
+    "replay": "Replay",
+    "next": "Next",
+    "waiting": "Waiting",
+    "scrubHint": "Move the pointer across the card to step through it.",
+    "tapHint": "Tap the dots to step through it.",
+    "railTapHint": "Tap a step to keep it open.",
+    "stepOf": "Step {current} of {total}",
+    "nodeOf": "Stage {current} of {total}",
+    "mixerHint": "Actions on this platform: {count}",
+    "phaseIdle": "Not started yet",
+    "phaseUnlocked": "Content delivered"
   }
 }

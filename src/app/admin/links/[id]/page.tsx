@@ -8,6 +8,8 @@ import { EmptyState, Panel, PanelHeader } from '@/components/admin/panel'
 import { PageHeader } from '@/components/admin/page-header'
 import { StatCard } from '@/components/admin/stat-card'
 import { Badge } from '@/components/ui/badge'
+import { StatusPill } from '@/components/status-pill'
+import { Timestamp } from '@/components/timestamp'
 import { getActionOptionMap } from '@/lib/action-catalog'
 import { prisma } from '@/lib/prisma'
 import { requireAdmin } from '@/lib/session'
@@ -88,17 +90,7 @@ export default async function AdminLinkDetailPage({
       />
 
       <div className="flex flex-wrap items-center gap-2">
-        <Badge
-          variant={
-            link.status === 'ACTIVE'
-              ? 'default'
-              : link.status === 'DISABLED'
-                ? 'destructive'
-                : 'secondary'
-          }
-        >
-          {t(`status.${link.status.toLowerCase()}`)}
-        </Badge>
+        <StatusPill status={link.status} label={t(`status.${link.status.toLowerCase()}`)} />
         <Badge variant="outline">{link.contentType.toLowerCase()}</Badge>
         {openReports > 0 ? (
           <Badge variant="destructive">{t('linkDetail.openReports', { count: openReports })}</Badge>
@@ -151,21 +143,23 @@ export default async function AdminLinkDetailPage({
           <div>
             <dt className="text-muted-foreground">{t('linkDetail.expires')}</dt>
             <dd className="mt-0.5 tabular-nums">
-              {link.expiresAt
-                ? link.expiresAt.toISOString().replace('T', ' ').slice(0, 16)
-                : t('common.noExpiry')}
+              {link.expiresAt ? (
+                <Timestamp value={link.expiresAt} />
+              ) : (
+                t('common.noExpiry')
+              )}
             </dd>
           </div>
           <div>
             <dt className="text-muted-foreground">{t('linkDetail.created')}</dt>
             <dd className="mt-0.5 tabular-nums">
-              {link.createdAt.toISOString().replace('T', ' ').slice(0, 16)}
+              <Timestamp value={link.createdAt} />
             </dd>
           </div>
           <div>
             <dt className="text-muted-foreground">{t('linkDetail.updated')}</dt>
             <dd className="mt-0.5 tabular-nums">
-              {link.updatedAt.toISOString().replace('T', ' ').slice(0, 16)}
+              <Timestamp value={link.updatedAt} />
             </dd>
           </div>
           <div className="sm:col-span-2">
@@ -190,7 +184,7 @@ export default async function AdminLinkDetailPage({
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="border-b border-border text-left text-xs text-muted-foreground">
+              <thead className="border-b border-border text-start text-xs text-muted-foreground">
                 <tr>
                   <th className="px-5 py-3 font-medium">{t('linkDetail.colType')}</th>
                   <th className="px-5 py-3 font-medium">{t('linkDetail.colLabel')}</th>
@@ -228,7 +222,7 @@ export default async function AdminLinkDetailPage({
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="border-b border-border text-left text-xs text-muted-foreground">
+              <thead className="border-b border-border text-start text-xs text-muted-foreground">
                 <tr>
                   <th className="px-5 py-3 font-medium">{t('linkDetail.colCreated')}</th>
                   <th className="px-5 py-3 font-medium">{t('linkDetail.colStatus')}</th>
@@ -239,9 +233,14 @@ export default async function AdminLinkDetailPage({
                 {link.unlocks.map((unlock) => (
                   <tr key={unlock.id} className="hover:bg-muted/40">
                     <td className="px-5 py-3 text-muted-foreground tabular-nums">
-                      {unlock.createdAt.toISOString().replace('T', ' ').slice(0, 16)}
+                      <Timestamp value={unlock.createdAt} />
                     </td>
-                    <td className="px-5 py-3">{t(`status.${unlock.status.toLowerCase()}`)}</td>
+                    <td className="px-5 py-3">
+                      <StatusPill
+                        status={unlock.status}
+                        label={t(`status.${unlock.status.toLowerCase()}`)}
+                      />
+                    </td>
                     <td className="hidden px-5 py-3 font-mono text-xs text-muted-foreground sm:table-cell">
                       {unlock.ipHash?.slice(0, 12) ?? '—'}
                     </td>
@@ -262,7 +261,7 @@ export default async function AdminLinkDetailPage({
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="border-b border-border text-left text-xs text-muted-foreground">
+              <thead className="border-b border-border text-start text-xs text-muted-foreground">
                 <tr>
                   <th className="px-5 py-3 font-medium">{t('linkDetail.colDate')}</th>
                   <th className="px-5 py-3 font-medium">{t('linkDetail.colReason')}</th>
@@ -273,13 +272,14 @@ export default async function AdminLinkDetailPage({
                 {link.abuseReports.map((report) => (
                   <tr key={report.id} className="hover:bg-muted/40">
                     <td className="px-5 py-3 text-muted-foreground tabular-nums">
-                      {report.createdAt.toISOString().replace('T', ' ').slice(0, 16)}
+                      <Timestamp value={report.createdAt} />
                     </td>
                     <td className="px-5 py-3">{tr(`reasons.${report.reason}`)}</td>
                     <td className="px-5 py-3">
-                      <Badge variant={report.status === 'OPEN' ? 'destructive' : 'secondary'}>
-                        {t(`status.${report.status.toLowerCase()}`)}
-                      </Badge>
+                      <StatusPill
+                        status={report.status}
+                        label={t(`status.${report.status.toLowerCase()}`)}
+                      />
                     </td>
                   </tr>
                 ))}

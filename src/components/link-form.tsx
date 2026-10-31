@@ -3,10 +3,13 @@
 import { useMemo, useRef, useState, useTransition } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useTranslations } from 'next-intl'
+import { useTranslations, useLocale } from 'next-intl'
 import {
+  CalendarDays,
+  Check,
   CheckCircle2,
   ChevronDown,
+  ExternalLink,
   FileText,
   Loader2,
   Lock,
@@ -523,7 +526,13 @@ export function LinkForm({
                   {values.actions.map((action, index) => {
                     const option = optionFor(action.type)
                     return (
-                      <li key={index} className="rounded-xl border p-3">
+                      <li
+                        key={index}
+                        className={cn(
+                          'rounded-xl border p-3',
+                          'motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-2 motion-safe:duration-300',
+                        )}
+                      >
                         <div className="flex items-start gap-3">
                           <span className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground">
                             <ActionGlyph
@@ -625,7 +634,12 @@ export function LinkForm({
               </button>
 
               {showMore ? (
-                <div className="space-y-4 border-t p-5">
+                <div
+                  className={cn(
+                    'space-y-4 border-t p-5',
+                    'motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-top-2 motion-safe:duration-300',
+                  )}
+                >
                   <div className="space-y-2">
                     <Label htmlFor="coverImage">{t('coverImageLabel')}</Label>
                     <div className="flex gap-2">
@@ -847,11 +861,30 @@ function LinkPreview({
   options: ActionOptionView[]
 }) {
   const t = useTranslations('linkForm')
+  const locale = useLocale()
   const optionFor = (type: string) => options.find((option) => option.key === type)
   const title = values.title.trim() || t('previewTitleFallback')
   const coverImage = values.coverImage.trim()
   const slug = values.slug.trim()
   const actions = values.actions
+
+  // Everything below is read straight out of the form state: the preview is the
+  // visitor's card with the owner's own inputs in it, not a stand-in picture of
+  // one. Fields that are still empty say so instead of showing invented content.
+  const isFile = values.contentType === 'FILE'
+  const destination = (isFile ? values.fileName : values.targetUrl).trim()
+  const hasDestination = (isFile ? values.fileId.trim() : values.targetUrl.trim()).length > 0
+  const expiry = values.expiresAt ? new Date(values.expiresAt) : null
+  const expiryLabel =
+    expiry && !Number.isNaN(expiry.getTime())
+      ? new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeStyle: 'short' }).format(expiry)
+      : null
+  const checklist = [
+    { label: t('readyTitle'), filled: values.title.trim().length > 0 },
+    { label: t('readyDestination'), filled: hasDestination },
+    { label: t('readySteps'), filled: actions.length > 0 },
+  ]
+  const filled = checklist.filter((item) => item.filled).length
 
   return (
     <div className="lg:sticky lg:top-6">
@@ -866,7 +899,7 @@ function LinkPreview({
           <img
             src={coverImage}
             alt=""
-            className="h-32 w-full object-cover"
+            className="h-32 w-full object-cover transition-[height] duration-300"
             referrerPolicy="no-referrer"
           />
         ) : (
@@ -879,6 +912,26 @@ function LinkPreview({
               {t('sharedByYou')}
             </p>
             <h3 className="text-xl font-semibold tracking-tight">{title}</h3>
+            {destination || expiryLabel ? (
+              <div className="flex flex-wrap gap-1.5 pt-0.5">
+                {destination ? (
+                  <span className="flex max-w-full items-center gap-1.5 rounded-full border bg-muted/50 px-2 py-0.5 text-[0.7rem] text-muted-foreground">
+                    {isFile ? (
+                      <FileText className="size-3 shrink-0" />
+                    ) : (
+                      <ExternalLink className="size-3 shrink-0" />
+                    )}
+                    <span className="truncate">{destination}</span>
+                  </span>
+                ) : null}
+                {expiryLabel ? (
+                  <span className="flex items-center gap-1.5 rounded-full border bg-muted/50 px-2 py-0.5 text-[0.7rem] text-muted-foreground">
+                    <CalendarDays className="size-3 shrink-0" />
+                    {t('previewExpires', { date: expiryLabel })}
+                  </span>
+                ) : null}
+              </div>
+            ) : null}
           </div>
 
           <div className="space-y-2">
@@ -895,7 +948,13 @@ function LinkPreview({
                 const option = optionFor(action.type)
                 const label = action.label.trim() || option?.label || action.type
                 return (
-                  <li key={index} className="flex items-start gap-3 rounded-xl border p-3">
+                  <li
+                    key={index}
+                    className={cn(
+                      'flex items-start gap-3 rounded-xl border p-3',
+                      'motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-2 motion-safe:duration-300',
+                    )}
+                  >
                     <span className="mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-full bg-muted text-xs font-semibold text-muted-foreground">
                       {index + 1}
                     </span>
@@ -926,7 +985,74 @@ function LinkPreview({
             <Lock className="size-4" />
             {t('startUnlocking')}
           </Button>
+
+          {/* The other half of the card: what the visitor is handed once the
+              last step is verified. This is the part owners most want to see
+              and could not see before. */}
+          <div className="rounded-xl border bg-muted/40 p-3">
+            <p className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
+              <CheckCircle2 className="size-3.5 shrink-0 text-emerald-600 dark:text-emerald-400" />
+              {t('previewAfterUnlock')}
+            </p>
+            {hasDestination ? (
+              <p className="mt-1.5 flex items-center gap-2 text-sm">
+                <span className="min-w-0 flex-1 truncate">{destination}</span>
+                <span className="shrink-0 text-[0.7rem] text-muted-foreground">
+                  {isFile ? t('previewDownload') : t('previewOpen')}
+                </span>
+              </p>
+            ) : (
+              <p className="mt-1.5 text-xs text-muted-foreground">{t('previewNoDestination')}</p>
+            )}
+          </div>
         </div>
+      </div>
+
+      {/* Creation progress, from the real fields: nothing here can look like
+          visitor data because every mark is derived from this form. */}
+      <div className="mt-3 rounded-xl border bg-card p-3">
+        <div className="flex items-center justify-between gap-2">
+          <p className="text-xs font-medium">{t('readyHeading')}</p>
+          <p className="text-[0.7rem] text-muted-foreground tabular-nums">
+            {t('readyCount', { done: filled, total: checklist.length })}
+          </p>
+        </div>
+        <div
+          role="progressbar"
+          aria-valuenow={Math.round((filled / checklist.length) * 100)}
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-label={t('readyHeading')}
+          className="mt-2 flex h-1 w-full items-center overflow-hidden rounded-full bg-muted"
+        >
+          {/* Width instead of the shadcn indicator's translateX, which fills from
+              the wrong edge in Arabic. */}
+          <div
+            className="h-full rounded-full bg-primary transition-[width] duration-500 ease-out"
+            style={{ width: `${(filled / checklist.length) * 100}%` }}
+          />
+        </div>
+        <ul className="mt-2 flex flex-wrap gap-x-4 gap-y-1">
+          {checklist.map((item) => (
+            <li
+              key={item.label}
+              className="flex items-center gap-1.5 text-[0.7rem] text-muted-foreground"
+            >
+              <span
+                aria-hidden
+                className={cn(
+                  'flex size-3.5 items-center justify-center rounded-full border transition-colors duration-300',
+                  item.filled
+                    ? 'border-primary bg-primary text-primary-foreground'
+                    : 'border-border',
+                )}
+              >
+                {item.filled ? <Check className="size-2.5" /> : null}
+              </span>
+              {item.label}
+            </li>
+          ))}
+        </ul>
       </div>
 
       <p className="mt-3 text-center text-xs text-muted-foreground">

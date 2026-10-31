@@ -3,6 +3,7 @@ import { getTranslations } from 'next-intl/server'
 
 import { AdminLinksTable } from '@/components/admin/admin-links-table'
 import { FilterTabs } from '@/components/admin/filter-tabs'
+import { NoResults } from '@/components/admin/no-results'
 import { PageHeader } from '@/components/admin/page-header'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -43,6 +44,7 @@ export default async function AdminLinksPage({
   const { q, status } = await searchParams
   const query = (q ?? '').trim().slice(0, 100)
   const filter = parseStatus(status)
+  const filtered = query !== '' || filter !== 'all'
 
   const where = {
     ...(query
@@ -132,7 +134,7 @@ export default async function AdminLinksPage({
 
         <form method="get" className="flex w-full gap-2 sm:max-w-md">
           {filter !== 'all' ? <input type="hidden" name="status" value={filter} /> : null}
-          <Input name="q" defaultValue={query} placeholder={t('links.searchPlaceholder')} />
+          <Input name="q" defaultValue={query} placeholder={t('links.searchPlaceholder')} aria-label={t('links.searchPlaceholder')} />
           <Button type="submit" variant="outline">
             {t('common.search')}
           </Button>
@@ -140,9 +142,12 @@ export default async function AdminLinksPage({
       </div>
 
       {links.length === 0 ? (
-        <p className="rounded-xl border border-dashed border-border bg-card/50 px-5 py-8 text-center text-sm text-muted-foreground">
-          {t('links.noLinks')}
-        </p>
+        <NoResults
+          filtered={filtered}
+          message={filtered ? t('links.noLinks') : t('links.emptyList')}
+          clearLabel={t('common.clearFilters')}
+          clearHref="/admin/links"
+        />
       ) : (
         <AdminLinksTable
           links={links.map((link) => ({

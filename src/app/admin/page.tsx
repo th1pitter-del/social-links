@@ -16,8 +16,12 @@ import { KpiHero } from '@/components/admin/kpi-hero'
 import { ModelDistribution } from '@/components/admin/model-distribution'
 import { PageHeader } from '@/components/admin/page-header'
 import { StatCard } from '@/components/admin/stat-card'
+import { StatusPill } from '@/components/status-pill'
+import { Timestamp } from '@/components/timestamp'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { getActionMix } from '@/lib/action-mix'
+import { buildHeatBuckets, windowStart, HEAT_DAYS } from '@/lib/activity-buckets'
 import { prisma } from '@/lib/prisma'
 
 export async function generateMetadata() {
@@ -25,38 +29,9 @@ export async function generateMetadata() {
   return { title: t('overview') }
 }
 
-function startOfWindow(days: number) {
-  const since = new Date()
-  since.setHours(0, 0, 0, 0)
-  since.setDate(since.getDate() - (days - 1))
-  return since
-}
-
 function dayLabel(iso: string, locale: string) {
   const date = new Date(`${iso}T00:00:00`)
   return date.toLocaleDateString(locale, { month: 'short', day: 'numeric' })
-}
-
-function formatTime(value: Date) {
-  return value.toISOString().replace('T', ' ').slice(0, 16)
-}
-
-function daysAgo(days: number) {
-  return new Date(Date.now() - days * 24 * 60 * 60 * 1000)
-}
-
-function buildHeatValues(recentActivity: Array<{ createdAt: Date }>) {
-  return Array.from({ length: 84 }, (_, index) => {
-    const bucketStart = daysAgo(84 - index)
-    bucketStart.setHours(0, 0, 0, 0)
-    const bucketEnd = new Date(bucketStart)
-    bucketEnd.setDate(bucketEnd.getDate() + 1)
-    let total = 0
-    for (const event of recentActivity) {
-      if (event.createdAt >= bucketStart && event.createdAt < bucketEnd) total += 1
-    }
-    return total
-  })
 }
 
 export default async function AdminOverviewPage() {
@@ -65,7 +40,7 @@ export default async function AdminOverviewPage() {
     getTranslations('report'),
     getLocale(),
   ])
-  const since = startOfWindow(14)
+  const since = windowStart(14)
 
   const [
     users,
@@ -121,7 +96,7 @@ export default async function AdminOverviewPage() {
       take: 5,
     }),
     prisma.analyticsEvent.findMany({
-      where: { createdAt: { gte: daysAgo(90) } },
+      where: { createdAt: { gte: windowStart(HEAT_DAYS) } },
       select: { createdAt: true },
     }),
   ])
@@ -173,14 +148,9 @@ export default async function AdminOverviewPage() {
     { label: t('overview.openReports'), value: openReports, icon: Flag, tone: 'rose' as const },
   ]
 
-  const heatValues = buildHeatValues(recentActivity)
+  const heat = buildHeatBuckets(recentActivity)
 
-  const distribution = [
-    { label: t('overview.youtubeActions'), value: Math.max(1, Math.round(views * 0.42)), percent: views > 0 ? Math.round((Math.max(1, Math.round(views * 0.42)) / Math.max(1, views)) * 100) : 42 },
-    { label: t('overview.followActions'), value: Math.max(1, Math.round(views * 0.28)), percent: views > 0 ? Math.round((Math.max(1, Math.round(views * 0.28)) / Math.max(1, views)) * 100) : 28 },
-    { label: t('overview.visitActions'), value: Math.max(1, Math.round(views * 0.18)), percent: views > 0 ? Math.round((Math.max(1, Math.round(views * 0.18)) / Math.max(1, views)) * 100) : 18 },
-    { label: t('overview.emailCapture'), value: Math.max(1, Math.round(views * 0.12)), percent: views > 0 ? Math.round((Math.max(1, Math.round(views * 0.12)) / Math.max(1, views)) * 100) : 12 },
-  ]
+  const actionMix = await getActionMix()
 
   return (
     <div className="space-y-6">
@@ -229,6 +199,7 @@ export default async function AdminOverviewPage() {
           <PanelContent>
             <BarChart
               points={points}
+              startDate={since}
               primaryLabel={t('overview.chartViews')}
               secondaryLabel={t('overview.chartUnlocks')}
             />
@@ -240,7 +211,7 @@ export default async function AdminOverviewPage() {
             description={t('overview.executionDescription')}
           />
           <PanelContent>
-            <ActivityHeatmap values={heatValues} />
+            <ActivityHeatmap values={heat.values} startDate={heat.startDate} />
           </PanelContent>
         </Panel>
       </div>
@@ -275,7 +246,7 @@ export default async function AdminOverviewPage() {
                       </Link>
                     </div>
                     <p className="mt-1 text-xs text-muted-foreground">
-                      {formatTime(report.createdAt)}
+                      <Timestamp value={report.createdAt} />
                     </p>
                   </div>
                 </li>
@@ -339,12 +310,12 @@ export default async function AdminOverviewPage() {
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
-                <thead className="border-b border-border text-left text-xs text-muted-foreground">
+                <thead className="border-b border-border text-start text-xs text-muted-foreground">
                   <tr>
                     <th className="px-5 py-3 font-medium">{t('overview.colLink')}</th>
                     <th className="hidden px-5 py-3 font-medium sm:table-cell">{t('overview.colOwner')}</th>
                     <th className="hidden px-5 py-3 font-medium md:table-cell">{t('overview.colStatus')}</th>
-                    <th className="px-5 py-3 text-right font-medium">{t('overview.colViews')}</th>
+                    <th className="px-5 py-3 text-end font-medium">{t('overview.colViews')}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border">
@@ -366,11 +337,12 @@ export default async function AdminOverviewPage() {
                           {link.owner?.email ?? t('common.guest')}
                         </td>
                         <td className="hidden px-5 py-3 md:table-cell">
-                          <Badge variant={link.status === 'ACTIVE' ? 'default' : 'secondary'}>
-                            {t(`status.${link.status.toLowerCase()}`)}
-                          </Badge>
+                          <StatusPill
+                            status={link.status}
+                            label={t(`status.${link.status.toLowerCase()}`)}
+                          />
                         </td>
-                        <td className="px-5 py-3 text-right font-medium tabular-nums">
+                        <td className="px-5 py-3 text-end font-medium tabular-nums">
                           {group._count.linkId}
                         </td>
                       </tr>
@@ -387,7 +359,14 @@ export default async function AdminOverviewPage() {
             description={t('overview.actionDistributionDescription')}
           />
           <PanelContent>
-            <ModelDistribution items={distribution} />
+            {actionMix.items.length === 0 ? (
+              <p className="text-sm text-muted-foreground">{t('overview.actionMixEmpty')}</p>
+            ) : (
+              <ModelDistribution
+                items={actionMix.items}
+                valueLabel={t('overview.completedSteps', { count: actionMix.total })}
+              />
+            )}
           </PanelContent>
         </Panel>
       </div>

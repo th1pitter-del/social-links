@@ -3,6 +3,7 @@ import { getTranslations } from 'next-intl/server'
 
 import { AdminUsersTable } from '@/components/admin/admin-users-table'
 import { FilterTabs } from '@/components/admin/filter-tabs'
+import { NoResults } from '@/components/admin/no-results'
 import { PageHeader } from '@/components/admin/page-header'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -39,6 +40,7 @@ export default async function AdminUsersPage({
   const { q, status } = await searchParams
   const query = (q ?? '').trim().slice(0, 100)
   const filter = parseStatus(status)
+  const filtered = query !== '' || filter !== 'all'
 
   const where = {
     ...(query
@@ -115,7 +117,7 @@ export default async function AdminUsersPage({
 
         <form method="get" className="flex w-full gap-2 sm:max-w-md">
           {filter !== 'all' ? <input type="hidden" name="status" value={filter} /> : null}
-          <Input name="q" defaultValue={query} placeholder={t('users.searchPlaceholder')} />
+          <Input name="q" defaultValue={query} placeholder={t('users.searchPlaceholder')} aria-label={t('users.searchPlaceholder')} />
           <Button type="submit" variant="outline">
             {t('common.search')}
           </Button>
@@ -123,9 +125,12 @@ export default async function AdminUsersPage({
       </div>
 
       {users.length === 0 ? (
-        <p className="rounded-xl border border-dashed border-border bg-card/50 px-5 py-8 text-center text-sm text-muted-foreground">
-          {t('users.noUsers')}
-        </p>
+        <NoResults
+          filtered={filtered}
+          message={filtered ? t('users.noUsers') : t('users.emptyList')}
+          clearLabel={t('common.clearFilters')}
+          clearHref="/admin/users"
+        />
       ) : (
         <AdminUsersTable
           currentUserId={session.user.id}

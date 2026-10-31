@@ -266,7 +266,7 @@ export function PlatformsTable({ initial }: { initial: Platform[] }) {
   return (
     <Panel>
       <div className="grid md:grid-cols-[16rem_1fr]">
-        <aside className="flex flex-col border-b border-border md:border-b-0 md:border-r">
+        <aside className="flex flex-col border-b border-border md:border-b-0 md:border-e">
           <div className="border-b border-border p-3">
             <div className="relative">
               <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
@@ -309,7 +309,7 @@ export function PlatformsTable({ initial }: { initial: Platform[] }) {
                   aria-selected={isActive}
                   onClick={() => setActiveKey(platform.key)}
                   className={cn(
-                    'flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-left text-sm transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring',
+                    'flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-start text-sm transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring',
                     isActive
                       ? 'bg-muted font-medium text-foreground'
                       : 'text-muted-foreground hover:bg-muted/60 hover:text-foreground',
@@ -326,7 +326,7 @@ export function PlatformsTable({ initial }: { initial: Platform[] }) {
                       {tc('off')}
                     </Badge>
                   ) : null}
-                  <span className="ml-auto shrink-0 text-xs tabular-nums text-muted-foreground">
+                  <span className="ms-auto shrink-0 text-xs tabular-nums text-muted-foreground">
                     {enabledCount}/{platform.actionOptions.length}
                   </span>
                 </button>

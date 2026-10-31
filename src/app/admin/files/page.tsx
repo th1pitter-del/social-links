@@ -4,6 +4,7 @@ import { getTranslations } from 'next-intl/server'
 import { FileRowActions } from '@/components/admin/file-row-actions'
 import { EmptyState, Panel, PanelHeader } from '@/components/admin/panel'
 import { PageHeader } from '@/components/admin/page-header'
+import { Timestamp } from '@/components/timestamp'
 import { StatCard } from '@/components/admin/stat-card'
 import { prisma } from '@/lib/prisma'
 import { requireAdmin } from '@/lib/session'
@@ -69,14 +70,14 @@ export default async function AdminFilesPage() {
           <PanelHeader title={t('files.panelTitle')} description={t('files.panelDescription')} />
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="border-b border-border text-left text-xs text-muted-foreground">
+              <thead className="border-b border-border text-start text-xs text-muted-foreground">
                 <tr>
                   <th className="px-5 py-3 font-medium">{t('files.colFile')}</th>
                   <th className="hidden px-5 py-3 font-medium sm:table-cell">{t('files.colOwner')}</th>
                   <th className="hidden px-5 py-3 font-medium md:table-cell">{t('files.colSize')}</th>
                   <th className="hidden px-5 py-3 font-medium lg:table-cell">{t('files.colLinks')}</th>
                   <th className="hidden px-5 py-3 font-medium lg:table-cell">{t('files.colUploaded')}</th>
-                  <th className="px-5 py-3 text-right font-medium">{t('files.colActions')}</th>
+                  <th className="px-5 py-3 text-end font-medium">{t('files.colActions')}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
@@ -102,9 +103,9 @@ export default async function AdminFilesPage() {
                       )}
                     </td>
                     <td className="hidden px-5 py-3 text-muted-foreground lg:table-cell tabular-nums">
-                      {file.createdAt.toISOString().replace('T', ' ').slice(0, 16)}
+                      {<Timestamp value={file.createdAt} />}
                     </td>
-                    <td className="px-5 py-3 text-right">
+                    <td className="px-5 py-3 text-end">
                       <FileRowActions fileId={file.id} filename={file.filename} />
                     </td>
                   </tr>

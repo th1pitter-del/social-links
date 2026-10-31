@@ -8,6 +8,8 @@ import { toast } from 'sonner'
 
 import { UserRowActions } from '@/components/admin/user-row-actions'
 import { Badge } from '@/components/ui/badge'
+import { StatusPill } from '@/components/status-pill'
+import { Timestamp } from '@/components/timestamp'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { bulkSetUserBanned } from '@/lib/actions/admin'
@@ -20,10 +22,6 @@ export type AdminUserRow = {
   banned: boolean
   linkCount: number
   createdAt: string
-}
-
-function formatJoined(iso: string) {
-  return iso.slice(0, 10)
 }
 
 export function AdminUsersTable({
@@ -81,7 +79,7 @@ export function AdminUsersTable({
       {selected.size > 0 ? (
         <div className="flex flex-wrap items-center gap-2 rounded-xl border border-primary/40 bg-primary/10 px-4 py-2 text-sm">
           <span className="font-medium text-accent-text">{t('common.selected', { count: selected.size })}</span>
-          <div className="ml-auto flex gap-2">
+          <div className="ms-auto flex gap-2">
             <Button size="sm" variant="outline" disabled={pending} onClick={() => bulk(false)}>
               {t('common.unban')}
             </Button>
@@ -102,7 +100,7 @@ export function AdminUsersTable({
 
       <div className="overflow-x-auto rounded-xl border border-border bg-card shadow-sm">
         <table className="w-full text-sm">
-          <thead className="border-b border-border text-left text-xs text-muted-foreground">
+          <thead className="border-b border-border text-start text-xs text-muted-foreground">
             <tr>
               <th className="w-10 px-5 py-3">
                 <Checkbox
@@ -116,7 +114,7 @@ export function AdminUsersTable({
               <th className="hidden px-5 py-3 font-medium lg:table-cell">{t('users.colLinks')}</th>
               <th className="hidden px-5 py-3 font-medium lg:table-cell">{t('users.colJoined')}</th>
               <th className="px-5 py-3 font-medium">{t('users.colStatus')}</th>
-              <th className="px-5 py-3 text-right font-medium">{t('users.colActions')}</th>
+              <th className="px-5 py-3 text-end font-medium">{t('users.colActions')}</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
@@ -145,16 +143,15 @@ export function AdminUsersTable({
                   {user.linkCount}
                 </td>
                 <td className="hidden px-5 py-4 text-muted-foreground lg:table-cell tabular-nums">
-                  {formatJoined(user.createdAt)}
+                  <Timestamp value={new Date(user.createdAt)} withTime={false} />
                 </td>
                 <td className="px-5 py-4">
-                  {user.banned ? (
-                    <Badge variant="destructive">{t('status.banned')}</Badge>
-                  ) : (
-                    <Badge variant="outline">{t('status.active')}</Badge>
-                  )}
+                  <StatusPill
+                    status={user.banned ? 'BANNED' : 'ACTIVE'}
+                    label={t(user.banned ? 'status.banned' : 'status.active')}
+                  />
                 </td>
-                <td className="px-5 py-4 text-right">
+                <td className="px-5 py-4 text-end">
                   <UserRowActions
                     userId={user.id}
                     role={user.role}

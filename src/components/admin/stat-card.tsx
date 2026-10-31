@@ -1,4 +1,4 @@
-import type { ComponentType } from 'react'
+import type { ComponentType, ReactNode } from 'react'
 
 import { cn } from 'cn'
 
@@ -50,7 +50,7 @@ export function StatCard({
   tone = 'indigo',
 }: {
   label: string
-  value: string | number
+  value: ReactNode
   icon: ComponentType<{ className?: string }>
   hint?: string
   tone?: StatTone
@@ -66,9 +66,9 @@ export function StatCard({
     >
       <span
         aria-hidden
-        className={cn('absolute inset-y-0 left-0 w-1 bg-gradient-to-b', colors.bar)}
+        className={cn('absolute inset-y-0 start-0 w-1 bg-gradient-to-b', colors.bar)}
       />
-      <div className="flex items-start justify-between gap-3 pl-1.5">
+      <div className="flex items-start justify-between gap-3 ps-1.5">
         <div className="min-w-0">
           <p className="text-xs font-medium tracking-wide text-muted-foreground uppercase">{label}</p>
           <p className="mt-2 text-2xl font-semibold tracking-tight text-foreground">{value}</p>

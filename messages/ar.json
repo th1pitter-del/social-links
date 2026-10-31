@@ -72,6 +72,7 @@
     "signIn": "تسجيل الدخول",
     "signUp": "إنشاء حساب",
     "dashboard": "لوحة التحكم",
+    "account": "الحساب",
     "getStarted": "ابدأ الآن",
     "createLink": "أنشئ رابطك",
     "language": "اللغة",
@@ -90,6 +91,7 @@
     "videoCompressor": "ضاغط الفيديو",
     "videoDownloader": "منزّل الفيديو",
     "menu": "القائمة",
+    "sections": "التنقل",
     "contact": "اتصل بنا",
     "privacy": "الخصوصية",
     "terms": "الشروط"
@@ -132,7 +134,18 @@
       "stepDone": "الاشتراك في يوتيوب",
       "completed": "مكتمل",
       "stepNext": "الإجراء الأخير المطلوب",
-      "required": "مطلوب · يُوثَّق عند إكماله"
+      "required": "مطلوب · يُوثَّق عند إكماله",
+      "diagramTitle": "ما يحدث بين النقرة والوصول إلى المحتوى",
+      "nodes": {
+        "visitor": "فتح الرابط",
+        "visitorDetail": "رابط قصير واحد — بلا تطبيق أو حساب للبدء.",
+        "action": "تنفيذ الإجراء",
+        "actionDetail": "يتابع أو يشترك أو يشاهد أو يستمع إلى وجهتك.",
+        "verify": "تحقق الخادم",
+        "verifyDetail": "لا تُحتسب الخطوة إلا عندما يؤكد خادمنا إتمامها.",
+        "deliver": "تسليم المحتوى",
+        "deliverDetail": "رابط موقّع ومعرّض للانتهاء يسلّم الوجهة."
+      }
     },
     "featuresTitle": "كل ما تحتاجه، مجانًا",
     "features": {
@@ -172,13 +185,33 @@
     "verificationNote": "بعض الإجراءات يمكن طلبها لكن لا يمكن للمنصة التحقق منها تلقائيًا. نصنّف كل إجراء بصدق بدلًا من ادعاء تحقق لا نستطيع تنفيذه.",
     "ctaTitle": "ابدأ بمشاركة الروابط المقفلة اليوم",
     "ctaBody": "مجاني للمبدعين. بلا خطط مدفوعة أو فواتير اشتراك.",
-    "ctaButton": "أنشئ رابطك"
+    "ctaButton": "أنشئ رابطك",
+    "stepsIntro": "ثلاث خطوات، وجمهورك يرى الخطوة التي هو فيها فقط.",
+    "demo": {
+      "label": "رابط مثال — معاينة محاكاة",
+      "linkTitle": "مقطع تشويقي لم يُنشر بعد",
+      "linkBody": "سيختفي من التغذية العامة فور تبديله.",
+      "revealLabel": "إلى أين يصل الرابط",
+      "revealValue": "example.com/artist/teaser",
+      "sampleContent": "النسخة الكاملة مدتها ٣:٤٢ — احصل عليها قبل أن تُحذف.",
+      "tag": "محاكاة"
+    },
+    "funnel": {
+      "views": "المشاهدات",
+      "unlocks": "بدء الفتح",
+      "completed": "المكتملة"
+    },
+    "supportedActionsBody": "المفعّلة في هذا النشر. اختر منصة لترى ما يمكن أن يطلبه الرابط."
   },
   "auth": {
     "layout": {
       "agreementBefore": "بالمتابعة فإنك توافق على",
       "and": "و",
       "agreementAfter": "."
+    },
+    "password": {
+      "show": "إظهار كلمة المرور",
+      "hide": "إخفاء كلمة المرور"
     },
     "signIn": {
       "title": "مرحبًا بعودتك",
@@ -385,7 +418,9 @@
       "disable": "تعطيل",
       "unban": "رفع الحظر",
       "ban": "حظر",
-      "selected": "تم تحديد {count}"
+      "selected": "تم تحديد {count}",
+      "clearFilters": "مسح عوامل التصفية",
+      "loading": "جارٍ التحميل…"
     },
     "overview": {
       "title": "نظرة عامة على المنصة",
@@ -404,8 +439,10 @@
       "activityDescription": "الأحداث اليومية للمشاهدات وعمليات الفتح المكتملة.",
       "chartViews": "المشاهدات",
       "chartUnlocks": "عمليات الفتح",
+      "chartDays": "{days} يومًا",
+      "chartShareOfTotal": "{percent}% من إجمالي الفترة",
       "executionTitle": "نشاط التنفيذ",
-      "executionDescription": "خريطة حرارية لآخر 90 يومًا",
+      "executionDescription": "خريطة حرارية لآخر 84 يومًا",
       "heatmapLess": "أقل",
       "heatmapMore": "أكثر",
       "heatmapTooltip": "{count} حدثًا",
@@ -421,11 +458,10 @@
       "colStatus": "الحالة",
       "colViews": "المشاهدات",
       "actionDistribution": "توزيع الإجراءات",
-      "actionDistributionDescription": "مزيج الاستخدام حسب نوع الإجراء",
-      "youtubeActions": "إجراءات يوتيوب",
-      "followActions": "إجراءات المتابعة",
-      "visitActions": "إجراءات الزيارة",
-      "emailCapture": "جمع البريد الإلكتروني"
+      "actionDistributionDescription": "خطوات الإجراء المكتملة حسب المنصة",
+      "heatmapSummary": "{count} حدثًا خلال {days} يومًا",
+      "actionMixEmpty": "لم يُتم أي زائر خطوة إجراء بعد.",
+      "completedSteps": "{count} خطوات مكتملة"
     },
     "audit": {
       "title": "سجل التدقيق",
@@ -511,7 +547,8 @@
       "colActions": "الإجراءات",
       "bulkEnabledToast": "تم تفعيل {count} رابط.",
       "bulkDisabledToast": "تم تعطيل {count} رابط.",
-      "selectLink": "تحديد {title}"
+      "selectLink": "تحديد {title}",
+      "emptyList": "لا توجد روابط بعد."
     },
     "linkDetail": {
       "backToLinks": "← كل الروابط",
@@ -575,7 +612,8 @@
       "colActions": "الإجراءات",
       "bulkBannedToast": "تم حظر {count} مستخدم.",
       "bulkUnbannedToast": "تم رفع الحظر عن {count} مستخدم.",
-      "selectUser": "تحديد {email}"
+      "selectUser": "تحديد {email}",
+      "emptyList": "لا يوجد مستخدمون بعد."
     },
     "userDetail": {
       "backToUsers": "← كل المستخدمين",
@@ -863,17 +901,22 @@
       "completedUnlocks": "عمليات فك القفل المكتملة",
       "conversionFromViews": "{percent}% معدل التحويل من المشاهدات المسجّلة",
       "heatmapTitle": "خريطة النشاط",
-      "heatmapDescription": "آخر 90 يومًا",
+      "heatmapDescription": "آخر 84 يومًا",
       "recentLinks": "أحدث الروابط",
       "noLinksYet": "لم تنشئ أي روابط بعد.",
       "createFirstLink": "أنشئ أول رابط لك",
       "sessionsCount": "{count} جلسة",
       "actionMix": "توزيع الإجراءات",
-      "actionMixDescription": "تقدير بناءً على النشاط الأخير",
-      "youtubeActions": "إجراءات يوتيوب",
-      "followActions": "إجراءات المتابعة",
-      "visitActions": "إجراءات الزيارة",
-      "emailCapture": "التقاط البريد"
+      "actionMixDescription": "خطوات الإجراء المكتملة حسب المنصة",
+      "funnelTitle": "مسار فك القفل",
+      "funnelDescription": "الأحداث المسجلة، منذ البداية",
+      "funnelEmpty": "لا توجد مشاهدات مسجلة بعد. يمتلئ المسار عندما يصل الزوار.",
+      "continuedFrom": "{percent}% من {from}",
+      "createdOn": "أُنشئ في {date}",
+      "expiresOn": "ينتهي في {date}",
+      "eventsCount": "{count} حدثًا",
+      "completedSteps": "{count} خطوات مكتملة",
+      "actionMixEmpty": "لم يُتم أي زائر خطوة إجراء بعد."
     },
     "links": {
       "title": "روابطي",
@@ -897,14 +940,20 @@
       "statViews": "المشاهدات",
       "statStarts": "بدايات فك القفل",
       "statCompleted": "عمليات فك القفل المكتملة",
-      "conversionHint": "{percent}% معدل التحويل",
+      "funnelTitle": "من الزيارة إلى الفتح",
+      "funnelDescription": "كل رقم هو حدث محفوظ لهذا الرابط.",
+      "shareOfViews": "{percent}% من المشاهدات",
+      "shareOfStarts": "{percent}% من عمليات البدء",
+      "noVisits": "لا توجد زيارات مسجلة بعد.",
       "publicUrl": "الرابط العام لفك القفل",
       "leadsTitle": "عناوين البريد الإلكتروني المجموعة",
       "leadsDescription": "يمكنك أنت فقط عرض العناوين التي جُمِّعت عبر هذا الرابط أو تصديرها.",
       "noLeads": "لم يتم جمع أي عناوين بعد.",
       "colEmail": "البريد الإلكتروني",
       "colConsent": "الموافقة الممنوحة",
-      "hiddenAction": "{label} (مخفي)"
+      "hiddenAction": "{label} (مخفي)",
+      "activityTitle": "المشاهدات وعمليات الفتح المكتملة",
+      "lastDays": "آخر {days} يومًا"
     },
     "analytics": {
       "title": "التحليلات",
@@ -1178,6 +1227,16 @@
     "collectsEmailLong": "يجمع عنوان بريد إلكتروني",
     "opensNewTab": "يفتح في تبويب جديد",
     "startUnlocking": "ابدأ فك القفل",
+    "previewAfterUnlock": "بعد الخطوة الأخيرة",
+    "previewOpen": "فتح",
+    "previewDownload": "تنزيل",
+    "previewNoDestination": "أضف وجهة لترى ما يستلمه الزائر.",
+    "previewExpires": "تنتهي في {date}",
+    "readyHeading": "قبل النشر",
+    "readyCount": "اكتمل {done} من {total}",
+    "readyTitle": "عنوان",
+    "readyDestination": "وجهة",
+    "readySteps": "خطوة واحدة على الأقل",
     "willBeLiveAt": "سيكون رابطك متاحًا على /u/{slug}",
     "previewNote": "هكذا سيرى الزوار رابطك."
   },
@@ -1218,5 +1277,21 @@
   "email": {
     "resetPasswordSubject": "أعد تعيين كلمة المرور لتطبيق {site}",
     "resetPasswordBody": "مرحبًا {name}،\n\nأعد تعيين كلمة المرور الخاصة بك باستخدام هذا الرابط (صالح لمدة ساعة واحدة):\n{url}\n\nإذا لم تطلب هذا بنفسك، يمكنك تجاهل هذا البريد الإلكتروني."
+  },
+  "motion": {
+    "phase": "المرحلة {current} من {total}",
+    "pause": "إيقاف مؤقت",
+    "play": "تشغيل",
+    "replay": "إعادة التشغيل",
+    "next": "التالية",
+    "waiting": "في الانتظار",
+    "scrubHint": "حرّك المؤشر فوق البطاقة للانتقال بين الخطوات.",
+    "tapHint": "انقر على النقاط للانتقال بين الخطوات.",
+    "railTapHint": "اضغط على خطوة لإبقائها مفتوحة.",
+    "stepOf": "الخطوة {current} من {total}",
+    "nodeOf": "المرحلة {current} من {total}",
+    "mixerHint": "الإجراءات على هذه المنصة: {count}",
+    "phaseIdle": "لم يبدأ بعد",
+    "phaseUnlocked": "تم تسليم المحتوى"
   }
 }

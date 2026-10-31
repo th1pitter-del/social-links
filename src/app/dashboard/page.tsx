@@ -1,14 +1,19 @@
 import Link from 'next/link'
-import { ArrowUpRight, Eye, Link2, MousePointerClick, Rocket } from 'lucide-react'
+import { ArrowUpRight } from 'lucide-react'
 import { getLocale, getTranslations } from 'next-intl/server'
 
 import { ActivityHeatmap } from '@/components/admin/activity-heatmap'
 import { KpiHero } from '@/components/admin/kpi-hero'
 import { ModelDistribution } from '@/components/admin/model-distribution'
-import { Panel, PanelContent, PanelHeader } from '@/components/admin/panel'
+import { EmptyState, Panel, PanelContent, PanelHeader } from '@/components/admin/panel'
+import { FunnelStages } from '@/components/dashboard/funnel-stages'
+import { StatusPill, statusTone } from '@/components/status-pill'
 import { Button } from '@/components/ui/button'
+import { getActionMix } from '@/lib/action-mix'
+import { buildHeatBuckets } from '@/lib/activity-buckets'
 import { prisma } from '@/lib/prisma'
 import { requireUser } from '@/lib/session'
+import { cn } from 'cn'
 
 export async function generateMetadata() {
   const t = await getTranslations('dashboard.meta')
@@ -19,20 +24,6 @@ function daysAgo(days: number) {
   return new Date(Date.now() - days * 24 * 60 * 60 * 1000)
 }
 
-function buildHeatValues(recentActivity: Array<{ createdAt: Date }>) {
-  return Array.from({ length: 84 }, (_, index) => {
-    const bucketStart = daysAgo(84 - index)
-    bucketStart.setHours(0, 0, 0, 0)
-    const bucketEnd = new Date(bucketStart)
-    bucketEnd.setDate(bucketEnd.getDate() + 1)
-    let total = 0
-    for (const event of recentActivity) {
-      if (event.createdAt >= bucketStart && event.createdAt < bucketEnd) total += 1
-    }
-    return total
-  })
-}
-
 export default async function DashboardOverviewPage() {
   const session = await requireUser()
   const t = await getTranslations('dashboard.overview')
@@ -41,13 +32,17 @@ export default async function DashboardOverviewPage() {
   const locale = await getLocale()
   const ownerId = session.user.id
 
-  const [linkCount, activeCount, views, unlockStarts, completed, recentLinks, recentActivity] =
+  const [linkCount, views, unlockStarts, completed, statusByLink, recentLinks, recentActivity] =
     await Promise.all([
       prisma.link.count({ where: { ownerId } }),
-      prisma.link.count({ where: { ownerId, status: 'ACTIVE' } }),
       prisma.analyticsEvent.count({ where: { type: 'VIEW', link: { ownerId } } }),
       prisma.analyticsEvent.count({ where: { type: 'UNLOCK_START', link: { ownerId } } }),
       prisma.analyticsEvent.count({ where: { type: 'UNLOCK_COMPLETE', link: { ownerId } } }),
+      prisma.link.groupBy({
+        by: ['status'],
+        where: { ownerId },
+        _count: { _all: true },
+      }),
       prisma.link.findMany({
         where: { ownerId },
         orderBy: { createdAt: 'desc' },
@@ -58,7 +53,8 @@ export default async function DashboardOverviewPage() {
           title: true,
           status: true,
           createdAt: true,
-          _count: { select: { unlocks: true } },
+          expiresAt: true,
+          _count: { select: { unlocks: true, events: true } },
         },
       }),
       prisma.analyticsEvent.findMany({
@@ -67,23 +63,41 @@ export default async function DashboardOverviewPage() {
       }),
     ])
 
+  const actionMix = await getActionMix(ownerId)
+  const heat = buildHeatBuckets(recentActivity)
+
   const conversion = views > 0 ? Math.round((completed / views) * 100) : 0
+  const dateFormatter = new Intl.DateTimeFormat(locale, { dateStyle: 'medium' })
+  const startsShare = views > 0 ? Math.round((unlockStarts / views) * 100) : 0
+  const completedShare = views > 0 ? Math.round((completed / views) * 100) : 0
 
-  const stats = [
-    { label: t('statLinks'), value: linkCount, hint: t('activeHint', { count: activeCount }), icon: Link2 },
-    { label: t('statViews'), value: views, hint: t('allTime'), icon: Eye },
-    { label: t('statUnlockStarts'), value: unlockStarts, hint: t('allTime'), icon: Rocket },
-    { label: t('statConversions'), value: completed, hint: t('percentOfViews', { percent: conversion }), icon: MousePointerClick },
+  const stages = [
+    { label: t('statViews'), value: views, share: 100, note: t('allTime') },
+    {
+      label: t('statUnlockStarts'),
+      value: unlockStarts,
+      share: startsShare,
+      note: t('continuedFrom', { percent: startsShare, from: t('statViews').toLowerCase() }),
+    },
+    {
+      label: t('completedUnlocks'),
+      value: completed,
+      share: completedShare,
+      note: t('continuedFrom', {
+        percent: unlockStarts > 0 ? Math.round((completed / unlockStarts) * 100) : 0,
+        from: t('statUnlockStarts').toLowerCase(),
+      }),
+    },
   ]
 
-  const heatValues = buildHeatValues(recentActivity)
-
-  const distribution = [
-    { label: t('youtubeActions'), value: Math.max(1, Math.round(views * 0.42)), percent: views > 0 ? Math.round((Math.max(1, Math.round(views * 0.42)) / Math.max(1, views)) * 100) : 42 },
-    { label: t('followActions'), value: Math.max(1, Math.round(views * 0.28)), percent: views > 0 ? Math.round((Math.max(1, Math.round(views * 0.28)) / Math.max(1, views)) * 100) : 28 },
-    { label: t('visitActions'), value: Math.max(1, Math.round(views * 0.18)), percent: views > 0 ? Math.round((Math.max(1, Math.round(views * 0.18)) / Math.max(1, views)) * 100) : 18 },
-    { label: t('emailCapture'), value: Math.max(1, Math.round(views * 0.12)), percent: views > 0 ? Math.round((Math.max(1, Math.round(views * 0.12)) / Math.max(1, views)) * 100) : 12 },
-  ]
+  const statusRows = statusByLink
+    .slice()
+    .sort((a, b) => b._count._all - a._count._all)
+    .map((row) => ({
+      status: row.status,
+      label: ts(row.status.toLowerCase()),
+      count: row._count._all,
+    }))
 
   return (
     <div className="space-y-8">
@@ -111,22 +125,47 @@ export default async function DashboardOverviewPage() {
         <Panel>
           <PanelHeader title={t('heatmapTitle')} description={t('heatmapDescription')} />
           <PanelContent>
-            <ActivityHeatmap values={heatValues} />
+            <ActivityHeatmap values={heat.values} startDate={heat.startDate} />
           </PanelContent>
         </Panel>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {stats.map((stat) => (
-          <div key={stat.label} className="rounded-2xl border bg-card p-5">
-            <div className="flex items-center justify-between text-muted-foreground">
-              <span className="text-sm">{stat.label}</span>
-              <stat.icon className="size-4" />
-            </div>
-            <p className="mt-3 text-3xl font-semibold tracking-tight">{stat.value}</p>
-            <p className="mt-1 text-xs text-muted-foreground">{stat.hint}</p>
-          </div>
-        ))}
+      <div className="grid gap-4 lg:grid-cols-3">
+        <Panel>
+          <PanelHeader title={t('statLinks')} description={t('allTime')} />
+          <PanelContent>
+            <p className="text-4xl font-semibold tracking-tight tabular-nums">
+              {linkCount.toLocaleString(locale)}
+            </p>
+            {statusRows.length === 0 ? (
+              <p className="mt-3 text-xs text-muted-foreground">{t('noLinksYet')}</p>
+            ) : (
+              <ul className="mt-3 space-y-2">
+                {statusRows.map((row) => (
+                  <li key={row.status} className="flex items-center gap-2 text-xs">
+                    <span
+                      aria-hidden
+                      className={cn('size-2 shrink-0 rounded-full', statusTone(row.status))}
+                    />
+                    <span className="min-w-0 flex-1 truncate text-muted-foreground">{row.label}</span>
+                    <span className="shrink-0 font-medium tabular-nums">{row.count}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </PanelContent>
+        </Panel>
+
+        <Panel className="lg:col-span-2">
+          <PanelHeader title={t('funnelTitle')} description={t('funnelDescription')} />
+          <PanelContent>
+            {views > 0 ? (
+              <FunnelStages stages={stages} locale={locale} />
+            ) : (
+              <EmptyState>{t('funnelEmpty')}</EmptyState>
+            )}
+          </PanelContent>
+        </Panel>
       </div>
 
       <div className="grid gap-4 lg:grid-cols-3">
@@ -143,34 +182,45 @@ export default async function DashboardOverviewPage() {
             }
           />
           {recentLinks.length === 0 ? (
-            <PanelContent>
-              <div className="py-8 text-center">
-                <p className="text-sm text-muted-foreground">{t('noLinksYet')}</p>
-                <Button className="mt-4" asChild>
-                  <Link href="/dashboard/links/new">{t('createFirstLink')}</Link>
-                </Button>
-              </div>
+            <PanelContent className="text-center">
+              <EmptyState>{t('noLinksYet')}</EmptyState>
+              <Button className="mt-4" size="sm" asChild>
+                <Link href="/dashboard/links/new">{t('createFirstLink')}</Link>
+              </Button>
             </PanelContent>
           ) : (
             <ul className="divide-y divide-border">
-              {recentLinks.map((link) => (
-                <li key={link.id} className="flex items-center justify-between gap-4 px-5 py-4">
+              {recentLinks.map((link, index) => (
+                <li
+                  key={link.id}
+                  style={index ? { animationDelay: `${index * 50}ms` } : undefined}
+                  className="flex items-center justify-between gap-4 px-5 py-4 transition-colors hover:bg-muted/40 motion-safe:animate-in motion-safe:fade-in motion-safe:duration-300 motion-safe:fill-mode-backwards"
+                >
                   <div className="min-w-0">
                     <Link
                       href={`/dashboard/links/${link.id}`}
-                      className="truncate font-medium hover:underline"
+                      className="flex items-center gap-1.5 truncate font-medium hover:underline"
                     >
-                      {link.title}
+                      <span className="truncate">{link.title}</span>
+                      <ArrowUpRight className="size-3.5 shrink-0 text-muted-foreground" />
                     </Link>
-                    <p className="truncate text-xs text-muted-foreground">/u/{link.slug}</p>
+                    <p className="truncate text-xs text-muted-foreground">
+                      /u/{link.slug}
+                      {' · '}
+                      {t('createdOn', { date: dateFormatter.format(link.createdAt) })}
+                      {link.expiresAt
+                        ? ` · ${t('expiresOn', { date: dateFormatter.format(link.expiresAt) })}`
+                        : null}
+                    </p>
                   </div>
                   <div className="flex shrink-0 items-center gap-3 text-xs text-muted-foreground">
-                    <span className="hidden sm:inline">
+                    <span className="hidden text-right sm:inline">
                       {t('sessionsCount', { count: link._count.unlocks })}
+                      <span className="block">
+                        {t('eventsCount', { count: link._count.events })}
+                      </span>
                     </span>
-                    <span className="rounded-full border px-2 py-0.5">
-                      {ts(link.status.toLowerCase())}
-                    </span>
+                    <StatusPill status={link.status} label={ts(link.status.toLowerCase())} />
                   </div>
                 </li>
               ))}
@@ -178,9 +228,19 @@ export default async function DashboardOverviewPage() {
           )}
         </Panel>
         <Panel>
-          <PanelHeader title={t('actionMix')} description={t('actionMixDescription')} />
+          <PanelHeader
+            title={t('actionMix')}
+            description={t('actionMixDescription')}
+          />
           <PanelContent>
-            <ModelDistribution items={distribution} />
+            {actionMix.items.length === 0 ? (
+              <p className="text-sm text-muted-foreground">{t('actionMixEmpty')}</p>
+            ) : (
+              <ModelDistribution
+                items={actionMix.items}
+                valueLabel={t('completedSteps', { count: actionMix.total })}
+              />
+            )}
           </PanelContent>
         </Panel>
       </div>

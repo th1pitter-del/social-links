@@ -7,6 +7,7 @@ import { EmptyState, Panel, PanelHeader } from '@/components/admin/panel'
 import { PageHeader } from '@/components/admin/page-header'
 import { StatCard } from '@/components/admin/stat-card'
 import { UserDetailActions } from '@/components/admin/user-detail-actions'
+import { Timestamp } from '@/components/timestamp'
 import { Badge } from '@/components/ui/badge'
 import { prisma } from '@/lib/prisma'
 import { requireAdmin } from '@/lib/session'
@@ -112,7 +113,7 @@ export default async function AdminUserDetailPage({
         />
         <StatCard
           label={t('userDetail.registered')}
-          value={user.createdAt.toISOString().slice(0, 10)}
+          value={<Timestamp value={user.createdAt} withTime={false} />}
           tone="slate"
           icon={CalendarDays}
         />
@@ -130,12 +131,12 @@ export default async function AdminUserDetailPage({
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="border-b border-border text-left text-xs text-muted-foreground">
+              <thead className="border-b border-border text-start text-xs text-muted-foreground">
                 <tr>
                   <th className="px-5 py-3 font-medium">{t('userDetail.colTitle')}</th>
                   <th className="hidden px-5 py-3 font-medium sm:table-cell">{t('userDetail.colStatus')}</th>
-                  <th className="hidden px-5 py-3 text-right font-medium md:table-cell">{t('userDetail.colSessions')}</th>
-                  <th className="hidden px-5 py-3 text-right font-medium md:table-cell">{t('userDetail.colReports')}</th>
+                  <th className="hidden px-5 py-3 text-end font-medium md:table-cell">{t('userDetail.colSessions')}</th>
+                  <th className="hidden px-5 py-3 text-end font-medium md:table-cell">{t('userDetail.colReports')}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
@@ -160,10 +161,10 @@ export default async function AdminUserDetailPage({
                         {t(`status.${link.status.toLowerCase()}`)}
                       </Badge>
                     </td>
-                    <td className="hidden px-5 py-3 text-right text-muted-foreground md:table-cell tabular-nums">
+                    <td className="hidden px-5 py-3 text-end text-muted-foreground md:table-cell tabular-nums">
                       {link._count.unlocks}
                     </td>
-                    <td className="hidden px-5 py-3 text-right text-muted-foreground md:table-cell tabular-nums">
+                    <td className="hidden px-5 py-3 text-end text-muted-foreground md:table-cell tabular-nums">
                       {link._count.abuseReports}
                     </td>
                   </tr>
@@ -186,7 +187,7 @@ export default async function AdminUserDetailPage({
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="border-b border-border text-left text-xs text-muted-foreground">
+              <thead className="border-b border-border text-start text-xs text-muted-foreground">
                 <tr>
                   <th className="px-5 py-3 font-medium">{t('userDetail.colCreated')}</th>
                   <th className="hidden px-5 py-3 font-medium sm:table-cell">{t('userDetail.colExpires')}</th>
@@ -197,10 +198,10 @@ export default async function AdminUserDetailPage({
                 {user.sessions.map((sessionRow) => (
                   <tr key={sessionRow.id} className="hover:bg-muted/40">
                     <td className="px-5 py-3 text-muted-foreground tabular-nums">
-                      {sessionRow.createdAt.toISOString().replace('T', ' ').slice(0, 16)}
+                      <Timestamp value={sessionRow.createdAt} />
                     </td>
                     <td className="hidden px-5 py-3 text-muted-foreground sm:table-cell tabular-nums">
-                      {sessionRow.expiresAt.toISOString().replace('T', ' ').slice(0, 16)}
+                      <Timestamp value={sessionRow.expiresAt} />
                     </td>
                     <td className="max-w-xs truncate px-5 py-3 text-muted-foreground">
                       {sessionRow.userAgent ?? '—'}

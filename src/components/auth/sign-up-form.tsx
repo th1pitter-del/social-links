@@ -1,10 +1,12 @@
 'use client'
 
-import { useActionState } from 'react'
+import { useActionState, useState } from 'react'
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
 import { Loader2 } from 'lucide-react'
 
+import { AuthNotice, FieldErrorText } from '@/components/auth/auth-messages'
+import { PasswordField } from '@/components/auth/password-field'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -15,42 +17,53 @@ const initialState: AuthFormState = {}
 export function SignUpForm() {
   const [state, formAction, pending] = useActionState(signUpAction, initialState)
   const t = useTranslations('auth.signUp')
+  const [password, setPassword] = useState('')
+
+  const nameError = state.fieldErrors?.name
+  const emailError = state.fieldErrors?.email
 
   return (
     <form action={formAction} className="space-y-5">
       <div className="space-y-2">
         <Label htmlFor="name">{t('name')}</Label>
-        <Input id="name" name="name" autoComplete="name" required />
-        {state.fieldErrors?.name ? (
-          <p className="text-xs text-destructive">{state.fieldErrors.name}</p>
-        ) : null}
+        <Input
+          id="name"
+          name="name"
+          autoComplete="name"
+          required
+          aria-invalid={nameError ? true : undefined}
+          aria-describedby={nameError ? 'name-error' : undefined}
+        />
+        <FieldErrorText id="name-error" message={nameError} />
       </div>
 
       <div className="space-y-2">
         <Label htmlFor="email">{t('email')}</Label>
-        <Input id="email" name="email" type="email" autoComplete="email" required />
-        {state.fieldErrors?.email ? (
-          <p className="text-xs text-destructive">{state.fieldErrors.email}</p>
-        ) : null}
-      </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="password">{t('password')}</Label>
         <Input
-          id="password"
-          name="password"
-          type="password"
-          autoComplete="new-password"
-          minLength={8}
+          id="email"
+          name="email"
+          type="email"
+          autoComplete="email"
           required
+          aria-invalid={emailError ? true : undefined}
+          aria-describedby={emailError ? 'email-error' : undefined}
         />
-        <p className="text-xs text-muted-foreground">{t('passwordHint')}</p>
-        {state.fieldErrors?.password ? (
-          <p className="text-xs text-destructive">{state.fieldErrors.password}</p>
-        ) : null}
+        <FieldErrorText id="email-error" message={emailError} />
       </div>
 
-      {state.error ? <p className="text-sm text-destructive">{state.error}</p> : null}
+      <PasswordField
+        id="password"
+        name="password"
+        label={t('password')}
+        value={password}
+        onChange={setPassword}
+        autoComplete="new-password"
+        minLength={8}
+        hint={t('passwordHint')}
+        error={state.fieldErrors?.password}
+      />
+
+      {state.error ? <AuthNotice tone="error">{state.error}</AuthNotice> : null}
 
       <Button type="submit" className="w-full" disabled={pending}>
         {pending ? <Loader2 className="animate-spin" /> : null}

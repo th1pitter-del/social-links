@@ -2,8 +2,10 @@
 import { Eye, MousePointerClick, Rocket } from 'lucide-react'
 import { getTranslations } from 'next-intl/server'
 
-import { BarChart } from '@/components/admin/bar-chart'
+import { BarChart, type BarChartPoint } from '@/components/admin/bar-chart'
+import { StatusPill } from '@/components/status-pill'
 import { Button } from '@/components/ui/button'
+import { buildDayBuckets, windowStart } from '@/lib/activity-buckets'
 import { prisma } from '@/lib/prisma'
 import { requireUser } from '@/lib/session'
 
@@ -46,9 +48,7 @@ export default async function AnalyticsPage() {
 
   const linkIds = links.map((link) => link.id)
 
-  const start = new Date()
-  start.setHours(0, 0, 0, 0)
-  start.setDate(start.getDate() - (DAYS - 1))
+  const start = windowStart(DAYS)
 
   const [totalsByType, perLink, recentEvents] = await Promise.all([
     prisma.analyticsEvent.groupBy({
@@ -85,21 +85,12 @@ export default async function AnalyticsPage() {
     linkCounts.set(row.linkId, inner)
   }
 
-  // 14-day series
-  const buckets: { label: string; primary: number; secondary: number }[] = []
-  for (let i = 0; i < DAYS; i++) {
-    const day = new Date(start)
-    day.setDate(start.getDate() + i)
-    buckets.push({ label: `${day.getDate()}`, primary: 0, secondary: 0 })
-  }
-  for (const event of recentEvents) {
-    const index = Math.floor(
-      (event.createdAt.getTime() - start.getTime()) / (24 * 60 * 60 * 1000),
-    )
-    if (index < 0 || index >= DAYS) continue
-    if (event.type === 'VIEW') buckets[index].primary += 1
-    else buckets[index].secondary += 1
-  }
+  const series = buildDayBuckets(recentEvents, DAYS)
+  const buckets: BarChartPoint[] = series.buckets.map((bucket) => ({
+    label: `${bucket.date.getDate()}`,
+    primary: bucket.primary,
+    secondary: bucket.secondary,
+  }))
 
   const stats = [
     { label: t('statViews'), value: views, hint: t('allTime'), icon: Eye },
@@ -137,7 +128,12 @@ export default async function AnalyticsPage() {
           <h2 className="font-medium">{t('lastDays', { days: DAYS })}</h2>
           <span className="text-xs text-muted-foreground">{t('viewsVsUnlocks')}</span>
         </div>
-        <BarChart points={buckets} primaryLabel={t('chartViews')} secondaryLabel={t('chartUnlocks')} />
+        <BarChart
+          points={buckets}
+          startDate={series.startDate}
+          primaryLabel={t('chartViews')}
+          secondaryLabel={t('chartUnlocks')}
+        />
       </div>
 
       <div className="rounded-2xl border bg-card">
@@ -175,9 +171,7 @@ export default async function AnalyticsPage() {
                       <p className="text-xs text-muted-foreground">/u/{link.slug}</p>
                     </td>
                     <td className="px-5 py-3">
-                      <span className="rounded-full border px-2 py-0.5 text-xs">
-                        {ts(link.status.toLowerCase())}
-                      </span>
+                      <StatusPill status={link.status} label={ts(link.status.toLowerCase())} />
                     </td>
                     <td className="px-5 py-3">{linkViews}</td>
                     <td className="px-5 py-3">{counts?.get('UNLOCK_START') ?? 0}</td>

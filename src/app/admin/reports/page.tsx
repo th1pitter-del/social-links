@@ -6,6 +6,8 @@ import { EmptyState, Panel, PanelContent, PanelHeader } from '@/components/admin
 import { PageHeader } from '@/components/admin/page-header'
 import { ReportRowActions } from '@/components/admin/report-row-actions'
 import { Badge } from '@/components/ui/badge'
+import { StatusPill } from '@/components/status-pill'
+import { Timestamp } from '@/components/timestamp'
 import { prisma } from '@/lib/prisma'
 import { getSiteSettings } from '@/lib/settings'
 
@@ -134,7 +136,7 @@ export default async function AdminReportsPage({
                       </div>
                       <p className="mt-2 max-w-2xl text-sm whitespace-pre-line">{report.details}</p>
                       <p className="mt-2 text-xs text-muted-foreground">
-                        {report.createdAt.toISOString().replace('T', ' ').slice(0, 19)}
+                        <Timestamp value={report.createdAt} />
                         {report.reporterEmail
                           ? ` · ${report.reporterEmail}`
                           : ` · ${t('common.anonymous')}`}
@@ -157,7 +159,7 @@ export default async function AdminReportsPage({
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
-                <thead className="border-b border-border text-left text-xs text-muted-foreground">
+                <thead className="border-b border-border text-start text-xs text-muted-foreground">
                   <tr>
                     <th className="px-5 py-3 font-medium">{t('reports.colLink')}</th>
                     <th className="hidden px-5 py-3 font-medium sm:table-cell">{t('reports.colReason')}</th>
@@ -174,15 +176,16 @@ export default async function AdminReportsPage({
                         {tr(`reasons.${report.reason}`)}
                       </td>
                       <td className="px-5 py-3">
-                        <Badge variant={report.status === 'DISMISSED' ? 'secondary' : 'default'}>
-                          {t(`status.${report.status.toLowerCase()}`)}
-                        </Badge>
+                        <StatusPill
+                          status={report.status}
+                          label={t(`status.${report.status.toLowerCase()}`)}
+                        />
                       </td>
                       <td className="hidden max-w-xs truncate px-5 py-3 text-muted-foreground lg:table-cell">
                         {report.resolutionNote ?? '—'}
                       </td>
                       <td className="hidden px-5 py-3 text-muted-foreground md:table-cell">
-                        {report.resolvedAt?.toISOString().replace('T', ' ').slice(0, 16) ?? '—'}
+                        {report.resolvedAt ? <Timestamp value={report.resolvedAt} /> : '—'}
                       </td>
                     </tr>
                   ))}

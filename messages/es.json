@@ -72,6 +72,7 @@
     "signIn": "Iniciar sesión",
     "signUp": "Registrarse",
     "dashboard": "Panel",
+    "account": "Cuenta",
     "getStarted": "Empezar",
     "createLink": "Crear tu enlace",
     "language": "Idioma",
@@ -90,6 +91,7 @@
     "videoCompressor": "Comprimir vídeo",
     "videoDownloader": "Descargar vídeo",
     "menu": "Menú",
+    "sections": "Navegación",
     "contact": "Contacto",
     "privacy": "Privacidad",
     "terms": "Términos"
@@ -132,7 +134,18 @@
       "stepDone": "Suscribirse en YouTube",
       "completed": "Completado",
       "stepNext": "Acción final requerida",
-      "required": "Requerida · verificada al completarla"
+      "required": "Requerida · verificada al completarla",
+      "diagramTitle": "Qué ocurre entre el clic y el contenido",
+      "nodes": {
+        "visitor": "Abre el enlace",
+        "visitorDetail": "Una URL corta: sin app y sin cuenta para empezar.",
+        "action": "Acción cumplida",
+        "actionDetail": "Siguen, se suscriben, ven o escuchan a donde lleve la acción.",
+        "verify": "El servidor verifica",
+        "verifyDetail": "El paso solo cuenta cuando nuestro servidor lo confirma.",
+        "deliver": "Contenido entregado",
+        "deliverDetail": "Un enlace firmado y con caducidad entrega el destino."
+      }
     },
     "featuresTitle": "Todo lo que necesitas, gratis",
     "features": {
@@ -172,13 +185,33 @@
     "verificationNote": "Algunas acciones se pueden solicitar pero no verificar automáticamente por la plataforma. Etiquetamos cada acción con honestidad en lugar de afirmar una verificación que no podemos realizar.",
     "ctaTitle": "Empieza a compartir enlaces bloqueados hoy",
     "ctaBody": "Gratis para creadores. Sin planes premium ni suscripciones.",
-    "ctaButton": "Crear tu enlace"
+    "ctaButton": "Crear tu enlace",
+    "stepsIntro": "Tres pasos, y tu audiencia solo ve en todo momento el que le toca.",
+    "demo": {
+      "label": "Enlace de ejemplo — vista previa simulada",
+      "linkTitle": "Pista inédita del próximo trabajo",
+      "linkBody": "Desaparecerá del feed público cuando rote.",
+      "revealLabel": "Adónde lleva el enlace",
+      "revealValue": "example.com/artista/avance",
+      "sampleContent": "La mezcla completa dura 3:42 — bájala antes de que desaparezca.",
+      "tag": "Simulado"
+    },
+    "funnel": {
+      "views": "Visitas",
+      "unlocks": "Inicios de desbloqueo",
+      "completed": "Completados"
+    },
+    "supportedActionsBody": "Activados en este despliegue. Elige una plataforma para ver lo que un enlace puede pedir."
   },
   "auth": {
     "layout": {
       "agreementBefore": "Al continuar aceptas nuestros",
       "and": "y",
       "agreementAfter": "."
+    },
+    "password": {
+      "show": "Mostrar la contraseña",
+      "hide": "Ocultar la contraseña"
     },
     "signIn": {
       "title": "Bienvenido de nuevo",
@@ -385,7 +418,9 @@
       "disable": "Desactivar",
       "unban": "Desbloquear",
       "ban": "Bloquear",
-      "selected": "{count} seleccionado(s)"
+      "selected": "{count} seleccionado(s)",
+      "clearFilters": "Limpiar filtros",
+      "loading": "Cargando…"
     },
     "overview": {
       "title": "Resumen de la plataforma",
@@ -404,8 +439,10 @@
       "activityDescription": "Eventos diarios de vistas y desbloqueos completados.",
       "chartViews": "Vistas",
       "chartUnlocks": "Desbloqueos",
+      "chartDays": "{days} días",
+      "chartShareOfTotal": "{percent}% del total del período",
       "executionTitle": "Actividad de ejecución",
-      "executionDescription": "Mapa de calor de los últimos 90 días",
+      "executionDescription": "Mapa de calor de los últimos 84 días",
       "heatmapLess": "Menos",
       "heatmapMore": "Más",
       "heatmapTooltip": "{count} eventos",
@@ -421,11 +458,10 @@
       "colStatus": "Estado",
       "colViews": "Vistas",
       "actionDistribution": "Distribución de acciones",
-      "actionDistributionDescription": "Mezcla de uso por tipo de acción",
-      "youtubeActions": "Acciones de YouTube",
-      "followActions": "Acciones de seguir",
-      "visitActions": "Acciones de visita",
-      "emailCapture": "Captura de correo"
+      "actionDistributionDescription": "Pasos de acción completados, por plataforma",
+      "heatmapSummary": "{count} eventos en {days} días",
+      "actionMixEmpty": "Ningún visitante ha completado un paso de acción todavía.",
+      "completedSteps": "{count} pasos completados"
     },
     "audit": {
       "title": "Registro de auditoría",
@@ -511,7 +547,8 @@
       "colActions": "Acciones",
       "bulkEnabledToast": "{count} enlace(s) activado(s).",
       "bulkDisabledToast": "{count} enlace(s) desactivado(s).",
-      "selectLink": "Seleccionar {title}"
+      "selectLink": "Seleccionar {title}",
+      "emptyList": "Aún no hay enlaces."
     },
     "linkDetail": {
       "backToLinks": "← Todos los enlaces",
@@ -575,7 +612,8 @@
       "colActions": "Acciones",
       "bulkBannedToast": "{count} usuario(s) bloqueado(s).",
       "bulkUnbannedToast": "{count} usuario(s) desbloqueado(s).",
-      "selectUser": "Seleccionar {email}"
+      "selectUser": "Seleccionar {email}",
+      "emptyList": "Aún no hay usuarios."
     },
     "userDetail": {
       "backToUsers": "← Todos los usuarios",
@@ -863,17 +901,22 @@
       "completedUnlocks": "Desbloqueos completados",
       "conversionFromViews": "{percent}% de conversión desde las vistas registradas",
       "heatmapTitle": "Mapa de actividad",
-      "heatmapDescription": "Últimos 90 días",
+      "heatmapDescription": "Últimos 84 días",
       "recentLinks": "Enlaces recientes",
       "noLinksYet": "Aún no has creado ningún enlace.",
       "createFirstLink": "Crear tu primer enlace",
       "sessionsCount": "{count} sesiones",
       "actionMix": "Mix de acciones",
-      "actionMixDescription": "Estimado según la actividad reciente",
-      "youtubeActions": "Acciones de YouTube",
-      "followActions": "Acciones de seguimiento",
-      "visitActions": "Acciones de visita",
-      "emailCapture": "Captura de correo"
+      "actionMixDescription": "Pasos de acción completados, por plataforma",
+      "funnelTitle": "Embudo de desbloqueo",
+      "funnelDescription": "Eventos registrados, desde siempre",
+      "funnelEmpty": "Aún no hay vistas registradas. El embudo se llena cuando llegan visitantes.",
+      "continuedFrom": "{percent}% de {from}",
+      "createdOn": "Creado el {date}",
+      "expiresOn": "Caduca el {date}",
+      "eventsCount": "{count} eventos",
+      "completedSteps": "{count} pasos completados",
+      "actionMixEmpty": "Ningún visitante ha completado un paso de acción todavía."
     },
     "links": {
       "title": "Mis enlaces",
@@ -897,14 +940,20 @@
       "statViews": "Vistas",
       "statStarts": "Inicios de desbloqueo",
       "statCompleted": "Desbloqueos completados",
-      "conversionHint": "{percent}% de conversión",
+      "funnelTitle": "De la visita al desbloqueo",
+      "funnelDescription": "Cada cifra es un evento guardado de este enlace.",
+      "shareOfViews": "{percent}% de las visitas",
+      "shareOfStarts": "{percent}% de los inicios",
+      "noVisits": "Aún no hay visitas registradas.",
       "publicUrl": "URL pública de desbloqueo",
       "leadsTitle": "Direcciones de correo recogidas",
       "leadsDescription": "Solo tú puedes ver o exportar las direcciones recogidas a través de este enlace.",
       "noLeads": "Aún no se ha recogido ninguna dirección.",
       "colEmail": "Correo",
       "colConsent": "Consentimiento otorgado",
-      "hiddenAction": "{label} (oculta)"
+      "hiddenAction": "{label} (oculta)",
+      "activityTitle": "Visitas y desbloqueos completados",
+      "lastDays": "Últimos {days} días"
     },
     "analytics": {
       "title": "Analíticas",
@@ -1178,6 +1227,16 @@
     "collectsEmailLong": "Recoge una dirección de correo",
     "opensNewTab": "Se abre en una pestaña nueva",
     "startUnlocking": "Empezar a desbloquear",
+    "previewAfterUnlock": "Tras el último paso",
+    "previewOpen": "Abrir",
+    "previewDownload": "Descargar",
+    "previewNoDestination": "Añade un destino para ver qué recibe el visitante.",
+    "previewExpires": "Caduca {date}",
+    "readyHeading": "Antes de publicar",
+    "readyCount": "{done} de {total} completados",
+    "readyTitle": "Un título",
+    "readyDestination": "Un destino",
+    "readySteps": "Al menos un paso",
     "willBeLiveAt": "Tu enlace estará activo en /u/{slug}",
     "previewNote": "Así es como los visitantes verán tu enlace."
   },
@@ -1218,5 +1277,21 @@
   "email": {
     "resetPasswordSubject": "Restablece tu contraseña de {site}",
     "resetPasswordBody": "Hola {name},\n\nRestablece tu contraseña con este enlace (válido durante una hora):\n{url}\n\nSi no has solicitado esto, puedes ignorar este correo."
+  },
+  "motion": {
+    "phase": "Fase {current} de {total}",
+    "pause": "Pausar",
+    "play": "Reproducir",
+    "replay": "Repetir",
+    "next": "Siguiente",
+    "waiting": "En espera",
+    "scrubHint": "Mueve el cursor sobre la tarjeta para recorrerla.",
+    "tapHint": "Toca los puntos para recorrerla.",
+    "railTapHint": "Toca un paso para fijarlo.",
+    "stepOf": "Paso {current} de {total}",
+    "nodeOf": "Etapa {current} de {total}",
+    "mixerHint": "Acciones en esta plataforma: {count}",
+    "phaseIdle": "Aún no ha empezado",
+    "phaseUnlocked": "Contenido entregado"
   }
 }

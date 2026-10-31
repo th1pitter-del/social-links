@@ -2,15 +2,18 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { ExternalLink } from 'lucide-react'
-import { getTranslations } from 'next-intl/server'
+import { getLocale, getTranslations } from 'next-intl/server'
 
+import { BarChart, type BarChartPoint } from '@/components/admin/bar-chart'
 import { CopyButton } from '@/components/copy-button'
+import { FunnelStages } from '@/components/dashboard/funnel-stages'
+import { StatusPill } from '@/components/status-pill'
 import { LinkForm, type LinkFormValues } from '@/components/link-form'
 import { LinkRowActions } from '@/components/link-row-actions'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { getActionOptionMap, getEnabledActionOptions } from '@/lib/action-catalog'
 import type { ActionOptionView } from '@/lib/action-defaults'
+import { buildDayBuckets, windowStart } from '@/lib/activity-buckets'
 import { prisma } from '@/lib/prisma'
 import { requireUser } from '@/lib/session'
 import { isExpired } from '@/lib/unlock'
@@ -19,6 +22,8 @@ export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('dashboard.meta')
   return { title: t('editLink') }
 }
+
+const DAYS = 14
 
 export default async function EditLinkPage({
   params,
@@ -30,6 +35,7 @@ export default async function EditLinkPage({
   const t = await getTranslations('dashboard.editLink')
   const tc = await getTranslations('dashboard.common')
   const ts = await getTranslations('dashboard.status')
+  const locale = await getLocale()
 
   const link = await prisma.link.findFirst({
     where: { id, ownerId: session.user.id },
@@ -55,12 +61,44 @@ export default async function EditLinkPage({
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? ''
   const publicUrl = `${appUrl}/u/${link.slug}`
 
-  const [views, starts, completed] = await Promise.all([
+  const since = windowStart(DAYS)
+  const [views, starts, completed, seriesEvents] = await Promise.all([
     prisma.analyticsEvent.count({ where: { linkId: link.id, type: 'VIEW' } }),
     prisma.analyticsEvent.count({ where: { linkId: link.id, type: 'UNLOCK_START' } }),
     prisma.analyticsEvent.count({ where: { linkId: link.id, type: 'UNLOCK_COMPLETE' } }),
+    prisma.analyticsEvent.findMany({
+      where: { linkId: link.id, type: { in: ['VIEW', 'UNLOCK_COMPLETE'] }, createdAt: { gte: since } },
+      select: { type: true, createdAt: true },
+    }),
   ])
-  const conversion = views > 0 ? Math.round((completed / views) * 100) : 0
+  const dateFormatter = new Intl.DateTimeFormat(locale, { dateStyle: 'medium' })
+
+  const startsShare = views > 0 ? Math.round((starts / views) * 100) : 0
+  const completedShare = views > 0 ? Math.round((completed / views) * 100) : 0
+  const stages = [
+    { label: t('statViews'), value: views, share: 100 },
+    {
+      label: t('statStarts'),
+      value: starts,
+      share: startsShare,
+      note: t('shareOfViews', { percent: startsShare }),
+    },
+    {
+      label: t('statCompleted'),
+      value: completed,
+      share: completedShare,
+      note: t('shareOfStarts', {
+        percent: starts > 0 ? Math.round((completed / starts) * 100) : 0,
+      }),
+    },
+  ]
+
+  const series = buildDayBuckets(seriesEvents, DAYS)
+  const buckets: BarChartPoint[] = series.buckets.map((bucket) => ({
+    label: `${bucket.date.getDate()}`,
+    primary: bucket.primary,
+    secondary: bucket.secondary,
+  }))
 
   const leads = link.actions.some((action) => actionCatalog.get(action.type)?.behavior === 'EMAIL')
     ? await prisma.emailLead.findMany({
@@ -113,15 +151,13 @@ export default async function EditLinkPage({
         <div>
           <div className="flex items-center gap-3">
             <h1 className="text-2xl font-semibold tracking-tight">{link.title}</h1>
-            <Badge variant={link.status === 'ACTIVE' ? 'default' : 'secondary'}>
-              {ts(link.status.toLowerCase())}
-            </Badge>
+            <StatusPill status={link.status} label={ts(link.status.toLowerCase())} />
           </div>
           <p className="mt-1 text-sm text-muted-foreground">
             {link.expiresAt
               ? isExpired(link.expiresAt)
                 ? t('expired')
-                : t('expiresOn', { date: link.expiresAt.toISOString().slice(0, 10) })
+                : t('expiresOn', { date: dateFormatter.format(link.expiresAt) })
               : t('noExpiry')}
           </p>
         </div>
@@ -133,14 +169,36 @@ export default async function EditLinkPage({
         </div>
       </div>
 
-      <div className="grid gap-3 rounded-2xl border bg-card p-4 sm:grid-cols-2 lg:grid-cols-3">
-        <Stat label={t('statViews')} value={views} />
-        <Stat label={t('statStarts')} value={starts} />
-        <Stat
-          label={t('statCompleted')}
-          value={completed}
-          hint={t('conversionHint', { percent: conversion })}
-        />
+      {/* One card for this link's numbers: the funnel answers "where do visitors
+          stop", the series under it answers "when". Splitting them into three
+          identical number tiles, as before, answered neither. */}
+      <div className="rounded-2xl border bg-card">
+        <div className="p-5">
+          <h2 className="text-sm font-medium">{t('funnelTitle')}</h2>
+          <p className="text-xs text-muted-foreground">{t('funnelDescription')}</p>
+          {views > 0 ? (
+            <FunnelStages stages={stages} locale={locale} className="mt-4" />
+          ) : (
+            <p className="mt-4 rounded-xl border border-dashed px-4 py-6 text-center text-sm text-muted-foreground">
+              {t('noVisits')}
+            </p>
+          )}
+        </div>
+        <div className="border-t p-5">
+          <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+            <h2 className="text-sm font-medium">{t('activityTitle')}</h2>
+            <span className="text-xs text-muted-foreground tabular-nums">
+              {t('lastDays', { days: DAYS })}
+            </span>
+          </div>
+          <BarChart
+            className="mt-4"
+            points={buckets}
+            startDate={series.startDate}
+            primaryLabel={t('statViews')}
+            secondaryLabel={t('statCompleted')}
+          />
+        </div>
       </div>
 
       <div className="flex flex-wrap items-center gap-2 rounded-2xl border bg-card p-4">
@@ -189,8 +247,8 @@ export default async function EditLinkPage({
                   {leads.map((lead) => (
                     <tr key={lead.id}>
                       <td className="px-5 py-3">{lead.email}</td>
-                      <td className="px-5 py-3 text-muted-foreground">
-                        {lead.consentAt.toISOString().slice(0, 10)}
+                      <td className="px-5 py-3 text-muted-foreground tabular-nums">
+                        {dateFormatter.format(lead.consentAt)}
                       </td>
                     </tr>
                   ))}
@@ -200,16 +258,6 @@ export default async function EditLinkPage({
           )}
         </section>
       ) : null}
-    </div>
-  )
-}
-
-function Stat({ label, value, hint }: { label: string; value: number; hint?: string }) {
-  return (
-    <div>
-      <p className="text-xs text-muted-foreground">{label}</p>
-      <p className="mt-1 text-2xl font-semibold tracking-tight">{value}</p>
-      {hint ? <p className="text-xs text-muted-foreground">{hint}</p> : null}
     </div>
   )
 }

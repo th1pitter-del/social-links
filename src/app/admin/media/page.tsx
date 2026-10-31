@@ -4,6 +4,7 @@ import { getTranslations } from 'next-intl/server'
 import { MediaRowActions } from '@/components/admin/media-row-actions'
 import { EmptyState, Panel, PanelHeader } from '@/components/admin/panel'
 import { PageHeader } from '@/components/admin/page-header'
+import { Timestamp } from '@/components/timestamp'
 import { StatCard } from '@/components/admin/stat-card'
 import { prisma } from '@/lib/prisma'
 import { requireAdmin } from '@/lib/session'
@@ -68,14 +69,14 @@ export default async function AdminMediaPage() {
           <PanelHeader title={t('media.panelTitle')} description={t('media.panelDescription')} />
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="border-b border-border text-left text-xs text-muted-foreground">
+              <thead className="border-b border-border text-start text-xs text-muted-foreground">
                 <tr>
                   <th className="px-5 py-3 font-medium">{t('media.colPreview')}</th>
                   <th className="px-5 py-3 font-medium">{t('media.colFile')}</th>
                   <th className="hidden px-5 py-3 font-medium sm:table-cell">{t('media.colOwner')}</th>
                   <th className="hidden px-5 py-3 font-medium md:table-cell">{t('media.colSize')}</th>
                   <th className="hidden px-5 py-3 font-medium lg:table-cell">{t('media.colUploaded')}</th>
-                  <th className="px-5 py-3 text-right font-medium">{t('media.colActions')}</th>
+                  <th className="px-5 py-3 text-end font-medium">{t('media.colActions')}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
@@ -100,9 +101,9 @@ export default async function AdminMediaPage() {
                       {formatSize(asset.size)}
                     </td>
                     <td className="hidden px-5 py-3 text-muted-foreground lg:table-cell tabular-nums">
-                      {asset.createdAt.toISOString().replace('T', ' ').slice(0, 16)}
+                      {<Timestamp value={asset.createdAt} />}
                     </td>
-                    <td className="px-5 py-3 text-right">
+                    <td className="px-5 py-3 text-end">
                       <MediaRowActions mediaId={asset.id} />
                     </td>
                   </tr>

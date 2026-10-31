@@ -2,6 +2,7 @@ import { getTranslations } from 'next-intl/server'
 
 import { EmptyState, Panel, PanelHeader } from '@/components/admin/panel'
 import { PageHeader } from '@/components/admin/page-header'
+import { Timestamp } from '@/components/timestamp'
 import { Input } from '@/components/ui/input'
 import { prisma } from '@/lib/prisma'
 import { requireAdmin } from '@/lib/session'
@@ -64,7 +65,7 @@ export default async function AdminAuditPage({
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="border-b border-border text-left text-xs text-muted-foreground">
+              <thead className="border-b border-border text-start text-xs text-muted-foreground">
                 <tr>
                   <th className="px-5 py-3 font-medium">{t('audit.colTime')}</th>
                   <th className="px-5 py-3 font-medium">{t('audit.colActor')}</th>
@@ -76,7 +77,7 @@ export default async function AdminAuditPage({
                 {logs.map((log) => (
                   <tr key={log.id} className="hover:bg-muted/40">
                     <td className="px-5 py-3 text-muted-foreground tabular-nums">
-                      {log.createdAt.toISOString().replace('T', ' ').slice(0, 16)}
+                      {<Timestamp value={log.createdAt} />}
                     </td>
                     <td className="px-5 py-3">{log.actorEmail ?? log.actorName ?? log.actorId}</td>
                     <td className="px-5 py-3 font-medium">{log.action}</td>
