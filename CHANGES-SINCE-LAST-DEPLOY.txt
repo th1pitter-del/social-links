@@ -1,7 +1,14 @@
-CHANGES SINCE LAST DEPLOY
+CHANGES FROM THE LAST DEPLOY TO NOW
 Project: social-links (Link Unlocker)
-Production before these changes: https://social-links-rust-six.vercel.app
-Last deployed commit: 0931384 "Wire the tagline and content policy settings into real surfaces"
+Deployed commit: 50b14d9 "Give the inline nav icons and make the dropdown hover paint"
+                     (on top of ae5756a, which was committed but never deployed)
+Previous production build: commit 0931384 "Wire the tagline and content policy
+   settings into real surfaces"
+Production after this round: https://social-links-rust-six.vercel.app
+   (Vercel account th1pitter-6167 / team th1pitter-gmailcoms-projects,
+    project social-links prj_ow72J5yxiMWa5BSzeQvQBPHqPWzN, deployed with no
+    --scope because a personal account cannot be set as a scope)
+GitHub: pushed to https://github.com/th1pitter-del/social-links master
 Written: 2026-10-31
 
 =====================================================================
@@ -135,6 +142,22 @@ for the header only:
 nav.faq (the long form) is untouched because the footer still uses it.
 
 =====================================================================
+8. DEPLOYED, THEN RE-VERIFIED ON THE LIVE SITE
+=====================================================================
+Everything below was read from https://social-links-rust-six.vercel.app after
+the alias switched, not from the local dev server:
+ - HTTP 200, header renders the new markup: every dropdown row carries
+   hover:bg-[#f0f1ea] dark:hover:bg-[#2a2b27], 4px row gap, one icon per item.
+ - The production CSS contains both rules under @media (hover: hover), and a real
+   pointer hover painted rgb(42, 43, 39) against the menu's rgb(29, 30, 27).
+ - Inline desktop row (forced visible for measuring at 1073px): 1 icon per anchor,
+   nav 574px, whole header row 1026px against the 1168px budget, display restored
+   to none afterwards.
+ - Partner links: target="_blank" rel="noopener noreferrer" with their brand
+   colours; internal links have no target.
+ - Short header FAQ label is live ("FAQ" in en).
+
+=====================================================================
 FILES TOUCHED
 =====================================================================
   src/components/site-nav.tsx          (new)
@@ -172,7 +195,10 @@ OUTSTANDING / FOR YOUR ATTENTION
     UNLOCK_START 3->6, ACTION_DONE 1->3, UNLOCK_COMPLETE 1->3 and 3 extra
     sessions from the unlock-flow testing. The cloud DB was never written to.
     Say the word and I will clear those rows.
- 2. The Vercel token and the production TiDB connection string that appeared in
-    an earlier chat still need rotating.
+ 2. ROTATE THESE NOW. The Vercel token used for this deploy and the production
+    TiDB connection string both appeared in chat earlier; the token was pasted
+    into the command line again for this deployment, so it has now been exposed
+    twice more. Rotate it in vercel.com/account/tokens and update the TiDB
+    password; nothing was saved to a file or to memory.
  3. Production media uploads cannot persist on serverless, and the email/webhook
     env vars are still missing on the Vercel project (see earlier notes).
