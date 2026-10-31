@@ -1,5 +1,5 @@
 import type { ComponentType } from 'react'
-import { Globe, Palette, ShieldCheck, Timer, Upload } from 'lucide-react'
+import { Globe, KeyRound, Palette, ShieldCheck, Timer, Upload } from 'lucide-react'
 
 type IconType = ComponentType<{ className?: string }>
 
@@ -8,6 +8,10 @@ export type SettingsField = {
   /** Renders a color picker plus a hex text input instead of a plain input. */
   color?: boolean
   multiline?: boolean
+  /** Renders a URL input with an image-upload button and preview (logo/favicon). */
+  image?: boolean
+  /** Renders an on/off switch storing 'true'/'false'. */
+  toggle?: boolean
 }
 
 export type SettingsGroup = {
@@ -27,7 +31,12 @@ export const SETTINGS_GROUPS: SettingsGroup[] = [
   {
     id: 'site-content',
     icon: Globe,
-    fields: [{ key: 'site.name' }, { key: 'site.tagline' }],
+    fields: [
+      { key: 'site.name' },
+      { key: 'site.tagline' },
+      { key: 'site.logoUrl', image: true },
+      { key: 'site.faviconUrl', image: true },
+    ],
   },
   {
     id: 'appearance',
@@ -63,6 +72,16 @@ export const SETTINGS_GROUPS: SettingsGroup[] = [
     fields: [
       { key: 'rules.socialPlatforms', multiline: true },
       { key: 'rules.contentPolicy', multiline: true },
+    ],
+  },
+  {
+    id: 'demo-access',
+    icon: KeyRound,
+    fields: [
+      { key: 'demo.loginEnabled', toggle: true },
+      { key: 'demo.label' },
+      { key: 'demo.email' },
+      { key: 'demo.password' },
     ],
   },
 ]

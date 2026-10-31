@@ -185,7 +185,10 @@
       "submit": "Entrar",
       "resetSuccess": "Sua senha foi atualizada. Entre com a nova senha.",
       "noAccount": "Novo por aqui?",
-      "createAccount": "Criar uma conta"
+      "createAccount": "Criar uma conta",
+      "demoTitle": "Acesso de demonstração",
+      "demoUse": "Usar credenciais",
+      "demoHint": "Preenche o formulário instantaneamente. Desative o acesso de demonstração nas configurações do administrador em produção."
     },
     "signUp": {
       "title": "Crie sua conta",
@@ -701,6 +704,10 @@
         "platform-rules": {
           "title": "Regras de plataformas",
           "description": "Plataformas sociais permitidas e política de conteúdo exibida aos proprietários."
+        },
+        "demo-access": {
+          "title": "Acesso de demonstração",
+          "description": "Credenciais de demonstração opcionais com um clique exibidas na página de login."
         }
       },
       "fields": {
@@ -770,8 +777,37 @@
         "rules_contentPolicy": {
           "label": "Política de conteúdo",
           "hint": "Texto simples, sem Markdown."
+        },
+        "site_logoUrl": {
+          "label": "Logotipo",
+          "hint": "Exibido no cabeçalho, no painel e nas páginas de desbloqueio. Envie uma imagem ou cole uma URL http(s). Vazio = marca padrão.",
+          "placeholder": "https://exemplo.com/logo.png"
+        },
+        "site_faviconUrl": {
+          "label": "Favicon",
+          "hint": "Ícone da aba do navegador. Envie um PNG quadrado ou cole uma URL http(s). Vazio = ícone padrão.",
+          "placeholder": "https://exemplo.com/favicon.png"
+        },
+        "demo_loginEnabled": {
+          "label": "Mostrar credenciais de demonstração no login",
+          "hint": "A senha é armazenada em texto puro e exibida a todos os visitantes. Mantenha desativado em produção."
+        },
+        "demo_label": {
+          "label": "Rótulo exibido",
+          "placeholder": "Admin de demonstração"
+        },
+        "demo_email": {
+          "label": "E-mail de demonstração",
+          "placeholder": "admin@exemplo.com"
+        },
+        "demo_password": {
+          "label": "Senha de demonstração",
+          "hint": "Armazenada em texto puro. Use uma conta descartável."
         }
-      }
+      },
+      "uploadImage": "Enviar imagem",
+      "imageUploadedToast": "Imagem enviada. Salve para aplicar.",
+      "imageUploadFailed": "Falha no envio. Tente novamente."
     }
   },
   "dashboard": {
@@ -1049,7 +1085,8 @@
     "actionKeyExists": "Já existe uma ação com esta chave.",
     "targetPlatformNotFound": "Plataforma de destino não encontrada.",
     "actionBuiltIn": "As ações integradas não podem ser excluídas. Desative-as.",
-    "actionInUse": "Esta ação é usada por {count} link(s). Remova-a deles primeiro."
+    "actionInUse": "Esta ação é usada por {count} link(s). Remova-a deles primeiro.",
+    "invalidImageUrl": "O logotipo e o favicon devem ser uma imagem enviada ou uma URL http(s)."
   },
   "linkForm": {
     "uploadFailed": "Falha no envio.",

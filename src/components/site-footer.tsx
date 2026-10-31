@@ -33,7 +33,7 @@ export async function SiteFooter({
         {showBrand ? (
           <div className="space-y-2">
             <div className="flex items-center gap-2 font-semibold">
-              <BrandMark className="size-5" />
+              <BrandMark className="size-5" src={site.logoUrl || null} />
               {site.name}
             </div>
             <p className="max-w-xs text-sm text-muted-foreground">{t('tagline')}</p>

@@ -226,8 +226,14 @@ export const getSettingMap = cache(async (): Promise<Record<string, string>> => 
           in: [
             'site.name',
             'site.tagline',
+            'site.logoUrl',
+            'site.faviconUrl',
             'rules.socialPlatforms',
             'rules.contentPolicy',
+            'demo.loginEnabled',
+            'demo.label',
+            'demo.email',
+            'demo.password',
             ...THEME_KEYS,
             ...CONTENT_PAGES.map((page) => `content.${page}`),
           ],
@@ -248,6 +254,10 @@ export const getSettingMap = cache(async (): Promise<Record<string, string>> => 
 export type SiteSettings = {
   name: string
   tagline: string
+  /** Admin-managed custom logo (`/api/media/<id>` or http(s) URL); '' = built-in mark. */
+  logoUrl: string
+  /** Admin-managed favicon URL; '' = the shipped favicon.ico. */
+  faviconUrl: string
   allowedPlatforms: string[]
   contentPolicy: string
 }
@@ -257,11 +267,44 @@ export const getSiteSettings = cache(async (): Promise<SiteSettings> => {
   return {
     name: map['site.name']?.trim() || defaults.name,
     tagline: map['site.tagline']?.trim() || defaults.tagline,
+    logoUrl: isMediaOrHttpUrl(map['site.logoUrl']) ? (map['site.logoUrl'] as string) : '',
+    faviconUrl: isMediaOrHttpUrl(map['site.faviconUrl']) ? (map['site.faviconUrl'] as string) : '',
     allowedPlatforms: (map['rules.socialPlatforms'] ?? '')
       .split(',')
       .map((platform) => platform.trim())
       .filter(Boolean),
     contentPolicy: map['rules.contentPolicy']?.trim() || '',
+  }
+})
+
+/** True for values usable as logo/favicon URLs (uploaded media or http(s)). */
+export function isMediaOrHttpUrl(value: string | undefined | null): boolean {
+  const trimmed = value?.trim() ?? ''
+  return /^https?:\/\//.test(trimmed) || /^\/api\/media\/[A-Za-z0-9_-]+$/.test(trimmed)
+}
+
+export type DemoLogin = {
+  label: string
+  email: string
+  password: string
+}
+
+/**
+ * Demo credentials shown on the sign-in page. Opt-in via the `demo.loginEnabled`
+ * setting with both an email and a password configured; null otherwise. The
+ * password is stored in plain text on purpose — this is a demo convenience that
+ * must be disabled in production.
+ */
+export const getDemoLogin = cache(async (): Promise<DemoLogin | null> => {
+  const map = await getSettingMap()
+  if (map['demo.loginEnabled'] !== 'true') return null
+  const email = map['demo.email']?.trim().toLowerCase() ?? ''
+  const password = map['demo.password'] ?? ''
+  if (!email || !password) return null
+  return {
+    label: map['demo.label']?.trim() || email,
+    email,
+    password,
   }
 })
 

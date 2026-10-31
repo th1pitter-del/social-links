@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import { AlertTriangle, CalendarClock, Ban } from 'lucide-react'
 import { getTranslations } from 'next-intl/server'
 
@@ -8,7 +8,7 @@ import { UnlockExperience, type UnlockStepPreview } from '@/components/unlock/un
 import { Button } from '@/components/ui/button'
 import { getSession } from '@/lib/session'
 import { getSiteSettings } from '@/lib/settings'
-import { getPublicUnlockLink, isExpired, type PublicUnlockLink } from '@/lib/unlock'
+import { getPublicUnlockLink, isExpired, recordShortLinkVisit, type PublicUnlockLink } from '@/lib/unlock'
 
 type PageProps = {
   params: Promise<{ slug: string }>
@@ -41,6 +41,7 @@ export default async function UnlockPage({ params, searchParams }: PageProps) {
   const settings = await getSiteSettings()
   const steps = toSteps(link)
   const stats = { viewCount: link.viewCount, unlockCount: link.unlockCount }
+  const brand = { siteName: settings.name, logoUrl: settings.logoUrl }
 
   if (link.status === 'DISABLED') {
     return (
@@ -73,7 +74,7 @@ export default async function UnlockPage({ params, searchParams }: PageProps) {
         description={link.description}
         coverImage={link.coverImage}
         initialToken={token && token.length <= 128 ? token : null}
-        siteName={settings.name}
+        {...brand}
         steps={steps}
         {...stats}
         preview
@@ -92,6 +93,12 @@ export default async function UnlockPage({ params, searchParams }: PageProps) {
     )
   }
 
+  // Zero-action URL links act as short links: deliver the destination instantly.
+  if (link.actions.length === 0 && link.contentType === 'URL' && link.targetUrl) {
+    await recordShortLinkVisit(link.id)
+    redirect(link.targetUrl)
+  }
+
   return (
     <UnlockExperience
       slug={link.slug}
@@ -99,7 +106,7 @@ export default async function UnlockPage({ params, searchParams }: PageProps) {
       description={link.description}
       coverImage={link.coverImage}
       initialToken={token && token.length <= 128 ? token : null}
-      siteName={settings.name}
+      {...brand}
       steps={steps}
       {...stats}
     />

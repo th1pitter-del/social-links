@@ -3,6 +3,7 @@ import 'server-only'
 import { createReadStream } from 'node:fs'
 import { mkdir, readFile, unlink, writeFile } from 'node:fs/promises'
 import path from 'node:path'
+import { Readable } from 'node:stream'
 
 import { prisma } from '@/lib/prisma'
 
@@ -94,8 +95,12 @@ export async function readStoredFileBytes(id: string): Promise<Uint8Array> {
   return readFile(filePathFor(id))
 }
 
-export function createStoredFileStream(id: string) {
-  return createReadStream(filePathFor(id))
+export function createStoredFileStream(id: string): ReadableStream<Uint8Array> {
+  const nodeStream = createReadStream(filePathFor(id))
+  // Swallow fs errors (missing file, fd failures) so they surface as a stream
+  // error instead of an unhandled 'error' event crashing the process.
+  nodeStream.on('error', () => nodeStream.destroy())
+  return Readable.toWeb(nodeStream) as unknown as ReadableStream<Uint8Array>
 }
 
 export async function deleteStoredFile(id: string) {

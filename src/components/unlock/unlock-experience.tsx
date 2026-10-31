@@ -65,6 +65,7 @@ export function UnlockExperience({
   viewCount = 0,
   unlockCount = 0,
   siteName,
+  logoUrl,
   steps = [],
 }: {
   slug: string
@@ -76,6 +77,7 @@ export function UnlockExperience({
   viewCount?: number
   unlockCount?: number
   siteName: string
+  logoUrl?: string
   steps?: UnlockStepPreview[]
 }) {
   const t = useTranslations('unlock')
@@ -196,7 +198,7 @@ export function UnlockExperience({
             ) : (
               <div className="relative h-48 w-full overflow-hidden rounded-xl bg-gradient-to-br from-primary/15 via-pulse-lime-soft/10 to-primary/5 sm:h-56">
                 <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-muted-foreground">
-                  <BrandMark className="size-12" />
+                  <BrandMark className="size-12" src={logoUrl || null} />
                   <p className="text-xs font-medium tracking-wide uppercase opacity-60">{siteName}</p>
                 </div>
               </div>

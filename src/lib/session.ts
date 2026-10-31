@@ -15,6 +15,11 @@ export async function requireUser() {
   return session
 }
 
+/** Landing page for a signed-in user: admins live in the console, owners in their dashboard. */
+export function homePathForRole(role: string | null | undefined): string {
+  return role === 'ADMIN' ? '/admin' : '/dashboard'
+}
+
 export async function requireAdmin() {
   const session = await requireUser()
   if (session.user.role !== 'ADMIN') {

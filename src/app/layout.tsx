@@ -32,6 +32,10 @@ export async function generateMetadata(): Promise<Metadata> {
       template: `%s · ${site.name}`,
     },
     description: t('description'),
+    // Single source of truth for the tab icon: the admin upload when set, the
+    // shipped `public/favicon.ico` otherwise. Keeping it in metadata avoids a
+    // second file-convention `<link rel="icon">` outranking the admin value.
+    icons: { icon: [{ url: site.faviconUrl || '/favicon.ico' }] },
     openGraph: {
       type: 'website',
       title: `${site.name} — ${t('title')}`,

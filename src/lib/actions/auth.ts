@@ -7,6 +7,7 @@ import { getTranslations } from 'next-intl/server'
 import { auth } from '@/lib/auth'
 import { claimGuestLinks } from '@/lib/guest'
 import { consume } from '@/lib/rate-limit'
+import { homePathForRole } from '@/lib/session'
 
 export type AuthFormState = {
   error?: string
@@ -82,7 +83,7 @@ export async function signInAction(
     .trim()
     .toLowerCase()
   const password = String(formData.get('password') ?? '')
-  const redirectTo = String(formData.get('redirectTo') ?? '/dashboard')
+  const redirectTo = String(formData.get('redirectTo') ?? '')
 
   if (!email || !password) {
     return { fieldErrors: { email: !email ? t('enterEmail') : '' } }
@@ -95,9 +96,11 @@ export async function signInAction(
   if (!limited.ok) return { error: t('tooManyAttempts') }
 
   let userId: string | undefined
+  let role: string | null | undefined
   try {
     const result = await auth.api.signInEmail({ body: { email, password } })
     userId = result.user.id
+    role = result.user.role
   } catch (error) {
     // The admin plugin rejects banned users with a BANNED_USER error code.
     const code = (error as { body?: { code?: string } })?.body?.code
@@ -110,7 +113,12 @@ export async function signInAction(
   // Move any links created as a guest onto the signed-in account.
   if (userId) await claimGuestLinks(userId)
 
-  redirect(redirectTo.startsWith('/') ? redirectTo : '/dashboard')
+  // A pending target (set when an unauthenticated visitor bounced off a protected
+  // page) wins; otherwise land by role. Reject protocol-relative values like
+  // '//host.example', which would leave the site.
+  const explicitTarget =
+    redirectTo.startsWith('/') && !redirectTo.startsWith('//') ? redirectTo : ''
+  redirect(explicitTarget || homePathForRole(role))
 }
 
 export async function signOutAction() {

@@ -15,7 +15,7 @@ export default async function BioLayout({ children }: { children: React.ReactNod
       <header className="sticky top-0 z-40 bg-background/80 backdrop-blur">
         <div className="mx-auto flex h-16 w-full max-w-5xl items-center justify-between gap-4 px-4">
           <Link href="/" className="flex items-center gap-2 font-semibold">
-            <BrandMark className="size-6" />
+            <BrandMark className="size-6" src={site.logoUrl || null} />
             <span>{site.name}</span>
           </Link>
           <Button size="sm" asChild>

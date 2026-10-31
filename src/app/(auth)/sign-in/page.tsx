@@ -3,7 +3,8 @@ import { redirect } from 'next/navigation'
 import { getTranslations } from 'next-intl/server'
 
 import { SignInForm } from '@/components/auth/sign-in-form'
-import { getSession } from '@/lib/session'
+import { getSession, homePathForRole } from '@/lib/session'
+import { getDemoLogin } from '@/lib/settings'
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('auth.signIn')
@@ -22,10 +23,11 @@ export default async function SignInPage({
     const target =
       redirectTo && redirectTo.startsWith('/') && !redirectTo.startsWith('//')
         ? redirectTo
-        : '/dashboard'
+        : homePathForRole(session.user.role)
     redirect(target)
   }
   const t = await getTranslations('auth.signIn')
+  const demo = await getDemoLogin()
 
   return (
     <div className="space-y-6">
@@ -33,7 +35,7 @@ export default async function SignInPage({
         <h1 className="text-xl font-semibold">{t('title')}</h1>
         <p className="text-sm text-muted-foreground">{t('subtitle')}</p>
       </div>
-      <SignInForm redirectTo={redirectTo} reset={reset === '1'} />
+      <SignInForm redirectTo={redirectTo} reset={reset === '1'} demo={demo} />
     </div>
   )
 }

@@ -91,10 +91,12 @@ function isActive(pathname: string, href: string) {
 export function DashboardShell({
   user,
   siteName,
+  logoUrl,
   children,
 }: {
   user: DashboardShellUser
   siteName: string
+  logoUrl?: string
   children: ReactNode
 }) {
   const t = useTranslations('dashboardShell')
@@ -181,7 +183,7 @@ export function DashboardShell({
             collapsed ? 'lg:justify-center lg:px-3' : '',
           )}
         >
-          <BrandMark className="size-9 shrink-0" />
+          <BrandMark className="size-9 shrink-0" src={logoUrl || null} />
           <div className={cn('min-w-0', collapsed ? 'lg:hidden' : '')}>
             <p className="truncate text-sm font-semibold text-foreground">{t('brandName')}</p>
             <p className="truncate text-[11px] text-muted-foreground">{siteName}</p>

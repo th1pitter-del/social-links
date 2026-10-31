@@ -1,6 +1,30 @@
 import { cn } from 'cn'
 
-export function BrandMark({ className }: { className?: string }) {
+/**
+ * The site mark. When an admin has uploaded a custom logo (`site.logoUrl`
+ * setting), it renders that image; otherwise the built-in glyph is shown.
+ */
+export function BrandMark({
+  className,
+  src,
+  alt = '',
+}: {
+  className?: string
+  src?: string | null
+  alt?: string
+}) {
+  if (src) {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        src={src}
+        alt={alt}
+        className={cn('inline-block rounded-md object-contain', className)}
+        referrerPolicy="no-referrer"
+      />
+    )
+  }
+
   return (
     <span
       className={cn(

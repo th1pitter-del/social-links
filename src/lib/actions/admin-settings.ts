@@ -4,7 +4,7 @@ import { revalidatePath } from 'next/cache'
 import { getTranslations } from 'next-intl/server'
 
 import { setSetting, writeAudit } from '@/lib/admin-utils'
-import { sanitizeHex } from '@/lib/settings'
+import { isMediaOrHttpUrl, sanitizeHex } from '@/lib/settings'
 import { CONTENT_VALUE_MAX_LENGTH } from '@/lib/validation'
 import { requireAdmin } from '@/lib/session'
 
@@ -25,6 +25,17 @@ export async function updateSetting(key: string, value: string): Promise<Setting
       return { ok: false, error: t('themeColorsHex') }
     }
     value = sanitizeHex(trimmedValue) ?? ''
+  }
+  if (trimmedKey === 'site.logoUrl' || trimmedKey === 'site.faviconUrl') {
+    // Empty = built-in default; otherwise an uploaded media path or http(s) URL.
+    const trimmedValue = value.trim()
+    if (trimmedValue !== '' && !isMediaOrHttpUrl(trimmedValue)) {
+      return { ok: false, error: t('invalidImageUrl') }
+    }
+    value = trimmedValue
+  }
+  if (trimmedKey === 'demo.loginEnabled') {
+    value = value === 'true' ? 'true' : 'false'
   }
   const maxLength = trimmedKey.startsWith('content.')
     ? CONTENT_VALUE_MAX_LENGTH

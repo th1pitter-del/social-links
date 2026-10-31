@@ -340,7 +340,8 @@
     "actionKeyExists": "An action with this key already exists.",
     "targetPlatformNotFound": "Target platform not found.",
     "actionBuiltIn": "Built-in actions cannot be deleted. Disable it instead.",
-    "actionInUse": "This action is used by {count} link(s). Remove it from them first."
+    "actionInUse": "This action is used by {count} link(s). Remove it from them first.",
+    "invalidImageUrl": "Logo and favicon must be an uploaded image or an http(s) URL."
   },
   "common": {
     "siteName": "Link Unlocker",
@@ -462,7 +463,10 @@
       "submit": "Sign in",
       "resetSuccess": "Your password was updated. Sign in with your new password.",
       "noAccount": "New here?",
-      "createAccount": "Create an account"
+      "createAccount": "Create an account",
+      "demoTitle": "Demo access",
+      "demoUse": "Use credentials",
+      "demoHint": "Fills the form instantly. Disable demo access in the admin settings for production."
     },
     "signUp": {
       "title": "Create your account",
@@ -1095,6 +1099,10 @@
         "platform-rules": {
           "title": "Platform rules",
           "description": "Allowlisted social platforms and content policy shown to owners."
+        },
+        "demo-access": {
+          "title": "Demo access",
+          "description": "Optional one-click demo credentials shown on the sign-in page."
         }
       },
       "fields": {
@@ -1164,8 +1172,37 @@
         "rules_contentPolicy": {
           "label": "Content policy",
           "hint": "Markdown-free plain text."
+        },
+        "site_logoUrl": {
+          "label": "Logo",
+          "hint": "Shown in the header, dashboard and unlock pages. Upload an image or paste an http(s) URL. Empty = built-in mark.",
+          "placeholder": "https://example.com/logo.png"
+        },
+        "site_faviconUrl": {
+          "label": "Favicon",
+          "hint": "Browser tab icon. Upload a square PNG or paste an http(s) URL. Empty = default icon.",
+          "placeholder": "https://example.com/favicon.png"
+        },
+        "demo_loginEnabled": {
+          "label": "Show demo credentials on sign-in",
+          "hint": "The password is stored in plain text and shown to every visitor. Keep this off in production."
+        },
+        "demo_label": {
+          "label": "Display label",
+          "placeholder": "Demo admin"
+        },
+        "demo_email": {
+          "label": "Demo email",
+          "placeholder": "admin@example.com"
+        },
+        "demo_password": {
+          "label": "Demo password",
+          "hint": "Stored in plain text. Use a throwaway account."
         }
-      }
+      },
+      "uploadImage": "Upload image",
+      "imageUploadedToast": "Image uploaded. Save to apply.",
+      "imageUploadFailed": "Upload failed. Please try again."
     }
   }
 }

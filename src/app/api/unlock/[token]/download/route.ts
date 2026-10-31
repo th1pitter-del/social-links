@@ -59,9 +59,9 @@ export async function GET(
   }
 
   const filename = session.link.file.filename.replace(/["'\\]/g, '_')
-  const stream = createStoredFileStream(asset.id)
+  const stream = createStoredFileStream(session.link.file.id)
 
-  return new Response(stream as unknown as BodyInit, {
+  return new Response(stream, {
     headers: {
       'Content-Type': asset.mimeType,
       'Content-Length': String(asset.size),

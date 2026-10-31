@@ -11,7 +11,24 @@ if (!connectionString) {
   throw new Error('DATABASE_URL is not set')
 }
 
-const prisma = new PrismaClient({ adapter: new PrismaMariaDb(connectionString) })
+const LOCAL_HOSTS = new Set(['localhost', '127.0.0.1', '::1'])
+
+/** Remote hosts (cloud MySQL such as TiDB) require TLS; local stays plain. */
+function adapterOptions(url: string) {
+  const parsed = new URL(url)
+  if (LOCAL_HOSTS.has(parsed.hostname)) return url
+  return {
+    host: parsed.hostname,
+    port: Number(parsed.port || 3306),
+    user: decodeURIComponent(parsed.username),
+    password: decodeURIComponent(parsed.password),
+    database: decodeURIComponent(parsed.pathname.slice(1)),
+    ssl: {},
+    connectTimeout: 15000,
+  }
+}
+
+const prisma = new PrismaClient({ adapter: new PrismaMariaDb(adapterOptions(connectionString)) })
 
 const PLATFORM_DEFAULTS = [
   { key: 'youtube', label: 'YouTube', icon: 'video', position: 0 },

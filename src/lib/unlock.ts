@@ -23,6 +23,7 @@ export type PublicUnlockLink = {
   coverImage: string | null
   status: 'DRAFT' | 'ACTIVE' | 'DISABLED'
   contentType: 'URL' | 'TEXT' | 'FILE'
+  targetUrl: string | null
   expiresAt: Date | null
   ownerName: string
   actions: PublicAction[]
@@ -43,6 +44,7 @@ export async function getPublicUnlockLink(slug: string): Promise<PublicUnlockLin
       coverImage: true,
       status: true,
       contentType: true,
+      targetUrl: true,
       expiresAt: true,
       owner: { select: { name: true } },
       file: { select: { id: true, filename: true, size: true } },
@@ -71,6 +73,7 @@ export async function getPublicUnlockLink(slug: string): Promise<PublicUnlockLin
     coverImage: link.coverImage,
     status: link.status,
     contentType: link.contentType,
+    targetUrl: link.targetUrl,
     expiresAt: link.expiresAt,
     ownerName: link.owner?.name ?? 'Guest',
     actions: link.actions.map((action) => {
@@ -90,4 +93,18 @@ export async function getPublicUnlockLink(slug: string): Promise<PublicUnlockLin
 
 export function isExpired(expiresAt: Date | null): boolean {
   return Boolean(expiresAt && expiresAt.getTime() <= Date.now())
+}
+
+/**
+ * Logs an instant visit for a zero-action short link. The page redirects
+ * straight to the destination, so no unlock session exists; a completed unlock
+ * is recorded because the content was delivered immediately.
+ */
+export async function recordShortLinkVisit(linkId: string): Promise<void> {
+  await prisma.analyticsEvent.createMany({
+    data: [
+      { linkId, type: 'VIEW' },
+      { linkId, type: 'UNLOCK_COMPLETE' },
+    ],
+  })
 }
