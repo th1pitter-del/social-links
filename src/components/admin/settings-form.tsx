@@ -47,20 +47,35 @@ export function SettingsGroupForm({
     })
   }
 
+  // Upload failures arrive as a stable code plus legacy English text; the code
+  // lets this panel speak the visitor's locale, the text is the fallback.
+  function uploadErrorMessage(data: { error?: string; code?: string; maxMb?: number }) {
+    if (data.code && t.has(`uploadErrors.${data.code}`)) {
+      return t(`uploadErrors.${data.code}`, { maxMb: data.maxMb ?? '' })
+    }
+    return data.error ?? t('imageUploadFailed')
+  }
+
   async function uploadImage(key: string, file: File) {
     setUploadingKey(key)
     try {
       const body = new FormData()
       body.append('file', file)
       const response = await fetch('/api/uploads', { method: 'POST', body })
-      const data = (await response.json()) as { url?: string; error?: string }
+      const data = (await response.json()) as {
+        url?: string
+        error?: string
+        code?: string
+        maxMb?: number
+      }
       if (!response.ok || !data.url) {
-        throw new Error(data.error ?? 'Upload failed')
+        toast.error(uploadErrorMessage(data))
+        return
       }
       setValues((v) => ({ ...v, [key]: data.url as string }))
       toast.success(t('imageUploadedToast'))
-    } catch (error) {
-      toast.error(error instanceof Error ? error.message : t('imageUploadFailed'))
+    } catch {
+      toast.error(t('imageUploadFailed'))
     } finally {
       setUploadingKey(null)
     }

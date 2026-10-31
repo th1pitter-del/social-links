@@ -807,7 +807,15 @@
       },
       "uploadImage": "تحميل صورة",
       "imageUploadedToast": "تم تحميل الصورة. احفظ للتطبيق.",
-      "imageUploadFailed": "فشل التحميل. حاول مرة أخرى."
+      "imageUploadFailed": "فشل التحميل. حاول مرة أخرى.",
+      "uploadErrors": {
+        "unauthorized": "سجّل الدخول لتحميل الملفات.",
+        "rateLimited": "عدد كبير من عمليات التحميل. حاول مرة أخرى لاحقًا.",
+        "invalidBody": "بيانات التحميل غير صالحة.",
+        "noFile": "لم يتم اختيار ملف.",
+        "unsupportedType": "نوع الملف غير مدعوم. المسموح: PNG و JPEG و WEBP و GIF.",
+        "tooLarge": "الملف كبير جدًا. الحد الأقصى للحجم هو {maxMb} ميجابايت."
+      }
     }
   },
   "dashboard": {

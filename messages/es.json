@@ -807,7 +807,15 @@
       },
       "uploadImage": "Subir imagen",
       "imageUploadedToast": "Imagen subida. Guarda para aplicar.",
-      "imageUploadFailed": "Error al subir. Inténtalo de nuevo."
+      "imageUploadFailed": "Error al subir. Inténtalo de nuevo.",
+      "uploadErrors": {
+        "unauthorized": "Inicia sesión para subir archivos.",
+        "rateLimited": "Demasiados envíos. Inténtalo de nuevo más tarde.",
+        "invalidBody": "Datos de envío no válidos.",
+        "noFile": "No se ha seleccionado ningún archivo.",
+        "unsupportedType": "Tipo de archivo no admitido. Permitidos: PNG, JPEG, WEBP, GIF.",
+        "tooLarge": "El archivo es demasiado grande. El tamaño máximo es {maxMb} MB."
+      }
     }
   },
   "dashboard": {

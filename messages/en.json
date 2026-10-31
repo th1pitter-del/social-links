@@ -1202,7 +1202,15 @@
       },
       "uploadImage": "Upload image",
       "imageUploadedToast": "Image uploaded. Save to apply.",
-      "imageUploadFailed": "Upload failed. Please try again."
+      "imageUploadFailed": "Upload failed. Please try again.",
+      "uploadErrors": {
+        "unauthorized": "Sign in to upload files.",
+        "rateLimited": "Too many uploads. Please try again later.",
+        "invalidBody": "Invalid upload body.",
+        "noFile": "No file provided.",
+        "unsupportedType": "Unsupported file type. Allowed: PNG, JPEG, WEBP, GIF.",
+        "tooLarge": "File is too large. Maximum size is {maxMb} MB."
+      }
     }
   }
 }
