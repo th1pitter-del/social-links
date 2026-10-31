@@ -192,8 +192,7 @@ export function SettingsGroupForm({
               {hasHint ? (
                 <p className="text-xs text-muted-foreground">{t(`fields.${fieldKey}.hint`)}</p>
               ) : null}
-              <div className="flex items-center justify-between pt-1">
-                <code className="text-xs text-muted-foreground">{field.key}</code>
+              <div className="flex items-center justify-end pt-1">
                 <Button
                   type="button"
                   size="sm"

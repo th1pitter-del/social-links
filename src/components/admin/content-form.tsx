@@ -168,7 +168,6 @@ export function ContentForm({ pages }: { pages: PageDef[] }) {
                       />
                     ) : null}
                   </h2>
-                  <code className="text-xs text-muted-foreground">content.{page.page}</code>
                 </div>
               </div>
 
