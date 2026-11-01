@@ -6,9 +6,11 @@ import { cn } from 'cn'
 import { DemoStage, useDemoCycle } from '@/components/motion/demo-cycle'
 
 /**
- * The three steps of the product as one connected rail instead of three matching
- * cards: the connector fills to the active step, and moving the pointer along the
- * rail is what selects a step, so the gesture teaches the sequence it describes.
+ * The three steps of the product as nodes threaded on one rail: the connector
+ * fills to the active node, that node's badge is the only solid one, and its
+ * card is the only one lit - so the sequence is followed with the eye rather
+ * than read from a caption below. Each card carries its own text, which means
+ * the mobile stack and the desktop rail say the same thing.
  *
  * Tap or click pins a step (the loop stops so it can be read); the transport in
  * the page's other demos is not needed here because the rail is small enough to
@@ -24,19 +26,26 @@ export function StepRail({
   const t = useTranslations('motion')
   const cycle = useDemoCycle({ phaseCount: steps.length, intervalMs: 4200 })
 
+  // The rail runs badge-center to badge-center: 4px of button padding plus half
+  // of the 32px badge.
+  const ratio = cycle.phase / Math.max(1, steps.length - 1)
+
   return (
-    <DemoStage cycle={cycle} label={title} className="space-y-5">
+    <DemoStage cycle={cycle} label={title}>
       <div className="relative grid gap-3 sm:grid-cols-3">
-        {/* The rail itself, sitting behind the nodes. */}
+        {/* The track, and the filled part of it. Both sit at the badges' own
+            height, so they pass behind them instead of cutting across the
+            cards. */}
         <span
           aria-hidden
-          className="absolute inset-x-4 top-4 hidden h-px bg-border sm:block"
+          className="absolute inset-x-5 top-5 z-10 hidden h-0.5 -translate-y-1/2 rounded-full bg-border sm:block"
         />
         <span
           aria-hidden
-          className="absolute start-4 top-4 hidden h-px bg-primary transition-[width] duration-700 ease-out sm:block"
-          style={{ width: `calc((100% - 2rem) * ${cycle.phase / Math.max(1, steps.length - 1)})` }}
+          className="absolute start-5 top-5 z-10 hidden h-0.5 -translate-y-1/2 rounded-full bg-gradient-to-r from-primary/40 to-primary rtl:bg-gradient-to-l transition-[width] duration-700 ease-out motion-reduce:transition-none sm:block"
+          style={{ width: `calc((100% - 2.5rem) * ${ratio})` }}
         />
+
         {steps.map((step, index) => {
           const active = index === cycle.phase
           const reached = index <= cycle.phase
@@ -49,56 +58,49 @@ export function StepRail({
                 cycle.pause()
               }}
               aria-current={active ? 'step' : undefined}
-              className={cn(
-                'relative flex cursor-pointer flex-col items-start gap-2 rounded-xl p-1 text-start transition-colors duration-300',
-                'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring',
-              )}
+              className="group relative flex cursor-pointer flex-col items-start gap-3 p-1 text-start focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
             >
+              {/* Only the current node wears the full accent: the ones already
+                  passed stay marked, but recede. */}
               <span
                 className={cn(
-                  'relative z-10 flex size-8 items-center justify-center rounded-lg text-sm font-semibold transition-[background-color,color,transform] duration-300',
-                  reached ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground',
-                  active && 'motion-safe:scale-105',
+                  'relative z-20 flex size-8 items-center justify-center rounded-lg text-sm font-semibold transition-[background-color,color,box-shadow] duration-500 motion-reduce:transition-none',
+                  active
+                    ? 'bg-primary text-primary-foreground shadow-md shadow-primary/25'
+                    : reached
+                      ? 'bg-primary/15 text-accent-text'
+                      : 'bg-muted text-muted-foreground',
                 )}
               >
                 {index + 1}
               </span>
               <span
                 className={cn(
-                  'font-medium transition-colors duration-300',
-                  active ? 'text-foreground' : 'text-muted-foreground',
+                  'w-full rounded-xl border p-4 transition-[background-color,border-color,box-shadow] duration-500 motion-reduce:transition-none',
+                  active
+                    ? 'border-primary/45 bg-card shadow-lg shadow-primary/10'
+                    : 'border-border bg-card/55 group-hover:border-primary/25',
                 )}
               >
-                {step.title}
-              </span>
-              {/* Below sm the rail is a stack, so each step carries its own text
-                  instead of sharing one panel that would be far from it. */}
-              <span
-                className={cn(
-                  'text-sm text-muted-foreground sm:hidden',
-                  active ? 'block' : 'hidden',
-                )}
-              >
-                {step.body}
+                <span
+                  className={cn(
+                    'block font-medium transition-colors duration-300',
+                    active ? 'text-foreground' : 'text-muted-foreground',
+                  )}
+                >
+                  {step.title}
+                </span>
+                <span className="mt-1.5 block text-sm leading-relaxed text-muted-foreground">
+                  {step.body}
+                </span>
               </span>
             </button>
           )
         })}
       </div>
 
-      <div className="min-h-16 rounded-xl border bg-card p-4 sm:min-h-0">
-        <p className="text-sm text-muted-foreground sm:hidden">{t('railTapHint')}</p>
-        {/* Hidden on mobile (the step itself carries the text there) and keyed so
-            the swap re-runs its fade. */}
-        <p
-          key={cycle.phase}
-          className={cn(
-            'hidden text-sm sm:block',
-            'motion-safe:animate-[demo-fade_0.35s_ease-out]',
-          )}
-        >
-          {steps[cycle.phase]?.body}
-        </p>
+      <div className="mt-4 flex items-center justify-between gap-3">
+        <p className="text-xs text-muted-foreground">{t('railTapHint')}</p>
         <p className="sr-only" aria-live="polite">
           {t('stepOf', { current: cycle.phase + 1, total: steps.length })}
         </p>

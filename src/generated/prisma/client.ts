@@ -107,6 +107,16 @@ export type AbuseReport = Prisma.AbuseReportModel
  */
 export type Setting = Prisma.SettingModel
 /**
+ * Model AdUnit
+ * 
+ */
+export type AdUnit = Prisma.AdUnitModel
+/**
+ * Model HeaderLink
+ * 
+ */
+export type HeaderLink = Prisma.HeaderLinkModel
+/**
  * Model AuditLog
  * 
  */

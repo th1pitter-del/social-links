@@ -2,22 +2,21 @@ import Link from 'next/link'
 import {
   ArrowRight,
   BadgeCheck,
-  ShieldCheck,
 } from 'lucide-react'
 import { getTranslations } from 'next-intl/server'
 
 import { SiteFooter } from '@/components/site-footer'
 import { SiteHeader } from '@/components/site-header'
 import { Button } from '@/components/ui/button'
+import { AdSlot } from '@/components/ads/ad-slot'
 import { ActionMixer, type DemoPlatform } from '@/components/home/action-mixer'
 import { FeatureBento } from '@/components/home/feature-bento'
 import { FlowDiagram } from '@/components/home/flow-diagram'
 import { StepRail } from '@/components/home/step-rail'
 import { UnlockDemo, type DemoStep } from '@/components/home/unlock-demo'
 import { Reveal } from '@/components/motion/reveal'
-import { getSiteSettings } from '@/lib/settings'
 import { getSession } from '@/lib/session'
-import { getEnabledActionOptions, getEnabledPlatforms } from '@/lib/action-catalog'
+import { getEnabledPlatforms } from '@/lib/action-catalog'
 
 export const dynamic = 'force-dynamic'
 
@@ -30,39 +29,28 @@ export const dynamic = 'force-dynamic'
  * prefers-reduced-motion, and never replaces the text it animates.
  */
 export default async function HomePage() {
-  const [t, nav, common, unlockCopy, session, site, actionOptions, platformRows] =
+  const [t, nav, common, unlockCopy, motionCopy, session, platformRows] =
     await Promise.all([
       getTranslations('home'),
       getTranslations('nav'),
       getTranslations('common'),
       getTranslations('unlock'),
+      getTranslations('motion'),
       getSession(),
-      getSiteSettings(),
-      getEnabledActionOptions(),
       getEnabledPlatforms(),
     ])
   const signedIn = Boolean(session)
 
-  // The demonstration uses actions that are actually switched on, so the page
-  // never advertises a capability the deployment does not have. Email steps are
-  // left out: they ask for an address, which a looping preview cannot show.
-  const realSteps = actionOptions
-    .filter((option) => option.behavior === 'URL')
-    .slice(0, 3)
-    .map((option): DemoStep => ({
-      label: option.label,
-      platform: option.platform,
-      icon: option.icon,
-    }))
-
-  const steps: DemoStep[] =
-    realSteps.length === 3
-      ? realSteps
-      : [
-          { label: t('actionLabels.youtube'), platform: 'youtube', icon: 'user_plus' },
-          { label: t('actionLabels.follow'), platform: 'x', icon: 'user_plus' },
-          { label: t('actionLabels.visit'), platform: null, icon: 'link' },
-        ]
+  // The hero demonstration walks four different platforms on purpose: the
+  // card is labelled as a simulation, and a varied set shows what the unlock
+  // flow looks like across the networks creators actually use. Each one is
+  // chosen for a distinct brand colour, since the rows wear those colours.
+  const steps: DemoStep[] = [
+    { label: t('demoSteps.youtube'), platform: 'youtube', icon: 'user_plus' },
+    { label: t('demoSteps.twitch'), platform: 'twitch', icon: 'user_check' },
+    { label: t('demoSteps.instagram'), platform: 'instagram', icon: 'user_plus' },
+    { label: t('demoSteps.discord'), platform: 'discord', icon: 'message' },
+  ]
 
   const platforms: DemoPlatform[] = platformRows.map((platform) => ({
     key: platform.key,
@@ -87,6 +75,7 @@ export default async function HomePage() {
       <SiteHeader />
 
       <main className="flex-1">
+        <AdSlot placement="home-top" className="mx-auto w-full max-w-[1200px] px-4 pt-6" />
         <section className="relative overflow-hidden">
           <div
             aria-hidden
@@ -139,10 +128,8 @@ export default async function HomePage() {
                 steps={steps}
                 linkTitle={t('demo.linkTitle')}
                 linkBody={t('demo.linkBody')}
-                siteName={site.name}
-                logoUrl={site.logoUrl || null}
-                revealLabel={t('demo.revealLabel')}
-                revealValue={t('demo.revealValue')}
+                creator={t('demo.creator')}
+                demoTag={t('demo.tag')}
                 demoLabel={t('demo.label')}
               />
             </div>
@@ -174,15 +161,24 @@ export default async function HomePage() {
               <div>
                 <h2 className="text-3xl font-semibold tracking-tight">{t('flow.title')}</h2>
                 <p className="mt-4 text-muted-foreground">{t('flow.body')}</p>
+                {/* Each claim names the stage of the flow it belongs to, so the
+                    list and the diagram beside it read as one mechanism instead
+                    of two unrelated blocks. Ordered by stage so the numbers ascend
+                    and never look like a broken 1-2-3. */}
                 <ul className="mt-6 space-y-3 text-sm">
                   {[
+                    { text: t('flow.progressBullet'), node: 1 },
                     { text: t('flow.serverBullet'), node: 2 },
                     { text: t('flow.signedBullet'), node: 3 },
-                    { text: t('flow.progressBullet'), node: 1 },
                   ].map((item) => (
-                    <li key={item.text} className="flex items-start gap-2">
-                      <ShieldCheck className="mt-0.5 size-4 shrink-0 text-accent-text" />
-                      <span>{item.text}</span>
+                    <li key={item.text} className="flex items-start gap-2.5">
+                      <span className="flex size-6 shrink-0 items-center justify-center rounded-lg bg-primary/12 text-[0.65rem] font-semibold text-accent-text tabular-nums ring-1 ring-primary/20">
+                        {item.node + 1}
+                        <span className="sr-only">
+                          {motionCopy('stageRef', { current: item.node + 1 })}
+                        </span>
+                      </span>
+                      <span className="pt-1 text-muted-foreground">{item.text}</span>
                     </li>
                   ))}
                 </ul>
@@ -199,6 +195,7 @@ export default async function HomePage() {
           <div className="mx-auto w-full max-w-[1200px] px-4 py-20">
             <Reveal>
               <h2 className="text-3xl font-semibold tracking-tight">{t('featuresTitle')}</h2>
+              <p className="mt-3 max-w-2xl text-muted-foreground">{t('featuresIntro')}</p>
             </Reveal>
 
             <FeatureBento
@@ -217,7 +214,6 @@ export default async function HomePage() {
                 },
                 email: { title: t('features.email.title'), body: t('features.email.body') },
                 abuse: { title: t('features.abuse.title'), body: t('features.abuse.body') },
-                mobile: { title: t('features.mobile.title'), body: t('features.mobile.body') },
               }}
               funnel={{
                 views: t('funnel.views'),
@@ -238,9 +234,11 @@ export default async function HomePage() {
             />
 
             <Reveal className="mt-14" delay={80}>
-              <div>
-                <h3 className="text-lg font-medium">{t('supportedActions')}</h3>
-                <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
+              <div className="rounded-2xl border bg-card p-5 sm:p-6">
+                <h3 className="text-xl font-semibold tracking-tight">
+                  {t('supportedActions')}
+                </h3>
+                <p className="mt-1.5 max-w-2xl text-sm text-muted-foreground">
                   {t('supportedActionsBody')}
                 </p>
                 <ActionMixer platforms={platforms} />
@@ -251,26 +249,39 @@ export default async function HomePage() {
           </div>
         </section>
 
-        <section className="relative overflow-hidden border-t">
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(45%_70%_at_85%_100%,rgba(201,247,42,0.16),transparent)] dark:bg-[radial-gradient(45%_70%_at_85%_100%,rgba(213,255,47,0.10),transparent)]"
-          />
+        <section className="border-t">
           <Reveal>
-            <div className="mx-auto flex w-full max-w-[1200px] flex-col items-start gap-6 px-4 py-16 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <h2 className="text-2xl font-semibold tracking-tight">{t('ctaTitle')}</h2>
-                <p className="mt-2 text-muted-foreground">{t('ctaBody')}</p>
+            <div className="mx-auto w-full max-w-[1200px] px-4 py-16">
+              {/* The closing ask gets the same framed treatment as the blocks
+                  above it, with the accent light inside the frame rather than
+                  bleeding across the whole page. */}
+              <div className="relative overflow-hidden rounded-2xl border bg-card">
+                <div
+                  aria-hidden
+                  className="pointer-events-none absolute inset-0 bg-[radial-gradient(50%_130%_at_88%_100%,rgba(201,247,42,0.16),transparent)] dark:bg-[radial-gradient(50%_130%_at_88%_100%,rgba(213,255,47,0.12),transparent)]"
+                />
+                <div className="relative flex flex-col items-start gap-6 p-6 sm:flex-row sm:items-center sm:justify-between sm:p-10">
+                  <div>
+                    <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
+                      {t('ctaTitle')}
+                    </h2>
+                    <p className="mt-2 max-w-xl text-muted-foreground">{t('ctaBody')}</p>
+                  </div>
+                  <div className="shrink-0">
+                    <Button size="lg" asChild>
+                      <Link href="/create">
+                        {t('ctaButton')}
+                        <ArrowRight className="rtl:rotate-180" />
+                      </Link>
+                    </Button>
+                  </div>
+                </div>
               </div>
-              <Button size="lg" asChild>
-                <Link href="/create">
-                  {t('ctaButton')}
-                  <ArrowRight className="rtl:rotate-180" />
-                </Link>
-              </Button>
             </div>
           </Reveal>
         </section>
+
+        <AdSlot placement="home-bottom" className="mx-auto w-full max-w-[1200px] px-4 pb-12" />
       </main>
 
       <SiteFooter />

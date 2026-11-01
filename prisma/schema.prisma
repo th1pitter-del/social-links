@@ -274,6 +274,40 @@ model Setting {
   updatedBy String?
 }
 
+// Admin-managed ad unit rendered in a fixed slot across the public site
+// (homepage, unlock pages, bio pages) and the creator dashboard.
+model AdUnit {
+  id        String  @id @default(cuid())
+  name      String
+  placement String
+  type      String
+  label     String?
+  url       String? @db.Text
+  imageUrl  String? @db.Text
+  html      String? @db.Text
+  newTab    Boolean @default(true)
+  enabled   Boolean @default(true)
+  position  Int     @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([placement, position])
+}
+
+// Admin-managed link shown in the header of every user link page (/u/*, /bio/*).
+model HeaderLink {
+  id        String   @id @default(cuid())
+  label     String
+  url       String   @db.Text
+  newTab    Boolean  @default(true)
+  enabled   Boolean  @default(true)
+  position  Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([position])
+}
+
 model AuditLog {
   id        String   @id @default(cuid())
   actorId   String

@@ -1,21 +1,13 @@
-import {
-  Blocks,
-  BarChart3,
-  Lock,
-  Mail,
-  ShieldCheck,
-  Smartphone,
-  Unlock,
-} from 'lucide-react'
+import { Blocks, BarChart3, Lock, Mail, ShieldCheck, Unlock } from 'lucide-react'
 import { cn } from 'cn'
 
 type Copy = { title: string; body: string }
 
 /**
- * The feature set as one composition instead of six matching cards. Each tile is
+ * The feature set as one composition instead of five matching cards. Each tile is
  * shaped by what it claims: the analytics tile draws the funnel it describes, the
- * delivery tile hides its own text behind a blur until you hover it, the abuse tile
- * carries a rate meter, the mobile tile carries a phone.
+ * delivery tile hides its own text behind a blur until you hover it, the abuse
+ * tile carries a rate meter.
  *
  * Interactions are CSS-only here: no JavaScript reaches the browser for this
  * section, and every hover-only state is already visible on touch devices through
@@ -31,7 +23,7 @@ export function FeatureBento({
   demoLabel,
   demoTag,
 }: {
-  features: Record<'actions' | 'delivery' | 'analytics' | 'email' | 'abuse' | 'mobile', Copy>
+  features: Record<'actions' | 'delivery' | 'analytics' | 'email' | 'abuse', Copy>
   /** Funnel stage names; the widths are an illustrative shape, never invented numbers. */
   funnel: { views: string; unlocks: string; completed: string }
   sampleContent: string
@@ -137,30 +129,6 @@ export function FeatureBento({
           <MockTag label={demoTag} />
         </div>
       </Tile>
-
-      <Tile
-        className="sm:col-span-2 lg:col-span-6"
-        icon={<Smartphone className="size-5" />}
-        title={features.mobile.title}
-        body={features.mobile.body}
-        layout="row"
-      >
-        <div className="relative grid size-28 shrink-0 place-items-end justify-center overflow-hidden rounded-2xl border bg-background pb-2">
-          <span
-            aria-hidden
-            className="absolute inset-x-3 bottom-0 h-14 rounded-t-full bg-primary/10"
-          />
-          <span
-            aria-hidden
-            className="relative mb-1 h-6 w-16 rounded-md bg-primary/70 transition-transform duration-300 group-hover:scale-105"
-          >
-            <span
-              aria-hidden
-              className="absolute inset-0 rounded-md bg-primary motion-safe:group-hover:animate-[demo-ripple_1s_ease-out] motion-reduce:hidden"
-            />
-          </span>
-        </div>
-      </Tile>
     </div>
   )
 }
@@ -237,34 +205,46 @@ function Tile({
   body,
   children,
   className,
-  layout = 'column',
 }: {
   icon: React.ReactNode
   title: string
   body: string
   children?: React.ReactNode
   className?: string
-  layout?: 'column' | 'row'
 }) {
   return (
     <article
       className={cn(
-        'group rounded-2xl border bg-card p-5 transition-[border-color,box-shadow,transform] duration-300',
+        'group flex h-full flex-col rounded-2xl border bg-card p-5 transition-[border-color,box-shadow,transform] duration-300',
         'hover:border-primary/40 motion-safe:hover:-translate-y-0.5',
         className,
       )}
     >
-      <div className={cn(layout === 'row' && 'flex items-center gap-6 flex-wrap')}>
-        <div className="min-w-0 flex-1">
-          <span className="flex size-10 items-center justify-center rounded-xl bg-primary/12 text-accent-text ring-1 ring-primary/20">
-            {icon}
-          </span>
-          <h3 className="mt-4 font-medium">{title}</h3>
-          <p className="mt-1 text-sm text-muted-foreground">{body}</p>
-          {layout === 'column' ? children : null}
-        </div>
-        {layout === 'row' ? children : null}
-      </div>
+      <TileCopy icon={icon} title={title} body={body} />
+      {/* The mock is pushed to the bottom edge, so tiles that share a row end
+          their artwork level no matter how long the copy turns out to be in a
+          given language. */}
+      <div className="mt-auto">{children}</div>
     </article>
+  )
+}
+
+function TileCopy({
+  icon,
+  title,
+  body,
+}: {
+  icon: React.ReactNode
+  title: string
+  body: string
+}) {
+  return (
+    <>
+      <span className="flex size-10 items-center justify-center rounded-xl bg-primary/12 text-accent-text ring-1 ring-primary/20">
+        {icon}
+      </span>
+      <h3 className="mt-4 font-medium">{title}</h3>
+      <p className="mt-1 text-sm text-muted-foreground">{body}</p>
+    </>
   )
 }

@@ -15,7 +15,9 @@ import {
   LayoutDashboard,
   Link2,
   LogOut,
+  Megaphone,
   Menu,
+  PanelTop,
   ScrollText,
   Settings,
   ShieldCheck,
@@ -96,6 +98,13 @@ export function AdminShell({
         { href: '/admin/platforms', label: t('nav.platforms'), icon: Globe },
         { href: '/admin/media', label: t('nav.mediaLibrary'), icon: Images },
         { href: '/admin/files', label: t('nav.lockedFiles'), icon: FileLock2 },
+      ],
+    },
+    {
+      title: t('groups.monetization'),
+      items: [
+        { href: '/admin/ads', label: t('nav.ads'), icon: Megaphone },
+        { href: '/admin/header-links', label: t('nav.headerLinks'), icon: PanelTop },
       ],
     },
     {

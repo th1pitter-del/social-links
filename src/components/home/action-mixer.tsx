@@ -31,7 +31,13 @@ export function ActionMixer({ platforms }: { platforms: DemoPlatform[] }) {
 
   return (
     <Tabs value={value} onValueChange={setValue} className="mt-4" dir={direction}>
-      <TabsList variant="line" className="h-auto w-full justify-start gap-1 overflow-x-auto">
+      {/* The strip scrolls by drag, wheel or arrow keys; a native bar inside a
+          framed card reads as a broken widget, and the clipped last tab already
+          says there is more to see. */}
+      <TabsList
+        variant="line"
+        className="h-auto w-full justify-start gap-1 overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      >
         {platforms.map((platform) => (
           <TabsTrigger
             key={platform.key}

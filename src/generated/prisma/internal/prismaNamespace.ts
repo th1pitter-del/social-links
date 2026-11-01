@@ -410,6 +410,8 @@ export const ModelName = {
   RateLimitBucket: 'RateLimitBucket',
   AbuseReport: 'AbuseReport',
   Setting: 'Setting',
+  AdUnit: 'AdUnit',
+  HeaderLink: 'HeaderLink',
   AuditLog: 'AuditLog',
   Platform: 'Platform',
   ActionOption: 'ActionOption',
@@ -433,7 +435,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "session" | "account" | "verification" | "link" | "linkAction" | "unlockSession" | "unlockActionCompletion" | "analyticsEvent" | "emailLead" | "rateLimitBucket" | "abuseReport" | "setting" | "auditLog" | "platform" | "actionOption" | "mediaAsset" | "storedFile" | "userUnlock" | "profile" | "bioLink"
+    modelProps: "user" | "session" | "account" | "verification" | "link" | "linkAction" | "unlockSession" | "unlockActionCompletion" | "analyticsEvent" | "emailLead" | "rateLimitBucket" | "abuseReport" | "setting" | "adUnit" | "headerLink" | "auditLog" | "platform" | "actionOption" | "mediaAsset" | "storedFile" | "userUnlock" | "profile" | "bioLink"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1295,6 +1297,138 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    AdUnit: {
+      payload: Prisma.$AdUnitPayload<ExtArgs>
+      fields: Prisma.AdUnitFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AdUnitFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdUnitPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AdUnitFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdUnitPayload>
+        }
+        findFirst: {
+          args: Prisma.AdUnitFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdUnitPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AdUnitFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdUnitPayload>
+        }
+        findMany: {
+          args: Prisma.AdUnitFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdUnitPayload>[]
+        }
+        create: {
+          args: Prisma.AdUnitCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdUnitPayload>
+        }
+        createMany: {
+          args: Prisma.AdUnitCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.AdUnitDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdUnitPayload>
+        }
+        update: {
+          args: Prisma.AdUnitUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdUnitPayload>
+        }
+        deleteMany: {
+          args: Prisma.AdUnitDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AdUnitUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.AdUnitUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdUnitPayload>
+        }
+        aggregate: {
+          args: Prisma.AdUnitAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAdUnit>
+        }
+        groupBy: {
+          args: Prisma.AdUnitGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AdUnitGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AdUnitCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AdUnitCountAggregateOutputType> | number
+        }
+      }
+    }
+    HeaderLink: {
+      payload: Prisma.$HeaderLinkPayload<ExtArgs>
+      fields: Prisma.HeaderLinkFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.HeaderLinkFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HeaderLinkPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.HeaderLinkFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HeaderLinkPayload>
+        }
+        findFirst: {
+          args: Prisma.HeaderLinkFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HeaderLinkPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.HeaderLinkFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HeaderLinkPayload>
+        }
+        findMany: {
+          args: Prisma.HeaderLinkFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HeaderLinkPayload>[]
+        }
+        create: {
+          args: Prisma.HeaderLinkCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HeaderLinkPayload>
+        }
+        createMany: {
+          args: Prisma.HeaderLinkCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.HeaderLinkDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HeaderLinkPayload>
+        }
+        update: {
+          args: Prisma.HeaderLinkUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HeaderLinkPayload>
+        }
+        deleteMany: {
+          args: Prisma.HeaderLinkDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.HeaderLinkUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.HeaderLinkUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HeaderLinkPayload>
+        }
+        aggregate: {
+          args: Prisma.HeaderLinkAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateHeaderLink>
+        }
+        groupBy: {
+          args: Prisma.HeaderLinkGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.HeaderLinkGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.HeaderLinkCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.HeaderLinkCountAggregateOutputType> | number
+        }
+      }
+    }
     AuditLog: {
       payload: Prisma.$AuditLogPayload<ExtArgs>
       fields: Prisma.AuditLogFieldRefs
@@ -2049,6 +2183,39 @@ export const SettingScalarFieldEnum = {
 export type SettingScalarFieldEnum = (typeof SettingScalarFieldEnum)[keyof typeof SettingScalarFieldEnum]
 
 
+export const AdUnitScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  placement: 'placement',
+  type: 'type',
+  label: 'label',
+  url: 'url',
+  imageUrl: 'imageUrl',
+  html: 'html',
+  newTab: 'newTab',
+  enabled: 'enabled',
+  position: 'position',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AdUnitScalarFieldEnum = (typeof AdUnitScalarFieldEnum)[keyof typeof AdUnitScalarFieldEnum]
+
+
+export const HeaderLinkScalarFieldEnum = {
+  id: 'id',
+  label: 'label',
+  url: 'url',
+  newTab: 'newTab',
+  enabled: 'enabled',
+  position: 'position',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type HeaderLinkScalarFieldEnum = (typeof HeaderLinkScalarFieldEnum)[keyof typeof HeaderLinkScalarFieldEnum]
+
+
 export const AuditLogScalarFieldEnum = {
   id: 'id',
   actorId: 'actorId',
@@ -2316,6 +2483,29 @@ export const SettingOrderByRelevanceFieldEnum = {
 } as const
 
 export type SettingOrderByRelevanceFieldEnum = (typeof SettingOrderByRelevanceFieldEnum)[keyof typeof SettingOrderByRelevanceFieldEnum]
+
+
+export const AdUnitOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  placement: 'placement',
+  type: 'type',
+  label: 'label',
+  url: 'url',
+  imageUrl: 'imageUrl',
+  html: 'html'
+} as const
+
+export type AdUnitOrderByRelevanceFieldEnum = (typeof AdUnitOrderByRelevanceFieldEnum)[keyof typeof AdUnitOrderByRelevanceFieldEnum]
+
+
+export const HeaderLinkOrderByRelevanceFieldEnum = {
+  id: 'id',
+  label: 'label',
+  url: 'url'
+} as const
+
+export type HeaderLinkOrderByRelevanceFieldEnum = (typeof HeaderLinkOrderByRelevanceFieldEnum)[keyof typeof HeaderLinkOrderByRelevanceFieldEnum]
 
 
 export const AuditLogOrderByRelevanceFieldEnum = {
@@ -2672,6 +2862,8 @@ export type GlobalOmitConfig = {
   rateLimitBucket?: Prisma.RateLimitBucketOmit
   abuseReport?: Prisma.AbuseReportOmit
   setting?: Prisma.SettingOmit
+  adUnit?: Prisma.AdUnitOmit
+  headerLink?: Prisma.HeaderLinkOmit
   auditLog?: Prisma.AuditLogOmit
   platform?: Prisma.PlatformOmit
   actionOption?: Prisma.ActionOptionOmit

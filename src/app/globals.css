@@ -238,3 +238,52 @@
     transform: scale(1.9);
   }
 }
+
+/*
+ * One short confetti scatter for the hero unlock celebration. Each particle
+ * carries its own destination through the custom properties below, so the burst
+ * fans out from a single origin and fades without ever looping.
+ */
+@keyframes demo-confetti {
+  from {
+    opacity: 1;
+    transform: translate(0, 0) rotate(0deg) scale(1);
+  }
+  70% {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    transform: translate(var(--demo-x), var(--demo-y)) rotate(var(--demo-r)) scale(0.6);
+  }
+}
+
+/* The restrained refusal when Unlock is pressed with steps still outstanding. */
+@keyframes demo-shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-4px);
+  }
+  50% {
+    transform: translateX(3px);
+  }
+  75% {
+    transform: translateX(-2px);
+  }
+}
+
+/* A completed task's badge settling into place: one short scale-in, no bounce
+   and no glow, so it reads as a state change rather than as an event. */
+@keyframes demo-check {
+  from {
+    opacity: 0;
+    transform: scale(0.55);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

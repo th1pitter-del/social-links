@@ -17,6 +17,7 @@
       "overview": "Overview",
       "moderation": "Moderation",
       "content": "Content",
+      "monetization": "Monetization",
       "system": "System"
     },
     "nav": {
@@ -28,6 +29,8 @@
       "platforms": "Platforms",
       "mediaLibrary": "Media library",
       "lockedFiles": "Locked files",
+      "ads": "Ads",
+      "headerLinks": "Header links",
       "settings": "Settings",
       "auditLog": "Audit log"
     }
@@ -352,7 +355,13 @@
     "targetPlatformNotFound": "Target platform not found.",
     "actionBuiltIn": "Built-in actions cannot be deleted. Disable it instead.",
     "actionInUse": "This action is used by {count} link(s). Remove it from them first.",
-    "invalidImageUrl": "Logo and favicon must be an uploaded image or an http(s) URL."
+    "invalidImageUrl": "Logo and favicon must be an uploaded image or an http(s) URL.",
+    "nameRequired": "Add a name",
+    "invalidAdPlacement": "Invalid ad placement",
+    "invalidAdType": "Invalid ad type",
+    "adNotFound": "Ad not found.",
+    "headerLinkNotFound": "Header link not found.",
+    "htmlRequired": "Ad code cannot be empty"
   },
   "common": {
     "siteName": "Link Unlocker",
@@ -437,6 +446,7 @@
       }
     },
     "featuresTitle": "Everything you need, for free",
+    "featuresIntro": "Every link gets the whole set. No tiers to compare and no trial clock running.",
     "features": {
       "actions": {
         "title": "Modular social actions",
@@ -457,10 +467,6 @@
       "abuse": {
         "title": "Abuse protection",
         "body": "Rate limits, ownership checks and server-enforced authorization throughout."
-      },
-      "mobile": {
-        "title": "Mobile first",
-        "body": "Unlock pages are built for the phones your audience actually uses."
       }
     },
     "supportedActions": "Supported actions include",
@@ -477,13 +483,19 @@
     "ctaButton": "Create your link",
     "stepsIntro": "Three moves, and your audience only ever sees the one they are on.",
     "demo": {
-      "label": "Example link — simulated preview",
-      "linkTitle": "Unreleased teaser track",
-      "linkBody": "Gone from the public feed the moment it rotates.",
-      "revealLabel": "Where the link lands",
-      "revealValue": "example.com/artist/teaser",
+      "label": "Demo — watch this link unlock itself",
+      "linkTitle": "Unlock my private link",
+      "linkBody": "The destination stays hidden until every step below is done.",
+      "creator": "link.unlocker",
       "sampleContent": "The full mix runs 3:42 — take it before it goes away.",
       "tag": "Simulated"
+    },
+    "demoSteps": {
+      "youtube": "Subscribe on YouTube",
+      "x": "Follow on X",
+      "twitch": "Follow on Twitch",
+      "instagram": "Follow on Instagram",
+      "discord": "Join the Discord"
     },
     "funnel": {
       "views": "Views",
@@ -739,6 +751,9 @@
     "resetPasswordSubject": "Reset your {site} password",
     "resetPasswordBody": "Hi {name},\n\nReset your password using this link (valid for one hour):\n{url}\n\nIf you did not request this, you can ignore this email."
   },
+  "userPage": {
+    "headerNavLabel": "Quick links"
+  },
   "site": {
     "name": "Link Unlocker",
     "tagline": "Free social unlock links"
@@ -786,7 +801,9 @@
       "reports": "Reports",
       "users": "Users",
       "user": "User",
-      "settings": "Settings"
+      "settings": "Settings",
+      "ads": "Ads",
+      "headerLinks": "User page header links"
     },
     "status": {
       "active": "active",
@@ -1139,6 +1156,97 @@
         "actionDeleted": "Action deleted."
       }
     },
+    "ads": {
+      "title": "Ads",
+      "description": "Create ad units and links shown in fixed slots across the homepage, user link pages, bio pages and the creator dashboard.",
+      "filterPlacement": "Filter by placement",
+      "allPlacements": "All placements",
+      "enabledCount": "{enabled} of {total} ads enabled",
+      "newAd": "New ad",
+      "empty": "No ads yet. Create the first one to monetize your traffic.",
+      "newTitle": "New ad",
+      "editTitle": "Edit ad",
+      "formDescription": "Choose where the unit appears and what it renders.",
+      "nameLabel": "Internal name",
+      "namePlaceholder": "e.g. OGads top banner",
+      "placementLabel": "Placement",
+      "typeLabel": "Type",
+      "types": {
+        "banner": "Image banner",
+        "html": "Ad code (HTML)",
+        "link": "Link button"
+      },
+      "placements": {
+        "home-top": "Homepage — top",
+        "home-bottom": "Homepage — bottom",
+        "unlock-top": "Unlock page — top",
+        "unlock-bottom": "Unlock page — bottom",
+        "bio-top": "Bio page — top",
+        "bio-bottom": "Bio page — bottom",
+        "dashboard-top": "Dashboard — top",
+        "dashboard-bottom": "Dashboard — bottom"
+      },
+      "urlLabel": "Target URL",
+      "urlHint": "An http(s) URL or a site path like /create.",
+      "imageUrlLabel": "Banner image",
+      "uploadImage": "Upload image",
+      "imageUploadedToast": "Image uploaded.",
+      "imageUploadFailed": "Upload failed. Check the type and size.",
+      "labelLabel": "Link text",
+      "labelPlaceholder": "e.g. Claim your reward",
+      "labelHint": "Shown as the button text (link) or the image alt text (banner).",
+      "htmlLabel": "Ad code",
+      "htmlPlaceholder": "<!-- Paste the ad network snippet here -->",
+      "htmlHint": "Paste the snippet from your ad network. Scripts run when the page loads.",
+      "newTabLabel": "Open in a new tab",
+      "createAd": "Create ad",
+      "htmlPreview": "Ad network code",
+      "deleteTitle": "Delete ad?",
+      "deleteDescription": "“{name}” will stop appearing immediately. This cannot be undone.",
+      "moveUpAria": "Move {name} up",
+      "moveDownAria": "Move {name} down",
+      "editAria": "Edit {name}",
+      "deleteAria": "Delete {name}",
+      "enableAria": "Enable {name}",
+      "toasts": {
+        "created": "Ad created.",
+        "updated": "Ad updated.",
+        "deleted": "Ad deleted.",
+        "enabled": "Ad enabled.",
+        "disabled": "Ad disabled."
+      }
+    },
+    "headerLinks": {
+      "title": "User page header links",
+      "description": "Custom links shown in the header of every user link page (unlock and bio pages). Useful for your own promos or offer links.",
+      "enabledCount": "{enabled} of {total} links enabled",
+      "newLink": "New link",
+      "empty": "No header links yet. Add one to show it on all user link pages.",
+      "newTitle": "New header link",
+      "editTitle": "Edit header link",
+      "formDescription": "Shown on every /u/… and /bio/… page header.",
+      "labelLabel": "Label",
+      "labelPlaceholder": "e.g. My offers",
+      "urlLabel": "URL",
+      "urlHint": "An http(s) URL or a site path like /create.",
+      "newTabLabel": "Open in a new tab",
+      "newTabBadge": "new tab",
+      "createLink": "Create link",
+      "deleteTitle": "Delete header link?",
+      "deleteDescription": "“{label}” will be removed from all user link pages. This cannot be undone.",
+      "moveUpAria": "Move {label} up",
+      "moveDownAria": "Move {label} down",
+      "editAria": "Edit {label}",
+      "deleteAria": "Delete {label}",
+      "enableAria": "Enable {label}",
+      "toasts": {
+        "created": "Header link created.",
+        "updated": "Header link updated.",
+        "deleted": "Header link deleted.",
+        "enabled": "Header link enabled.",
+        "disabled": "Header link disabled."
+      }
+    },
     "settings": {
       "navLabel": "Settings",
       "navAria": "Settings sections",
@@ -1290,8 +1398,15 @@
     "railTapHint": "Tap a step to keep it open.",
     "stepOf": "Step {current} of {total}",
     "nodeOf": "Stage {current} of {total}",
+    "stageRef": "Stage {current}",
     "mixerHint": "Actions on this platform: {count}",
     "phaseIdle": "Not started yet",
-    "phaseUnlocked": "Content delivered"
+    "phaseUnlocked": "Content delivered",
+    "toastTaskDone": "{label} completed!",
+    "toastAllDone": "All tasks completed! Content unlocked.",
+    "toastUnlocked": "Content unlocked successfully!",
+    "toastStepsFirst": "Complete every step first.",
+    "toastDemoOnly": "This is a demo — nothing was shared.",
+    "verifiedCreator": "Verified creator"
   }
 }

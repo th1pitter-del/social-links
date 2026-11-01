@@ -1,9 +1,11 @@
 import Link from 'next/link'
 import { getTranslations } from 'next-intl/server'
 
+import { AdSlot } from '@/components/ads/ad-slot'
 import { BrandMark } from '@/components/brand-mark'
 import { SiteFooter } from '@/components/site-footer'
 import { Button } from '@/components/ui/button'
+import { UserPageNav } from '@/components/user-page-nav'
 import { getSiteSettings } from '@/lib/settings'
 
 export default async function BioLayout({ children }: { children: React.ReactNode }) {
@@ -22,9 +24,14 @@ export default async function BioLayout({ children }: { children: React.ReactNod
             <Link href="/create">{t('createOwnLink')}</Link>
           </Button>
         </div>
+        <UserPageNav />
       </header>
 
-      <div className="flex flex-1 flex-col">{children}</div>
+      <div className="flex flex-1 flex-col">
+        <AdSlot placement="bio-top" className="mx-auto w-full max-w-lg px-4 pt-6" />
+        {children}
+        <AdSlot placement="bio-bottom" className="mx-auto w-full max-w-lg px-4 pb-8" />
+      </div>
 
       <SiteFooter bordered={false} showBrand={false} compact />
     </div>

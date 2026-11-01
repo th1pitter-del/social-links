@@ -17,6 +17,7 @@
       "overview": "Visão geral",
       "moderation": "Moderação",
       "content": "Conteúdo",
+      "monetization": "Monetização",
       "system": "Sistema"
     },
     "nav": {
@@ -28,6 +29,8 @@
       "platforms": "Plataformas",
       "mediaLibrary": "Biblioteca de mídia",
       "lockedFiles": "Arquivos bloqueados",
+      "ads": "Anúncios",
+      "headerLinks": "Links do cabeçalho",
       "settings": "Configurações",
       "auditLog": "Registro de auditoria"
     }
@@ -148,6 +151,7 @@
       }
     },
     "featuresTitle": "Tudo o que você precisa, grátis",
+    "featuresIntro": "Todo link vem com o conjunto completo. Sem planos para comparar nem período de teste.",
     "features": {
       "actions": {
         "title": "Ações sociais modulares",
@@ -168,10 +172,6 @@
       "abuse": {
         "title": "Proteção contra abusos",
         "body": "Limites de requisição, verificação de propriedade e autorização no servidor."
-      },
-      "mobile": {
-        "title": "Feito para o celular",
-        "body": "As páginas de desbloqueio são feitas para os celulares que seu público realmente usa."
       }
     },
     "supportedActions": "Entre as ações compatíveis estão",
@@ -188,13 +188,19 @@
     "ctaButton": "Criar seu link",
     "stepsIntro": "São três passos, e o público só enxerga a etapa em que está.",
     "demo": {
-      "label": "Link de exemplo — prévia simulada",
-      "linkTitle": "Faixa inédita do próximo trabalho",
-      "linkBody": "Some do feed público quando rotacionar.",
-      "revealLabel": "Onde o link chega",
-      "revealValue": "example.com/artista/preview",
+      "label": "Demonstração — veja este link ser desbloqueado sozinho",
+      "linkTitle": "Desbloqueie meu link privado",
+      "linkBody": "O destino fica oculto até você concluir todas as etapas.",
+      "creator": "link.unlocker",
       "sampleContent": "A mix completa dura 3:42 — baixe antes que saia do ar.",
       "tag": "Simulado"
+    },
+    "demoSteps": {
+      "youtube": "Inscreva-se no YouTube",
+      "x": "Siga no X",
+      "twitch": "Siga no Twitch",
+      "instagram": "Siga no Instagram",
+      "discord": "Entre no Discord"
     },
     "funnel": {
       "views": "Visualizações",
@@ -323,6 +329,9 @@
     "notFoundCta": "Ir para o início",
     "policyTitle": "Política de conteúdo"
   },
+  "userPage": {
+    "headerNavLabel": "Links rápidos"
+  },
   "site": {
     "name": "Link Unlocker",
     "tagline": "Links de desbloqueio social grátis"
@@ -370,7 +379,9 @@
       "reports": "Denúncias",
       "users": "Usuários",
       "user": "Usuário",
-      "settings": "Configurações"
+      "settings": "Configurações",
+      "ads": "Anúncios",
+      "headerLinks": "Links do cabeçalho das páginas de usuário"
     },
     "status": {
       "active": "ativo",
@@ -721,6 +732,97 @@
         "actionCreated": "Ação criada.",
         "platformDeleted": "Plataforma excluída.",
         "actionDeleted": "Ação excluída."
+      }
+    },
+    "ads": {
+      "title": "Anúncios",
+      "description": "Crie unidades de anúncio e links exibidos em espaços fixos da página inicial, das páginas de links dos usuários, das páginas de bio e do painel do criador.",
+      "filterPlacement": "Filtrar por posição",
+      "allPlacements": "Todas as posições",
+      "enabledCount": "{enabled} de {total} anúncios ativos",
+      "newAd": "Novo anúncio",
+      "empty": "Nenhum anúncio ainda. Crie o primeiro para monetizar seu tráfego.",
+      "newTitle": "Novo anúncio",
+      "editTitle": "Editar anúncio",
+      "formDescription": "Escolha onde a unidade aparece e o que ela exibe.",
+      "nameLabel": "Nome interno",
+      "namePlaceholder": "ex.: Banner superior do OGads",
+      "placementLabel": "Posição",
+      "typeLabel": "Tipo",
+      "types": {
+        "banner": "Banner de imagem",
+        "html": "Código de anúncio (HTML)",
+        "link": "Botão de link"
+      },
+      "placements": {
+        "home-top": "Início — topo",
+        "home-bottom": "Início — rodapé",
+        "unlock-top": "Página de desbloqueio — topo",
+        "unlock-bottom": "Página de desbloqueio — rodapé",
+        "bio-top": "Página de bio — topo",
+        "bio-bottom": "Página de bio — rodapé",
+        "dashboard-top": "Painel — topo",
+        "dashboard-bottom": "Painel — rodapé"
+      },
+      "urlLabel": "URL de destino",
+      "urlHint": "URL http(s) ou um caminho do site como /create.",
+      "imageUrlLabel": "Imagem do banner",
+      "uploadImage": "Enviar imagem",
+      "imageUploadedToast": "Imagem enviada.",
+      "imageUploadFailed": "Falha no envio. Verifique o tipo e o tamanho.",
+      "labelLabel": "Texto do link",
+      "labelPlaceholder": "ex.: Resgate sua recompensa",
+      "labelHint": "Exibido como texto do botão (link) ou texto alternativo da imagem (banner).",
+      "htmlLabel": "Código do anúncio",
+      "htmlPlaceholder": "<!-- Cole aqui o snippet da sua rede de anúncios -->",
+      "htmlHint": "Cole o snippet da sua rede de anúncios. Os scripts rodam quando a página carrega.",
+      "newTabLabel": "Abrir em uma nova aba",
+      "createAd": "Criar anúncio",
+      "htmlPreview": "Código da rede de anúncios",
+      "deleteTitle": "Excluir anúncio?",
+      "deleteDescription": "“{name}” deixará de aparecer imediatamente. Isso não pode ser desfeito.",
+      "moveUpAria": "Mover {name} para cima",
+      "moveDownAria": "Mover {name} para baixo",
+      "editAria": "Editar {name}",
+      "deleteAria": "Excluir {name}",
+      "enableAria": "Ativar {name}",
+      "toasts": {
+        "created": "Anúncio criado.",
+        "updated": "Anúncio atualizado.",
+        "deleted": "Anúncio excluído.",
+        "enabled": "Anúncio ativado.",
+        "disabled": "Anúncio desativado."
+      }
+    },
+    "headerLinks": {
+      "title": "Links do cabeçalho das páginas de usuário",
+      "description": "Links personalizados exibidos no cabeçalho de todas as páginas de links dos usuários (páginas de desbloqueio e bio). Úteis para suas próprias promoções ou ofertas.",
+      "enabledCount": "{enabled} de {total} links ativos",
+      "newLink": "Novo link",
+      "empty": "Nenhum link de cabeçalho ainda. Adicione um para exibi-lo em todas as páginas de usuário.",
+      "newTitle": "Novo link de cabeçalho",
+      "editTitle": "Editar link de cabeçalho",
+      "formDescription": "Exibido no cabeçalho de todas as páginas /u/… e /bio/…",
+      "labelLabel": "Etiqueta",
+      "labelPlaceholder": "ex.: Minhas ofertas",
+      "urlLabel": "URL",
+      "urlHint": "URL http(s) ou um caminho do site como /create.",
+      "newTabLabel": "Abrir em uma nova aba",
+      "newTabBadge": "nova aba",
+      "createLink": "Criar link",
+      "deleteTitle": "Excluir link do cabeçalho?",
+      "deleteDescription": "“{label}” será removido de todas as páginas de usuário. Isso não pode ser desfeito.",
+      "moveUpAria": "Mover {label} para cima",
+      "moveDownAria": "Mover {label} para baixo",
+      "editAria": "Editar {label}",
+      "deleteAria": "Excluir {label}",
+      "enableAria": "Ativar {label}",
+      "toasts": {
+        "created": "Link de cabeçalho criado.",
+        "updated": "Link de cabeçalho atualizado.",
+        "deleted": "Link de cabeçalho excluído.",
+        "enabled": "Link de cabeçalho ativado.",
+        "disabled": "Link de cabeçalho desativado."
       }
     },
     "settings": {
@@ -1149,7 +1251,13 @@
     "targetPlatformNotFound": "Plataforma de destino não encontrada.",
     "actionBuiltIn": "As ações integradas não podem ser excluídas. Desative-as.",
     "actionInUse": "Esta ação é usada por {count} link(s). Remova-a deles primeiro.",
-    "invalidImageUrl": "O logotipo e o favicon devem ser uma imagem enviada ou uma URL http(s)."
+    "invalidImageUrl": "O logotipo e o favicon devem ser uma imagem enviada ou uma URL http(s).",
+    "nameRequired": "Adicione um nome",
+    "invalidAdPlacement": "Posição de anúncio inválida",
+    "invalidAdType": "Tipo de anúncio inválido",
+    "adNotFound": "Anúncio não encontrado.",
+    "headerLinkNotFound": "Link de cabeçalho não encontrado.",
+    "htmlRequired": "O código do anúncio não pode estar vazio"
   },
   "linkForm": {
     "uploadFailed": "Falha no envio.",
@@ -1290,8 +1398,15 @@
     "railTapHint": "Toque em uma etapa para mantê-la aberta.",
     "stepOf": "Passo {current} de {total}",
     "nodeOf": "Estágio {current} de {total}",
+    "stageRef": "Estágio {current}",
     "mixerHint": "Ações nesta plataforma: {count}",
     "phaseIdle": "Ainda não iniciado",
-    "phaseUnlocked": "Conteúdo entregue"
+    "phaseUnlocked": "Conteúdo entregue",
+    "toastTaskDone": "{label} concluída!",
+    "toastAllDone": "Todas as tarefas concluídas! Conteúdo desbloqueado.",
+    "toastUnlocked": "Conteúdo desbloqueado com sucesso!",
+    "toastStepsFirst": "Conclua todas as etapas primeiro.",
+    "toastDemoOnly": "Isto é uma demonstração — nada foi compartilhado.",
+    "verifiedCreator": "Criador verificado"
   }
 }

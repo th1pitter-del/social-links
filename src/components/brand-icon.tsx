@@ -66,14 +66,21 @@ function brandColor(hex: string): string | undefined {
 export function BrandIcon({
   platform,
   className,
+  neutral = false,
 }: {
   platform: string | null | undefined
   className?: string
+  /**
+   * Draw in `currentColor` instead of the brand colour. Used where the glyph
+   * already sits on a surface washed with that same brand colour, where the two
+   * would cancel each other out instead of one reading against the other.
+   */
+  neutral?: boolean
 }) {
   const slug = brandSlugFor(platform)
   const icon = slug ? BRAND_ICONS[slug] : undefined
   if (!slug || !icon) return null
-  const color = brandColor(icon.hex)
+  const color = neutral ? undefined : brandColor(icon.hex)
   return (
     <svg
       viewBox="0 0 24 24"
@@ -96,13 +103,16 @@ export function PlatformGlyph({
   platform,
   icon,
   className,
+  neutral = false,
 }: {
   platform: string | null | undefined
   icon: string
   className?: string
+  /** See BrandIcon#neutral. */
+  neutral?: boolean
 }) {
   if (brandSlugFor(platform)) {
-    return <BrandIcon platform={platform} className={className} />
+    return <BrandIcon platform={platform} neutral={neutral} className={className} />
   }
   return createElement(actionIcon(icon), { className })
 }

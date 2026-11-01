@@ -64,6 +64,8 @@ export const ModelName = {
   RateLimitBucket: 'RateLimitBucket',
   AbuseReport: 'AbuseReport',
   Setting: 'Setting',
+  AdUnit: 'AdUnit',
+  HeaderLink: 'HeaderLink',
   AuditLog: 'AuditLog',
   Platform: 'Platform',
   ActionOption: 'ActionOption',
@@ -275,6 +277,39 @@ export const SettingScalarFieldEnum = {
 } as const
 
 export type SettingScalarFieldEnum = (typeof SettingScalarFieldEnum)[keyof typeof SettingScalarFieldEnum]
+
+
+export const AdUnitScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  placement: 'placement',
+  type: 'type',
+  label: 'label',
+  url: 'url',
+  imageUrl: 'imageUrl',
+  html: 'html',
+  newTab: 'newTab',
+  enabled: 'enabled',
+  position: 'position',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AdUnitScalarFieldEnum = (typeof AdUnitScalarFieldEnum)[keyof typeof AdUnitScalarFieldEnum]
+
+
+export const HeaderLinkScalarFieldEnum = {
+  id: 'id',
+  label: 'label',
+  url: 'url',
+  newTab: 'newTab',
+  enabled: 'enabled',
+  position: 'position',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type HeaderLinkScalarFieldEnum = (typeof HeaderLinkScalarFieldEnum)[keyof typeof HeaderLinkScalarFieldEnum]
 
 
 export const AuditLogScalarFieldEnum = {
@@ -544,6 +579,29 @@ export const SettingOrderByRelevanceFieldEnum = {
 } as const
 
 export type SettingOrderByRelevanceFieldEnum = (typeof SettingOrderByRelevanceFieldEnum)[keyof typeof SettingOrderByRelevanceFieldEnum]
+
+
+export const AdUnitOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  placement: 'placement',
+  type: 'type',
+  label: 'label',
+  url: 'url',
+  imageUrl: 'imageUrl',
+  html: 'html'
+} as const
+
+export type AdUnitOrderByRelevanceFieldEnum = (typeof AdUnitOrderByRelevanceFieldEnum)[keyof typeof AdUnitOrderByRelevanceFieldEnum]
+
+
+export const HeaderLinkOrderByRelevanceFieldEnum = {
+  id: 'id',
+  label: 'label',
+  url: 'url'
+} as const
+
+export type HeaderLinkOrderByRelevanceFieldEnum = (typeof HeaderLinkOrderByRelevanceFieldEnum)[keyof typeof HeaderLinkOrderByRelevanceFieldEnum]
 
 
 export const AuditLogOrderByRelevanceFieldEnum = {

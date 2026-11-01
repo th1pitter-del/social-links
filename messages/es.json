@@ -17,6 +17,7 @@
       "overview": "Resumen",
       "moderation": "Moderación",
       "content": "Contenido",
+      "monetization": "Monetización",
       "system": "Sistema"
     },
     "nav": {
@@ -28,6 +29,8 @@
       "platforms": "Plataformas",
       "mediaLibrary": "Biblioteca multimedia",
       "lockedFiles": "Archivos bloqueados",
+      "ads": "Anuncios",
+      "headerLinks": "Enlaces del encabezado",
       "settings": "Ajustes",
       "auditLog": "Registro de auditoría"
     }
@@ -148,6 +151,7 @@
       }
     },
     "featuresTitle": "Todo lo que necesitas, gratis",
+    "featuresIntro": "Cada enlace incluye todo. Sin planes que comparar ni periodos de prueba.",
     "features": {
       "actions": {
         "title": "Acciones sociales modulares",
@@ -168,10 +172,6 @@
       "abuse": {
         "title": "Protección contra abusos",
         "body": "Límites de frecuencia, comprobaciones de propiedad y autorización en el servidor."
-      },
-      "mobile": {
-        "title": "Primero para móviles",
-        "body": "Las páginas de desbloqueo están pensadas para los móviles que usa tu audiencia."
       }
     },
     "supportedActions": "Entre las acciones compatibles se incluyen",
@@ -188,13 +188,19 @@
     "ctaButton": "Crear tu enlace",
     "stepsIntro": "Tres pasos, y tu audiencia solo ve en todo momento el que le toca.",
     "demo": {
-      "label": "Enlace de ejemplo — vista previa simulada",
-      "linkTitle": "Pista inédita del próximo trabajo",
-      "linkBody": "Desaparecerá del feed público cuando rote.",
-      "revealLabel": "Adónde lleva el enlace",
-      "revealValue": "example.com/artista/avance",
+      "label": "Demo — mira cómo se desbloquea este enlace",
+      "linkTitle": "Desbloquea mi enlace privado",
+      "linkBody": "El destino permanece oculto hasta completar todos los pasos.",
+      "creator": "link.unlocker",
       "sampleContent": "La mezcla completa dura 3:42 — bájala antes de que desaparezca.",
       "tag": "Simulado"
+    },
+    "demoSteps": {
+      "youtube": "Suscríbete en YouTube",
+      "x": "Síguenos en X",
+      "twitch": "Síguenos en Twitch",
+      "instagram": "Síguenos en Instagram",
+      "discord": "Únete al Discord"
     },
     "funnel": {
       "views": "Visitas",
@@ -323,6 +329,9 @@
     "notFoundCta": "Ir al inicio",
     "policyTitle": "Política de contenido"
   },
+  "userPage": {
+    "headerNavLabel": "Enlaces rápidos"
+  },
   "site": {
     "name": "Link Unlocker",
     "tagline": "Enlaces de desbloqueo social gratis"
@@ -370,7 +379,9 @@
       "reports": "Reportes",
       "users": "Usuarios",
       "user": "Usuario",
-      "settings": "Ajustes"
+      "settings": "Ajustes",
+      "ads": "Anuncios",
+      "headerLinks": "Enlaces del encabezado de páginas de usuario"
     },
     "status": {
       "active": "activo",
@@ -721,6 +732,97 @@
         "actionCreated": "Acción creada.",
         "platformDeleted": "Plataforma eliminada.",
         "actionDeleted": "Acción eliminada."
+      }
+    },
+    "ads": {
+      "title": "Anuncios",
+      "description": "Crea unidades de anuncios y enlaces que se muestran en espacios fijos de la página principal, las páginas de enlaces de usuario, las páginas de bio y el panel del creador.",
+      "filterPlacement": "Filtrar por ubicación",
+      "allPlacements": "Todas las ubicaciones",
+      "enabledCount": "{enabled} de {total} anuncios activos",
+      "newAd": "Nuevo anuncio",
+      "empty": "Aún no hay anuncios. Crea el primero para monetizar tu tráfico.",
+      "newTitle": "Nuevo anuncio",
+      "editTitle": "Editar anuncio",
+      "formDescription": "Elige dónde aparece la unidad y qué muestra.",
+      "nameLabel": "Nombre interno",
+      "namePlaceholder": "p. ej. Banner superior de OGads",
+      "placementLabel": "Ubicación",
+      "typeLabel": "Tipo",
+      "types": {
+        "banner": "Banner de imagen",
+        "html": "Código de anuncio (HTML)",
+        "link": "Botón de enlace"
+      },
+      "placements": {
+        "home-top": "Inicio — arriba",
+        "home-bottom": "Inicio — abajo",
+        "unlock-top": "Página de desbloqueo — arriba",
+        "unlock-bottom": "Página de desbloqueo — abajo",
+        "bio-top": "Página de bio — arriba",
+        "bio-bottom": "Página de bio — abajo",
+        "dashboard-top": "Panel — arriba",
+        "dashboard-bottom": "Panel — abajo"
+      },
+      "urlLabel": "URL de destino",
+      "urlHint": "URL http(s) o una ruta del sitio como /create.",
+      "imageUrlLabel": "Imagen del banner",
+      "uploadImage": "Subir imagen",
+      "imageUploadedToast": "Imagen subida.",
+      "imageUploadFailed": "Error al subir. Comprueba el tipo y el tamaño.",
+      "labelLabel": "Texto del enlace",
+      "labelPlaceholder": "p. ej. Reclama tu recompensa",
+      "labelHint": "Se muestra como texto del botón (enlace) o texto alternativo de la imagen (banner).",
+      "htmlLabel": "Código del anuncio",
+      "htmlPlaceholder": "<!-- Pega aquí el fragmento de tu red de anuncios -->",
+      "htmlHint": "Pega el fragmento de tu red de anuncios. Los scripts se ejecutan al cargar la página.",
+      "newTabLabel": "Abrir en una pestaña nueva",
+      "createAd": "Crear anuncio",
+      "htmlPreview": "Código de red de anuncios",
+      "deleteTitle": "¿Eliminar el anuncio?",
+      "deleteDescription": "«{name}» dejará de mostrarse de inmediato. Esta acción no se puede deshacer.",
+      "moveUpAria": "Subir {name}",
+      "moveDownAria": "Bajar {name}",
+      "editAria": "Editar {name}",
+      "deleteAria": "Eliminar {name}",
+      "enableAria": "Activar {name}",
+      "toasts": {
+        "created": "Anuncio creado.",
+        "updated": "Anuncio actualizado.",
+        "deleted": "Anuncio eliminado.",
+        "enabled": "Anuncio activado.",
+        "disabled": "Anuncio desactivado."
+      }
+    },
+    "headerLinks": {
+      "title": "Enlaces del encabezado de páginas de usuario",
+      "description": "Enlaces personalizados que se muestran en el encabezado de todas las páginas de enlaces de usuario (páginas de desbloqueo y bio). Útiles para tus propias promociones u ofertas.",
+      "enabledCount": "{enabled} de {total} enlaces activos",
+      "newLink": "Nuevo enlace",
+      "empty": "Aún no hay enlaces de encabezado. Añade uno para mostrarlo en todas las páginas de usuario.",
+      "newTitle": "Nuevo enlace de encabezado",
+      "editTitle": "Editar enlace de encabezado",
+      "formDescription": "Se muestra en el encabezado de todas las páginas /u/… y /bio/…",
+      "labelLabel": "Etiqueta",
+      "labelPlaceholder": "p. ej. Mis ofertas",
+      "urlLabel": "URL",
+      "urlHint": "URL http(s) o una ruta del sitio como /create.",
+      "newTabLabel": "Abrir en una pestaña nueva",
+      "newTabBadge": "pestaña nueva",
+      "createLink": "Crear enlace",
+      "deleteTitle": "¿Eliminar el enlace del encabezado?",
+      "deleteDescription": "«{label}» se eliminará de todas las páginas de usuario. Esta acción no se puede deshacer.",
+      "moveUpAria": "Subir {label}",
+      "moveDownAria": "Bajar {label}",
+      "editAria": "Editar {label}",
+      "deleteAria": "Eliminar {label}",
+      "enableAria": "Activar {label}",
+      "toasts": {
+        "created": "Enlace de encabezado creado.",
+        "updated": "Enlace de encabezado actualizado.",
+        "deleted": "Enlace de encabezado eliminado.",
+        "enabled": "Enlace de encabezado activado.",
+        "disabled": "Enlace de encabezado desactivado."
       }
     },
     "settings": {
@@ -1149,7 +1251,13 @@
     "targetPlatformNotFound": "Plataforma de destino no encontrada.",
     "actionBuiltIn": "Las acciones integradas no se pueden eliminar. Desactívala en su lugar.",
     "actionInUse": "Esta acción se usa en {count} enlace(s). Retírala de ellos primero.",
-    "invalidImageUrl": "El logotipo y el favicon deben ser una imagen subida o una URL http(s)."
+    "invalidImageUrl": "El logotipo y el favicon deben ser una imagen subida o una URL http(s).",
+    "nameRequired": "Añade un nombre",
+    "invalidAdPlacement": "Ubicación de anuncio no válida",
+    "invalidAdType": "Tipo de anuncio no válido",
+    "adNotFound": "Anuncio no encontrado.",
+    "headerLinkNotFound": "Enlace de encabezado no encontrado.",
+    "htmlRequired": "El código del anuncio no puede estar vacío"
   },
   "linkForm": {
     "uploadFailed": "Error al subir.",
@@ -1290,8 +1398,15 @@
     "railTapHint": "Toca un paso para fijarlo.",
     "stepOf": "Paso {current} de {total}",
     "nodeOf": "Etapa {current} de {total}",
+    "stageRef": "Etapa {current}",
     "mixerHint": "Acciones en esta plataforma: {count}",
     "phaseIdle": "Aún no ha empezado",
-    "phaseUnlocked": "Contenido entregado"
+    "phaseUnlocked": "Contenido entregado",
+    "toastTaskDone": "¡{label} completada!",
+    "toastAllDone": "¡Todas las tareas completadas! Contenido desbloqueado.",
+    "toastUnlocked": "¡Contenido desbloqueado con éxito!",
+    "toastStepsFirst": "Completa primero todas las tareas.",
+    "toastDemoOnly": "Esto es una demo — no se compartió nada.",
+    "verifiedCreator": "Creador verificado"
   }
 }

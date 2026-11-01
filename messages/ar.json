@@ -17,6 +17,7 @@
       "overview": "نظرة عامة",
       "moderation": "الإشراف",
       "content": "المحتوى",
+      "monetization": "تحقيق الدخل",
       "system": "النظام"
     },
     "nav": {
@@ -28,6 +29,8 @@
       "platforms": "المنصات",
       "mediaLibrary": "مكتبة الوسائط",
       "lockedFiles": "الملفات المقفلة",
+      "ads": "الإعلانات",
+      "headerLinks": "روابط الترويسة",
       "settings": "الإعدادات",
       "auditLog": "سجل التدقيق"
     }
@@ -148,6 +151,7 @@
       }
     },
     "featuresTitle": "كل ما تحتاجه، مجانًا",
+    "featuresIntro": "كل رابط يحصل على المزايا كاملة. بلا خطط للمقارنة ولا مدة تجربة.",
     "features": {
       "actions": {
         "title": "إجراءات اجتماعية مرنة",
@@ -168,10 +172,6 @@
       "abuse": {
         "title": "حماية من الإساءة",
         "body": "حدود معدل، وفحوص ملكية، وتفويض مفروض من الخادم في كل مكان."
-      },
-      "mobile": {
-        "title": "أولوية الهاتف",
-        "body": "صُممت صفحات الفتح للهواتف التي يستخدمها جمهورك فعلًا."
       }
     },
     "supportedActions": "تشمل الإجراءات المدعومة",
@@ -188,13 +188,19 @@
     "ctaButton": "أنشئ رابطك",
     "stepsIntro": "ثلاث خطوات، وجمهورك يرى الخطوة التي هو فيها فقط.",
     "demo": {
-      "label": "رابط مثال — معاينة محاكاة",
-      "linkTitle": "مقطع تشويقي لم يُنشر بعد",
-      "linkBody": "سيختفي من التغذية العامة فور تبديله.",
-      "revealLabel": "إلى أين يصل الرابط",
-      "revealValue": "example.com/artist/teaser",
+      "label": "تجربة — شاهد كيف يُفتح الرابط بنفسه",
+      "linkTitle": "افتح رابطي الخاص",
+      "linkBody": "تبقى الوجهة مخفية حتى تُكمل جميع الخطوات أدناه.",
+      "creator": "link.unlocker",
       "sampleContent": "النسخة الكاملة مدتها ٣:٤٢ — احصل عليها قبل أن تُحذف.",
       "tag": "محاكاة"
+    },
+    "demoSteps": {
+      "youtube": "اشترك في يوتيوب",
+      "x": "تابع على إكس",
+      "twitch": "تابع على تويتش",
+      "instagram": "تابع على إنستغرام",
+      "discord": "انضم إلى ديسكورد"
     },
     "funnel": {
       "views": "المشاهدات",
@@ -323,6 +329,9 @@
     "notFoundCta": "الذهاب إلى الصفحة الرئيسية",
     "policyTitle": "سياسة المحتوى"
   },
+  "userPage": {
+    "headerNavLabel": "روابط سريعة"
+  },
   "site": {
     "name": "Link Unlocker",
     "tagline": "روابط فتح اجتماعية مجانية"
@@ -370,7 +379,9 @@
       "reports": "البلاغات",
       "users": "المستخدمون",
       "user": "مستخدم",
-      "settings": "الإعدادات"
+      "settings": "الإعدادات",
+      "ads": "الإعلانات",
+      "headerLinks": "روابط ترويسة صفحات المستخدمين"
     },
     "status": {
       "active": "نشط",
@@ -721,6 +732,97 @@
         "actionCreated": "أُنشئ الإجراء.",
         "platformDeleted": "حُذفت المنصة.",
         "actionDeleted": "حُذف الإجراء."
+      }
+    },
+    "ads": {
+      "title": "الإعلانات",
+      "description": "أنشئ وحدات إعلانية وروابط تظهر في مساحات محددة على الصفحة الرئيسية وصفحات روابط المستخدمين وصفحات البايو ولوحة تحكم المنشئ.",
+      "filterPlacement": "تصفية حسب الموضع",
+      "allPlacements": "كل المواضع",
+      "enabledCount": "{enabled} من {total} إعلانًا مفعّلًا",
+      "newAd": "إعلان جديد",
+      "empty": "لا توجد إعلانات بعد. أنشئ أول إعلان لتحقيق دخل من زياراتك.",
+      "newTitle": "إعلان جديد",
+      "editTitle": "تعديل الإعلان",
+      "formDescription": "اختر مكان ظهور الوحدة وما تعرضه.",
+      "nameLabel": "اسم داخلي",
+      "namePlaceholder": "مثال: بانر OGads العلوي",
+      "placementLabel": "الموضع",
+      "typeLabel": "النوع",
+      "types": {
+        "banner": "بانر صورة",
+        "html": "كود إعلان (HTML)",
+        "link": "زر رابط"
+      },
+      "placements": {
+        "home-top": "الرئيسية — أعلى",
+        "home-bottom": "الرئيسية — أسفل",
+        "unlock-top": "صفحة فتح المحتوى — أعلى",
+        "unlock-bottom": "صفحة فتح المحتوى — أسفل",
+        "bio-top": "صفحة البايو — أعلى",
+        "bio-bottom": "صفحة البايو — أسفل",
+        "dashboard-top": "لوحة التحكم — أعلى",
+        "dashboard-bottom": "لوحة التحكم — أسفل"
+      },
+      "urlLabel": "الرابط الهدف",
+      "urlHint": "رابط http(s) أو مسار داخلي مثل /create.",
+      "imageUrlLabel": "صورة البانر",
+      "uploadImage": "رفع صورة",
+      "imageUploadedToast": "تم رفع الصورة.",
+      "imageUploadFailed": "فشل الرفع. تحقق من النوع والحجم.",
+      "labelLabel": "نص الرابط",
+      "labelPlaceholder": "مثال: احصل على مكافأتك",
+      "labelHint": "يظهر كنص الزر (رابط) أو كنص بديل للصورة (بانر).",
+      "htmlLabel": "كود الإعلان",
+      "htmlPlaceholder": "<!-- الصق هنا كود شبكة الإعلانات -->",
+      "htmlHint": "الصق الكود من شبكة الإعلانات. تعمل السكربتات عند تحميل الصفحة.",
+      "newTabLabel": "الفتح في علامة تبويب جديدة",
+      "createAd": "إنشاء إعلان",
+      "htmlPreview": "كود شبكة إعلانات",
+      "deleteTitle": "حذف الإعلان؟",
+      "deleteDescription": "سيتوقف ظهور «{name}» فورًا. لا يمكن التراجع عن هذا الإجراء.",
+      "moveUpAria": "نقل {name} لأعلى",
+      "moveDownAria": "نقل {name} لأسفل",
+      "editAria": "تعديل {name}",
+      "deleteAria": "حذف {name}",
+      "enableAria": "تفعيل {name}",
+      "toasts": {
+        "created": "تم إنشاء الإعلان.",
+        "updated": "تم تحديث الإعلان.",
+        "deleted": "تم حذف الإعلان.",
+        "enabled": "تم تفعيل الإعلان.",
+        "disabled": "تم تعطيل الإعلان."
+      }
+    },
+    "headerLinks": {
+      "title": "روابط ترويسة صفحات المستخدمين",
+      "description": "روابط مخصصة تظهر في ترويسة كل صفحات روابط المستخدمين (صفحات فتح المحتوى والبايو). مفيدة لعروضك أو ترويجاتك.",
+      "enabledCount": "{enabled} من {total} رابطًا مفعّلًا",
+      "newLink": "رابط جديد",
+      "empty": "لا توجد روابط ترويسة بعد. أضف رابطًا ليظهر على جميع صفحات المستخدمين.",
+      "newTitle": "رابط ترويسة جديد",
+      "editTitle": "تعديل رابط الترويسة",
+      "formDescription": "يظهر في ترويسة كل صفحات /u/… و /bio/…",
+      "labelLabel": "التسمية",
+      "labelPlaceholder": "مثال: عروضي",
+      "urlLabel": "الرابط",
+      "urlHint": "رابط http(s) أو مسار داخلي مثل /create.",
+      "newTabLabel": "الفتح في علامة تبويب جديدة",
+      "newTabBadge": "علامة تبويب جديدة",
+      "createLink": "إنشاء رابط",
+      "deleteTitle": "حذف رابط الترويسة؟",
+      "deleteDescription": "سيُزال «{label}» من جميع صفحات المستخدمين. لا يمكن التراجع عن هذا الإجراء.",
+      "moveUpAria": "نقل {label} لأعلى",
+      "moveDownAria": "نقل {label} لأسفل",
+      "editAria": "تعديل {label}",
+      "deleteAria": "حذف {label}",
+      "enableAria": "تفعيل {label}",
+      "toasts": {
+        "created": "تم إنشاء رابط الترويسة.",
+        "updated": "تم تحديث رابط الترويسة.",
+        "deleted": "تم حذف رابط الترويسة.",
+        "enabled": "تم تفعيل رابط الترويسة.",
+        "disabled": "تم تعطيل رابط الترويسة."
       }
     },
     "settings": {
@@ -1149,7 +1251,13 @@
     "targetPlatformNotFound": "لم يتم العثور على المنصة الوجهة.",
     "actionBuiltIn": "لا يمكن حذف الإجراءات المدمجة. عطّلها بدلاً من ذلك.",
     "actionInUse": "يستخدم هذا الإجراء {count} رابطًا. أزل منه أولاً.",
-    "invalidImageUrl": "يجب أن يكون الشعار وأيقونة الموقع صورة مرفوعة أو رابط http(s)."
+    "invalidImageUrl": "يجب أن يكون الشعار وأيقونة الموقع صورة مرفوعة أو رابط http(s).",
+    "nameRequired": "أضف اسمًا",
+    "invalidAdPlacement": "موضع إعلان غير صالح",
+    "invalidAdType": "نوع إعلان غير صالح",
+    "adNotFound": "لم يتم العثور على الإعلان.",
+    "headerLinkNotFound": "لم يتم العثور على رابط الترويسة.",
+    "htmlRequired": "لا يمكن أن يكون كود الإعلان فارغًا"
   },
   "linkForm": {
     "uploadFailed": "تعذّر الرفع.",
@@ -1290,8 +1398,15 @@
     "railTapHint": "اضغط على خطوة لإبقائها مفتوحة.",
     "stepOf": "الخطوة {current} من {total}",
     "nodeOf": "المرحلة {current} من {total}",
+    "stageRef": "المرحلة {current}",
     "mixerHint": "الإجراءات على هذه المنصة: {count}",
     "phaseIdle": "لم يبدأ بعد",
-    "phaseUnlocked": "تم تسليم المحتوى"
+    "phaseUnlocked": "تم تسليم المحتوى",
+    "toastTaskDone": "اكتملت: {label}!",
+    "toastAllDone": "اكتملت جميع المهام! تم فتح المحتوى.",
+    "toastUnlocked": "تم فتح المحتوى بنجاح!",
+    "toastStepsFirst": "أكمل جميع الخطوات أولًا.",
+    "toastDemoOnly": "هذه تجربة فقط — لم تتم مشاركة أي شيء.",
+    "verifiedCreator": "منشئ موثّق"
   }
 }
