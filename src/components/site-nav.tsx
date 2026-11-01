@@ -151,10 +151,9 @@ function NavGroup({
 }
 
 /**
- * Every secondary control of the public header: the five nav links and, for
- * signed-in users, the account actions. One trigger at every viewport width
- * keeps the row short enough that no locale can overflow the 1168px content
- * budget, and the menu has the room the row never had for icon + label.
+ * The hamburger menu for the public header below lg, holding the five nav links
+ * and, for signed-in users, the account actions. Above lg the header renders
+ * these inline instead, so the menu is hidden there (see site-header.tsx).
  */
 export function SiteNavMenu({
   menuLabel,

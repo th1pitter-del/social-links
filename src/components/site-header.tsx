@@ -1,3 +1,4 @@
+import { LogOut } from 'lucide-react'
 import Link from 'next/link'
 import { getTranslations } from 'next-intl/server'
 
@@ -9,6 +10,7 @@ import { Button } from '@/components/ui/button'
 import { signOutAction } from '@/lib/actions/auth'
 import { getSession } from '@/lib/session'
 import { getSiteSettings } from '@/lib/settings'
+import { cn } from 'cn'
 
 export { BrandMark }
 
@@ -44,10 +46,10 @@ export async function SiteHeader() {
     },
   ]
 
-  // The row cannot fit these labels next to the CTA in every locale, so they live
-  // in the menu where icon + label has room. Sign-out stays a POST form: the form
-  // is rendered here because a server action cannot cross into the client menu,
-  // and the menu's button reaches it by id from anywhere in the document.
+  // Large screens show these inline in the header; below lg they only exist in
+  // the hamburger menu. Sign-out stays a POST form: the form is rendered here
+  // because a server action cannot cross into the client menu, and both the
+  // inline icon button and the menu's row reach it by id from anywhere.
   const adminLink: SiteNavItem[] =
     user && user.role === 'ADMIN'
       ? [{ href: '/admin', label: common('admin'), icon: 'shieldCheck' }]
@@ -61,6 +63,12 @@ export async function SiteHeader() {
       ]
     : []
 
+  const linkClass = (item: SiteNavItem) =>
+    cn(
+      'whitespace-nowrap text-sm font-medium transition-colors',
+      item.toneClass ?? 'text-muted-foreground hover:text-foreground',
+    )
+
   return (
     <header className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur">
       <div className="mx-auto flex h-16 w-full max-w-[1200px] items-center justify-between gap-4 px-4">
@@ -70,6 +78,54 @@ export async function SiteHeader() {
           <BrandMark className="size-6 shrink-0" src={site.logoUrl || null} />
           <span className="hidden truncate sm:inline">{site.name}</span>
         </Link>
+        {/* Normal/large screens: every nav and account control lives inline in
+            the row. The account links repeat what the small-screen menu offers,
+            with sign-out compressed to an icon so the longest locale still fits. */}
+        <nav aria-label={nav('sections')} className="hidden items-center gap-5 lg:flex">
+          {links.map((item) =>
+            item.external ? (
+              <a
+                key={item.label}
+                href={item.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={linkClass(item)}
+              >
+                {item.label}
+              </a>
+            ) : (
+              <Link key={item.label} href={item.href ?? '/'} className={linkClass(item)}>
+                {item.label}
+              </Link>
+            ),
+          )}
+          {user
+            ? account.map((item) =>
+                item.formId ? (
+                  <Button
+                    key={item.label}
+                    variant="ghost"
+                    size="icon"
+                    type="submit"
+                    form={item.formId}
+                    aria-label={item.label}
+                    title={item.label}
+                    className="size-8 text-muted-foreground hover:text-foreground"
+                  >
+                    <LogOut className="size-4" aria-hidden="true" />
+                  </Button>
+                ) : (
+                  <Link
+                    key={item.label}
+                    href={item.href ?? '/'}
+                    className="text-sm font-medium whitespace-nowrap text-muted-foreground transition-colors hover:text-foreground"
+                  >
+                    {item.label}
+                  </Link>
+                ),
+              )
+            : null}
+        </nav>
         <div className="flex items-center gap-2">
           <LanguageSwitcher />
           <ThemeSwitcher />
@@ -90,15 +146,17 @@ export async function SiteHeader() {
               </Button>
             </>
           )}
-          {/* Last child, and visible at every width: the menu is the only home for
-              the nav and account controls, so it never swaps with an inline row. */}
-          <SiteNavMenu
-            account={account}
-            accountLabel={common('account')}
-            links={links}
-            menuLabel={nav('menu')}
-            navLabel={nav('sections')}
-          />
+          {/* Medium/small screens only: the menu is the sole home for the nav and
+              account controls once the inline row no longer fits. */}
+          <div className="lg:hidden">
+            <SiteNavMenu
+              account={account}
+              accountLabel={common('account')}
+              links={links}
+              menuLabel={nav('menu')}
+              navLabel={nav('sections')}
+            />
+          </div>
         </div>
       </div>
     </header>
