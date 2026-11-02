@@ -1,4 +1,3 @@
-import { LogOut } from 'lucide-react'
 import Link from 'next/link'
 import { getTranslations } from 'next-intl/server'
 
@@ -6,6 +5,7 @@ import { BrandMark } from '@/components/brand-mark'
 import { LanguageSwitcher } from '@/components/language-switcher'
 import { navIcons } from '@/components/site-nav-icons'
 import { SiteNavMenu, type SiteNavItem } from '@/components/site-nav'
+import { SiteUserMenu } from '@/components/site-user-menu'
 import { ThemeSwitcher } from '@/components/theme-switcher'
 import { Button } from '@/components/ui/button'
 import { signOutAction } from '@/lib/actions/auth'
@@ -40,10 +40,9 @@ export async function SiteHeader() {
     toneColor: link.color ?? undefined,
   }))
 
-  // Large screens show these inline in the header; below lg they only exist in
-  // the hamburger menu. Sign-out stays a POST form: the form is rendered here
-  // because a server action cannot cross into the client menu, and both the
-  // inline icon button and the menu's row reach it by id from anywhere.
+  // Account actions never sit loose in the nav row: they live in the user menu,
+  // at every width. Sign-out stays a POST form rendered here — a server action
+  // cannot cross into the client menu, so the row reaches it by id.
   const adminLink: SiteNavItem[] =
     user && user.role === 'ADMIN'
       ? [{ href: '/admin', label: common('admin'), icon: 'shieldCheck' }]
@@ -53,7 +52,12 @@ export async function SiteHeader() {
     ? [
         { href: '/dashboard', label: common('dashboard'), icon: 'layoutDashboard' },
         ...adminLink,
-        { formId: 'site-signout', label: common('signOut'), icon: 'logOut' },
+        {
+          formId: 'site-signout',
+          label: common('signOut'),
+          icon: 'logOut',
+          destructive: true,
+        },
       ]
     : []
 
@@ -92,9 +96,8 @@ export async function SiteHeader() {
           <BrandMark className="size-6 shrink-0" src={site.logoUrl || null} />
           <span className="hidden truncate sm:inline">{site.name}</span>
         </Link>
-        {/* Normal/large screens: every nav and account control lives inline in
-            the row. The account links repeat what the small-screen menu offers,
-            with sign-out compressed to an icon so the longest locale still fits. */}
+        {/* Normal/large screens: the admin-managed menus live inline in the row.
+            Account actions do not — they are in the user menu at every width. */}
         <nav aria-label={nav('sections')} className="hidden items-center gap-5 lg:flex">
           {links.map((item) =>
             item.external ? (
@@ -119,32 +122,6 @@ export async function SiteHeader() {
               </Link>
             ),
           )}
-          {user
-            ? account.map((item) =>
-                item.formId ? (
-                  <Button
-                    key={item.label}
-                    variant="ghost"
-                    size="icon"
-                    type="submit"
-                    form={item.formId}
-                    aria-label={item.label}
-                    title={item.label}
-                    className="size-8 text-muted-foreground hover:text-foreground"
-                  >
-                    <LogOut className="size-4" aria-hidden="true" />
-                  </Button>
-                ) : (
-                  <Link
-                    key={item.label}
-                    href={item.href ?? '/'}
-                    className="text-sm font-medium whitespace-nowrap text-muted-foreground transition-colors hover:text-foreground"
-                  >
-                    {item.label}
-                  </Link>
-                ),
-              )
-            : null}
         </nav>
         <div className="flex items-center gap-2">
           <LanguageSwitcher />
@@ -152,6 +129,14 @@ export async function SiteHeader() {
           {user ? (
             <>
               <form id="site-signout" action={signOutAction} className="hidden" />
+              <SiteUserMenu
+                accountLabel={common('account')}
+                email={user.email ?? ''}
+                items={account}
+                menuLabel={common('account')}
+                roleLabel={user.role === 'ADMIN' ? common('admin') : common('member')}
+                userLabel={user.name ?? common('member')}
+              />
               <Button size="sm" asChild className="shrink-0">
                 <Link href="/dashboard/links/new">{common('createLink')}</Link>
               </Button>
@@ -166,12 +151,10 @@ export async function SiteHeader() {
               </Button>
             </>
           )}
-          {/* Medium/small screens only: the menu is the sole home for the nav and
-              account controls once the inline row no longer fits. */}
+          {/* Medium/small screens only: the menu is the sole home for the
+              admin-managed nav links once the inline row no longer fits. */}
           <div className="lg:hidden">
             <SiteNavMenu
-              account={account}
-              accountLabel={common('account')}
               links={links}
               menuLabel={nav('menu')}
               navLabel={nav('sections')}

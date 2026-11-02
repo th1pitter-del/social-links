@@ -14,7 +14,6 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { cn } from 'cn'
@@ -31,6 +30,8 @@ export type SiteNavItem = {
   /** Brand color (hex) painted on the item via --menu-tint; default tone when unset. */
   toneColor?: string
   toneClass?: string
+  /** Signs the user out, so the row is tinted as a destructive action. */
+  destructive?: boolean
 }
 
 type NavRowProps = { item: SiteNavItem } & React.ComponentPropsWithoutRef<'a'> & {
@@ -43,7 +44,7 @@ type NavRowProps = { item: SiteNavItem } & React.ComponentPropsWithoutRef<'a'> &
  * the DOM node. Dropping them made the rows unhighlightable and arrow keys threw
  * "Cannot read properties of null (reading 'focus')" inside Radix.
  */
-function NavRow({ item, className, ref, style, ...rest }: NavRowProps) {
+export function NavRow({ item, className, ref, style, ...rest }: NavRowProps) {
   const Icon = navIcons[item.icon]
   const toneStyle = item.toneColor
     ? ({ ...style, '--menu-tint': item.toneColor } as React.CSSProperties)
@@ -61,6 +62,7 @@ function NavRow({ item, className, ref, style, ...rest }: NavRowProps) {
     // ! because the shared dropdown item paints focus:text-accent-foreground,
     // and Radix focuses a row as soon as the pointer enters it.
     item.toneColor && 'text-(--menu-tint)! hover:text-(--menu-tint)/75! focus:text-(--menu-tint)!',
+    item.destructive && 'text-destructive',
     item.toneClass ?? 'hover:text-foreground',
     className,
   )
@@ -110,20 +112,10 @@ function NavRow({ item, className, ref, style, ...rest }: NavRowProps) {
   )
 }
 
-function NavGroup({
-  label,
-  items,
-  labelledBy,
-}: {
-  label?: string
-  items: SiteNavItem[]
-  labelledBy: string
-}) {
+function NavGroup({ label, items, labelledBy }: { label: string; items: SiteNavItem[]; labelledBy: string }) {
   return (
-    <DropdownMenuGroup aria-labelledby={label ? labelledBy : undefined}>
-      {label ? (
-        <DropdownMenuLabel id={labelledBy}>{label}</DropdownMenuLabel>
-      ) : null}
+    <DropdownMenuGroup aria-labelledby={labelledBy}>
+      <DropdownMenuLabel id={labelledBy}>{label}</DropdownMenuLabel>
       {items.map((item) => (
         <DropdownMenuItem key={item.label} asChild>
           <NavRow item={item} />
@@ -134,22 +126,19 @@ function NavGroup({
 }
 
 /**
- * The hamburger menu for the public header below lg, holding the five nav links
- * and, for signed-in users, the account actions. Above lg the header renders
- * these inline instead, so the menu is hidden there (see site-header.tsx).
+ * The hamburger menu for the public header below lg, holding the admin-managed
+ * nav links. Above lg the header renders those inline instead, so the menu is
+ * hidden there. Account actions are not here: the user menu carries them at
+ * every width (see site-user-menu.tsx).
  */
 export function SiteNavMenu({
   menuLabel,
   navLabel,
   links,
-  accountLabel,
-  account,
 }: {
   menuLabel: string
   navLabel: string
   links: SiteNavItem[]
-  accountLabel?: string
-  account?: SiteNavItem[]
 }) {
   // Radix pins dir="ltr" on the portalled content unless the root says otherwise,
   // which left the Arabic panel anchored to the wrong edge with icons on the left.
@@ -168,16 +157,6 @@ export function SiteNavMenu({
         className="flex w-60 flex-col gap-1 text-sm"
       >
         <NavGroup label={navLabel} items={links} labelledBy="site-nav-menu-navigation" />
-        {account?.length ? (
-          <>
-            <DropdownMenuSeparator />
-            <NavGroup
-              label={accountLabel}
-              items={account}
-              labelledBy="site-nav-menu-account"
-            />
-          </>
-        ) : null}
       </DropdownMenuContent>
     </DropdownMenu>
   )
