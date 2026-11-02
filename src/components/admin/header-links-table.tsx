@@ -21,7 +21,7 @@ import {
 } from '@/components/ui/dialog'
 import { Switch } from '@/components/ui/switch'
 import { Panel } from '@/components/admin/panel'
-import { navIcons, type SiteNavIcon } from '@/components/site-nav'
+import { navIcons, type SiteNavIcon } from '@/components/site-nav-icons'
 import {
   createHeaderLink,
   deleteHeaderLink,

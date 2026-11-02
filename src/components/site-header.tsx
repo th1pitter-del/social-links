@@ -4,6 +4,7 @@ import { getTranslations } from 'next-intl/server'
 
 import { BrandMark } from '@/components/brand-mark'
 import { LanguageSwitcher } from '@/components/language-switcher'
+import { navIcons } from '@/components/site-nav-icons'
 import { SiteNavMenu, type SiteNavItem } from '@/components/site-nav'
 import { ThemeSwitcher } from '@/components/theme-switcher'
 import { Button } from '@/components/ui/button'
@@ -69,6 +70,19 @@ export async function SiteHeader() {
       ? ({ '--menu-tint': item.toneColor } as React.CSSProperties)
       : undefined
 
+  // Icons are admin-chosen, so the inline row shows them like the hamburger does.
+  // text-inherit keeps the glyph on the link's own colour, including the hover
+  // fade that the tone classes apply to the parent.
+  const labelled = (item: SiteNavItem) => {
+    const Icon = navIcons[item.icon]
+    return (
+      <>
+        <Icon className="size-4 shrink-0 text-inherit" aria-hidden="true" />
+        <span>{item.label}</span>
+      </>
+    )
+  }
+
   return (
     <header className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur">
       <div className="mx-auto flex h-16 w-full max-w-[1200px] items-center justify-between gap-4 px-4">
@@ -90,13 +104,18 @@ export async function SiteHeader() {
                 target="_blank"
                 rel="noopener noreferrer"
                 style={linkStyle(item)}
-                className={linkClass(item)}
+                className={cn(linkClass(item), 'flex items-center gap-1.5')}
               >
-                {item.label}
+                {labelled(item)}
               </a>
             ) : (
-              <Link key={item.label} href={item.href ?? '/'} style={linkStyle(item)} className={linkClass(item)}>
-                {item.label}
+              <Link
+                key={item.label}
+                href={item.href ?? '/'}
+                style={linkStyle(item)}
+                className={cn(linkClass(item), 'flex items-center gap-1.5')}
+              >
+                {labelled(item)}
               </Link>
             ),
           )}

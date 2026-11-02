@@ -3,33 +3,11 @@
 import type * as React from 'react'
 import Link from 'next/link'
 import { useLocale } from 'next-intl'
-import {
-  Camera,
-  CircleHelp,
-  Download,
-  Film,
-  Flame,
-  Gift,
-  Globe,
-  Heart,
-  LayoutDashboard,
-  Link2,
-  ListChecks,
-  LogOut,
-  Menu,
-  Minimize2,
-  Music,
-  Play,
-  Rocket,
-  ShieldCheck,
-  Sparkles,
-  Star,
-  Tag,
-  type LucideIcon,
-} from 'lucide-react'
+import { Menu } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { localeDirection, type Locale } from '@/i18n/config'
+import { navIcons, type SiteNavIcon } from '@/components/site-nav-icons'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -40,35 +18,6 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { cn } from 'cn'
-
-/**
- * Icons are looked up by key because the header is a Server Component and cannot
- * pass a component reference across the client boundary.
- */
-export const navIcons = {
-  listChecks: ListChecks,
-  sparkles: Sparkles,
-  circleHelp: CircleHelp,
-  minimize: Minimize2,
-  download: Download,
-  link: Link2,
-  globe: Globe,
-  star: Star,
-  gift: Gift,
-  tag: Tag,
-  rocket: Rocket,
-  play: Play,
-  film: Film,
-  music: Music,
-  camera: Camera,
-  heart: Heart,
-  flame: Flame,
-  layoutDashboard: LayoutDashboard,
-  shieldCheck: ShieldCheck,
-  logOut: LogOut,
-} satisfies Record<string, LucideIcon>
-
-export type SiteNavIcon = keyof typeof navIcons
 
 export type SiteNavItem = {
   label: string
