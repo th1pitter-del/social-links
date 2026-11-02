@@ -49,20 +49,25 @@ export const getActiveAds = cache(async (placement: AdPlacement): Promise<AdUnit
   }
 })
 
-/** Enabled header links for the user link pages, ordered. Failure-safe. */
+const headerLinkSelect = {
+  id: true,
+  label: true,
+  labelKey: true,
+  url: true,
+  icon: true,
+  color: true,
+  newTab: true,
+  enabled: true,
+  position: true,
+} as const
+
+/** Enabled header links for the public site header menu, ordered. Failure-safe. */
 export const getActiveHeaderLinks = cache(async (): Promise<HeaderLinkData[]> => {
   try {
     return await prisma.headerLink.findMany({
       where: { enabled: true },
       orderBy: [{ position: 'asc' }, { createdAt: 'asc' }],
-      select: {
-        id: true,
-        label: true,
-        url: true,
-        newTab: true,
-        enabled: true,
-        position: true,
-      },
+      select: headerLinkSelect,
     })
   } catch {
     return []
@@ -81,13 +86,6 @@ export const getAllAdUnits = cache(async (): Promise<AdUnitData[]> => {
 export const getAllHeaderLinks = cache(async (): Promise<HeaderLinkData[]> => {
   return prisma.headerLink.findMany({
     orderBy: [{ position: 'asc' }, { createdAt: 'asc' }],
-    select: {
-      id: true,
-      label: true,
-      url: true,
-      newTab: true,
-      enabled: true,
-      position: true,
-    },
+    select: headerLinkSelect,
   })
 })

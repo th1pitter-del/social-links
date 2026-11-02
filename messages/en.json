@@ -361,7 +361,9 @@
     "invalidAdType": "Invalid ad type",
     "adNotFound": "Ad not found.",
     "headerLinkNotFound": "Header link not found.",
-    "htmlRequired": "Ad code cannot be empty"
+    "htmlRequired": "Ad code cannot be empty",
+    "invalidHeaderIcon": "Please choose a valid icon.",
+    "invalidHeaderColor": "Please use a hex color like #5182EF or leave it empty."
   },
   "common": {
     "siteName": "Link Unlocker",
@@ -751,9 +753,6 @@
     "resetPasswordSubject": "Reset your {site} password",
     "resetPasswordBody": "Hi {name},\n\nReset your password using this link (valid for one hour):\n{url}\n\nIf you did not request this, you can ignore this email."
   },
-  "userPage": {
-    "headerNavLabel": "Quick links"
-  },
   "site": {
     "name": "Link Unlocker",
     "tagline": "Free social unlock links"
@@ -803,7 +802,7 @@
       "user": "User",
       "settings": "Settings",
       "ads": "Ads",
-      "headerLinks": "User page header links"
+      "headerLinks": "Site header menu links"
     },
     "status": {
       "active": "active",
@@ -1217,14 +1216,14 @@
       }
     },
     "headerLinks": {
-      "title": "User page header links",
-      "description": "Custom links shown in the header of every user link page (unlock and bio pages). Useful for your own promos or offer links.",
+      "title": "Site header menu links",
+      "description": "Custom links shown in the site header menu on every public page. Useful for your own promos or offer links.",
       "enabledCount": "{enabled} of {total} links enabled",
       "newLink": "New link",
-      "empty": "No header links yet. Add one to show it on all user link pages.",
+      "empty": "No header links yet. Add one to show it in the site header menu.",
       "newTitle": "New header link",
       "editTitle": "Edit header link",
-      "formDescription": "Shown on every /u/… and /bio/… page header.",
+      "formDescription": "Shown in the header menu on every public page.",
       "labelLabel": "Label",
       "labelPlaceholder": "e.g. My offers",
       "urlLabel": "URL",
@@ -1233,7 +1232,7 @@
       "newTabBadge": "new tab",
       "createLink": "Create link",
       "deleteTitle": "Delete header link?",
-      "deleteDescription": "“{label}” will be removed from all user link pages. This cannot be undone.",
+      "deleteDescription": "“{label}” will be removed from the site header menu. This cannot be undone.",
       "moveUpAria": "Move {label} up",
       "moveDownAria": "Move {label} down",
       "editAria": "Edit {label}",
@@ -1245,7 +1244,13 @@
         "deleted": "Header link deleted.",
         "enabled": "Header link enabled.",
         "disabled": "Header link disabled."
-      }
+      },
+      "builtInBadge": "Built-in",
+      "builtInLabelHint": "Built-in menu — its label comes from the site translations.",
+      "iconLabel": "Icon",
+      "colorLabel": "Color",
+      "colorClear": "Clear",
+      "colorDefault": "Default tone"
     },
     "settings": {
       "navLabel": "Settings",

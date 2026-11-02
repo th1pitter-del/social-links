@@ -21,6 +21,7 @@ import {
 } from '@/components/ui/dialog'
 import { Switch } from '@/components/ui/switch'
 import { Panel } from '@/components/admin/panel'
+import { navIcons, type SiteNavIcon } from '@/components/site-nav'
 import {
   createHeaderLink,
   deleteHeaderLink,
@@ -28,12 +29,29 @@ import {
   setHeaderLinkEnabled,
   updateHeaderLink,
 } from '@/lib/actions/admin-ads'
-import { HEADER_LINK_LABEL_MAX_LENGTH, type HeaderLinkData } from '@/lib/ads'
+import {
+  HEADER_ICONS,
+  HEADER_ICON_DEFAULT,
+  HEADER_LINK_LABEL_MAX_LENGTH,
+  type HeaderLinkData,
+} from '@/lib/ads'
 import { cn } from 'cn'
 
-type FormState = { label: string; url: string; newTab: boolean }
+type FormState = {
+  label: string
+  url: string
+  icon: SiteNavIcon
+  color: string
+  newTab: boolean
+}
 
-const EMPTY_FORM: FormState = { label: '', url: '', newTab: true }
+const EMPTY_FORM: FormState = {
+  label: '',
+  url: '',
+  icon: HEADER_ICON_DEFAULT,
+  color: '',
+  newTab: true,
+}
 
 function sortLinks(list: HeaderLinkData[]): HeaderLinkData[] {
   return [...list].sort((a, b) => a.position - b.position || a.label.localeCompare(b.label))
@@ -60,6 +78,7 @@ export function HeaderLinksTable({ initial }: { initial: HeaderLinkData[] }) {
   const router = useRouter()
   const t = useTranslations('admin.headerLinks')
   const tc = useTranslations('admin.common')
+  const tn = useTranslations('nav')
   const [links, setLinks] = useState<HeaderLinkData[]>(initial)
   const [pending, setPending] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
@@ -69,6 +88,10 @@ export function HeaderLinksTable({ initial }: { initial: HeaderLinkData[] }) {
   const [confirm, setConfirm] = useState<HeaderLinkData | null>(null)
   const [, startTransition] = useTransition()
 
+  // Built-in menus show their translated label; custom rows show the stored one.
+  const displayLabel = (link: HeaderLinkData) =>
+    link.labelKey ? tn(link.labelKey as 'howItWorks') : link.label
+
   function openCreate() {
     setEditing(null)
     setForm(EMPTY_FORM)
@@ -77,12 +100,26 @@ export function HeaderLinksTable({ initial }: { initial: HeaderLinkData[] }) {
 
   function openEdit(link: HeaderLinkData) {
     setEditing(link)
-    setForm({ label: link.label, url: link.url, newTab: link.newTab })
+    setForm({
+      label: displayLabel(link),
+      url: link.url,
+      icon: (HEADER_ICONS.includes(link.icon as (typeof HEADER_ICONS)[number])
+        ? link.icon
+        : HEADER_ICON_DEFAULT) as SiteNavIcon,
+      color: link.color ?? '',
+      newTab: link.newTab,
+    })
     setDialogOpen(true)
   }
 
   function submitForm() {
-    const input = { label: form.label, url: form.url, newTab: form.newTab }
+    const input = {
+      label: form.label,
+      url: form.url,
+      icon: form.icon,
+      color: form.color || undefined,
+      newTab: form.newTab,
+    }
     setBusy(true)
     startTransition(async () => {
       const result = editing
@@ -172,8 +209,17 @@ export function HeaderLinksTable({ initial }: { initial: HeaderLinkData[] }) {
       <ul className="divide-y divide-border">
         {links.map((link, index) => {
           const rowBusy = pending === link.id
+          const RowIcon = navIcons[link.icon as SiteNavIcon] ?? navIcons[HEADER_ICON_DEFAULT]
+          const label = displayLabel(link)
           return (
             <li key={link.id} className="group flex items-center gap-3 px-4 py-3 sm:px-5">
+              <span
+                className="flex size-8 shrink-0 items-center justify-center rounded-md border border-border bg-muted/40"
+                style={link.color ? { color: link.color } : undefined}
+                aria-hidden="true"
+              >
+                <RowIcon className="size-4" />
+              </span>
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-2">
                   <p
@@ -182,8 +228,9 @@ export function HeaderLinksTable({ initial }: { initial: HeaderLinkData[] }) {
                       !link.enabled && 'text-muted-foreground',
                     )}
                   >
-                    {link.label}
+                    {label}
                   </p>
+                  {link.labelKey ? <Badge variant="outline">{t('builtInBadge')}</Badge> : null}
                   {!link.enabled ? <Badge variant="secondary">{tc('off')}</Badge> : null}
                   {link.newTab ? <Badge variant="outline">{t('newTabBadge')}</Badge> : null}
                 </div>
@@ -208,7 +255,7 @@ export function HeaderLinksTable({ initial }: { initial: HeaderLinkData[] }) {
                   variant="ghost"
                   size="icon-xs"
                   disabled={rowBusy || index <= 0}
-                  aria-label={t('moveUpAria', { label: link.label })}
+                  aria-label={t('moveUpAria', { label })}
                   onClick={() => move(link, 'up')}
                 >
                   <ArrowUp />
@@ -218,7 +265,7 @@ export function HeaderLinksTable({ initial }: { initial: HeaderLinkData[] }) {
                   variant="ghost"
                   size="icon-xs"
                   disabled={rowBusy || index >= links.length - 1}
-                  aria-label={t('moveDownAria', { label: link.label })}
+                  aria-label={t('moveDownAria', { label })}
                   onClick={() => move(link, 'down')}
                 >
                   <ArrowDown />
@@ -228,7 +275,7 @@ export function HeaderLinksTable({ initial }: { initial: HeaderLinkData[] }) {
                   variant="ghost"
                   size="icon-xs"
                   className="opacity-0 transition-opacity focus-visible:opacity-100 group-hover:opacity-100"
-                  aria-label={t('editAria', { label: link.label })}
+                  aria-label={t('editAria', { label })}
                   onClick={() => openEdit(link)}
                 >
                   <Pencil />
@@ -238,7 +285,7 @@ export function HeaderLinksTable({ initial }: { initial: HeaderLinkData[] }) {
                   variant="ghost"
                   size="icon-xs"
                   className="opacity-0 transition-opacity focus-visible:opacity-100 group-hover:opacity-100"
-                  aria-label={t('deleteAria', { label: link.label })}
+                  aria-label={t('deleteAria', { label })}
                   onClick={() => setConfirm(link)}
                 >
                   <Trash2 />
@@ -247,7 +294,7 @@ export function HeaderLinksTable({ initial }: { initial: HeaderLinkData[] }) {
                   checked={link.enabled}
                   disabled={rowBusy}
                   onCheckedChange={(checked) => toggleEnabled(link, checked)}
-                  aria-label={t('enableAria', { label: link.label })}
+                  aria-label={t('enableAria', { label })}
                 />
               </div>
             </li>
@@ -281,8 +328,12 @@ export function HeaderLinksTable({ initial }: { initial: HeaderLinkData[] }) {
                 onChange={(event) => setForm((f) => ({ ...f, label: event.target.value }))}
                 maxLength={HEADER_LINK_LABEL_MAX_LENGTH}
                 placeholder={t('labelPlaceholder')}
+                readOnly={Boolean(editing?.labelKey)}
                 autoFocus
               />
+              {editing?.labelKey ? (
+                <p className="text-xs text-muted-foreground">{t('builtInLabelHint')}</p>
+              ) : null}
             </div>
             <div className="grid gap-2">
               <Label htmlFor="header-link-url">{t('urlLabel')}</Label>
@@ -293,6 +344,63 @@ export function HeaderLinksTable({ initial }: { initial: HeaderLinkData[] }) {
                 placeholder="https://example.com"
               />
               <p className="text-xs text-muted-foreground">{t('urlHint')}</p>
+            </div>
+            <div className="grid gap-2">
+              <Label>{t('iconLabel')}</Label>
+              <div className="grid grid-cols-8 gap-1.5" role="radiogroup" aria-label={t('iconLabel')}>
+                {HEADER_ICONS.map((key) => {
+                  const Icon = navIcons[key]
+                  const selected = form.icon === key
+                  return (
+                    <button
+                      key={key}
+                      type="button"
+                      role="radio"
+                      aria-checked={selected}
+                      aria-label={key}
+                      onClick={() => setForm((f) => ({ ...f, icon: key }))}
+                      className={cn(
+                        'flex size-9 items-center justify-center rounded-md border transition-colors',
+                        selected
+                          ? 'border-primary bg-primary/10 text-foreground'
+                          : 'border-border text-muted-foreground hover:border-primary/40 hover:text-foreground',
+                      )}
+                    >
+                      <Icon className="size-4" />
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="header-link-color">{t('colorLabel')}</Label>
+              <div className="flex items-center gap-2">
+                <Input
+                  id="header-link-color"
+                  type="color"
+                  value={/^#[0-9a-fA-F]{6}$/.test(form.color) ? form.color : '#d5ff2f'}
+                  onChange={(event) => setForm((f) => ({ ...f, color: event.target.value }))}
+                  className="h-9 w-14 shrink-0 cursor-pointer p-1"
+                />
+                <Input
+                  value={form.color}
+                  onChange={(event) => setForm((f) => ({ ...f, color: event.target.value }))}
+                  placeholder="#5182EF"
+                  className="max-w-36 font-mono text-xs"
+                />
+                {form.color ? (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setForm((f) => ({ ...f, color: '' }))}
+                  >
+                    {t('colorClear')}
+                  </Button>
+                ) : (
+                  <span className="text-xs text-muted-foreground">{t('colorDefault')}</span>
+                )}
+              </div>
             </div>
             <div className="flex items-center gap-2">
               <Switch

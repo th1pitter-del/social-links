@@ -4,15 +4,27 @@ import type * as React from 'react'
 import Link from 'next/link'
 import { useLocale } from 'next-intl'
 import {
+  Camera,
   CircleHelp,
   Download,
+  Film,
+  Flame,
+  Gift,
+  Globe,
+  Heart,
   LayoutDashboard,
+  Link2,
   ListChecks,
   LogOut,
   Menu,
   Minimize2,
+  Music,
+  Play,
+  Rocket,
   ShieldCheck,
   Sparkles,
+  Star,
+  Tag,
   type LucideIcon,
 } from 'lucide-react'
 
@@ -33,12 +45,24 @@ import { cn } from 'cn'
  * Icons are looked up by key because the header is a Server Component and cannot
  * pass a component reference across the client boundary.
  */
-const navIcons = {
+export const navIcons = {
   listChecks: ListChecks,
   sparkles: Sparkles,
   circleHelp: CircleHelp,
   minimize: Minimize2,
   download: Download,
+  link: Link2,
+  globe: Globe,
+  star: Star,
+  gift: Gift,
+  tag: Tag,
+  rocket: Rocket,
+  play: Play,
+  film: Film,
+  music: Music,
+  camera: Camera,
+  heart: Heart,
+  flame: Flame,
   layoutDashboard: LayoutDashboard,
   shieldCheck: ShieldCheck,
   logOut: LogOut,
@@ -55,6 +79,8 @@ export type SiteNavItem = {
   external?: boolean
   /** id of the <form> to submit; sign-out has to stay a POST action, not a link. */
   formId?: string
+  /** Brand color (hex) painted on the item via --menu-tint; default tone when unset. */
+  toneColor?: string
   toneClass?: string
 }
 
@@ -68,8 +94,11 @@ type NavRowProps = { item: SiteNavItem } & React.ComponentPropsWithoutRef<'a'> &
  * the DOM node. Dropping them made the rows unhighlightable and arrow keys threw
  * "Cannot read properties of null (reading 'focus')" inside Radix.
  */
-function NavRow({ item, className, ref, ...rest }: NavRowProps) {
+function NavRow({ item, className, ref, style, ...rest }: NavRowProps) {
   const Icon = navIcons[item.icon]
+  const toneStyle = item.toneColor
+    ? ({ ...style, '--menu-tint': item.toneColor } as React.CSSProperties)
+    : style
   const classes = cn(
     // min-h-9: 28px rows feel cramped under a finger, and the menu is now the only
     // place these controls exist on a phone.
@@ -80,6 +109,9 @@ function NavRow({ item, className, ref, ...rest }: NavRowProps) {
     // are spelled out (design-spec hover tokens). The dark focus rule wins over the
     // shared item's focus:bg-accent because .dark * raises its specificity.
     'hover:bg-[#f0f1ea] focus:bg-[#f0f1ea] dark:hover:bg-[#2a2b27] dark:focus:bg-[#2a2b27]',
+    // ! because the shared dropdown item paints focus:text-accent-foreground,
+    // and Radix focuses a row as soon as the pointer enters it.
+    item.toneColor && 'text-(--menu-tint)! hover:text-(--menu-tint)/75! focus:text-(--menu-tint)!',
     item.toneClass ?? 'hover:text-foreground',
     className,
   )
@@ -95,7 +127,7 @@ function NavRow({ item, className, ref, ...rest }: NavRowProps) {
 
   if (item.external) {
     return (
-      <a {...rest} ref={ref as React.Ref<HTMLAnchorElement>} href={item.href} target="_blank" rel="noopener noreferrer" className={classes}>
+      <a {...rest} ref={ref as React.Ref<HTMLAnchorElement>} href={item.href} target="_blank" rel="noopener noreferrer" style={toneStyle} className={classes}>
         {content}
       </a>
     )
@@ -108,6 +140,7 @@ function NavRow({ item, className, ref, ...rest }: NavRowProps) {
         ref={ref as React.Ref<HTMLButtonElement>}
         type="submit"
         form={item.formId}
+        style={toneStyle}
         className={classes}
       >
         {content}
@@ -120,6 +153,7 @@ function NavRow({ item, className, ref, ...rest }: NavRowProps) {
       {...(rest as React.ComponentProps<typeof Link>)}
       ref={ref as React.Ref<HTMLAnchorElement>}
       href={item.href ?? '/'}
+      style={toneStyle}
       className={classes}
     >
       {content}

@@ -2205,7 +2205,10 @@ export type AdUnitScalarFieldEnum = (typeof AdUnitScalarFieldEnum)[keyof typeof 
 export const HeaderLinkScalarFieldEnum = {
   id: 'id',
   label: 'label',
+  labelKey: 'labelKey',
   url: 'url',
+  icon: 'icon',
+  color: 'color',
   newTab: 'newTab',
   enabled: 'enabled',
   position: 'position',
@@ -2502,7 +2505,10 @@ export type AdUnitOrderByRelevanceFieldEnum = (typeof AdUnitOrderByRelevanceFiel
 export const HeaderLinkOrderByRelevanceFieldEnum = {
   id: 'id',
   label: 'label',
-  url: 'url'
+  labelKey: 'labelKey',
+  url: 'url',
+  icon: 'icon',
+  color: 'color'
 } as const
 
 export type HeaderLinkOrderByRelevanceFieldEnum = (typeof HeaderLinkOrderByRelevanceFieldEnum)[keyof typeof HeaderLinkOrderByRelevanceFieldEnum]

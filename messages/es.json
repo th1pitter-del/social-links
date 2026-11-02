@@ -329,9 +329,6 @@
     "notFoundCta": "Ir al inicio",
     "policyTitle": "Política de contenido"
   },
-  "userPage": {
-    "headerNavLabel": "Enlaces rápidos"
-  },
   "site": {
     "name": "Link Unlocker",
     "tagline": "Enlaces de desbloqueo social gratis"
@@ -381,7 +378,7 @@
       "user": "Usuario",
       "settings": "Ajustes",
       "ads": "Anuncios",
-      "headerLinks": "Enlaces del encabezado de páginas de usuario"
+      "headerLinks": "Enlaces del menú del encabezado"
     },
     "status": {
       "active": "activo",
@@ -795,14 +792,14 @@
       }
     },
     "headerLinks": {
-      "title": "Enlaces del encabezado de páginas de usuario",
-      "description": "Enlaces personalizados que se muestran en el encabezado de todas las páginas de enlaces de usuario (páginas de desbloqueo y bio). Útiles para tus propias promociones u ofertas.",
+      "title": "Enlaces del menú del encabezado",
+      "description": "Enlaces personalizados que se muestran en el menú del encabezado del sitio en todas las páginas públicas. Útiles para tus propias promociones u ofertas.",
       "enabledCount": "{enabled} de {total} enlaces activos",
       "newLink": "Nuevo enlace",
-      "empty": "Aún no hay enlaces de encabezado. Añade uno para mostrarlo en todas las páginas de usuario.",
+      "empty": "Aún no hay enlaces de encabezado. Añade uno para mostrarlo en el menú del encabezado.",
       "newTitle": "Nuevo enlace de encabezado",
       "editTitle": "Editar enlace de encabezado",
-      "formDescription": "Se muestra en el encabezado de todas las páginas /u/… y /bio/…",
+      "formDescription": "Se muestra en el menú del encabezado en todas las páginas públicas.",
       "labelLabel": "Etiqueta",
       "labelPlaceholder": "p. ej. Mis ofertas",
       "urlLabel": "URL",
@@ -811,7 +808,7 @@
       "newTabBadge": "pestaña nueva",
       "createLink": "Crear enlace",
       "deleteTitle": "¿Eliminar el enlace del encabezado?",
-      "deleteDescription": "«{label}» se eliminará de todas las páginas de usuario. Esta acción no se puede deshacer.",
+      "deleteDescription": "“{label}” se eliminará del menú del encabezado del sitio. Esta acción no se puede deshacer.",
       "moveUpAria": "Subir {label}",
       "moveDownAria": "Bajar {label}",
       "editAria": "Editar {label}",
@@ -823,7 +820,13 @@
         "deleted": "Enlace de encabezado eliminado.",
         "enabled": "Enlace de encabezado activado.",
         "disabled": "Enlace de encabezado desactivado."
-      }
+      },
+      "builtInBadge": "Integrado",
+      "builtInLabelHint": "Menú integrado: su etiqueta proviene de las traducciones del sitio.",
+      "iconLabel": "Icono",
+      "colorLabel": "Color",
+      "colorClear": "Borrar",
+      "colorDefault": "Tono predeterminado"
     },
     "settings": {
       "navLabel": "Ajustes",
@@ -1257,7 +1260,9 @@
     "invalidAdType": "Tipo de anuncio no válido",
     "adNotFound": "Anuncio no encontrado.",
     "headerLinkNotFound": "Enlace de encabezado no encontrado.",
-    "htmlRequired": "El código del anuncio no puede estar vacío"
+    "htmlRequired": "El código del anuncio no puede estar vacío",
+    "invalidHeaderIcon": "Elige un icono válido.",
+    "invalidHeaderColor": "Usa un color hexadecimal como #5182EF o déjalo vacío."
   },
   "linkForm": {
     "uploadFailed": "Error al subir.",

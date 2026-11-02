@@ -43,7 +43,10 @@ export type AdUnitData = {
 export type HeaderLinkData = {
   id: string
   label: string
+  labelKey: string | null
   url: string
+  icon: string
+  color: string | null
   newTab: boolean
   enabled: boolean
   position: number
@@ -64,8 +67,40 @@ export type AdUnitInput = {
 export type HeaderLinkInput = {
   label: string
   url: string
+  icon: string
+  color?: string
   newTab: boolean
   enabled?: boolean
+}
+
+/** Icon keys selectable in the admin; must match the site-nav icon map. */
+export const HEADER_ICONS = [
+  'link',
+  'globe',
+  'star',
+  'gift',
+  'tag',
+  'rocket',
+  'sparkles',
+  'listChecks',
+  'circleHelp',
+  'minimize',
+  'download',
+  'play',
+  'film',
+  'music',
+  'camera',
+  'heart',
+  'flame',
+] as const
+
+export type HeaderIcon = (typeof HEADER_ICONS)[number]
+
+export const HEADER_ICON_DEFAULT: HeaderIcon = 'link'
+
+/** Menu brand colours are plain hex like `#5182EF`; empty means default tone. */
+export function isHeaderMenuColor(value: string): boolean {
+  return /^#[0-9a-fA-F]{6}$/.test(value.trim())
 }
 
 /**

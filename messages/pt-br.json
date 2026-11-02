@@ -329,9 +329,6 @@
     "notFoundCta": "Ir para o início",
     "policyTitle": "Política de conteúdo"
   },
-  "userPage": {
-    "headerNavLabel": "Links rápidos"
-  },
   "site": {
     "name": "Link Unlocker",
     "tagline": "Links de desbloqueio social grátis"
@@ -381,7 +378,7 @@
       "user": "Usuário",
       "settings": "Configurações",
       "ads": "Anúncios",
-      "headerLinks": "Links do cabeçalho das páginas de usuário"
+      "headerLinks": "Links do menu do cabeçalho"
     },
     "status": {
       "active": "ativo",
@@ -795,14 +792,14 @@
       }
     },
     "headerLinks": {
-      "title": "Links do cabeçalho das páginas de usuário",
-      "description": "Links personalizados exibidos no cabeçalho de todas as páginas de links dos usuários (páginas de desbloqueio e bio). Úteis para suas próprias promoções ou ofertas.",
+      "title": "Links do menu do cabeçalho",
+      "description": "Links personalizados exibidos no menu do cabeçalho do site em todas as páginas públicas. Úteis para suas próprias promoções ou ofertas.",
       "enabledCount": "{enabled} de {total} links ativos",
       "newLink": "Novo link",
-      "empty": "Nenhum link de cabeçalho ainda. Adicione um para exibi-lo em todas as páginas de usuário.",
+      "empty": "Nenhum link de cabeçalho ainda. Adicione um para exibi-lo no menu do cabeçalho.",
       "newTitle": "Novo link de cabeçalho",
       "editTitle": "Editar link de cabeçalho",
-      "formDescription": "Exibido no cabeçalho de todas as páginas /u/… e /bio/…",
+      "formDescription": "Exibido no menu do cabeçalho em todas as páginas públicas.",
       "labelLabel": "Etiqueta",
       "labelPlaceholder": "ex.: Minhas ofertas",
       "urlLabel": "URL",
@@ -811,7 +808,7 @@
       "newTabBadge": "nova aba",
       "createLink": "Criar link",
       "deleteTitle": "Excluir link do cabeçalho?",
-      "deleteDescription": "“{label}” será removido de todas as páginas de usuário. Isso não pode ser desfeito.",
+      "deleteDescription": "“{label}” será removido do menu do cabeçalho do site. Isso não pode ser desfeito.",
       "moveUpAria": "Mover {label} para cima",
       "moveDownAria": "Mover {label} para baixo",
       "editAria": "Editar {label}",
@@ -823,7 +820,13 @@
         "deleted": "Link de cabeçalho excluído.",
         "enabled": "Link de cabeçalho ativado.",
         "disabled": "Link de cabeçalho desativado."
-      }
+      },
+      "builtInBadge": "Integrado",
+      "builtInLabelHint": "Menu integrado: o rótulo vem das traduções do site.",
+      "iconLabel": "Ícone",
+      "colorLabel": "Cor",
+      "colorClear": "Limpar",
+      "colorDefault": "Tom padrão"
     },
     "settings": {
       "navLabel": "Configurações",
@@ -1257,7 +1260,9 @@
     "invalidAdType": "Tipo de anúncio inválido",
     "adNotFound": "Anúncio não encontrado.",
     "headerLinkNotFound": "Link de cabeçalho não encontrado.",
-    "htmlRequired": "O código do anúncio não pode estar vazio"
+    "htmlRequired": "O código do anúncio não pode estar vazio",
+    "invalidHeaderIcon": "Escolha um ícone válido.",
+    "invalidHeaderColor": "Use uma cor hexadecimal como #5182EF ou deixe vazia."
   },
   "linkForm": {
     "uploadFailed": "Falha no envio.",

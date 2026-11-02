@@ -294,11 +294,15 @@ model AdUnit {
   @@index([placement, position])
 }
 
-// Admin-managed link shown in the header of every user link page (/u/*, /bio/*).
+// Admin-managed link shown in the public site header menu on every page.
+// labelKey rows are built-in menus whose label comes from the nav translations.
 model HeaderLink {
   id        String   @id @default(cuid())
   label     String
+  labelKey  String?
   url       String   @db.Text
+  icon      String   @default("link")
+  color     String?
   newTab    Boolean  @default(true)
   enabled   Boolean  @default(true)
   position  Int      @default(0)

@@ -14,7 +14,9 @@ import {
   AD_TYPES,
   AD_URL_MAX_LENGTH,
   AD_HTML_MAX_LENGTH,
+  HEADER_ICONS,
   HEADER_LINK_LABEL_MAX_LENGTH,
+  isHeaderMenuColor,
   isUsableTargetUrl,
   type AdUnitData,
   type AdType,
@@ -269,7 +271,10 @@ export async function deleteAdUnit(id: string): Promise<AdminAdsActionResult> {
 type HeaderLinkRecord = {
   id: string
   label: string
+  labelKey: string | null
   url: string
+  icon: string
+  color: string | null
   newTab: boolean
   enabled: boolean
   position: number
@@ -279,7 +284,10 @@ function serializeHeaderLink(row: HeaderLinkRecord): HeaderLinkData {
   return {
     id: row.id,
     label: row.label,
+    labelKey: row.labelKey,
     url: row.url,
+    icon: row.icon,
+    color: row.color,
     newTab: row.newTab,
     enabled: row.enabled,
     position: row.position,
@@ -289,7 +297,10 @@ function serializeHeaderLink(row: HeaderLinkRecord): HeaderLinkData {
 async function validateHeaderLinkInput(
   input: HeaderLinkInput,
 ): Promise<
-  | { ok: true; data: { label: string; url: string; newTab: boolean } }
+  | {
+      ok: true
+      data: { label: string; url: string; icon: string; color: string | null; newTab: boolean }
+    }
   | { ok: false; error: string }
 > {
   const t = await getTranslations('errors')
@@ -304,7 +315,19 @@ async function validateHeaderLinkInput(
     return { ok: false, error: t('invalidUrl') }
   }
 
-  return { ok: true, data: { label, url, newTab: input.newTab } }
+  if (!HEADER_ICONS.includes(input.icon as (typeof HEADER_ICONS)[number])) {
+    return { ok: false, error: t('invalidHeaderIcon') }
+  }
+
+  const color = input.color?.trim() ?? ''
+  if (color && !isHeaderMenuColor(color)) {
+    return { ok: false, error: t('invalidHeaderColor') }
+  }
+
+  return {
+    ok: true,
+    data: { label, url, icon: input.icon, color: color || null, newTab: input.newTab },
+  }
 }
 
 export async function createHeaderLink(input: HeaderLinkInput): Promise<AdminHeaderLinkResult> {
@@ -336,13 +359,22 @@ export async function updateHeaderLink(
   await requireAdmin()
   const t = await getTranslations('errors')
 
-  const existing = await prisma.headerLink.findUnique({ where: { id }, select: { id: true } })
+  const existing = await prisma.headerLink.findUnique({
+    where: { id },
+    select: { id: true, labelKey: true, label: true },
+  })
   if (!existing) return { ok: false, error: t('headerLinkNotFound') }
 
   const validated = await validateHeaderLinkInput(input)
   if (!validated.ok) return { ok: false, error: validated.error }
 
-  const row = await prisma.headerLink.update({ where: { id }, data: validated.data })
+  // Built-in menus keep their seeded label; the UI renders it read-only and
+  // translated, but the server is the one that guarantees it never drifts.
+  const data = existing.labelKey
+    ? { ...validated.data, label: existing.label }
+    : validated.data
+
+  const row = await prisma.headerLink.update({ where: { id }, data })
   await writeAudit({
     action: 'headerLink.update',
     targetType: 'headerLink',

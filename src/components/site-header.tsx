@@ -8,6 +8,8 @@ import { SiteNavMenu, type SiteNavItem } from '@/components/site-nav'
 import { ThemeSwitcher } from '@/components/theme-switcher'
 import { Button } from '@/components/ui/button'
 import { signOutAction } from '@/lib/actions/auth'
+import { getActiveHeaderLinks } from '@/lib/ads-data'
+import { HEADER_ICONS, HEADER_ICON_DEFAULT } from '@/lib/ads'
 import { getSession } from '@/lib/session'
 import { getSiteSettings } from '@/lib/settings'
 import { cn } from 'cn'
@@ -15,36 +17,27 @@ import { cn } from 'cn'
 export { BrandMark }
 
 export async function SiteHeader() {
-  const [site, nav, common, session] = await Promise.all([
+  const [site, nav, common, session, headerLinks] = await Promise.all([
     getSiteSettings(),
     getTranslations('nav'),
     getTranslations('common'),
     getSession(),
+    getActiveHeaderLinks(),
   ])
 
   const user = session?.user
 
-  const links: SiteNavItem[] = [
-    { href: '/#how-it-works', label: nav('howItWorks'), icon: 'listChecks' },
-    { href: '/#features', label: nav('features'), icon: 'sparkles' },
-    { href: '/faq', label: nav('faqShort'), icon: 'circleHelp' },
-    {
-      href: 'https://www.videocompressor4you.com/',
-      label: nav('videoCompressor'),
-      icon: 'minimize',
-      external: true,
-      // ! because the shared dropdown item paints focus:text-accent-foreground,
-      // and Radix focuses a row as soon as the pointer enters it.
-      toneClass: 'text-[#5182EF]! hover:text-[#5182EF]/75!',
-    },
-    {
-      href: 'https://www.downloadsocialmediavideo.com/',
-      label: nav('videoDownloader'),
-      icon: 'download',
-      external: true,
-      toneClass: 'text-[#4CBA95]! hover:text-[#4CBA95]/75!',
-    },
-  ]
+  // The public header menu is fully admin-managed (Header links manager).
+  // Built-in rows carry a labelKey resolved through the nav translations.
+  const links: SiteNavItem[] = headerLinks.map((link) => ({
+    href: link.url,
+    label: link.labelKey ? nav(link.labelKey as 'howItWorks') : link.label,
+    icon: (HEADER_ICONS.includes(link.icon as (typeof HEADER_ICONS)[number])
+      ? link.icon
+      : HEADER_ICON_DEFAULT) as SiteNavItem['icon'],
+    external: link.newTab,
+    toneColor: link.color ?? undefined,
+  }))
 
   // Large screens show these inline in the header; below lg they only exist in
   // the hamburger menu. Sign-out stays a POST form: the form is rendered here
@@ -66,8 +59,15 @@ export async function SiteHeader() {
   const linkClass = (item: SiteNavItem) =>
     cn(
       'whitespace-nowrap text-sm font-medium transition-colors',
+      item.toneColor &&
+        'text-(--menu-tint)! hover:text-(--menu-tint)/75!',
       item.toneClass ?? 'text-muted-foreground hover:text-foreground',
     )
+
+  const linkStyle = (item: SiteNavItem) =>
+    item.toneColor
+      ? ({ '--menu-tint': item.toneColor } as React.CSSProperties)
+      : undefined
 
   return (
     <header className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur">
@@ -89,12 +89,13 @@ export async function SiteHeader() {
                 href={item.href}
                 target="_blank"
                 rel="noopener noreferrer"
+                style={linkStyle(item)}
                 className={linkClass(item)}
               >
                 {item.label}
               </a>
             ) : (
-              <Link key={item.label} href={item.href ?? '/'} className={linkClass(item)}>
+              <Link key={item.label} href={item.href ?? '/'} style={linkStyle(item)} className={linkClass(item)}>
                 {item.label}
               </Link>
             ),

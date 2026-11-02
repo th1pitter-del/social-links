@@ -37,7 +37,10 @@ export type HeaderLinkSumAggregateOutputType = {
 export type HeaderLinkMinAggregateOutputType = {
   id: string | null
   label: string | null
+  labelKey: string | null
   url: string | null
+  icon: string | null
+  color: string | null
   newTab: boolean | null
   enabled: boolean | null
   position: number | null
@@ -48,7 +51,10 @@ export type HeaderLinkMinAggregateOutputType = {
 export type HeaderLinkMaxAggregateOutputType = {
   id: string | null
   label: string | null
+  labelKey: string | null
   url: string | null
+  icon: string | null
+  color: string | null
   newTab: boolean | null
   enabled: boolean | null
   position: number | null
@@ -59,7 +65,10 @@ export type HeaderLinkMaxAggregateOutputType = {
 export type HeaderLinkCountAggregateOutputType = {
   id: number
   label: number
+  labelKey: number
   url: number
+  icon: number
+  color: number
   newTab: number
   enabled: number
   position: number
@@ -80,7 +89,10 @@ export type HeaderLinkSumAggregateInputType = {
 export type HeaderLinkMinAggregateInputType = {
   id?: true
   label?: true
+  labelKey?: true
   url?: true
+  icon?: true
+  color?: true
   newTab?: true
   enabled?: true
   position?: true
@@ -91,7 +103,10 @@ export type HeaderLinkMinAggregateInputType = {
 export type HeaderLinkMaxAggregateInputType = {
   id?: true
   label?: true
+  labelKey?: true
   url?: true
+  icon?: true
+  color?: true
   newTab?: true
   enabled?: true
   position?: true
@@ -102,7 +117,10 @@ export type HeaderLinkMaxAggregateInputType = {
 export type HeaderLinkCountAggregateInputType = {
   id?: true
   label?: true
+  labelKey?: true
   url?: true
+  icon?: true
+  color?: true
   newTab?: true
   enabled?: true
   position?: true
@@ -200,7 +218,10 @@ export type HeaderLinkGroupByArgs<ExtArgs extends runtime.Types.Extensions.Inter
 export type HeaderLinkGroupByOutputType = {
   id: string
   label: string
+  labelKey: string | null
   url: string
+  icon: string
+  color: string | null
   newTab: boolean
   enabled: boolean
   position: number
@@ -234,7 +255,10 @@ export type HeaderLinkWhereInput = {
   NOT?: Prisma.HeaderLinkWhereInput | Prisma.HeaderLinkWhereInput[]
   id?: Prisma.StringFilter<"HeaderLink"> | string
   label?: Prisma.StringFilter<"HeaderLink"> | string
+  labelKey?: Prisma.StringNullableFilter<"HeaderLink"> | string | null
   url?: Prisma.StringFilter<"HeaderLink"> | string
+  icon?: Prisma.StringFilter<"HeaderLink"> | string
+  color?: Prisma.StringNullableFilter<"HeaderLink"> | string | null
   newTab?: Prisma.BoolFilter<"HeaderLink"> | boolean
   enabled?: Prisma.BoolFilter<"HeaderLink"> | boolean
   position?: Prisma.IntFilter<"HeaderLink"> | number
@@ -245,7 +269,10 @@ export type HeaderLinkWhereInput = {
 export type HeaderLinkOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   label?: Prisma.SortOrder
+  labelKey?: Prisma.SortOrderInput | Prisma.SortOrder
   url?: Prisma.SortOrder
+  icon?: Prisma.SortOrder
+  color?: Prisma.SortOrderInput | Prisma.SortOrder
   newTab?: Prisma.SortOrder
   enabled?: Prisma.SortOrder
   position?: Prisma.SortOrder
@@ -260,7 +287,10 @@ export type HeaderLinkWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.HeaderLinkWhereInput[]
   NOT?: Prisma.HeaderLinkWhereInput | Prisma.HeaderLinkWhereInput[]
   label?: Prisma.StringFilter<"HeaderLink"> | string
+  labelKey?: Prisma.StringNullableFilter<"HeaderLink"> | string | null
   url?: Prisma.StringFilter<"HeaderLink"> | string
+  icon?: Prisma.StringFilter<"HeaderLink"> | string
+  color?: Prisma.StringNullableFilter<"HeaderLink"> | string | null
   newTab?: Prisma.BoolFilter<"HeaderLink"> | boolean
   enabled?: Prisma.BoolFilter<"HeaderLink"> | boolean
   position?: Prisma.IntFilter<"HeaderLink"> | number
@@ -271,7 +301,10 @@ export type HeaderLinkWhereUniqueInput = Prisma.AtLeast<{
 export type HeaderLinkOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   label?: Prisma.SortOrder
+  labelKey?: Prisma.SortOrderInput | Prisma.SortOrder
   url?: Prisma.SortOrder
+  icon?: Prisma.SortOrder
+  color?: Prisma.SortOrderInput | Prisma.SortOrder
   newTab?: Prisma.SortOrder
   enabled?: Prisma.SortOrder
   position?: Prisma.SortOrder
@@ -290,7 +323,10 @@ export type HeaderLinkScalarWhereWithAggregatesInput = {
   NOT?: Prisma.HeaderLinkScalarWhereWithAggregatesInput | Prisma.HeaderLinkScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"HeaderLink"> | string
   label?: Prisma.StringWithAggregatesFilter<"HeaderLink"> | string
+  labelKey?: Prisma.StringNullableWithAggregatesFilter<"HeaderLink"> | string | null
   url?: Prisma.StringWithAggregatesFilter<"HeaderLink"> | string
+  icon?: Prisma.StringWithAggregatesFilter<"HeaderLink"> | string
+  color?: Prisma.StringNullableWithAggregatesFilter<"HeaderLink"> | string | null
   newTab?: Prisma.BoolWithAggregatesFilter<"HeaderLink"> | boolean
   enabled?: Prisma.BoolWithAggregatesFilter<"HeaderLink"> | boolean
   position?: Prisma.IntWithAggregatesFilter<"HeaderLink"> | number
@@ -301,7 +337,10 @@ export type HeaderLinkScalarWhereWithAggregatesInput = {
 export type HeaderLinkCreateInput = {
   id?: string
   label: string
+  labelKey?: string | null
   url: string
+  icon?: string
+  color?: string | null
   newTab?: boolean
   enabled?: boolean
   position?: number
@@ -312,7 +351,10 @@ export type HeaderLinkCreateInput = {
 export type HeaderLinkUncheckedCreateInput = {
   id?: string
   label: string
+  labelKey?: string | null
   url: string
+  icon?: string
+  color?: string | null
   newTab?: boolean
   enabled?: boolean
   position?: number
@@ -323,7 +365,10 @@ export type HeaderLinkUncheckedCreateInput = {
 export type HeaderLinkUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.StringFieldUpdateOperationsInput | string
+  labelKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   url?: Prisma.StringFieldUpdateOperationsInput | string
+  icon?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   newTab?: Prisma.BoolFieldUpdateOperationsInput | boolean
   enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   position?: Prisma.IntFieldUpdateOperationsInput | number
@@ -334,7 +379,10 @@ export type HeaderLinkUpdateInput = {
 export type HeaderLinkUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.StringFieldUpdateOperationsInput | string
+  labelKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   url?: Prisma.StringFieldUpdateOperationsInput | string
+  icon?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   newTab?: Prisma.BoolFieldUpdateOperationsInput | boolean
   enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   position?: Prisma.IntFieldUpdateOperationsInput | number
@@ -345,7 +393,10 @@ export type HeaderLinkUncheckedUpdateInput = {
 export type HeaderLinkCreateManyInput = {
   id?: string
   label: string
+  labelKey?: string | null
   url: string
+  icon?: string
+  color?: string | null
   newTab?: boolean
   enabled?: boolean
   position?: number
@@ -356,7 +407,10 @@ export type HeaderLinkCreateManyInput = {
 export type HeaderLinkUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.StringFieldUpdateOperationsInput | string
+  labelKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   url?: Prisma.StringFieldUpdateOperationsInput | string
+  icon?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   newTab?: Prisma.BoolFieldUpdateOperationsInput | boolean
   enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   position?: Prisma.IntFieldUpdateOperationsInput | number
@@ -367,7 +421,10 @@ export type HeaderLinkUpdateManyMutationInput = {
 export type HeaderLinkUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.StringFieldUpdateOperationsInput | string
+  labelKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   url?: Prisma.StringFieldUpdateOperationsInput | string
+  icon?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   newTab?: Prisma.BoolFieldUpdateOperationsInput | boolean
   enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   position?: Prisma.IntFieldUpdateOperationsInput | number
@@ -384,7 +441,10 @@ export type HeaderLinkOrderByRelevanceInput = {
 export type HeaderLinkCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   label?: Prisma.SortOrder
+  labelKey?: Prisma.SortOrder
   url?: Prisma.SortOrder
+  icon?: Prisma.SortOrder
+  color?: Prisma.SortOrder
   newTab?: Prisma.SortOrder
   enabled?: Prisma.SortOrder
   position?: Prisma.SortOrder
@@ -399,7 +459,10 @@ export type HeaderLinkAvgOrderByAggregateInput = {
 export type HeaderLinkMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   label?: Prisma.SortOrder
+  labelKey?: Prisma.SortOrder
   url?: Prisma.SortOrder
+  icon?: Prisma.SortOrder
+  color?: Prisma.SortOrder
   newTab?: Prisma.SortOrder
   enabled?: Prisma.SortOrder
   position?: Prisma.SortOrder
@@ -410,7 +473,10 @@ export type HeaderLinkMaxOrderByAggregateInput = {
 export type HeaderLinkMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   label?: Prisma.SortOrder
+  labelKey?: Prisma.SortOrder
   url?: Prisma.SortOrder
+  icon?: Prisma.SortOrder
+  color?: Prisma.SortOrder
   newTab?: Prisma.SortOrder
   enabled?: Prisma.SortOrder
   position?: Prisma.SortOrder
@@ -427,7 +493,10 @@ export type HeaderLinkSumOrderByAggregateInput = {
 export type HeaderLinkSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   label?: boolean
+  labelKey?: boolean
   url?: boolean
+  icon?: boolean
+  color?: boolean
   newTab?: boolean
   enabled?: boolean
   position?: boolean
@@ -440,7 +509,10 @@ export type HeaderLinkSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
 export type HeaderLinkSelectScalar = {
   id?: boolean
   label?: boolean
+  labelKey?: boolean
   url?: boolean
+  icon?: boolean
+  color?: boolean
   newTab?: boolean
   enabled?: boolean
   position?: boolean
@@ -448,7 +520,7 @@ export type HeaderLinkSelectScalar = {
   updatedAt?: boolean
 }
 
-export type HeaderLinkOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "label" | "url" | "newTab" | "enabled" | "position" | "createdAt" | "updatedAt", ExtArgs["result"]["headerLink"]>
+export type HeaderLinkOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "label" | "labelKey" | "url" | "icon" | "color" | "newTab" | "enabled" | "position" | "createdAt" | "updatedAt", ExtArgs["result"]["headerLink"]>
 
 export type $HeaderLinkPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "HeaderLink"
@@ -456,7 +528,10 @@ export type $HeaderLinkPayload<ExtArgs extends runtime.Types.Extensions.Internal
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     label: string
+    labelKey: string | null
     url: string
+    icon: string
+    color: string | null
     newTab: boolean
     enabled: boolean
     position: number
@@ -833,7 +908,10 @@ export interface Prisma__HeaderLinkClient<T, Null = never, ExtArgs extends runti
 export interface HeaderLinkFieldRefs {
   readonly id: Prisma.FieldRef<"HeaderLink", 'String'>
   readonly label: Prisma.FieldRef<"HeaderLink", 'String'>
+  readonly labelKey: Prisma.FieldRef<"HeaderLink", 'String'>
   readonly url: Prisma.FieldRef<"HeaderLink", 'String'>
+  readonly icon: Prisma.FieldRef<"HeaderLink", 'String'>
+  readonly color: Prisma.FieldRef<"HeaderLink", 'String'>
   readonly newTab: Prisma.FieldRef<"HeaderLink", 'Boolean'>
   readonly enabled: Prisma.FieldRef<"HeaderLink", 'Boolean'>
   readonly position: Prisma.FieldRef<"HeaderLink", 'Int'>
