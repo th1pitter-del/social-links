@@ -99,12 +99,9 @@ export function StepRail({
         })}
       </div>
 
-      <div className="mt-4 flex items-center justify-between gap-3">
-        <p className="text-xs text-muted-foreground">{t('railTapHint')}</p>
-        <p className="sr-only" aria-live="polite">
-          {t('stepOf', { current: cycle.phase + 1, total: steps.length })}
-        </p>
-      </div>
+      <p className="sr-only" aria-live="polite">
+        {t('stepOf', { current: cycle.phase + 1, total: steps.length })}
+      </p>
     </DemoStage>
   )
 }

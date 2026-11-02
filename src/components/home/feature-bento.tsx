@@ -20,7 +20,6 @@ export function FeatureBento({
   actions,
   emailPlaceholder,
   submitEmail,
-  demoLabel,
   demoTag,
 }: {
   features: Record<'actions' | 'delivery' | 'analytics' | 'email' | 'abuse', Copy>
@@ -30,8 +29,7 @@ export function FeatureBento({
   actions: string[]
   emailPlaceholder: string
   submitEmail: string
-  demoLabel: string
-  /** Short honesty tag repeated under the drawn mocks; the long label is for the card mock only. */
+  /** Short honesty tag repeated under the drawn mocks. */
   demoTag: string
 }) {
   return (
@@ -52,7 +50,7 @@ export function FeatureBento({
               <Lock className="absolute inset-0 size-4 transition-opacity duration-300 group-hover:opacity-0 no-hover:opacity-0" />
               <Unlock className="absolute inset-0 size-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100 no-hover:opacity-100" />
             </span>
-            {demoLabel}
+            {demoTag}
           </div>
           <p className="mt-2 text-xs leading-relaxed opacity-60 blur-[5px] transition-[opacity,filter] duration-500 group-hover:opacity-100 group-hover:blur-none no-hover:opacity-100 no-hover:blur-none">
             {sampleContent}

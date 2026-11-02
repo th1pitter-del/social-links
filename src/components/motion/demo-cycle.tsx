@@ -117,8 +117,9 @@ export function DemoStage({
 }
 
 /**
- * The frame every demonstration lives in: a label that states it is only an
- * example, one dot per phase, and the transport controls.
+ * The frame every demonstration lives in: one dot per phase and the transport
+ * controls. The `label` is kept for the group's accessible name only - the
+ * sentence used to be printed in the strip and read as noise to site visitors.
  */
 export function DemoShell({
   cycle,
@@ -142,20 +143,15 @@ export function DemoShell({
         className,
       )}
     >
-      {/* On a phone the label gets its own line instead of being squeezed to
-          nothing by the controls - it is the sentence that says this is a demo. */}
-      <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 border-b bg-muted/40 px-4 py-2">
-        <p className="flex min-w-0 basis-full items-center gap-2 text-xs font-medium text-muted-foreground sm:basis-auto">
-          <span
-            aria-hidden
-            className={cn(
-              'size-1.5 shrink-0 rounded-full bg-primary',
-              cycle.playing && !cycle.scrubbing && 'motion-safe:animate-pulse',
-            )}
-          />
-          <span className="truncate">{label}</span>
-        </p>
-        <div className="ms-auto flex shrink-0 items-center gap-1.5 sm:ms-0">
+      <div className="flex items-center justify-between gap-x-3 border-b bg-muted/40 px-4 py-2">
+        <span
+          aria-hidden
+          className={cn(
+            'size-1.5 shrink-0 rounded-full bg-primary',
+            cycle.playing && !cycle.scrubbing && 'motion-safe:animate-pulse',
+          )}
+        />
+        <div className="flex shrink-0 items-center gap-1.5">
           <PhaseDots cycle={cycle} />
           <TransportButtons cycle={cycle} />
         </div>

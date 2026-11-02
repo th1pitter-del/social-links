@@ -229,7 +229,6 @@ export default async function HomePage() {
               ]}
               emailPlaceholder={unlockCopy('emailPlaceholder')}
               submitEmail={unlockCopy('submitEmail')}
-              demoLabel={t('demo.label')}
               demoTag={t('demo.tag')}
             />
 

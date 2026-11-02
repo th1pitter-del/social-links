@@ -100,7 +100,6 @@ export function FlowDiagram({
           {nodes[cycle.phase]?.detail}
         </p>
       </div>
-      <p className="mt-3 text-xs text-muted-foreground">{t('scrubHint')}</p>
     </DemoStage>
   )
 }
