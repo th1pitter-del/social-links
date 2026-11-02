@@ -17,6 +17,7 @@ import { UnlockDemo, type DemoStep } from '@/components/home/unlock-demo'
 import { Reveal } from '@/components/motion/reveal'
 import { getSession } from '@/lib/session'
 import { getEnabledPlatforms } from '@/lib/action-catalog'
+import { actionLabel } from '@/lib/action-label'
 
 export const dynamic = 'force-dynamic'
 
@@ -29,13 +30,14 @@ export const dynamic = 'force-dynamic'
  * prefers-reduced-motion, and never replaces the text it animates.
  */
 export default async function HomePage() {
-  const [t, nav, common, unlockCopy, motionCopy, session, platformRows] =
+  const [t, nav, common, unlockCopy, motionCopy, actionCopy, session, platformRows] =
     await Promise.all([
       getTranslations('home'),
       getTranslations('nav'),
       getTranslations('common'),
       getTranslations('unlock'),
       getTranslations('motion'),
+      getTranslations('actions'),
       getSession(),
       getEnabledPlatforms(),
     ])
@@ -58,10 +60,18 @@ export default async function HomePage() {
     icon: platform.icon,
     actions: platform.actionOptions.map((option) => ({
       key: option.key,
-      label: option.label,
+      label: actionLabel(option, actionCopy),
       icon: option.icon,
     })),
   }))
+
+  const stats = [
+    { value: t('stats.creatorsValue'), label: t('stats.creatorsLabel') },
+    { value: t('stats.unlocksValue'), label: t('stats.unlocksLabel') },
+    // Counted, not written: this is the same set of enabled platforms the ring
+    // below walks through, so an admin switching one on moves this number.
+    { value: `${platforms.length}+`, label: t('stats.platformsLabel') },
+  ]
 
   const flowNodes = [
     { label: t('flow.nodes.visitor'), detail: t('flow.nodes.visitorDetail') },
@@ -133,6 +143,34 @@ export default async function HomePage() {
                 demoLabel={t('demo.label')}
               />
             </div>
+          </div>
+        </section>
+
+        <section>
+          <div className="mx-auto w-full max-w-[1200px] px-4 py-20">
+            {/* No frame and no divider: the numbers, the ring and the roots sit
+                straight on the page background, so nothing competes with the
+                brand colours or the lime wash above them. */}
+            <Reveal>
+              <h2 className="grid gap-4 text-center sm:grid-cols-3">
+                {stats.map((stat) => (
+                  <span
+                    key={stat.label}
+                    className="flex items-baseline justify-center gap-2 sm:flex-col sm:items-center sm:gap-1"
+                  >
+                    <span
+                      dir="ltr"
+                      className="text-3xl font-semibold tracking-tight tabular-nums sm:text-4xl"
+                    >
+                      {stat.value}
+                    </span>
+                    <span className="text-sm text-muted-foreground">{stat.label}</span>
+                  </span>
+                ))}
+              </h2>
+              <p className="mt-12 text-center text-sm text-muted-foreground">{t('worksWith')}</p>
+              <ActionMixer platforms={platforms} />
+            </Reveal>
           </div>
         </section>
 
@@ -231,20 +269,6 @@ export default async function HomePage() {
               submitEmail={unlockCopy('submitEmail')}
               demoTag={t('demo.tag')}
             />
-
-            <Reveal className="mt-14" delay={80}>
-              <div className="rounded-2xl border bg-card p-5 sm:p-6">
-                <h3 className="text-xl font-semibold tracking-tight">
-                  {t('supportedActions')}
-                </h3>
-                <p className="mt-1.5 max-w-2xl text-sm text-muted-foreground">
-                  {t('supportedActionsBody')}
-                </p>
-                <ActionMixer platforms={platforms} />
-              </div>
-            </Reveal>
-
-            <p className="mt-8 max-w-3xl text-xs text-muted-foreground">{t('verificationNote')}</p>
           </div>
         </section>
 

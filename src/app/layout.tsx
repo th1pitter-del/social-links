@@ -62,7 +62,9 @@ export default async function RootLayout({ children }: LayoutProps<'/'>) {
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body className="flex min-h-full flex-col">
+      {/* Browser extensions write attributes onto body before React arrives, so
+          this element is allowed to differ from the server markup. */}
+      <body className="flex min-h-full flex-col" suppressHydrationWarning>
         {themeCss ? <style dangerouslySetInnerHTML={{ __html: themeCss }} /> : null}
         <NextIntlClientProvider messages={messages}>
           <ThemeProvider attribute="class" defaultTheme="dark" disableTransitionOnChange>

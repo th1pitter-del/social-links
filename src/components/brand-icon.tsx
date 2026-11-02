@@ -50,6 +50,37 @@ export function brandSlugFor(platform: string | null | undefined): string | null
   return slug && BRAND_ICONS[slug] ? slug : null
 }
 
+/**
+ * The colour a brand is known by, for the accents that grow out of its logo.
+ * Only the brightness moves - a mark too dark for the dark page is lifted, one
+ * too pale for the light page is dropped - so the hue stays the brand's own.
+ * Marks with no hue at all (GitHub, X) return nothing and the caller keeps the
+ * surrounding text colour, which is what those logos are drawn in anyway.
+ */
+export function brandAccentFor(
+  platform: string | null | undefined,
+  dark: boolean,
+): string | undefined {
+  const slug = brandSlugFor(platform)
+  const hex = slug ? BRAND_ICONS[slug]?.hex : undefined
+  if (!hex) return undefined
+  const channels = [0, 2, 4].map((start) => parseInt(hex.slice(start, start + 2), 16))
+  if (channels.some((channel) => Number.isNaN(channel))) return undefined
+  const [r, g, b] = channels
+  if (Math.max(r, g, b) - Math.min(r, g, b) < 24) return undefined
+  const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255
+  const lift = dark && Math.max(r, g, b) < 100
+  const drop = !dark && luminance > 0.62
+  if (!lift && !drop) return `#${hex}`
+  const toward = lift ? 255 : 0
+  const amount = lift ? 0.55 : 0.35
+  const mix = (channel: number) =>
+    Math.round(channel + (toward - channel) * amount)
+      .toString(16)
+      .padStart(2, '0')
+  return `#${mix(r)}${mix(g)}${mix(b)}`
+}
+
 // Uses the official brand color when it stays legible on both light and dark
 // backgrounds; near-black (GitHub, X, …) and near-white (Snapchat) brands fall
 // back to `currentColor` so the glyph never disappears.
