@@ -134,14 +134,18 @@ export default async function HomePage() {
                 </div>
               </div>
 
-              <UnlockDemo
-                steps={steps}
-                linkTitle={t('demo.linkTitle')}
-                linkBody={t('demo.linkBody')}
-                creator={t('demo.creator')}
-                demoTag={t('demo.tag')}
-                demoLabel={t('demo.label')}
-              />
+              {/* A modest inset rather than a hard phone-shaped cap: the card
+                  keeps most of its column and only tightens a little below `lg`. */}
+              <div className="mx-auto w-full max-w-[22rem] sm:max-w-[38rem] lg:max-w-none">
+                <UnlockDemo
+                  steps={steps}
+                  linkTitle={t('demo.linkTitle')}
+                  linkBody={t('demo.linkBody')}
+                  creator={t('demo.creator')}
+                  demoTag={t('demo.tag')}
+                  demoLabel={t('demo.label')}
+                />
+              </div>
             </div>
           </div>
         </section>

@@ -32,11 +32,13 @@ const prisma = new PrismaClient({ adapter: new PrismaMariaDb(adapterOptions(conn
  * Retention cleanup.
  *
  * Unlock sessions and rate-limit buckets are transient by design. Analytics
- * events are kept unless RETENTION_ANALYTICS_DAYS is set, because the dashboard
- * reports are built from them.
+ * events are kept unless the retention setting is above 0, because the
+ * dashboard reports are built from them.
  */
-function numberFromEnv(name: string, fallback: number) {
-  const raw = process.env[name]
+async function numberConfig(dbKey: string, envName: string, fallback: number) {
+  const row = await prisma.setting.findUnique({ where: { key: dbKey }, select: { value: true } })
+  // The administrator's value wins; the environment only seeds it until one is saved.
+  const raw = row ? row.value.trim() : (process.env[envName]?.trim() ?? '')
   if (!raw) return fallback
   const value = Number(raw)
   return Number.isFinite(value) && value >= 0 ? value : fallback
@@ -44,7 +46,11 @@ function numberFromEnv(name: string, fallback: number) {
 
 async function main() {
   const now = new Date()
-  const analyticsDays = numberFromEnv('RETENTION_ANALYTICS_DAYS', 0)
+  const analyticsDays = await numberConfig(
+    'retention.analyticsDays',
+    'RETENTION_ANALYTICS_DAYS',
+    0,
+  )
 
   const buckets = await prisma.rateLimitBucket.deleteMany({
     where: { expiresAt: { lt: now } },

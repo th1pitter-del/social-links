@@ -1,5 +1,5 @@
 import type { ComponentType } from 'react'
-import { Globe, KeyRound, Palette, ShieldCheck, Timer, Upload } from 'lucide-react'
+import { Database, Globe, KeyRound, Mail, Palette, Scale, ShieldCheck, Timer, Upload } from 'lucide-react'
 
 type IconType = ComponentType<{ className?: string }>
 
@@ -12,6 +12,12 @@ export type SettingsField = {
   image?: boolean
   /** Renders an on/off switch storing 'true'/'false'. */
   toggle?: boolean
+  /**
+   * A credential. The stored value is never sent to the browser: the panel
+   * shows whether one is configured and offers replace/remove instead of a
+   * prefilled input.
+   */
+  secret?: boolean
 }
 
 export type SettingsGroup = {
@@ -57,6 +63,7 @@ export const SETTINGS_GROUPS: SettingsGroup[] = [
       { key: 'limits.linkCreatePerHour' },
       { key: 'limits.guestLinkCreatePerHour' },
       { key: 'limits.unlockStartPerMinute' },
+      { key: 'limits.verifyPerMinute' },
       { key: 'limits.reportPerHour' },
       { key: 'limits.uploadPerHour' },
     ],
@@ -68,7 +75,7 @@ export const SETTINGS_GROUPS: SettingsGroup[] = [
   },
   {
     id: 'platform-rules',
-    icon: ShieldCheck,
+    icon: Scale,
     fields: [
       { key: 'rules.socialPlatforms', multiline: true },
       { key: 'rules.contentPolicy', multiline: true },
@@ -83,6 +90,28 @@ export const SETTINGS_GROUPS: SettingsGroup[] = [
       { key: 'demo.email' },
       { key: 'demo.password' },
     ],
+  },
+  {
+    id: 'step-verification',
+    icon: ShieldCheck,
+    fields: [
+      { key: 'verification.telegramBotToken', secret: true },
+      { key: 'verification.githubToken', secret: true },
+    ],
+  },
+  {
+    id: 'email-delivery',
+    icon: Mail,
+    fields: [
+      { key: 'email.webhookUrl' },
+      { key: 'email.webhookToken', secret: true },
+      { key: 'email.from' },
+    ],
+  },
+  {
+    id: 'data-retention',
+    icon: Database,
+    fields: [{ key: 'retention.analyticsDays' }],
   },
 ]
 

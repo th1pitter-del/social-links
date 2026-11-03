@@ -29,6 +29,8 @@ export type UnlockActionCompletionMinAggregateOutputType = {
   unlockSessionId: string | null
   linkActionId: string | null
   completedAt: Date | null
+  verified: boolean | null
+  proof: string | null
 }
 
 export type UnlockActionCompletionMaxAggregateOutputType = {
@@ -36,6 +38,8 @@ export type UnlockActionCompletionMaxAggregateOutputType = {
   unlockSessionId: string | null
   linkActionId: string | null
   completedAt: Date | null
+  verified: boolean | null
+  proof: string | null
 }
 
 export type UnlockActionCompletionCountAggregateOutputType = {
@@ -43,6 +47,8 @@ export type UnlockActionCompletionCountAggregateOutputType = {
   unlockSessionId: number
   linkActionId: number
   completedAt: number
+  verified: number
+  proof: number
   _all: number
 }
 
@@ -52,6 +58,8 @@ export type UnlockActionCompletionMinAggregateInputType = {
   unlockSessionId?: true
   linkActionId?: true
   completedAt?: true
+  verified?: true
+  proof?: true
 }
 
 export type UnlockActionCompletionMaxAggregateInputType = {
@@ -59,6 +67,8 @@ export type UnlockActionCompletionMaxAggregateInputType = {
   unlockSessionId?: true
   linkActionId?: true
   completedAt?: true
+  verified?: true
+  proof?: true
 }
 
 export type UnlockActionCompletionCountAggregateInputType = {
@@ -66,6 +76,8 @@ export type UnlockActionCompletionCountAggregateInputType = {
   unlockSessionId?: true
   linkActionId?: true
   completedAt?: true
+  verified?: true
+  proof?: true
   _all?: true
 }
 
@@ -146,6 +158,8 @@ export type UnlockActionCompletionGroupByOutputType = {
   unlockSessionId: string
   linkActionId: string
   completedAt: Date
+  verified: boolean
+  proof: string | null
   _count: UnlockActionCompletionCountAggregateOutputType | null
   _min: UnlockActionCompletionMinAggregateOutputType | null
   _max: UnlockActionCompletionMaxAggregateOutputType | null
@@ -174,6 +188,8 @@ export type UnlockActionCompletionWhereInput = {
   unlockSessionId?: Prisma.StringFilter<"UnlockActionCompletion"> | string
   linkActionId?: Prisma.StringFilter<"UnlockActionCompletion"> | string
   completedAt?: Prisma.DateTimeFilter<"UnlockActionCompletion"> | Date | string
+  verified?: Prisma.BoolFilter<"UnlockActionCompletion"> | boolean
+  proof?: Prisma.StringNullableFilter<"UnlockActionCompletion"> | string | null
   unlockSession?: Prisma.XOR<Prisma.UnlockSessionScalarRelationFilter, Prisma.UnlockSessionWhereInput>
   linkAction?: Prisma.XOR<Prisma.LinkActionScalarRelationFilter, Prisma.LinkActionWhereInput>
 }
@@ -183,6 +199,8 @@ export type UnlockActionCompletionOrderByWithRelationInput = {
   unlockSessionId?: Prisma.SortOrder
   linkActionId?: Prisma.SortOrder
   completedAt?: Prisma.SortOrder
+  verified?: Prisma.SortOrder
+  proof?: Prisma.SortOrderInput | Prisma.SortOrder
   unlockSession?: Prisma.UnlockSessionOrderByWithRelationInput
   linkAction?: Prisma.LinkActionOrderByWithRelationInput
   _relevance?: Prisma.UnlockActionCompletionOrderByRelevanceInput
@@ -197,6 +215,8 @@ export type UnlockActionCompletionWhereUniqueInput = Prisma.AtLeast<{
   unlockSessionId?: Prisma.StringFilter<"UnlockActionCompletion"> | string
   linkActionId?: Prisma.StringFilter<"UnlockActionCompletion"> | string
   completedAt?: Prisma.DateTimeFilter<"UnlockActionCompletion"> | Date | string
+  verified?: Prisma.BoolFilter<"UnlockActionCompletion"> | boolean
+  proof?: Prisma.StringNullableFilter<"UnlockActionCompletion"> | string | null
   unlockSession?: Prisma.XOR<Prisma.UnlockSessionScalarRelationFilter, Prisma.UnlockSessionWhereInput>
   linkAction?: Prisma.XOR<Prisma.LinkActionScalarRelationFilter, Prisma.LinkActionWhereInput>
 }, "id" | "unlockSessionId_linkActionId">
@@ -206,6 +226,8 @@ export type UnlockActionCompletionOrderByWithAggregationInput = {
   unlockSessionId?: Prisma.SortOrder
   linkActionId?: Prisma.SortOrder
   completedAt?: Prisma.SortOrder
+  verified?: Prisma.SortOrder
+  proof?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.UnlockActionCompletionCountOrderByAggregateInput
   _max?: Prisma.UnlockActionCompletionMaxOrderByAggregateInput
   _min?: Prisma.UnlockActionCompletionMinOrderByAggregateInput
@@ -219,11 +241,15 @@ export type UnlockActionCompletionScalarWhereWithAggregatesInput = {
   unlockSessionId?: Prisma.StringWithAggregatesFilter<"UnlockActionCompletion"> | string
   linkActionId?: Prisma.StringWithAggregatesFilter<"UnlockActionCompletion"> | string
   completedAt?: Prisma.DateTimeWithAggregatesFilter<"UnlockActionCompletion"> | Date | string
+  verified?: Prisma.BoolWithAggregatesFilter<"UnlockActionCompletion"> | boolean
+  proof?: Prisma.StringNullableWithAggregatesFilter<"UnlockActionCompletion"> | string | null
 }
 
 export type UnlockActionCompletionCreateInput = {
   id?: string
   completedAt?: Date | string
+  verified?: boolean
+  proof?: string | null
   unlockSession: Prisma.UnlockSessionCreateNestedOneWithoutCompletionsInput
   linkAction: Prisma.LinkActionCreateNestedOneWithoutCompletionsInput
 }
@@ -233,11 +259,15 @@ export type UnlockActionCompletionUncheckedCreateInput = {
   unlockSessionId: string
   linkActionId: string
   completedAt?: Date | string
+  verified?: boolean
+  proof?: string | null
 }
 
 export type UnlockActionCompletionUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   completedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  proof?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   unlockSession?: Prisma.UnlockSessionUpdateOneRequiredWithoutCompletionsNestedInput
   linkAction?: Prisma.LinkActionUpdateOneRequiredWithoutCompletionsNestedInput
 }
@@ -247,6 +277,8 @@ export type UnlockActionCompletionUncheckedUpdateInput = {
   unlockSessionId?: Prisma.StringFieldUpdateOperationsInput | string
   linkActionId?: Prisma.StringFieldUpdateOperationsInput | string
   completedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  proof?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type UnlockActionCompletionCreateManyInput = {
@@ -254,11 +286,15 @@ export type UnlockActionCompletionCreateManyInput = {
   unlockSessionId: string
   linkActionId: string
   completedAt?: Date | string
+  verified?: boolean
+  proof?: string | null
 }
 
 export type UnlockActionCompletionUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   completedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  proof?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type UnlockActionCompletionUncheckedUpdateManyInput = {
@@ -266,6 +302,8 @@ export type UnlockActionCompletionUncheckedUpdateManyInput = {
   unlockSessionId?: Prisma.StringFieldUpdateOperationsInput | string
   linkActionId?: Prisma.StringFieldUpdateOperationsInput | string
   completedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  proof?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type UnlockActionCompletionListRelationFilter = {
@@ -294,6 +332,8 @@ export type UnlockActionCompletionCountOrderByAggregateInput = {
   unlockSessionId?: Prisma.SortOrder
   linkActionId?: Prisma.SortOrder
   completedAt?: Prisma.SortOrder
+  verified?: Prisma.SortOrder
+  proof?: Prisma.SortOrder
 }
 
 export type UnlockActionCompletionMaxOrderByAggregateInput = {
@@ -301,6 +341,8 @@ export type UnlockActionCompletionMaxOrderByAggregateInput = {
   unlockSessionId?: Prisma.SortOrder
   linkActionId?: Prisma.SortOrder
   completedAt?: Prisma.SortOrder
+  verified?: Prisma.SortOrder
+  proof?: Prisma.SortOrder
 }
 
 export type UnlockActionCompletionMinOrderByAggregateInput = {
@@ -308,6 +350,8 @@ export type UnlockActionCompletionMinOrderByAggregateInput = {
   unlockSessionId?: Prisma.SortOrder
   linkActionId?: Prisma.SortOrder
   completedAt?: Prisma.SortOrder
+  verified?: Prisma.SortOrder
+  proof?: Prisma.SortOrder
 }
 
 export type UnlockActionCompletionCreateNestedManyWithoutLinkActionInput = {
@@ -397,6 +441,8 @@ export type UnlockActionCompletionUncheckedUpdateManyWithoutUnlockSessionNestedI
 export type UnlockActionCompletionCreateWithoutLinkActionInput = {
   id?: string
   completedAt?: Date | string
+  verified?: boolean
+  proof?: string | null
   unlockSession: Prisma.UnlockSessionCreateNestedOneWithoutCompletionsInput
 }
 
@@ -404,6 +450,8 @@ export type UnlockActionCompletionUncheckedCreateWithoutLinkActionInput = {
   id?: string
   unlockSessionId: string
   completedAt?: Date | string
+  verified?: boolean
+  proof?: string | null
 }
 
 export type UnlockActionCompletionCreateOrConnectWithoutLinkActionInput = {
@@ -440,11 +488,15 @@ export type UnlockActionCompletionScalarWhereInput = {
   unlockSessionId?: Prisma.StringFilter<"UnlockActionCompletion"> | string
   linkActionId?: Prisma.StringFilter<"UnlockActionCompletion"> | string
   completedAt?: Prisma.DateTimeFilter<"UnlockActionCompletion"> | Date | string
+  verified?: Prisma.BoolFilter<"UnlockActionCompletion"> | boolean
+  proof?: Prisma.StringNullableFilter<"UnlockActionCompletion"> | string | null
 }
 
 export type UnlockActionCompletionCreateWithoutUnlockSessionInput = {
   id?: string
   completedAt?: Date | string
+  verified?: boolean
+  proof?: string | null
   linkAction: Prisma.LinkActionCreateNestedOneWithoutCompletionsInput
 }
 
@@ -452,6 +504,8 @@ export type UnlockActionCompletionUncheckedCreateWithoutUnlockSessionInput = {
   id?: string
   linkActionId: string
   completedAt?: Date | string
+  verified?: boolean
+  proof?: string | null
 }
 
 export type UnlockActionCompletionCreateOrConnectWithoutUnlockSessionInput = {
@@ -484,11 +538,15 @@ export type UnlockActionCompletionCreateManyLinkActionInput = {
   id?: string
   unlockSessionId: string
   completedAt?: Date | string
+  verified?: boolean
+  proof?: string | null
 }
 
 export type UnlockActionCompletionUpdateWithoutLinkActionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   completedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  proof?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   unlockSession?: Prisma.UnlockSessionUpdateOneRequiredWithoutCompletionsNestedInput
 }
 
@@ -496,23 +554,31 @@ export type UnlockActionCompletionUncheckedUpdateWithoutLinkActionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   unlockSessionId?: Prisma.StringFieldUpdateOperationsInput | string
   completedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  proof?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type UnlockActionCompletionUncheckedUpdateManyWithoutLinkActionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   unlockSessionId?: Prisma.StringFieldUpdateOperationsInput | string
   completedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  proof?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type UnlockActionCompletionCreateManyUnlockSessionInput = {
   id?: string
   linkActionId: string
   completedAt?: Date | string
+  verified?: boolean
+  proof?: string | null
 }
 
 export type UnlockActionCompletionUpdateWithoutUnlockSessionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   completedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  proof?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkAction?: Prisma.LinkActionUpdateOneRequiredWithoutCompletionsNestedInput
 }
 
@@ -520,12 +586,16 @@ export type UnlockActionCompletionUncheckedUpdateWithoutUnlockSessionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   linkActionId?: Prisma.StringFieldUpdateOperationsInput | string
   completedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  proof?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type UnlockActionCompletionUncheckedUpdateManyWithoutUnlockSessionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   linkActionId?: Prisma.StringFieldUpdateOperationsInput | string
   completedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  proof?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -535,6 +605,8 @@ export type UnlockActionCompletionSelect<ExtArgs extends runtime.Types.Extension
   unlockSessionId?: boolean
   linkActionId?: boolean
   completedAt?: boolean
+  verified?: boolean
+  proof?: boolean
   unlockSession?: boolean | Prisma.UnlockSessionDefaultArgs<ExtArgs>
   linkAction?: boolean | Prisma.LinkActionDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["unlockActionCompletion"]>
@@ -546,9 +618,11 @@ export type UnlockActionCompletionSelectScalar = {
   unlockSessionId?: boolean
   linkActionId?: boolean
   completedAt?: boolean
+  verified?: boolean
+  proof?: boolean
 }
 
-export type UnlockActionCompletionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "unlockSessionId" | "linkActionId" | "completedAt", ExtArgs["result"]["unlockActionCompletion"]>
+export type UnlockActionCompletionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "unlockSessionId" | "linkActionId" | "completedAt" | "verified" | "proof", ExtArgs["result"]["unlockActionCompletion"]>
 export type UnlockActionCompletionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   unlockSession?: boolean | Prisma.UnlockSessionDefaultArgs<ExtArgs>
   linkAction?: boolean | Prisma.LinkActionDefaultArgs<ExtArgs>
@@ -565,6 +639,14 @@ export type $UnlockActionCompletionPayload<ExtArgs extends runtime.Types.Extensi
     unlockSessionId: string
     linkActionId: string
     completedAt: Date
+    /**
+     * * True when a platform public record or API confirmed the action, not the visitor.
+     */
+    verified: boolean
+    /**
+     * * What the check actually saw, e.g. "octocat follows tekkub". Never shown to visitors.
+     */
+    proof: string | null
   }, ExtArgs["result"]["unlockActionCompletion"]>
   composites: {}
 }
@@ -940,6 +1022,8 @@ export interface UnlockActionCompletionFieldRefs {
   readonly unlockSessionId: Prisma.FieldRef<"UnlockActionCompletion", 'String'>
   readonly linkActionId: Prisma.FieldRef<"UnlockActionCompletion", 'String'>
   readonly completedAt: Prisma.FieldRef<"UnlockActionCompletion", 'DateTime'>
+  readonly verified: Prisma.FieldRef<"UnlockActionCompletion", 'Boolean'>
+  readonly proof: Prisma.FieldRef<"UnlockActionCompletion", 'String'>
 }
     
 

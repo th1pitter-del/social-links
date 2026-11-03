@@ -7,6 +7,7 @@ import { toast } from 'sonner'
 import { Loader2, Upload } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
@@ -17,9 +18,11 @@ import { getSettingsGroup, settingsFieldKey } from './settings-config'
 export function SettingsGroupForm({
   groupId,
   settings,
+  configured = {},
 }: {
   groupId: string
   settings: Record<string, string>
+  configured?: Record<string, boolean>
 }) {
   const router = useRouter()
   const t = useTranslations('admin.settings')
@@ -33,14 +36,19 @@ export function SettingsGroupForm({
   const group = getSettingsGroup(groupId)
   if (!group) return null
 
-  function save(key: string) {
+  function save(key: string, value = values[key] ?? '') {
     setPendingKey(key)
     startTransition(async () => {
-      const result = await updateSetting(key, values[key] ?? '')
+      const result = await updateSetting(key, value)
       setPendingKey(null)
       if (!result.ok) {
         toast.error(result.error)
         return
+      }
+      // A credential is never echoed back, so drop the typed value from local
+      // state once the server has it instead of leaving it on screen.
+      if (group?.fields.some((field) => field.key === key && field.secret)) {
+        setValues((v) => ({ ...v, [key]: '' }))
       }
       toast.success(t('savedToast'))
       router.refresh()
@@ -89,6 +97,7 @@ export function SettingsGroupForm({
           const label = t(`fields.${fieldKey}.label`)
           const hasHint = t.has(`fields.${fieldKey}.hint`)
           const hasPlaceholder = t.has(`fields.${fieldKey}.placeholder`)
+          const isConfigured = field.secret ? Boolean(configured[field.key]) : false
           return (
             <div key={field.key} className="space-y-1.5">
               <Label htmlFor={field.key}>{label}</Label>
@@ -123,6 +132,28 @@ export function SettingsGroupForm({
                   <span className="text-sm text-muted-foreground">
                     {values[field.key] === 'true' ? tc('enabled') : tc('disabled')}
                   </span>
+                </div>
+              ) : field.secret ? (
+                <div className="flex items-center gap-2">
+                  <Input
+                    id={field.key}
+                    type="password"
+                    autoComplete="off"
+                    spellCheck={false}
+                    value={values[field.key] ?? ''}
+                    placeholder={
+                      isConfigured
+                        ? t('secretReplacePlaceholder')
+                        : hasPlaceholder
+                          ? t(`fields.${fieldKey}.placeholder`)
+                          : undefined
+                    }
+                    onChange={(e) => setValues((v) => ({ ...v, [field.key]: e.target.value }))}
+                    className="flex-1 font-mono"
+                  />
+                  <Badge variant={isConfigured ? 'secondary' : 'outline'}>
+                    {isConfigured ? t('secretConfigured') : t('secretNotConfigured')}
+                  </Badge>
                 </div>
               ) : field.image ? (
                 <div className="space-y-2">
@@ -192,12 +223,26 @@ export function SettingsGroupForm({
               {hasHint ? (
                 <p className="text-xs text-muted-foreground">{t(`fields.${fieldKey}.hint`)}</p>
               ) : null}
-              <div className="flex items-center justify-end pt-1">
+              <div className="flex items-center justify-end gap-2 pt-1">
+                {field.secret && isConfigured ? (
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="ghost"
+                    disabled={pendingKey === field.key}
+                    onClick={() => save(field.key, '')}
+                  >
+                    {t('secretRemove')}
+                  </Button>
+                ) : null}
                 <Button
                   type="button"
                   size="sm"
                   variant="outline"
-                  disabled={pendingKey === field.key}
+                  disabled={
+                    pendingKey === field.key ||
+                    (field.secret ? !(values[field.key] ?? '').trim() : false)
+                  }
                   onClick={() => save(field.key)}
                 >
                   {pendingKey === field.key ? tc('saving') : tc('save')}

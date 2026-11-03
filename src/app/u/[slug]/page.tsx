@@ -7,7 +7,6 @@ import { getTranslations } from 'next-intl/server'
 import { UnlockExperience, type UnlockStepPreview } from '@/components/unlock/unlock-experience'
 import { Button } from '@/components/ui/button'
 import { getSession } from '@/lib/session'
-import { getSiteSettings } from '@/lib/settings'
 import { getPublicUnlockLink, isExpired, recordShortLinkVisit, type PublicUnlockLink } from '@/lib/unlock'
 
 type PageProps = {
@@ -38,10 +37,8 @@ export default async function UnlockPage({ params, searchParams }: PageProps) {
     notFound()
   }
 
-  const settings = await getSiteSettings()
   const steps = toSteps(link)
   const stats = { viewCount: link.viewCount, unlockCount: link.unlockCount }
-  const brand = { siteName: settings.name, logoUrl: settings.logoUrl }
 
   if (link.status === 'DISABLED') {
     return (
@@ -74,7 +71,6 @@ export default async function UnlockPage({ params, searchParams }: PageProps) {
         description={link.description}
         coverImage={link.coverImage}
         initialToken={token && token.length <= 128 ? token : null}
-        {...brand}
         steps={steps}
         {...stats}
         preview
@@ -106,7 +102,6 @@ export default async function UnlockPage({ params, searchParams }: PageProps) {
       description={link.description}
       coverImage={link.coverImage}
       initialToken={token && token.length <= 128 ? token : null}
-      {...brand}
       steps={steps}
       {...stats}
     />
@@ -115,6 +110,7 @@ export default async function UnlockPage({ params, searchParams }: PageProps) {
 
 function toSteps(link: PublicUnlockLink): UnlockStepPreview[] {
   return link.actions.map((action) => ({
+    id: action.id,
     label: action.label?.trim() || action.optionLabel || action.type,
     platform: action.platform,
     icon: action.icon,

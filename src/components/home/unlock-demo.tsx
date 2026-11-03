@@ -15,8 +15,7 @@ import {
 } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
-import { brandSlugFor, PlatformGlyph } from '@/components/brand-icon'
-import { BRAND_ICONS } from '@/lib/brand-icons'
+import { platformTint, PlatformGlyph } from '@/components/brand-icon'
 import { DemoShell, type DemoCycle } from '@/components/motion/demo-cycle'
 import { useInView, useReducedMotion } from '@/components/motion/reveal'
 import { cn } from 'cn'
@@ -53,35 +52,6 @@ const TIMING = {
 }
 
 const CONFETTI_COLORS = ['bg-primary', 'bg-pulse-lime-soft', 'bg-success']
-
-/** A translucent wash of the platform's real brand color, per theme. */
-function platformTint(platform: string | null): {
-  light: string
-  dark: string
-  rampLight: string
-  rampDark: string
-} | null {
-  const slug = brandSlugFor(platform)
-  if (!slug) return null
-  const hex = BRAND_ICONS[slug].hex
-  const r = parseInt(hex.slice(0, 2), 16)
-  const g = parseInt(hex.slice(2, 4), 16)
-  const b = parseInt(hex.slice(4, 6), 16)
-  const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255
-  const brand = `${r}, ${g}, ${b}`
-  // Near-black brands (X, TikTok, Threads) would vanish on the dark card, so
-  // there the wash goes light — but only for that theme, or it would disappear
-  // against the white card instead.
-  const dark = luminance < 0.13 ? '255, 255, 255' : brand
-  // The base is the row's colour and the ramp is the same hue lit from the top
-  // edge, so the glass highlight deepens the brand instead of greying it out.
-  return {
-    light: `rgba(${brand}, 0.20)`,
-    dark: `rgba(${dark}, 0.34)`,
-    rampLight: `rgba(${brand}, 0.36)`,
-    rampDark: `rgba(${dark}, 0.54)`,
-  }
-}
 
 type PointerState = { x: number; y: number; click: boolean }
 type NoticeState = { id: number; text: string; kind: 'success' | 'info' }
@@ -501,19 +471,20 @@ export function UnlockDemo({
               hero section itself carries behind the card. */}
           <span
             aria-hidden
-            className="pointer-events-none absolute -left-10 -top-14 h-32 w-48 rounded-full bg-primary/15 blur-2xl"
+            className="pointer-events-none absolute -left-10 -top-14 h-32 w-48 rounded-full bg-primary/[0.07] blur-2xl dark:bg-primary/15"
           />
           {/* A second, dimmer pool behind the task list. Frosted rows need
               something to frost: over a flat surface `backdrop-blur` is a
-              no-op, so the light has to exist under them. */}
+              no-op, so the light has to exist under them. The light theme keeps
+              both pools faint, or the white card stops reading as white. */}
           <span
             aria-hidden
-            className="pointer-events-none absolute -bottom-6 -right-12 h-52 w-80 rounded-full bg-primary/10 blur-3xl"
+            className="pointer-events-none absolute -bottom-6 -right-12 h-52 w-80 rounded-full bg-primary/[0.05] blur-3xl dark:bg-primary/10"
           />
 
           {/* Toast slot: absolutely positioned so the card never reflows while
               notifications come and go. It rides the bottom edge, over the
-              (static) call-to-action's shadow line, rather than the top - the
+              (static) call-to-action's lower edge, rather than the top - the
               title, creator and step list all stay readable while it shows. */}
           {notice ? (
             <p
@@ -661,7 +632,7 @@ export function UnlockDemo({
                         // the neutral surface instead: only what is still to do
                         // keeps a color.
                         done
-                          ? 'bg-muted/50 bg-gradient-to-b from-white/10 to-transparent'
+                          ? 'bg-muted/50 bg-gradient-to-b from-black/5 to-transparent dark:from-white/10'
                           : tint
                             ? 'bg-[var(--tint-l)] bg-gradient-to-b from-[var(--ramp-l)] to-transparent dark:bg-[var(--tint-d)] dark:from-[var(--ramp-d)]'
                             : 'bg-transparent',
@@ -742,9 +713,8 @@ export function UnlockDemo({
                 aria-disabled={!allDone}
                 className={cn(
                   'absolute inset-0 h-full rounded-xl text-sm [&_svg]:size-4',
-                  'transition-[opacity,transform,box-shadow,background-color,color] duration-500',
+                  'transition-[opacity,transform,background-color,color] duration-500',
                   unlocked ? 'pointer-events-none opacity-0' : 'opacity-100',
-                  allDone && !unlocked && 'shadow-lg shadow-primary/25',
                   pressed && 'scale-95',
                   nudging && 'motion-safe:animate-[demo-shake_0.4s_ease-in-out]',
                 )}

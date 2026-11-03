@@ -37,6 +37,14 @@ export async function updateSetting(key: string, value: string): Promise<Setting
   if (trimmedKey === 'demo.loginEnabled') {
     value = value === 'true' ? 'true' : 'false'
   }
+  if (trimmedKey.startsWith('verification.') || trimmedKey.startsWith('email.')) {
+    // Credentials are pasted, so surrounding whitespace is never part of the
+    // value. An accidental space makes every platform request fail.
+    value = value.trim()
+    if (trimmedKey === 'email.webhookUrl' && value !== '' && !/^https?:\/\//.test(value)) {
+      return { ok: false, error: t('invalidWebhookUrl') }
+    }
+  }
   const maxLength = trimmedKey.startsWith('content.')
     ? CONTENT_VALUE_MAX_LENGTH
     : 2000

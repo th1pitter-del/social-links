@@ -15,6 +15,7 @@ import { getActionOptionMap, getEnabledActionOptions } from '@/lib/action-catalo
 import type { ActionOptionView } from '@/lib/action-defaults'
 import { buildDayBuckets, windowStart } from '@/lib/activity-buckets'
 import { prisma } from '@/lib/prisma'
+import { verifierFor } from '@/lib/verification'
 import { requireUser } from '@/lib/session'
 import { isExpired } from '@/lib/unlock'
 
@@ -106,6 +107,29 @@ export default async function EditLinkPage({
         orderBy: { createdAt: 'desc' },
         take: 50,
         select: { id: true, email: true, consentAt: true },
+      })
+    : []
+
+  // Public-record checks leave a proof string behind; the owner gets to read it.
+  const verifiable = link.actions.some((action) =>
+    verifierFor(actionCatalog.get(action.type)?.platform),
+  )
+  const proofs = verifiable
+    ? await prisma.unlockActionCompletion.findMany({
+        where: { verified: true, linkAction: { linkId: link.id } },
+        orderBy: { completedAt: 'desc' },
+        take: 50,
+        select: {
+          id: true,
+          proof: true,
+          completedAt: true,
+          linkAction: {
+            select: {
+              label: true,
+              option: { select: { label: true, platform: { select: { label: true } } } },
+            },
+          },
+        },
       })
     : []
 
@@ -249,6 +273,48 @@ export default async function EditLinkPage({
                       <td className="px-5 py-3">{lead.email}</td>
                       <td className="px-5 py-3 text-muted-foreground tabular-nums">
                         {dateFormatter.format(lead.consentAt)}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </section>
+      ) : null}
+
+      {verifiable ? (
+        <section className="space-y-3">
+          <div>
+            <h2 className="font-medium">{t('verifiedTitle')}</h2>
+            <p className="text-sm text-muted-foreground">{t('verifiedDescription')}</p>
+          </div>
+
+          {proofs.length === 0 ? (
+            <p className="rounded-2xl border border-dashed p-5 text-sm text-muted-foreground">
+              {t('noVerified')}
+            </p>
+          ) : (
+            <div className="overflow-hidden rounded-2xl border bg-card">
+              <table className="w-full text-sm">
+                <thead className="border-b text-left text-xs text-muted-foreground">
+                  <tr>
+                    <th className="px-5 py-3 font-medium">{t('colVerifiedAction')}</th>
+                    <th className="px-5 py-3 font-medium">{t('colEvidence')}</th>
+                    <th className="px-5 py-3 font-medium">{t('colVerifiedAt')}</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y">
+                  {proofs.map((row) => (
+                    <tr key={row.id}>
+                      <td className="px-5 py-3 whitespace-nowrap">
+                        {row.linkAction.option?.platform?.label ?? row.linkAction.label}
+                      </td>
+                      <td className="px-5 py-3 text-muted-foreground" dir="ltr">
+                        {row.proof}
+                      </td>
+                      <td className="px-5 py-3 text-muted-foreground tabular-nums">
+                        {dateFormatter.format(row.completedAt)}
                       </td>
                     </tr>
                   ))}

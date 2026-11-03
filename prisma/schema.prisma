@@ -146,6 +146,7 @@ model LinkAction {
   link        Link                    @relation(fields: [linkId], references: [id], onDelete: Cascade)
   option      ActionOption            @relation(fields: [type], references: [key], onDelete: Restrict)
   completions UnlockActionCompletion[]
+  checkins    TelegramCheckin[]
 
   @@index([linkId, position])
 }
@@ -170,6 +171,7 @@ model UnlockSession {
   link        Link                   @relation(fields: [linkId], references: [id], onDelete: Cascade)
   completions UnlockActionCompletion[]
   events      AnalyticsEvent[]
+  checkins    TelegramCheckin[]
 
   @@index([linkId])
 }
@@ -179,6 +181,10 @@ model UnlockActionCompletion {
   unlockSessionId String
   linkActionId    String
   completedAt     DateTime @default(now())
+  /** True when a platform public record or API confirmed the action, not the visitor. */
+  verified        Boolean  @default(false)
+  /** What the check actually saw, e.g. "octocat follows tekkub". Never shown to visitors. */
+  proof           String?  @db.Text
 
   unlockSession UnlockSession @relation(fields: [unlockSessionId], references: [id], onDelete: Cascade)
   linkAction    LinkAction    @relation(fields: [linkActionId], references: [id], onDelete: Cascade)
@@ -436,4 +442,28 @@ model BioLink {
   profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
 
   @@index([profileId, position])
+}
+
+/**
+ * One visit to the bot's /start deep link. The id is the payload only the
+ * server knows, so the account that presses Start cannot be forged by the
+ * visitor, and the membership read happens against Telegram's own record.
+ */
+model TelegramCheckin {
+  id              String   @id
+  unlockSessionId String
+  linkActionId    String
+  chatId          String
+  /** The Telegram account that actually opened the bot, once its update is read. */
+  userId          String?
+  username        String?
+  memberStatus    String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  expiresAt       DateTime
+
+  unlockSession UnlockSession @relation(fields: [unlockSessionId], references: [id], onDelete: Cascade)
+  linkAction    LinkAction    @relation(fields: [linkActionId], references: [id], onDelete: Cascade)
+
+  @@index([unlockSessionId])
 }

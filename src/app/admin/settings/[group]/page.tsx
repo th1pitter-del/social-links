@@ -31,13 +31,18 @@ export default async function AdminSettingsGroupPage({
   // Theme colors prefill with their effective defaults so the pickers start
   // on the color actually in use instead of an empty input.
   const all = await getSettings()
-  const settings = Object.fromEntries(
-    group.fields.map((field) => {
-      const stored = all[field.key]
-      const value = stored ?? defaultThemeValue(field.key) ?? ''
-      return [field.key, value]
-    }),
-  )
+  const settings: Record<string, string> = {}
+  const configured: Record<string, boolean> = {}
+  for (const field of group.fields) {
+    const stored = all[field.key]
+    if (field.secret) {
+      // A credential is write-only: report that one exists, never what it is.
+      settings[field.key] = ''
+      configured[field.key] = Boolean(stored?.trim())
+    } else {
+      settings[field.key] = stored ?? defaultThemeValue(field.key) ?? ''
+    }
+  }
 
-  return <SettingsGroupForm groupId={group.id} settings={settings} />
+  return <SettingsGroupForm groupId={group.id} settings={settings} configured={configured} />
 }

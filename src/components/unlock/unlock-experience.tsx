@@ -4,17 +4,16 @@ import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from '
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useTranslations } from 'next-intl'
-import { CheckCircle2, Download, ExternalLink, Eye, FileText, Loader2, Lock, Mail, Share2, Unlock } from 'lucide-react'
+import { Check, CheckCircle2, Download, ExternalLink, Eye, FileLock, FileText, Loader2, Lock, Mail, Share2, Unlock } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
-import { Progress } from '@/components/ui/progress'
-import { ActionGlyph } from '@/components/brand-icon'
-import { BrandMark } from '@/components/brand-mark'
+import { PlatformGlyph, platformTint } from '@/components/brand-icon'
 import { cn } from 'cn'
 import {
   claimContent,
+  confirmProfile,
   getUnlockState,
   markActionComplete,
   startUnlock,
@@ -29,6 +28,8 @@ type ClaimedContent =
 
 /** A creator action as shown before the visitor starts the unlock session. */
 export type UnlockStepPreview = {
+  /** The real action id, so a row can be completed the moment it is pressed. */
+  id: string
   label: string
   platform: string | null
   icon: string
@@ -46,6 +47,10 @@ type StepAction = {
 }
 
 const emptySubscribe = () => () => {}
+
+/** The completed tick, drawn the same way as the hero's demonstration card. */
+const ROW_CHECK =
+  'flex size-5 items-center justify-center rounded-full bg-success/15 text-emerald-600 ring-1 ring-success/30 dark:text-success'
 
 /**
  * The canonical URL visitors share. Deliberately rebuilt from the origin plus
@@ -68,8 +73,6 @@ export function UnlockExperience({
   preview = false,
   viewCount = 0,
   unlockCount = 0,
-  siteName,
-  logoUrl,
   steps = [],
 }: {
   slug: string
@@ -80,8 +83,6 @@ export function UnlockExperience({
   preview?: boolean
   viewCount?: number
   unlockCount?: number
-  siteName: string
-  logoUrl?: string
   steps?: UnlockStepPreview[]
 }) {
   const t = useTranslations('unlock')
@@ -91,6 +92,8 @@ export function UnlockExperience({
   const [error, setError] = useState<string | null>(null)
   const [email, setEmail] = useState('')
   const [consent, setConsent] = useState(false)
+  const [profile, setProfile] = useState('')
+  const [confirming, setConfirming] = useState(false)
   const [claimed, setClaimed] = useState<ClaimedContent>(null)
   const shareUrl = useShareUrl(slug)
   /** Token already loaded or created locally; keeps a route refresh from re-fetching it. */
@@ -137,14 +140,32 @@ export function UnlockExperience({
   }
 
   async function handleAction(actionId: string, target: string, isEmail: boolean) {
-    if (!state) return
+    // The row is the visitor's first move, so the session begins here instead of
+    // behind a separate "start" press: one action per step, like the card shows.
+    let session = state
+    if (!session) {
+      setBusy(true)
+      setError(null)
+      const begin = await startUnlock(slug, { preview })
+      setBusy(false)
+      if (!begin.ok) {
+        setError(begin.error)
+        return
+      }
+      applyState(begin.state)
+      session = begin.state
+      // Starting a session records a view server-side, so the public counters on
+      // this page are now stale. Refresh them in place rather than waiting.
+      router.refresh()
+    }
+
     if (!isEmail && target) {
       window.open(target, '_blank', 'noopener,noreferrer')
     }
     setBusy(true)
     setError(null)
     const result = await markActionComplete({
-      token: state.token,
+      token: session.token,
       actionId,
       email: isEmail ? email : undefined,
       consent: isEmail ? consent : undefined,
@@ -154,6 +175,23 @@ export function UnlockExperience({
       setError(result.error)
       return
     }
+    setState(result.state)
+  }
+
+  async function handleConfirm() {
+    if (!state) return
+    const handle = profile.trim()
+    if (!handle) return
+    setBusy(true)
+    setError(null)
+    const result = await confirmProfile({ token: state.token, handle })
+    setBusy(false)
+    if (!result.ok) {
+      setError(result.error)
+      return
+    }
+    setProfile('')
+    setConfirming(false)
     setState(result.state)
   }
 
@@ -176,12 +214,43 @@ export function UnlockExperience({
     }
   }
 
+  // The card has one call to action, the way the demonstration card has one.
+  // What it does depends on where the visitor stands: begin, remind, confirm,
+  // reveal.
+  function handlePrimary() {
+    if (!started) {
+      void handleStart()
+      return
+    }
+    if (!state?.canUnlock) {
+      setError(t('stepsFirst'))
+      return
+    }
+    if (state.requiresProfileConfirm) {
+      if (!confirming) {
+        setConfirming(true)
+        return
+      }
+      void handleConfirm()
+      return
+    }
+    void handleClaim()
+  }
+
   const started = Boolean(state)
+  const expired = Boolean(state?.expired)
+  const ready = Boolean(state?.canUnlock)
+  // Same slot, same shape, four possible meanings.
+  const ctaLabel = !started
+    ? t('start')
+    : ready && state?.requiresProfileConfirm
+      ? t('confirmButton')
+      : t('unlockButton')
 
   const actionSteps: StepAction[] = state
     ? state.actions.map((action) => ({ ...action }))
-    : steps.map((step, index) => ({
-        id: `preview-${index}`,
+    : steps.map((step) => ({
+        id: step.id,
         label: step.label,
         platform: step.platform,
         icon: step.icon,
@@ -195,7 +264,7 @@ export function UnlockExperience({
   const percent = totalSteps > 0 ? Math.round((doneSteps / totalSteps) * 100) : 0
 
   return (
-    <div className="mx-auto w-full max-w-5xl px-4 py-8 sm:py-12">
+    <div className="mx-auto w-full max-w-2xl px-4 py-8 sm:py-12">
       <div className="grid items-start gap-6 overflow-hidden rounded-2xl border bg-card shadow-sm lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)]">
         {/* Left: the shared content and its public stats. */}
         <div>
@@ -210,9 +279,10 @@ export function UnlockExperience({
               />
             ) : (
               <div className="relative h-48 w-full overflow-hidden rounded-xl bg-gradient-to-br from-primary/15 via-pulse-lime-soft/10 to-primary/5 sm:h-56">
-                <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-muted-foreground">
-                  <BrandMark className="size-12" src={logoUrl || null} />
-                  <p className="text-xs font-medium tracking-wide uppercase opacity-60">{siteName}</p>
+                <div className="absolute inset-0 flex items-center justify-center text-muted-foreground">
+                  {/* What sits inside this link is a locked drop, not the site's
+                      brand, so an empty frame shows a sealed document. */}
+                  <FileLock className="size-20 sm:size-24" />
                 </div>
               </div>
             )}
@@ -266,124 +336,224 @@ export function UnlockExperience({
         <div className="p-5 sm:p-6">
           {!claimed ? (
             <>
-              <div className="mb-4 space-y-2">
-                <div className="flex items-center justify-between">
-                  <h2 className="font-semibold">{t('stepsTitle')}</h2>
-                  <span className="text-xs text-muted-foreground tabular-nums">
-                    {t('stepsCount', { done: doneSteps, total: totalSteps })}
-                  </span>
-                </div>
-                <Progress value={percent} />
-              </div>
-              <p className="mb-4 text-xs text-muted-foreground">
+              <p className="text-sm text-muted-foreground">
                 {totalSteps === 1
                   ? t('introOne', { title })
                   : t('intro', { title, total: totalSteps })}
               </p>
 
-              <ol className="overflow-hidden rounded-xl border">
-                {actionSteps.map((action, index) => {
-                      const isEmail = action.behavior === 'EMAIL'
+              <div className="mt-4">
+                <div className="flex items-center justify-between gap-2">
+                  <h3 className="text-[0.65rem] font-medium tracking-wider text-muted-foreground uppercase">
+                    {t('stepsTitle')}
+                  </h3>
+                  <span className="text-xs text-muted-foreground tabular-nums">
+                    {t('stepsCount', { done: doneSteps, total: totalSteps })}
+                  </span>
+                </div>
+                <div
+                  role="progressbar"
+                  aria-valuenow={percent}
+                  aria-valuemin={0}
+                  aria-valuemax={100}
+                  aria-label={t('stepsTitle')}
+                  className="mt-2 flex h-1 w-full items-center overflow-hidden rounded-full bg-muted"
+                >
+                  {/* Width, not the shadcn indicator's translateX: a translated fill
+                      slides the wrong way in RTL, and this page serves Arabic too. */}
+                  <div
+                    className={cn(
+                      'h-full rounded-full bg-primary motion-reduce:transition-none',
+                      percent === 0
+                        ? 'transition-none'
+                        : 'transition-[width] duration-700 ease-out',
+                    )}
+                    style={{ width: `${percent}%` }}
+                  />
+                </div>
+
+                {/* Each step is one frosted row wearing its platform's own colour,
+                    exactly the surface the demonstration card in the hero shows. */}
+                <ol className="mx-auto mt-3 w-[92%] space-y-2">
+                  {actionSteps.map((action) => {
+                    const isEmail = action.behavior === 'EMAIL'
+                    const done = action.completed
+                    const tint = platformTint(action.platform)
+                    const clickable = !done && !expired
+                    const surface = cn(
+                      'relative flex w-full items-center justify-center gap-3 px-4 py-3.5 text-sm backdrop-blur-md transition-[filter,background-color] duration-500 motion-reduce:transition-none',
+                      // A finished task drops its brand wash and settles to the
+                      // neutral surface instead: only what is left keeps a colour.
+                      done
+                        ? 'bg-muted/50 bg-gradient-to-b from-black/5 to-transparent dark:from-white/10'
+                        : tint
+                          ? 'bg-[var(--tint-l)] bg-gradient-to-b from-[var(--ramp-l)] to-transparent dark:bg-[var(--tint-d)] dark:from-[var(--ramp-d)]'
+                          : 'bg-transparent',
+                      clickable && 'cursor-pointer hover:brightness-105 dark:hover:brightness-125',
+                    )
+                    const tintVars = tint
+                      ? ({
+                          '--tint-l': tint.light,
+                          '--tint-d': tint.dark,
+                          '--ramp-l': tint.rampLight,
+                          '--ramp-d': tint.rampDark,
+                        } as React.CSSProperties)
+                      : undefined
+                    const glyph = (
+                      <PlatformGlyph
+                        platform={action.platform}
+                        icon={action.icon}
+                        neutral
+                        className={cn(
+                          // The row is already washed in this platform's colour, so
+                          // the mark wears the text colour: brand on brand would
+                          // leave nothing to see.
+                          'size-6 shrink-0 transition-colors duration-500 motion-reduce:transition-none',
+                          done ? 'text-muted-foreground' : 'text-foreground',
+                        )}
+                      />
+                    )
+                    const label = (
+                      <span
+                        className={cn(
+                          'min-w-0 truncate font-medium',
+                          // Struck through as well as greyed: together they read as
+                          // finished at a glance.
+                          done &&
+                            'text-muted-foreground line-through decoration-muted-foreground/50',
+                        )}
+                      >
+                        {action.label}
+                      </span>
+                    )
+
+                    if (isEmail) {
+                      // The email step needs the visitor's own input, so its row
+                      // opens up under the same surface instead of being a button.
                       return (
                         <li
-                          key={started ? action.id : `preview-${index}`}
-                          className={cn(
-                            'p-4',
-                            action.completed ? 'bg-emerald-500/5' : '',
-                          )}
+                          key={action.id}
+                          className="overflow-hidden rounded-xl"
                         >
-                          <div className="flex items-start gap-3">
-                            <span
-                              className={cn(
-                                'mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-full text-xs font-semibold',
-                                action.completed
-                                  ? 'bg-emerald-500 text-white'
-                                  : 'bg-muted text-muted-foreground',
-                              )}
-                            >
-                              {action.completed ? <CheckCircle2 className="size-4" /> : index + 1}
-                            </span>
-                            <div className="min-w-0 flex-1 space-y-3">
-                              <div>
-                                <p className="flex items-center gap-2 font-medium">
-                                  <ActionGlyph
-                                    platform={action.platform}
-                                    icon={action.icon}
-                                    className="size-4 shrink-0 text-muted-foreground"
-                                  />
-                                  <span className="truncate">{action.label}</span>
-                                </p>
-                                {action.completed ? (
-                                  <p className="text-xs text-emerald-600 dark:text-emerald-400">
-                                    {t('completed')}
-                                  </p>
-                                ) : null}
-                              </div>
-
-                              {started && !action.completed && isEmail ? (
-                                <div className="space-y-2">
-                                  <div className="relative">
-                                    <Mail className="absolute start-2.5 top-2.5 size-4 text-muted-foreground" />
-                                    <Input
-                                      type="email"
-                                      placeholder={t('emailPlaceholder')}
-                                      className="ps-8"
-                                      value={email}
-                                      onChange={(event) => setEmail(event.target.value)}
-                                    />
-                                  </div>
-                                  <label className="flex items-start gap-2 text-xs text-muted-foreground">
-                                    <Checkbox
-                                      checked={consent}
-                                      onCheckedChange={(value) => setConsent(value === true)}
-                                    />
-                                    <span>{t('consent')}</span>
-                                  </label>
-                                  <Button
-                                    size="sm"
-                                    onClick={() => handleAction(action.id, '', true)}
-                                    disabled={busy || !email || !consent}
-                                  >
-                                    {t('submitEmail')}
-                                  </Button>
-                                </div>
-                              ) : null}
-
-                              {started && !action.completed && !isEmail ? (
-                                <Button
-                                  size="sm"
-                                  variant="outline"
-                                  onClick={() => handleAction(action.id, action.target, false)}
-                                  disabled={busy}
-                                >
-                                  <ExternalLink />
-                                  {t('openStep')}
-                                </Button>
+                          <div style={tintVars} className={cn(surface, 'flex-col items-stretch gap-3')}>
+                            <div className="flex items-center justify-center gap-3">
+                              {glyph}
+                              {label}
+                              {done ? (
+                                <span className={ROW_CHECK}>
+                                  <Check className="size-3 shrink-0 strokeWidth={3}" />
+                                </span>
                               ) : null}
                             </div>
+                            {!done ? (
+                              <div className="space-y-2">
+                                <div className="relative">
+                                  <Mail className="absolute start-2.5 top-2.5 size-4 text-muted-foreground" />
+                                  <Input
+                                    type="email"
+                                    placeholder={t('emailPlaceholder')}
+                                    className="ps-8"
+                                    value={email}
+                                    onChange={(event) => setEmail(event.target.value)}
+                                  />
+                                </div>
+                                <label className="flex items-start gap-2 text-xs text-muted-foreground">
+                                  <Checkbox
+                                    checked={consent}
+                                    onCheckedChange={(value) => setConsent(value === true)}
+                                  />
+                                  <span>{t('consent')}</span>
+                                </label>
+                                <Button
+                                  size="sm"
+                                  onClick={() => handleAction(action.id, '', true)}
+                                  disabled={busy || !email || !consent}
+                                >
+                                  {t('submitEmail')}
+                                </Button>
+                              </div>
+                            ) : null}
                           </div>
                         </li>
                       )
-                    })}
-              </ol>
+                    }
 
-              {error ? <p className="mt-3 text-sm text-destructive">{error}</p> : null}
+                    return (
+                      <li key={action.id} className="overflow-hidden rounded-xl">
+                        <button
+                          type="button"
+                          onClick={() => handleAction(action.id, action.target, false)}
+                          disabled={!clickable || busy}
+                          style={tintVars}
+                          className={surface}
+                        >
+                          {glyph}
+                          {label}
+                          {/* The badge sits in a slot that takes no part in the row's
+                              layout, so the row never changes height as it finishes. */}
+                          <span
+                            aria-hidden
+                            className="pointer-events-none absolute inset-y-0 end-4 flex items-center"
+                          >
+                            <span
+                              className={cn(
+                                ROW_CHECK,
+                                done
+                                  ? 'motion-safe:animate-[demo-check_0.24s_ease-out]'
+                                  : 'opacity-0',
+                              )}
+                            >
+                              <Check className="size-3 shrink-0 strokeWidth={3}" />
+                            </span>
+                          </span>
+                          {done ? <span className="sr-only">{t('completed')}</span> : null}
+                        </button>
+                      </li>
+                    )
+                  })}
+                </ol>
 
-              {!started ? (
-                <Button size="lg" className="mt-4 w-full" onClick={handleStart} disabled={busy}>
-                  {busy ? <Loader2 className="animate-spin" /> : <Lock />}
-                  {t('start')}
-                </Button>
-              ) : state?.canUnlock ? (
-                <Button size="lg" className="mt-4 w-full" onClick={handleClaim} disabled={busy}>
-                  {busy ? <Loader2 className="animate-spin" /> : null}
-                  {t('unlockButton')}
-                </Button>
-              ) : null}
+                {/* One slot, one call to action - it begins, reminds, confirms or
+                    reveals depending on where the visitor stands. It matches a task
+                    row so it reads as the next row rather than a smaller control. */}
+                <div className="relative mx-auto mt-3 h-[3.25rem] w-[92%]">
+                  <Button
+                    size="sm"
+                    // Neutral until the tasks are all in, lime the moment the reward
+                    // is real: the colour itself is the progress signal.
+                    variant={ready ? 'default' : 'secondary'}
+                    onClick={handlePrimary}
+                    disabled={busy || expired}
+                    className={cn(
+                      'absolute inset-0 h-full rounded-xl text-sm [&_svg]:size-4',
+                      'transition-[background-color,color] duration-500',
+                    )}
+                  >
+                    {busy ? <Loader2 className="animate-spin" /> : ready ? <Unlock /> : <Lock />}
+                    {ctaLabel}
+                  </Button>
+                </div>
 
-              {state?.expired ? (
-                <p className="mt-3 text-sm text-destructive">{t('expired')}</p>
-              ) : null}
+                {/* The quiet confirmation only exists once it has been asked for, so
+                    the card never shows an audit field before it is needed. */}
+                {confirming ? (
+                  <div className="mx-auto mt-2 w-[92%]">
+                    <Input
+                      value={profile}
+                      onChange={(event) => setProfile(event.target.value)}
+                      onKeyDown={(event) => {
+                        if (event.key === 'Enter') handlePrimary()
+                      }}
+                      placeholder={t('handlePlaceholder')}
+                      autoComplete="off"
+                      className="h-9"
+                    />
+                  </div>
+                ) : null}
+
+                {error ? <p className="mt-3 text-sm text-destructive">{error}</p> : null}
+                {expired ? <p className="mt-3 text-sm text-destructive">{t('expired')}</p> : null}
+              </div>
             </>
           ) : (
             <div className="space-y-4 rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-5">

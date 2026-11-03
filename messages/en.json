@@ -157,6 +157,12 @@
       "noLeads": "No addresses collected yet.",
       "colEmail": "Email",
       "colConsent": "Consent given",
+      "verifiedTitle": "Confirmed follows",
+      "verifiedDescription": "Steps read from the platform's own public record instead of a visitor's click. Only the handle we checked and the date are kept.",
+      "noVerified": "No confirmed steps yet.",
+      "colVerifiedAction": "Platform",
+      "colEvidence": "What we saw",
+      "colVerifiedAt": "When",
       "hiddenAction": "{label} (hidden)",
       "activityTitle": "Views and completed unlocks",
       "lastDays": "Last {days} days"
@@ -287,6 +293,12 @@
     "actionUnavailable": "This action is no longer available",
     "actionUrlRequired": "A valid http(s) URL is required for this action",
     "platformNotAllowed": "This platform is not allowed by site rules",
+    "verifierTargetInvalid": "This step has no usable profile link for the creator, so it cannot be verified.",
+    "verifyUnavailable": "That platform is not responding right now. Please try again in a moment.",
+    "telegramNotConfigured": "Telegram check-ins are not set up for this link, so this step cannot be confirmed.",
+    "telegramWaiting": "Your check-in has not reached us yet. Press Start in Telegram, then check again here.",
+    "telegramNotMember": "Telegram shows that account is not in the channel. Join it, then check again.",
+    "telegramCheckinStale": "That check-in expired. Open the bot again, then check once more.",
     "fixHighlightedFields": "Please fix the highlighted fields.",
     "slugReserved": "That slug is reserved.",
     "slugTaken": "That slug is already taken.",
@@ -363,7 +375,11 @@
     "headerLinkNotFound": "Header link not found.",
     "htmlRequired": "Ad code cannot be empty",
     "invalidHeaderIcon": "Please choose a valid icon.",
-    "invalidHeaderColor": "Please use a hex color like #5182EF or leave it empty."
+    "invalidHeaderColor": "Please use a hex color like #5182EF or leave it empty.",
+    "invalidWebhookUrl": "The URL must start with http:// or https://",
+    "confirmHandleRequired": "Enter your profile handle to continue.",
+    "confirmNotFollowing": "We checked {handle} and could not see the follow for {steps}. Please complete the step, then confirm again.",
+    "confirmProfileRequired": "Confirm your profile to reveal the link."
   },
   "common": {
     "siteName": "Link Unlocker",
@@ -707,7 +723,7 @@
     "emailPlaceholder": "you@example.com",
     "consent": "I agree to receive updates from this creator. My address is only shared with them.",
     "submitEmail": "Submit email",
-    "openStep": "Open step",
+    "handlePlaceholder": "Your profile handle",
     "start": "Start unlocking",
     "unlockButton": "Unlock content",
     "expired": "This session has expired. Reload the page to start again.",
@@ -728,7 +744,9 @@
     "unpublishedMessage": "The creator has not activated this link.",
     "expiredTitle": "This link has expired",
     "expiredMessage": "The unlock window for this link has closed.",
-    "goHome": "Go to homepage"
+    "goHome": "Go to homepage",
+    "confirmButton": "Reveal link",
+    "stepsFirst": "Complete all steps above first"
   },
   "report": {
     "title": "Report a link",
@@ -1286,6 +1304,18 @@
         "demo-access": {
           "title": "Demo access",
           "description": "Optional one-click demo credentials shown on the sign-in page."
+        },
+        "step-verification": {
+          "title": "Step verification",
+          "description": "Credentials that let the site confirm a visitor really followed someone instead of only clicking."
+        },
+        "email-delivery": {
+          "title": "Email delivery",
+          "description": "Password reset mail is POSTed as JSON to your own relay or automation endpoint."
+        },
+        "data-retention": {
+          "title": "Data retention",
+          "description": "How long the cleanup job keeps analytics events."
         }
       },
       "fields": {
@@ -1331,6 +1361,11 @@
         "limits_unlockStartPerMinute": {
           "label": "Unlock starts per minute (per session)",
           "placeholder": "30"
+        },
+        "limits_verifyPerMinute": {
+          "label": "Verification checks per minute (per session)",
+          "hint": "Each check reads a public follow list. Lower it if the platform starts refusing lookups.",
+          "placeholder": "8"
         },
         "limits_reportPerHour": {
           "label": "Abuse reports per hour (per IP)",
@@ -1382,6 +1417,33 @@
         "demo_password": {
           "label": "Demo password",
           "hint": "Stored in plain text. Use a throwaway account."
+        },
+        "verification_telegramBotToken": {
+          "label": "Telegram bot token",
+          "hint": "Create a bot with @BotFather, make it an administrator of the channel, then save its token here. Do not set a webhook on the bot: the site reads check-ins from the update queue."
+        },
+        "verification_githubToken": {
+          "label": "GitHub API token",
+          "hint": "Optional. Anonymous checks are capped at 60 lookups per hour for the whole server; a classic token raises that to 5000."
+        },
+        "email_webhookUrl": {
+          "label": "Webhook URL",
+          "hint": "Empty means reset links are only logged. Must start with http:// or https://.",
+          "placeholder": "https://relay.example.com/mail"
+        },
+        "email_webhookToken": {
+          "label": "Webhook token",
+          "hint": "Sent as a bearer token with every request."
+        },
+        "email_from": {
+          "label": "Sender address",
+          "hint": "Used as the from field unless your relay sets its own.",
+          "placeholder": "Link Unlocker <no-reply@example.com>"
+        },
+        "retention_analyticsDays": {
+          "label": "Analytics retention days",
+          "hint": "0 keeps every event, which is what the dashboard reports need.",
+          "placeholder": "0"
         }
       },
       "uploadImage": "Upload image",
@@ -1394,7 +1456,11 @@
         "noFile": "No file provided.",
         "unsupportedType": "Unsupported file type. Allowed: PNG, JPEG, WEBP, GIF.",
         "tooLarge": "File is too large. Maximum size is {maxMb} MB."
-      }
+      },
+      "secretConfigured": "Configured",
+      "secretNotConfigured": "Not configured",
+      "secretReplacePlaceholder": "Paste a new value to replace it",
+      "secretRemove": "Remove"
     }
   },
   "motion": {

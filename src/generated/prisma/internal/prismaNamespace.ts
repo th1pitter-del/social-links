@@ -419,7 +419,8 @@ export const ModelName = {
   StoredFile: 'StoredFile',
   UserUnlock: 'UserUnlock',
   Profile: 'Profile',
-  BioLink: 'BioLink'
+  BioLink: 'BioLink',
+  TelegramCheckin: 'TelegramCheckin'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -435,7 +436,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "session" | "account" | "verification" | "link" | "linkAction" | "unlockSession" | "unlockActionCompletion" | "analyticsEvent" | "emailLead" | "rateLimitBucket" | "abuseReport" | "setting" | "adUnit" | "headerLink" | "auditLog" | "platform" | "actionOption" | "mediaAsset" | "storedFile" | "userUnlock" | "profile" | "bioLink"
+    modelProps: "user" | "session" | "account" | "verification" | "link" | "linkAction" | "unlockSession" | "unlockActionCompletion" | "analyticsEvent" | "emailLead" | "rateLimitBucket" | "abuseReport" | "setting" | "adUnit" | "headerLink" | "auditLog" | "platform" | "actionOption" | "mediaAsset" | "storedFile" | "userUnlock" | "profile" | "bioLink" | "telegramCheckin"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1957,6 +1958,72 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    TelegramCheckin: {
+      payload: Prisma.$TelegramCheckinPayload<ExtArgs>
+      fields: Prisma.TelegramCheckinFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TelegramCheckinFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TelegramCheckinPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TelegramCheckinFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TelegramCheckinPayload>
+        }
+        findFirst: {
+          args: Prisma.TelegramCheckinFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TelegramCheckinPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TelegramCheckinFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TelegramCheckinPayload>
+        }
+        findMany: {
+          args: Prisma.TelegramCheckinFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TelegramCheckinPayload>[]
+        }
+        create: {
+          args: Prisma.TelegramCheckinCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TelegramCheckinPayload>
+        }
+        createMany: {
+          args: Prisma.TelegramCheckinCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.TelegramCheckinDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TelegramCheckinPayload>
+        }
+        update: {
+          args: Prisma.TelegramCheckinUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TelegramCheckinPayload>
+        }
+        deleteMany: {
+          args: Prisma.TelegramCheckinDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TelegramCheckinUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.TelegramCheckinUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TelegramCheckinPayload>
+        }
+        aggregate: {
+          args: Prisma.TelegramCheckinAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTelegramCheckin>
+        }
+        groupBy: {
+          args: Prisma.TelegramCheckinGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TelegramCheckinGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TelegramCheckinCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TelegramCheckinCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -2114,7 +2181,9 @@ export const UnlockActionCompletionScalarFieldEnum = {
   id: 'id',
   unlockSessionId: 'unlockSessionId',
   linkActionId: 'linkActionId',
-  completedAt: 'completedAt'
+  completedAt: 'completedAt',
+  verified: 'verified',
+  proof: 'proof'
 } as const
 
 export type UnlockActionCompletionScalarFieldEnum = (typeof UnlockActionCompletionScalarFieldEnum)[keyof typeof UnlockActionCompletionScalarFieldEnum]
@@ -2327,6 +2396,22 @@ export const BioLinkScalarFieldEnum = {
 export type BioLinkScalarFieldEnum = (typeof BioLinkScalarFieldEnum)[keyof typeof BioLinkScalarFieldEnum]
 
 
+export const TelegramCheckinScalarFieldEnum = {
+  id: 'id',
+  unlockSessionId: 'unlockSessionId',
+  linkActionId: 'linkActionId',
+  chatId: 'chatId',
+  userId: 'userId',
+  username: 'username',
+  memberStatus: 'memberStatus',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  expiresAt: 'expiresAt'
+} as const
+
+export type TelegramCheckinScalarFieldEnum = (typeof TelegramCheckinScalarFieldEnum)[keyof typeof TelegramCheckinScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -2431,7 +2516,8 @@ export type UnlockSessionOrderByRelevanceFieldEnum = (typeof UnlockSessionOrderB
 export const UnlockActionCompletionOrderByRelevanceFieldEnum = {
   id: 'id',
   unlockSessionId: 'unlockSessionId',
-  linkActionId: 'linkActionId'
+  linkActionId: 'linkActionId',
+  proof: 'proof'
 } as const
 
 export type UnlockActionCompletionOrderByRelevanceFieldEnum = (typeof UnlockActionCompletionOrderByRelevanceFieldEnum)[keyof typeof UnlockActionCompletionOrderByRelevanceFieldEnum]
@@ -2599,6 +2685,19 @@ export const BioLinkOrderByRelevanceFieldEnum = {
 } as const
 
 export type BioLinkOrderByRelevanceFieldEnum = (typeof BioLinkOrderByRelevanceFieldEnum)[keyof typeof BioLinkOrderByRelevanceFieldEnum]
+
+
+export const TelegramCheckinOrderByRelevanceFieldEnum = {
+  id: 'id',
+  unlockSessionId: 'unlockSessionId',
+  linkActionId: 'linkActionId',
+  chatId: 'chatId',
+  userId: 'userId',
+  username: 'username',
+  memberStatus: 'memberStatus'
+} as const
+
+export type TelegramCheckinOrderByRelevanceFieldEnum = (typeof TelegramCheckinOrderByRelevanceFieldEnum)[keyof typeof TelegramCheckinOrderByRelevanceFieldEnum]
 
 
 
@@ -2878,6 +2977,7 @@ export type GlobalOmitConfig = {
   userUnlock?: Prisma.UserUnlockOmit
   profile?: Prisma.ProfileOmit
   bioLink?: Prisma.BioLinkOmit
+  telegramCheckin?: Prisma.TelegramCheckinOmit
 }
 
 /* Types for Logging */

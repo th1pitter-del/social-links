@@ -287,7 +287,7 @@
     "emailPlaceholder": "tu@ejemplo.com",
     "consent": "Acepto recibir novedades de este creador. Mi dirección solo se comparte con él.",
     "submitEmail": "Enviar correo",
-    "openStep": "Abrir paso",
+    "handlePlaceholder": "Tu usuario público",
     "start": "Empezar a desbloquear",
     "unlockButton": "Desbloquear contenido",
     "expired": "Esta sesión ha caducado. Recarga la página para empezar de nuevo.",
@@ -308,7 +308,9 @@
     "expiredTitle": "Este enlace ha caducado",
     "expiredMessage": "La ventana de desbloqueo de este enlace se ha cerrado.",
     "goHome": "Ir a la página principal",
-    "metaTitleSuffix": "Link Unlocker"
+    "metaTitleSuffix": "Link Unlocker",
+    "confirmButton": "Mostrar enlace",
+    "stepsFirst": "Completa primero todos los pasos de arriba"
   },
   "report": {
     "title": "Reportar un enlace",
@@ -862,6 +864,18 @@
         "demo-access": {
           "title": "Acceso de demostración",
           "description": "Credenciales de demostración opcionales de un clic mostradas en la página de inicio de sesión."
+        },
+        "step-verification": {
+          "title": "Verificación de pasos",
+          "description": "Credenciales que permiten al sitio confirmar que un visitante siguió de verdad a alguien, no solo que hizo clic."
+        },
+        "email-delivery": {
+          "title": "Envío de correos",
+          "description": "Los correos de restablecimiento se envían como JSON a tu propio relay o endpoint de automatización."
+        },
+        "data-retention": {
+          "title": "Retención de datos",
+          "description": "Cuánto tiempo conserva la tarea de limpieza los eventos de analítica."
         }
       },
       "fields": {
@@ -907,6 +921,11 @@
         "limits_unlockStartPerMinute": {
           "label": "Inicios de desbloqueo por minuto (por sesión)",
           "placeholder": "30"
+        },
+        "limits_verifyPerMinute": {
+          "label": "Comprobaciones de verificación por minuto (por sesión)",
+          "hint": "Cada comprobación lee una lista pública de seguimientos. Bájala si la plataforma empieza a rechazar las consultas.",
+          "placeholder": "8"
         },
         "limits_reportPerHour": {
           "label": "Reportes de abuso por hora (por IP)",
@@ -958,6 +977,33 @@
         "demo_password": {
           "label": "Contraseña de demostración",
           "hint": "Se guarda en texto plano. Usa una cuenta desechable."
+        },
+        "verification_telegramBotToken": {
+          "label": "Token del bot de Telegram",
+          "hint": "Crea un bot con @BotFather, ponlo como administrador del canal y guarda aquí su token. No le asignes un webhook: el sitio lee los registros desde la cola de actualizaciones."
+        },
+        "verification_githubToken": {
+          "label": "Token de la API de GitHub",
+          "hint": "Opcional. Las consultas anónimas están limitadas a 60 por hora en todo el servidor; un token clásico las sube a 5000."
+        },
+        "email_webhookUrl": {
+          "label": "URL del webhook",
+          "hint": "Vacío significa que los enlaces de restablecimiento solo se registran. Debe empezar por http:// o https://.",
+          "placeholder": "https://relay.example.com/mail"
+        },
+        "email_webhookToken": {
+          "label": "Token del webhook",
+          "hint": "Se envía como token bearer en cada petición."
+        },
+        "email_from": {
+          "label": "Remitente",
+          "hint": "Se usa como campo from salvo que tu relay defina el suyo.",
+          "placeholder": "Link Unlocker <no-reply@example.com>"
+        },
+        "retention_analyticsDays": {
+          "label": "Días de retención de analítica",
+          "hint": "0 conserva todos los eventos, que es lo que necesitan los informes del panel.",
+          "placeholder": "0"
         }
       },
       "uploadImage": "Subir imagen",
@@ -970,7 +1016,11 @@
         "noFile": "No se ha seleccionado ningún archivo.",
         "unsupportedType": "Tipo de archivo no admitido. Permitidos: PNG, JPEG, WEBP, GIF.",
         "tooLarge": "El archivo es demasiado grande. El tamaño máximo es {maxMb} MB."
-      }
+      },
+      "secretConfigured": "Configurado",
+      "secretNotConfigured": "Sin configurar",
+      "secretReplacePlaceholder": "Pega un valor nuevo para reemplazarlo",
+      "secretRemove": "Quitar"
     }
   },
   "dashboard": {
@@ -1062,6 +1112,12 @@
       "noLeads": "Aún no se ha recogido ninguna dirección.",
       "colEmail": "Correo",
       "colConsent": "Consentimiento otorgado",
+      "verifiedTitle": "Seguimientos confirmados",
+      "verifiedDescription": "Pasos leídos del registro público de la plataforma, no de un clic del visitante. Solo guardamos el usuario consultado y la fecha.",
+      "noVerified": "Todavía no hay pasos confirmados.",
+      "colVerifiedAction": "Plataforma",
+      "colEvidence": "Lo que vimos",
+      "colVerifiedAt": "Cuándo",
       "hiddenAction": "{label} (oculta)",
       "activityTitle": "Visitas y desbloqueos completados",
       "lastDays": "Últimos {days} días"
@@ -1192,6 +1248,12 @@
     "actionUnavailable": "Esta acción ya no está disponible",
     "actionUrlRequired": "Se requiere una URL http(s) válida para esta acción",
     "platformNotAllowed": "Las reglas del sitio no permiten esta plataforma",
+    "verifierTargetInvalid": "Este paso no tiene un enlace de perfil válido del creador, así que no se puede verificar.",
+    "verifyUnavailable": "Esa plataforma no responde ahora mismo. Vuelve a intentarlo en un momento.",
+    "telegramNotConfigured": "Las confirmaciones de Telegram no están activadas en este enlace, así que no se puede verificar este paso.",
+    "telegramWaiting": "Tu confirmación aún no nos ha llegado. Pulsa Start en Telegram y comprueba de nuevo aquí.",
+    "telegramNotMember": "Telegram muestra que esa cuenta no está en el canal. Únete y comprueba de nuevo.",
+    "telegramCheckinStale": "Esa confirmación caducó. Vuelve a abrir el bot y comprueba otra vez.",
     "fixHighlightedFields": "Corrige los campos resaltados.",
     "slugReserved": "Ese slug está reservado.",
     "slugTaken": "Ese slug ya está en uso.",
@@ -1268,7 +1330,11 @@
     "headerLinkNotFound": "Enlace de encabezado no encontrado.",
     "htmlRequired": "El código del anuncio no puede estar vacío",
     "invalidHeaderIcon": "Elige un icono válido.",
-    "invalidHeaderColor": "Usa un color hexadecimal como #5182EF o déjalo vacío."
+    "invalidHeaderColor": "Usa un color hexadecimal como #5182EF o déjalo vacío.",
+    "invalidWebhookUrl": "La URL debe empezar por http:// o https://",
+    "confirmHandleRequired": "Escribe tu usuario de perfil para continuar.",
+    "confirmNotFollowing": "Revisamos {handle} y no vimos el seguimiento de {steps}. Completa el paso y confirma de nuevo.",
+    "confirmProfileRequired": "Confirma tu perfil para mostrar el enlace."
   },
   "linkForm": {
     "uploadFailed": "Error al subir.",

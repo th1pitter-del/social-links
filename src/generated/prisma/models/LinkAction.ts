@@ -251,6 +251,7 @@ export type LinkActionWhereInput = {
   link?: Prisma.XOR<Prisma.LinkScalarRelationFilter, Prisma.LinkWhereInput>
   option?: Prisma.XOR<Prisma.ActionOptionScalarRelationFilter, Prisma.ActionOptionWhereInput>
   completions?: Prisma.UnlockActionCompletionListRelationFilter
+  checkins?: Prisma.TelegramCheckinListRelationFilter
 }
 
 export type LinkActionOrderByWithRelationInput = {
@@ -266,6 +267,7 @@ export type LinkActionOrderByWithRelationInput = {
   link?: Prisma.LinkOrderByWithRelationInput
   option?: Prisma.ActionOptionOrderByWithRelationInput
   completions?: Prisma.UnlockActionCompletionOrderByRelationAggregateInput
+  checkins?: Prisma.TelegramCheckinOrderByRelationAggregateInput
   _relevance?: Prisma.LinkActionOrderByRelevanceInput
 }
 
@@ -285,6 +287,7 @@ export type LinkActionWhereUniqueInput = Prisma.AtLeast<{
   link?: Prisma.XOR<Prisma.LinkScalarRelationFilter, Prisma.LinkWhereInput>
   option?: Prisma.XOR<Prisma.ActionOptionScalarRelationFilter, Prisma.ActionOptionWhereInput>
   completions?: Prisma.UnlockActionCompletionListRelationFilter
+  checkins?: Prisma.TelegramCheckinListRelationFilter
 }, "id">
 
 export type LinkActionOrderByWithAggregationInput = {
@@ -330,6 +333,7 @@ export type LinkActionCreateInput = {
   link: Prisma.LinkCreateNestedOneWithoutActionsInput
   option: Prisma.ActionOptionCreateNestedOneWithoutActionsInput
   completions?: Prisma.UnlockActionCompletionCreateNestedManyWithoutLinkActionInput
+  checkins?: Prisma.TelegramCheckinCreateNestedManyWithoutLinkActionInput
 }
 
 export type LinkActionUncheckedCreateInput = {
@@ -343,6 +347,7 @@ export type LinkActionUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   completions?: Prisma.UnlockActionCompletionUncheckedCreateNestedManyWithoutLinkActionInput
+  checkins?: Prisma.TelegramCheckinUncheckedCreateNestedManyWithoutLinkActionInput
 }
 
 export type LinkActionUpdateInput = {
@@ -356,6 +361,7 @@ export type LinkActionUpdateInput = {
   link?: Prisma.LinkUpdateOneRequiredWithoutActionsNestedInput
   option?: Prisma.ActionOptionUpdateOneRequiredWithoutActionsNestedInput
   completions?: Prisma.UnlockActionCompletionUpdateManyWithoutLinkActionNestedInput
+  checkins?: Prisma.TelegramCheckinUpdateManyWithoutLinkActionNestedInput
 }
 
 export type LinkActionUncheckedUpdateInput = {
@@ -369,6 +375,7 @@ export type LinkActionUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completions?: Prisma.UnlockActionCompletionUncheckedUpdateManyWithoutLinkActionNestedInput
+  checkins?: Prisma.TelegramCheckinUncheckedUpdateManyWithoutLinkActionNestedInput
 }
 
 export type LinkActionCreateManyInput = {
@@ -580,6 +587,20 @@ export type LinkActionUncheckedUpdateManyWithoutOptionNestedInput = {
   deleteMany?: Prisma.LinkActionScalarWhereInput | Prisma.LinkActionScalarWhereInput[]
 }
 
+export type LinkActionCreateNestedOneWithoutCheckinsInput = {
+  create?: Prisma.XOR<Prisma.LinkActionCreateWithoutCheckinsInput, Prisma.LinkActionUncheckedCreateWithoutCheckinsInput>
+  connectOrCreate?: Prisma.LinkActionCreateOrConnectWithoutCheckinsInput
+  connect?: Prisma.LinkActionWhereUniqueInput
+}
+
+export type LinkActionUpdateOneRequiredWithoutCheckinsNestedInput = {
+  create?: Prisma.XOR<Prisma.LinkActionCreateWithoutCheckinsInput, Prisma.LinkActionUncheckedCreateWithoutCheckinsInput>
+  connectOrCreate?: Prisma.LinkActionCreateOrConnectWithoutCheckinsInput
+  upsert?: Prisma.LinkActionUpsertWithoutCheckinsInput
+  connect?: Prisma.LinkActionWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.LinkActionUpdateToOneWithWhereWithoutCheckinsInput, Prisma.LinkActionUpdateWithoutCheckinsInput>, Prisma.LinkActionUncheckedUpdateWithoutCheckinsInput>
+}
+
 export type LinkActionCreateWithoutLinkInput = {
   id?: string
   label?: string | null
@@ -590,6 +611,7 @@ export type LinkActionCreateWithoutLinkInput = {
   updatedAt?: Date | string
   option: Prisma.ActionOptionCreateNestedOneWithoutActionsInput
   completions?: Prisma.UnlockActionCompletionCreateNestedManyWithoutLinkActionInput
+  checkins?: Prisma.TelegramCheckinCreateNestedManyWithoutLinkActionInput
 }
 
 export type LinkActionUncheckedCreateWithoutLinkInput = {
@@ -602,6 +624,7 @@ export type LinkActionUncheckedCreateWithoutLinkInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   completions?: Prisma.UnlockActionCompletionUncheckedCreateNestedManyWithoutLinkActionInput
+  checkins?: Prisma.TelegramCheckinUncheckedCreateNestedManyWithoutLinkActionInput
 }
 
 export type LinkActionCreateOrConnectWithoutLinkInput = {
@@ -655,6 +678,7 @@ export type LinkActionCreateWithoutCompletionsInput = {
   updatedAt?: Date | string
   link: Prisma.LinkCreateNestedOneWithoutActionsInput
   option: Prisma.ActionOptionCreateNestedOneWithoutActionsInput
+  checkins?: Prisma.TelegramCheckinCreateNestedManyWithoutLinkActionInput
 }
 
 export type LinkActionUncheckedCreateWithoutCompletionsInput = {
@@ -667,6 +691,7 @@ export type LinkActionUncheckedCreateWithoutCompletionsInput = {
   position?: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  checkins?: Prisma.TelegramCheckinUncheckedCreateNestedManyWithoutLinkActionInput
 }
 
 export type LinkActionCreateOrConnectWithoutCompletionsInput = {
@@ -695,6 +720,7 @@ export type LinkActionUpdateWithoutCompletionsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   link?: Prisma.LinkUpdateOneRequiredWithoutActionsNestedInput
   option?: Prisma.ActionOptionUpdateOneRequiredWithoutActionsNestedInput
+  checkins?: Prisma.TelegramCheckinUpdateManyWithoutLinkActionNestedInput
 }
 
 export type LinkActionUncheckedUpdateWithoutCompletionsInput = {
@@ -707,6 +733,7 @@ export type LinkActionUncheckedUpdateWithoutCompletionsInput = {
   position?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  checkins?: Prisma.TelegramCheckinUncheckedUpdateManyWithoutLinkActionNestedInput
 }
 
 export type LinkActionCreateWithoutOptionInput = {
@@ -719,6 +746,7 @@ export type LinkActionCreateWithoutOptionInput = {
   updatedAt?: Date | string
   link: Prisma.LinkCreateNestedOneWithoutActionsInput
   completions?: Prisma.UnlockActionCompletionCreateNestedManyWithoutLinkActionInput
+  checkins?: Prisma.TelegramCheckinCreateNestedManyWithoutLinkActionInput
 }
 
 export type LinkActionUncheckedCreateWithoutOptionInput = {
@@ -731,6 +759,7 @@ export type LinkActionUncheckedCreateWithoutOptionInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   completions?: Prisma.UnlockActionCompletionUncheckedCreateNestedManyWithoutLinkActionInput
+  checkins?: Prisma.TelegramCheckinUncheckedCreateNestedManyWithoutLinkActionInput
 }
 
 export type LinkActionCreateOrConnectWithoutOptionInput = {
@@ -759,6 +788,74 @@ export type LinkActionUpdateManyWithWhereWithoutOptionInput = {
   data: Prisma.XOR<Prisma.LinkActionUpdateManyMutationInput, Prisma.LinkActionUncheckedUpdateManyWithoutOptionInput>
 }
 
+export type LinkActionCreateWithoutCheckinsInput = {
+  id?: string
+  label?: string | null
+  target: string
+  verification?: $Enums.ActionVerification
+  position?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  link: Prisma.LinkCreateNestedOneWithoutActionsInput
+  option: Prisma.ActionOptionCreateNestedOneWithoutActionsInput
+  completions?: Prisma.UnlockActionCompletionCreateNestedManyWithoutLinkActionInput
+}
+
+export type LinkActionUncheckedCreateWithoutCheckinsInput = {
+  id?: string
+  linkId: string
+  type: string
+  label?: string | null
+  target: string
+  verification?: $Enums.ActionVerification
+  position?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  completions?: Prisma.UnlockActionCompletionUncheckedCreateNestedManyWithoutLinkActionInput
+}
+
+export type LinkActionCreateOrConnectWithoutCheckinsInput = {
+  where: Prisma.LinkActionWhereUniqueInput
+  create: Prisma.XOR<Prisma.LinkActionCreateWithoutCheckinsInput, Prisma.LinkActionUncheckedCreateWithoutCheckinsInput>
+}
+
+export type LinkActionUpsertWithoutCheckinsInput = {
+  update: Prisma.XOR<Prisma.LinkActionUpdateWithoutCheckinsInput, Prisma.LinkActionUncheckedUpdateWithoutCheckinsInput>
+  create: Prisma.XOR<Prisma.LinkActionCreateWithoutCheckinsInput, Prisma.LinkActionUncheckedCreateWithoutCheckinsInput>
+  where?: Prisma.LinkActionWhereInput
+}
+
+export type LinkActionUpdateToOneWithWhereWithoutCheckinsInput = {
+  where?: Prisma.LinkActionWhereInput
+  data: Prisma.XOR<Prisma.LinkActionUpdateWithoutCheckinsInput, Prisma.LinkActionUncheckedUpdateWithoutCheckinsInput>
+}
+
+export type LinkActionUpdateWithoutCheckinsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  target?: Prisma.StringFieldUpdateOperationsInput | string
+  verification?: Prisma.EnumActionVerificationFieldUpdateOperationsInput | $Enums.ActionVerification
+  position?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  link?: Prisma.LinkUpdateOneRequiredWithoutActionsNestedInput
+  option?: Prisma.ActionOptionUpdateOneRequiredWithoutActionsNestedInput
+  completions?: Prisma.UnlockActionCompletionUpdateManyWithoutLinkActionNestedInput
+}
+
+export type LinkActionUncheckedUpdateWithoutCheckinsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  linkId?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  target?: Prisma.StringFieldUpdateOperationsInput | string
+  verification?: Prisma.EnumActionVerificationFieldUpdateOperationsInput | $Enums.ActionVerification
+  position?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  completions?: Prisma.UnlockActionCompletionUncheckedUpdateManyWithoutLinkActionNestedInput
+}
+
 export type LinkActionCreateManyLinkInput = {
   id?: string
   type: string
@@ -780,6 +877,7 @@ export type LinkActionUpdateWithoutLinkInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   option?: Prisma.ActionOptionUpdateOneRequiredWithoutActionsNestedInput
   completions?: Prisma.UnlockActionCompletionUpdateManyWithoutLinkActionNestedInput
+  checkins?: Prisma.TelegramCheckinUpdateManyWithoutLinkActionNestedInput
 }
 
 export type LinkActionUncheckedUpdateWithoutLinkInput = {
@@ -792,6 +890,7 @@ export type LinkActionUncheckedUpdateWithoutLinkInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completions?: Prisma.UnlockActionCompletionUncheckedUpdateManyWithoutLinkActionNestedInput
+  checkins?: Prisma.TelegramCheckinUncheckedUpdateManyWithoutLinkActionNestedInput
 }
 
 export type LinkActionUncheckedUpdateManyWithoutLinkInput = {
@@ -826,6 +925,7 @@ export type LinkActionUpdateWithoutOptionInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   link?: Prisma.LinkUpdateOneRequiredWithoutActionsNestedInput
   completions?: Prisma.UnlockActionCompletionUpdateManyWithoutLinkActionNestedInput
+  checkins?: Prisma.TelegramCheckinUpdateManyWithoutLinkActionNestedInput
 }
 
 export type LinkActionUncheckedUpdateWithoutOptionInput = {
@@ -838,6 +938,7 @@ export type LinkActionUncheckedUpdateWithoutOptionInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completions?: Prisma.UnlockActionCompletionUncheckedUpdateManyWithoutLinkActionNestedInput
+  checkins?: Prisma.TelegramCheckinUncheckedUpdateManyWithoutLinkActionNestedInput
 }
 
 export type LinkActionUncheckedUpdateManyWithoutOptionInput = {
@@ -858,10 +959,12 @@ export type LinkActionUncheckedUpdateManyWithoutOptionInput = {
 
 export type LinkActionCountOutputType = {
   completions: number
+  checkins: number
 }
 
 export type LinkActionCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   completions?: boolean | LinkActionCountOutputTypeCountCompletionsArgs
+  checkins?: boolean | LinkActionCountOutputTypeCountCheckinsArgs
 }
 
 /**
@@ -881,6 +984,13 @@ export type LinkActionCountOutputTypeCountCompletionsArgs<ExtArgs extends runtim
   where?: Prisma.UnlockActionCompletionWhereInput
 }
 
+/**
+ * LinkActionCountOutputType without action
+ */
+export type LinkActionCountOutputTypeCountCheckinsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TelegramCheckinWhereInput
+}
+
 
 export type LinkActionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -895,6 +1005,7 @@ export type LinkActionSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   link?: boolean | Prisma.LinkDefaultArgs<ExtArgs>
   option?: boolean | Prisma.ActionOptionDefaultArgs<ExtArgs>
   completions?: boolean | Prisma.LinkAction$completionsArgs<ExtArgs>
+  checkins?: boolean | Prisma.LinkAction$checkinsArgs<ExtArgs>
   _count?: boolean | Prisma.LinkActionCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["linkAction"]>
 
@@ -917,6 +1028,7 @@ export type LinkActionInclude<ExtArgs extends runtime.Types.Extensions.InternalA
   link?: boolean | Prisma.LinkDefaultArgs<ExtArgs>
   option?: boolean | Prisma.ActionOptionDefaultArgs<ExtArgs>
   completions?: boolean | Prisma.LinkAction$completionsArgs<ExtArgs>
+  checkins?: boolean | Prisma.LinkAction$checkinsArgs<ExtArgs>
   _count?: boolean | Prisma.LinkActionCountOutputTypeDefaultArgs<ExtArgs>
 }
 
@@ -926,6 +1038,7 @@ export type $LinkActionPayload<ExtArgs extends runtime.Types.Extensions.Internal
     link: Prisma.$LinkPayload<ExtArgs>
     option: Prisma.$ActionOptionPayload<ExtArgs>
     completions: Prisma.$UnlockActionCompletionPayload<ExtArgs>[]
+    checkins: Prisma.$TelegramCheckinPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1280,6 +1393,7 @@ export interface Prisma__LinkActionClient<T, Null = never, ExtArgs extends runti
   link<T extends Prisma.LinkDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LinkDefaultArgs<ExtArgs>>): Prisma.Prisma__LinkClient<runtime.Types.Result.GetResult<Prisma.$LinkPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   option<T extends Prisma.ActionOptionDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ActionOptionDefaultArgs<ExtArgs>>): Prisma.Prisma__ActionOptionClient<runtime.Types.Result.GetResult<Prisma.$ActionOptionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   completions<T extends Prisma.LinkAction$completionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LinkAction$completionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UnlockActionCompletionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  checkins<T extends Prisma.LinkAction$checkinsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LinkAction$checkinsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TelegramCheckinPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1687,6 +1801,30 @@ export type LinkAction$completionsArgs<ExtArgs extends runtime.Types.Extensions.
   take?: number
   skip?: number
   distinct?: Prisma.UnlockActionCompletionScalarFieldEnum | Prisma.UnlockActionCompletionScalarFieldEnum[]
+}
+
+/**
+ * LinkAction.checkins
+ */
+export type LinkAction$checkinsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TelegramCheckin
+   */
+  select?: Prisma.TelegramCheckinSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TelegramCheckin
+   */
+  omit?: Prisma.TelegramCheckinOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TelegramCheckinInclude<ExtArgs> | null
+  where?: Prisma.TelegramCheckinWhereInput
+  orderBy?: Prisma.TelegramCheckinOrderByWithRelationInput | Prisma.TelegramCheckinOrderByWithRelationInput[]
+  cursor?: Prisma.TelegramCheckinWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TelegramCheckinScalarFieldEnum | Prisma.TelegramCheckinScalarFieldEnum[]
 }
 
 /**

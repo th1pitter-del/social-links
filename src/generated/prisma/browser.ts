@@ -132,3 +132,11 @@ export type Profile = Prisma.ProfileModel
  * 
  */
 export type BioLink = Prisma.BioLinkModel
+/**
+ * Model TelegramCheckin
+ * *
+ *  * One visit to the bot's /start deep link. The id is the payload only the
+ *  * server knows, so the account that presses Start cannot be forged by the
+ *  * visitor, and the membership read happens against Telegram's own record.
+ */
+export type TelegramCheckin = Prisma.TelegramCheckinModel

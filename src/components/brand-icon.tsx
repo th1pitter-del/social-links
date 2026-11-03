@@ -81,6 +81,42 @@ export function brandAccentFor(
   return `#${mix(r)}${mix(g)}${mix(b)}`
 }
 
+/**
+ * A translucent wash of the platform's real brand color, per theme. The hero's
+ * demonstration card and the live unlock card share it so the same step looks
+ * the same colour on both.
+ */
+export function platformTint(platform: string | null | undefined): {
+  light: string
+  dark: string
+  rampLight: string
+  rampDark: string
+} | null {
+  const slug = brandSlugFor(platform)
+  if (!slug) return null
+  const hex = BRAND_ICONS[slug].hex
+  const r = parseInt(hex.slice(0, 2), 16)
+  const g = parseInt(hex.slice(2, 4), 16)
+  const b = parseInt(hex.slice(4, 6), 16)
+  const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255
+  const brand = `${r}, ${g}, ${b}`
+  // Near-black brands (X, TikTok, Threads) would vanish on the dark card, so
+  // there the wash goes light — but only for that theme, or it would disappear
+  // against the white card instead.
+  const dark = luminance < 0.13 ? '255, 255, 255' : brand
+  // The base is the row's colour and the ramp is the same hue lit from the top
+  // edge, so the glass highlight deepens the brand instead of greying it out.
+  // The light theme wears the same hue thinner than the dark one — over a white
+  // card the dark theme's alphas read as pastel blocks — but still deep enough
+  // that a row looks tinted rather than merely warm.
+  return {
+    light: `rgba(${brand}, 0.17)`,
+    dark: `rgba(${dark}, 0.34)`,
+    rampLight: `rgba(${brand}, 0.29)`,
+    rampDark: `rgba(${dark}, 0.54)`,
+  }
+}
+
 // Uses the official brand color when it stays legible on both light and dark
 // backgrounds; near-black (GitHub, X, …) and near-white (Snapchat) brands fall
 // back to `currentColor` so the glyph never disappears.

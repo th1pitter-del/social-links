@@ -73,7 +73,8 @@ export const ModelName = {
   StoredFile: 'StoredFile',
   UserUnlock: 'UserUnlock',
   Profile: 'Profile',
-  BioLink: 'BioLink'
+  BioLink: 'BioLink',
+  TelegramCheckin: 'TelegramCheckin'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -210,7 +211,9 @@ export const UnlockActionCompletionScalarFieldEnum = {
   id: 'id',
   unlockSessionId: 'unlockSessionId',
   linkActionId: 'linkActionId',
-  completedAt: 'completedAt'
+  completedAt: 'completedAt',
+  verified: 'verified',
+  proof: 'proof'
 } as const
 
 export type UnlockActionCompletionScalarFieldEnum = (typeof UnlockActionCompletionScalarFieldEnum)[keyof typeof UnlockActionCompletionScalarFieldEnum]
@@ -423,6 +426,22 @@ export const BioLinkScalarFieldEnum = {
 export type BioLinkScalarFieldEnum = (typeof BioLinkScalarFieldEnum)[keyof typeof BioLinkScalarFieldEnum]
 
 
+export const TelegramCheckinScalarFieldEnum = {
+  id: 'id',
+  unlockSessionId: 'unlockSessionId',
+  linkActionId: 'linkActionId',
+  chatId: 'chatId',
+  userId: 'userId',
+  username: 'username',
+  memberStatus: 'memberStatus',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  expiresAt: 'expiresAt'
+} as const
+
+export type TelegramCheckinScalarFieldEnum = (typeof TelegramCheckinScalarFieldEnum)[keyof typeof TelegramCheckinScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -527,7 +546,8 @@ export type UnlockSessionOrderByRelevanceFieldEnum = (typeof UnlockSessionOrderB
 export const UnlockActionCompletionOrderByRelevanceFieldEnum = {
   id: 'id',
   unlockSessionId: 'unlockSessionId',
-  linkActionId: 'linkActionId'
+  linkActionId: 'linkActionId',
+  proof: 'proof'
 } as const
 
 export type UnlockActionCompletionOrderByRelevanceFieldEnum = (typeof UnlockActionCompletionOrderByRelevanceFieldEnum)[keyof typeof UnlockActionCompletionOrderByRelevanceFieldEnum]
@@ -695,4 +715,17 @@ export const BioLinkOrderByRelevanceFieldEnum = {
 } as const
 
 export type BioLinkOrderByRelevanceFieldEnum = (typeof BioLinkOrderByRelevanceFieldEnum)[keyof typeof BioLinkOrderByRelevanceFieldEnum]
+
+
+export const TelegramCheckinOrderByRelevanceFieldEnum = {
+  id: 'id',
+  unlockSessionId: 'unlockSessionId',
+  linkActionId: 'linkActionId',
+  chatId: 'chatId',
+  userId: 'userId',
+  username: 'username',
+  memberStatus: 'memberStatus'
+} as const
+
+export type TelegramCheckinOrderByRelevanceFieldEnum = (typeof TelegramCheckinOrderByRelevanceFieldEnum)[keyof typeof TelegramCheckinOrderByRelevanceFieldEnum]
 

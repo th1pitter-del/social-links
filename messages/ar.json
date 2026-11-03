@@ -287,7 +287,7 @@
     "emailPlaceholder": "you@example.com",
     "consent": "أوافق على تلقي تحديثات من هذا المبدع. يُشارك عنواني معه فقط.",
     "submitEmail": "إرسال البريد",
-    "openStep": "فتح الخطوة",
+    "handlePlaceholder": "اسم ملفك الشخصي",
     "start": "ابدأ الفتح",
     "unlockButton": "افتح المحتوى",
     "expired": "انتهت صلاحية هذه الجلسة. أعد تحميل الصفحة للبدء من جديد.",
@@ -308,7 +308,9 @@
     "expiredTitle": "انتهت صلاحية هذا الرابط",
     "expiredMessage": "أُغلقت نافذة الفتح لهذا الرابط.",
     "goHome": "الانتقال إلى الصفحة الرئيسية",
-    "metaTitleSuffix": "Link Unlocker"
+    "metaTitleSuffix": "Link Unlocker",
+    "confirmButton": "إظهار الرابط",
+    "stepsFirst": "أكمل كل الخطوات أعلاه أولًا"
   },
   "report": {
     "title": "الإبلاغ عن رابط",
@@ -862,6 +864,18 @@
         "demo-access": {
           "title": "الوصول التجريبي",
           "description": "بيانات دخول تجريبية اختيارية بنقرة واحدة تُعرض في صفحة تسجيل الدخول."
+        },
+        "step-verification": {
+          "title": "التحقق من الخطوات",
+          "description": "بيانات اعتماد تتيح للموقع التأكد أن الزائر تابع الشخص فعليًا وليس فقط أنه ضغط على الزر."
+        },
+        "email-delivery": {
+          "title": "إرسال البريد",
+          "description": "تُرسل رسائل إعادة ضبط كلمة المرور بصيغة JSON إلى وسيطك أو إلى نقطة نهاية الأتمتة الخاصة بك."
+        },
+        "data-retention": {
+          "title": "مدة الاحتفاظ بالبيانات",
+          "description": "كم من الوقت تُبقي مهمة التنظيف أحداث التحليلات."
         }
       },
       "fields": {
@@ -907,6 +921,11 @@
         "limits_unlockStartPerMinute": {
           "label": "بدايات الفتح في الدقيقة (لكل جلسة)",
           "placeholder": "30"
+        },
+        "limits_verifyPerMinute": {
+          "label": "عمليات التحقق في الدقيقة (لكل جلسة)",
+          "hint": "كل عملية تقرأ قائمة متابعة عامة. خفّضها إذا بدأت المنصة برفض الطلبات.",
+          "placeholder": "8"
         },
         "limits_reportPerHour": {
           "label": "بلاغات الإساءة في الساعة (لكل IP)",
@@ -958,6 +977,33 @@
         "demo_password": {
           "label": "كلمة المرور التجريبية",
           "hint": "تُخزَّن كنص صريح. استخدم حسابًا مؤقتًا."
+        },
+        "verification_telegramBotToken": {
+          "label": "رمز بوت تليجرام",
+          "hint": "أنشئ بوتًا عبر @BotFather واجعله مشرفًا على القناة ثم احفظ رمزه هنا. لا تُعيّن webhook للبوت: يقرأ الموقع تسجيلات الحضور من قائمة التحديثات."
+        },
+        "verification_githubToken": {
+          "label": "رمز واجهة GitHub",
+          "hint": "اختياري. عمليات الفحص المجهولة محدودة بستين طلبًا في الساعة على الخادم كله؛ ورمز كلاسيكي يرفعها إلى 5000."
+        },
+        "email_webhookUrl": {
+          "label": "رابط webhook",
+          "hint": "تركه فارغًا يعني تسجيل روابط إعادة الضبط دون إرسال. يجب أن يبدأ بـ http:// أو https://.",
+          "placeholder": "https://relay.example.com/mail"
+        },
+        "email_webhookToken": {
+          "label": "رمز webhook",
+          "hint": "يُرسل كرمز bearer مع كل طلب."
+        },
+        "email_from": {
+          "label": "عنوان المُرسِل",
+          "hint": "يُستخدم في حقل from ما لم يحدّد الوسيط عنوانه الخاص.",
+          "placeholder": "Link Unlocker <no-reply@example.com>"
+        },
+        "retention_analyticsDays": {
+          "label": "أيام الاحتفاظ بالتحليلات",
+          "hint": "القيمة 0 تحتفظ بكل الأحداث، وهذا ما تحتاجه تقارير اللوحة.",
+          "placeholder": "0"
         }
       },
       "uploadImage": "تحميل صورة",
@@ -970,7 +1016,11 @@
         "noFile": "لم يتم اختيار ملف.",
         "unsupportedType": "نوع الملف غير مدعوم. المسموح: PNG و JPEG و WEBP و GIF.",
         "tooLarge": "الملف كبير جدًا. الحد الأقصى للحجم هو {maxMb} ميجابايت."
-      }
+      },
+      "secretConfigured": "مُعدّ",
+      "secretNotConfigured": "غير مُعدّ",
+      "secretReplacePlaceholder": "الصق قيمة جديدة لاستبدالها",
+      "secretRemove": "إزالة"
     }
   },
   "dashboard": {
@@ -1062,6 +1112,12 @@
       "noLeads": "لم يتم جمع أي عناوين بعد.",
       "colEmail": "البريد الإلكتروني",
       "colConsent": "الموافقة الممنوحة",
+      "verifiedTitle": "متابعات مؤكَّدة",
+      "verifiedDescription": "خطوات قرأناها من السجل العام للمنصة نفسها، لا من نقرة الزائر. نحفظ الاسم الذي فحصناه والتاريخ فقط.",
+      "noVerified": "لا توجد خطوات مؤكَّدة بعد.",
+      "colVerifiedAction": "المنصة",
+      "colEvidence": "ما توصّلنا إليه",
+      "colVerifiedAt": "التاريخ",
       "hiddenAction": "{label} (مخفي)",
       "activityTitle": "المشاهدات وعمليات الفتح المكتملة",
       "lastDays": "آخر {days} يومًا"
@@ -1192,6 +1248,12 @@
     "actionUnavailable": "لم يعد هذا الإجراء متاحًا",
     "actionUrlRequired": "مطلوب رابط http(s) صالح لهذا الإجراء",
     "platformNotAllowed": "هذه المنصة غير مسموح بها وفق قواعد الموقع",
+    "verifierTargetInvalid": "لا يوجد رابط ملف شخصي صالح لصاحب الرابط في هذا الإجراء، لذا لا يمكن التحقق منه.",
+    "verifyUnavailable": "هذه المنصة لا تستجيب الآن. حاول مرة أخرى بعد قليل.",
+    "telegramNotConfigured": "التأكيد عبر تيليجرام غير مُعدّ في هذا الرابط، لذا لا يمكن التحقق من هذه الخطوة.",
+    "telegramWaiting": "لم يصلنا تأكيدك بعد. اضغط Start في تيليجرام ثم تحقق هنا مجددًا.",
+    "telegramNotMember": "يظهر في تيليجرام أن هذا الحساب ليس داخل القناة. انضم إليها ثم تحقق مرة أخرى.",
+    "telegramCheckinStale": "انتهت صلاحية هذا التأكيد. افتح البوت من جديد وتحقق مرة أخرى.",
     "fixHighlightedFields": "يرجى إصلاح الحقول المظللة.",
     "slugReserved": "هذا المعرّف المختصر محجوز.",
     "slugTaken": "هذا المعرّف المختصر مستخدم بالفعل.",
@@ -1268,7 +1330,11 @@
     "headerLinkNotFound": "لم يتم العثور على رابط الترويسة.",
     "htmlRequired": "لا يمكن أن يكون كود الإعلان فارغًا",
     "invalidHeaderIcon": "يرجى اختيار أيقونة صالحة.",
-    "invalidHeaderColor": "استخدم لونًا سداسيًا مثل #5182EF أو اتركه فارغًا."
+    "invalidHeaderColor": "استخدم لونًا سداسيًا مثل #5182EF أو اتركه فارغًا.",
+    "invalidWebhookUrl": "يجب أن يبدأ الرابط بـ http:// أو https://",
+    "confirmHandleRequired": "اكتب معرّف حسابك للمتابعة.",
+    "confirmNotFollowing": "تحقّقنا من {handle} ولم نجد المتابعة لـ {steps}. أكمل الخطوة ثم أكّد مرة أخرى.",
+    "confirmProfileRequired": "أكّد حسابك لإظهار الرابط."
   },
   "linkForm": {
     "uploadFailed": "تعذّر الرفع.",
