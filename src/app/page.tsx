@@ -43,15 +43,12 @@ export default async function HomePage() {
     ])
   const signedIn = Boolean(session)
 
-  // The hero demonstration walks four different platforms on purpose: the
-  // card is labelled as a simulation, and a varied set shows what the unlock
-  // flow looks like across the networks creators actually use. Each one is
-  // chosen for a distinct brand colour, since the rows wear those colours.
+  // The hero walks the actions the product actually offers, and every one of
+  // them is checked by the server before the card unlocks.
   const steps: DemoStep[] = [
-    { label: t('demoSteps.youtube'), platform: 'youtube', icon: 'user_plus' },
-    { label: t('demoSteps.twitch'), platform: 'twitch', icon: 'user_check' },
-    { label: t('demoSteps.instagram'), platform: 'instagram', icon: 'user_plus' },
-    { label: t('demoSteps.discord'), platform: 'discord', icon: 'message' },
+    { label: actionCopy('YOUTUBE_COMMENT'), platform: 'youtube', icon: 'message' },
+    { label: actionCopy('DISCORD_JOIN'), platform: 'discord', icon: 'users' },
+    { label: actionCopy('DISCORD_BOOST'), platform: 'discord', icon: 'rocket' },
   ]
 
   const platforms: DemoPlatform[] = platformRows.map((platform) => ({
@@ -70,7 +67,7 @@ export default async function HomePage() {
     { value: t('stats.unlocksValue'), label: t('stats.unlocksLabel') },
     // Counted, not written: this is the same set of enabled platforms the ring
     // below walks through, so an admin switching one on moves this number.
-    { value: `${platforms.length}+`, label: t('stats.platformsLabel') },
+    { value: `${platforms.length}`, label: t('stats.platformsLabel') },
   ]
 
   const flowNodes = [
@@ -264,10 +261,10 @@ export default async function HomePage() {
               }}
               sampleContent={t('demo.sampleContent')}
               actions={[
-                t('actionLabels.youtube'),
-                t('actionLabels.follow'),
-                t('actionLabels.music'),
-                t('actionLabels.email'),
+                actionCopy('YOUTUBE_SUBSCRIBE'),
+                actionCopy('INSTAGRAM_FOLLOW'),
+                actionCopy('TIKTOK_FOLLOW'),
+                actionCopy('SPOTIFY_TRACK'),
               ]}
               emailPlaceholder={unlockCopy('emailPlaceholder')}
               submitEmail={unlockCopy('submitEmail')}

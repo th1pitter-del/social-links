@@ -16,7 +16,7 @@ export const DEFAULT_CONTENT: Record<ContentPage, string> = {
   faq: `### Is Link Unlocker free?
 Yes. Every feature available to creators is free. There are no premium plans or subscriptions.
 ### Are the social actions automatically verified?
-Where a platform publishes a public record we can read, the link opens only after that record is checked: the visitor names one profile at the end of the steps, we read that profile's own follow list, and your dashboard shows what we found. The steps themselves stay a single quiet click, because the visitor never needs to know which of them we looked up. For platforms that publish no such record, nothing beyond the click is claimed, because we will not promise a verification we cannot perform.
+Where a platform publishes a public record we can read — a video's public comments, or membership of a Discord server — that step is checked: the visitor names one profile at the end, we read what that profile made public, and your dashboard shows what we found. Steps on platforms that publish no such record are confirmed when the visitor opens them, and the product does not claim more than that.
 ### What happens if a link expires or is disabled?
 Expired or disabled links stop unlocking immediately and show a clear message to visitors. You can re-enable a disabled link from your dashboard at any time.
 ### Who can see the content I protect?

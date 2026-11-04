@@ -163,6 +163,7 @@ export default async function EditLinkPage({
           key: type,
           label: t('hiddenAction', { label: option?.label ?? type }),
           platform: option?.platform ?? null,
+          platformLabel: option?.platformLabel ?? null,
           icon: option?.icon ?? 'link',
           behavior: option?.behavior ?? 'URL',
         }

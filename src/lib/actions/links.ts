@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache'
 import { getTranslations } from 'next-intl/server'
 
-import { getActionOptionMap, type ActionOption } from '@/lib/action-catalog'
+import { getActionOptionMap, getEnabledActionOptions, type ActionOption } from '@/lib/action-catalog'
 import { createGuestToken, getGuestToken, guestIpKey, setGuestCookie } from '@/lib/guest'
 import { prisma } from '@/lib/prisma'
 import { consumeBySetting } from '@/lib/rate-limit'
@@ -49,8 +49,9 @@ function parseLinkInput(raw: unknown, t: ValidatorMessages) {
 function validateActions(
   actions: ActionInput[],
   catalog: Map<string, ActionOption>,
+  offeredTypes: Set<string>,
   t: ValidatorMessages,
-  allowedDisabled: Set<string> = new Set(),
+  allowedExisting: Set<string> = new Set(),
 ): Record<string, string[]> {
   const issues: Record<string, string[]> = {}
   const httpUrl = makeHttpUrlSchema(t)
@@ -61,7 +62,9 @@ function validateActions(
       issues[`actions.${index}.type`] = [t('unknownActionType')]
       return
     }
-    if (!option.enabled && !allowedDisabled.has(action.type)) {
+    // A link keeps what it already had when a category is retired; anything new
+    // must be one of the actions the editor offers.
+    if ((!option.enabled || !offeredTypes.has(action.type)) && !allowedExisting.has(action.type)) {
       issues[`actions.${index}.type`] = [t('actionUnavailable')]
     }
     if (option.behavior === 'URL' && !httpUrl.safeParse(action.target).success) {
@@ -108,7 +111,11 @@ async function createLinkRecord({
   }
 
   const input = parsed.data
-  const [catalog, settings] = await Promise.all([getActionOptionMap(), getSiteSettings()])
+  const [catalog, settings, offered] = await Promise.all([
+    getActionOptionMap(),
+    getSiteSettings(),
+    getEnabledActionOptions(),
+  ])
   const allowedPlatforms = settings.allowedPlatforms
   if (allowedPlatforms.length > 0) {
     for (let index = 0; index < input.actions.length; index += 1) {
@@ -123,7 +130,12 @@ async function createLinkRecord({
       }
     }
   }
-  const actionIssues = validateActions(input.actions, catalog, t)
+  const actionIssues = validateActions(
+    input.actions,
+    catalog,
+    new Set(offered.map((option) => option.key)),
+    t,
+  )
   if (Object.keys(actionIssues).length > 0) {
     return { ok: false, error: t('fixHighlightedFields'), fieldErrors: actionIssues }
   }
@@ -269,7 +281,11 @@ export async function updateLink(id: string, raw: unknown): Promise<ActionResult
   }
 
   const input = parsed.data
-  const [catalog, settings] = await Promise.all([getActionOptionMap(), getSiteSettings()])
+  const [catalog, settings, offered] = await Promise.all([
+    getActionOptionMap(),
+    getSiteSettings(),
+    getEnabledActionOptions(),
+  ])
   const allowedPlatforms = settings.allowedPlatforms
   if (allowedPlatforms.length > 0) {
     for (let index = 0; index < input.actions.length; index += 1) {
@@ -285,7 +301,13 @@ export async function updateLink(id: string, raw: unknown): Promise<ActionResult
     }
   }
   const allowedDisabled = new Set(link.actions.map((action) => action.type))
-  const actionIssues = validateActions(input.actions, catalog, t, allowedDisabled)
+  const actionIssues = validateActions(
+    input.actions,
+    catalog,
+    new Set(offered.map((option) => option.key)),
+    t,
+    allowedDisabled,
+  )
   if (Object.keys(actionIssues).length > 0) {
     return { ok: false, error: t('fixHighlightedFields'), fieldErrors: actionIssues }
   }

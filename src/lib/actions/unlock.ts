@@ -87,16 +87,17 @@ type ConfirmableSession = {
 
 type OutstandingConfirmation = {
   actionId: string
+  actionType: string
   label: string
+  /** The platform whose public record answers for this step. */
+  platformKey: string
   /** The administrator's own platform name, so stored evidence reads properly. */
   platformName: string
   verifier: HandleVerifier
   creator: string
 }
 
-type ConfirmationCandidate = Omit<OutstandingConfirmation, 'platformName'> & {
-  platformKey: string
-}
+type ConfirmationCandidate = Omit<OutstandingConfirmation, 'platformName'>
 
 /**
  * Completed steps whose platform publishes a public record we can read, and
@@ -117,10 +118,12 @@ async function outstandingConfirmations(
     const option = catalog.get(action.type)
     const verifier = await activeVerifierFor(option?.platform)
     if (!verifier || verifier.mode !== 'HANDLE') continue
+    if (verifier.actionTypes && !verifier.actionTypes.includes(action.type)) continue
     const creator = verifier.parseCreator(action.target)
     if (!creator) continue
     found.push({
       actionId: action.id,
+      actionType: action.type,
       label: action.label?.trim() || option?.label || action.type,
       platformKey: verifier.platformKey,
       verifier,
@@ -138,7 +141,9 @@ async function outstandingConfirmations(
 
   return found.map((item) => ({
     actionId: item.actionId,
+    actionType: item.actionType,
     label: item.label,
+    platformKey: item.platformKey,
     platformName: nameByKey.get(item.platformKey) ?? item.platformKey,
     verifier: item.verifier,
     creator: item.creator,
@@ -465,9 +470,16 @@ export async function confirmProfile(input: {
   )
   if (!limited.ok) return { ok: false, error: t('rateLimited') }
 
+  // One handle names one account. When steps from several platforms are
+  // outstanding, the same string cannot answer for all of them, so each
+  // confirmation settles the first platform and the next field asks for the
+  // next one with its own format hint.
+  const platformKey = outstanding[0].platformKey
+  const batch = outstanding.filter((item) => item.platformKey === platformKey)
+
   const refused: string[] = []
-  for (const item of outstanding) {
-    const outcome = await item.verifier.check(handle, item.creator)
+  for (const item of batch) {
+    const outcome = await item.verifier.check(handle, item.creator, item.actionType)
 
     if (outcome.status === 'VERIFIED') {
       await recordConfirmation(token, item.actionId, true, outcome.proof)

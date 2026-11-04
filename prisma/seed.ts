@@ -30,38 +30,16 @@ function adapterOptions(url: string) {
 
 const prisma = new PrismaClient({ adapter: new PrismaMariaDb(adapterOptions(connectionString)) })
 
+// The platforms this build offers. Rows for retired built-ins stay in existing
+// databases but are hidden from the panel by the supported-key list.
 const PLATFORM_DEFAULTS = [
   { key: 'youtube', label: 'YouTube', icon: 'video', position: 0 },
-  { key: 'tiktok', label: 'TikTok', icon: 'music', position: 1 },
-  { key: 'instagram', label: 'Instagram', icon: 'camera', position: 2 },
-  { key: 'facebook', label: 'Facebook', icon: 'users', position: 3 },
-  { key: 'x', label: 'X', icon: 'at', position: 4 },
-  { key: 'threads', label: 'Threads', icon: 'at', position: 5 },
-  { key: 'discord', label: 'Discord', icon: 'message', position: 6 },
-  { key: 'twitch', label: 'Twitch', icon: 'tv', position: 7 },
-  { key: 'kick', label: 'Kick', icon: 'play', position: 8 },
-  { key: 'reddit', label: 'Reddit', icon: 'newspaper', position: 9 },
-  { key: 'telegram', label: 'Telegram', icon: 'send', position: 10 },
-  { key: 'whatsapp', label: 'WhatsApp', icon: 'message', position: 11 },
-  { key: 'snapchat', label: 'Snapchat', icon: 'camera', position: 12 },
-  { key: 'linkedin', label: 'LinkedIn', icon: 'users', position: 13 },
-  { key: 'pinterest', label: 'Pinterest', icon: 'bookmark', position: 14 },
-  { key: 'spotify', label: 'Spotify', icon: 'music', position: 15 },
-  { key: 'soundcloud', label: 'SoundCloud', icon: 'music', position: 16 },
-  { key: 'github', label: 'GitHub', icon: 'star', position: 17 },
-  { key: 'medium', label: 'Medium', icon: 'newspaper', position: 18 },
-  { key: 'tumblr', label: 'Tumblr', icon: 'newspaper', position: 19 },
-  { key: 'vimeo', label: 'Vimeo', icon: 'video', position: 20 },
-  { key: 'patreon', label: 'Patreon', icon: 'crown', position: 21 },
-  { key: 'kofi', label: 'Ko-fi', icon: 'gift', position: 22 },
-  { key: 'steam', label: 'Steam', icon: 'gamepad', position: 23 },
-  { key: 'etsy', label: 'Etsy', icon: 'shopping', position: 24 },
-  { key: 'substack', label: 'Substack', icon: 'mail', position: 25 },
-  { key: 'mastodon', label: 'Mastodon', icon: 'rss', position: 26 },
-  { key: 'bluesky', label: 'Bluesky', icon: 'at', position: 27 },
-  { key: 'vk', label: 'VK', icon: 'users', position: 28 },
-  { key: 'quora', label: 'Quora', icon: 'message', position: 29 },
-  { key: 'none', label: 'Custom action', icon: 'globe', position: 30 },
+  { key: 'instagram', label: 'Instagram', icon: 'camera', position: 1 },
+  { key: 'facebook', label: 'Facebook', icon: 'users', position: 2 },
+  { key: 'tiktok', label: 'TikTok', icon: 'music', position: 3 },
+  { key: 'discord', label: 'Discord', icon: 'message', position: 4 },
+  { key: 'spotify', label: 'Spotify', icon: 'music', position: 5 },
+  { key: 'none', label: 'Website', icon: 'globe', position: 6 },
 ] as const
 
 async function seedPlatforms() {

@@ -31,6 +31,7 @@ export const VERIFICATION_SETTINGS = {
   telegramBotToken: { dbKey: 'verification.telegramBotToken', envName: 'TELEGRAM_BOT_TOKEN' },
   githubToken: { dbKey: 'verification.githubToken', envName: 'VERIFIER_GITHUB_TOKEN' },
   steamWebApiKey: { dbKey: 'verification.steamWebApiKey', envName: 'STEAM_WEB_API_KEY' },
+  youtubeApiKey: { dbKey: 'verification.youtubeApiKey', envName: 'YOUTUBE_API_KEY' },
   discordBotToken: { dbKey: 'verification.discordBotToken', envName: 'DISCORD_BOT_TOKEN' },
   /** Optional: lets the bot check any invite link the owner pastes. */
   discordGuildId: { dbKey: 'verification.discordGuildId', envName: 'DISCORD_GUILD_ID' },

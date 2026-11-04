@@ -8,6 +8,12 @@ export type VerifyOutcome =
 
 type VerifierBase = {
   platformKey: string
+  /**
+   * The action keys this provider can prove. A platform can host steps its
+   * public record cannot answer (a YouTube like leaves no trace per person),
+   * and checking those would refuse a visitor who did act.
+   */
+  actionTypes?: readonly string[]
   /** Extract the link owner's identity from the action target they pasted. */
   parseCreator(target: string): string | null
   /**
@@ -33,7 +39,7 @@ export type Verifier =
   | (VerifierBase & {
       mode: 'HANDLE'
       /** Check the platform's public record for `visitorHandle → creator`. */
-      check(visitorHandle: string, creator: string): Promise<VerifyOutcome>
+      check(visitorHandle: string, creator: string, actionType?: string): Promise<VerifyOutcome>
     })
   | (VerifierBase & { mode: 'HANDOFF' })
 

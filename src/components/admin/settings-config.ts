@@ -98,6 +98,7 @@ export const SETTINGS_GROUPS: SettingsGroup[] = [
       { key: 'verification.telegramBotToken', secret: true },
       { key: 'verification.githubToken', secret: true },
       { key: 'verification.steamWebApiKey', secret: true },
+      { key: 'verification.youtubeApiKey', secret: true },
       { key: 'verification.discordBotToken', secret: true },
       { key: 'verification.discordGuildId' },
       { key: 'verification.twitchClientId' },

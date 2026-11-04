@@ -2,8 +2,23 @@ import 'server-only'
 
 import { cache } from 'react'
 
-import type { ActionOptionView } from '@/lib/action-defaults'
+import { ACTION_OPTION_DEFAULTS, SUPPORTED_PLATFORM_KEYS, type ActionOptionView } from '@/lib/action-defaults'
 import { prisma } from '@/lib/prisma'
+
+const SUPPORTED_PLATFORMS = new Set<string>(SUPPORTED_PLATFORM_KEYS)
+const BUILT_IN_ACTION_KEYS = new Set(ACTION_OPTION_DEFAULTS.map((option) => option.key))
+
+/**
+ * An action is offered when its platform is one the product supports and it is
+ * either a built-in we ship for that platform or an option an administrator
+ * created. Retired built-ins stay in the database but never reach the editor.
+ * Whether the step can be proven is a separate question, answered at release
+ * time by the verifier registry.
+ */
+function isOfferable(platform: string | null, key: string, system: boolean): boolean {
+  if (!platform || !SUPPORTED_PLATFORMS.has(platform)) return false
+  return !system || BUILT_IN_ACTION_KEYS.has(key)
+}
 
 export type ActionOption = ActionOptionView & {
   enabled: boolean
@@ -35,7 +50,7 @@ export type Platform = {
 type ActionOptionRow = {
   key: string
   label: string
-  platform: string | null
+  platform: { key: string; label: string } | null
   icon: string
   behavior: string
   enabled: boolean
@@ -47,7 +62,8 @@ function toOption(row: ActionOptionRow): ActionOption {
   return {
     key: row.key,
     label: row.label,
-    platform: row.platform,
+    platform: row.platform?.key ?? null,
+    platformLabel: row.platform?.label ?? null,
     icon: row.icon,
     behavior: row.behavior === 'EMAIL' ? 'EMAIL' : 'URL',
     enabled: row.enabled,
@@ -89,16 +105,7 @@ export const getActionOptionMap = cache(async (): Promise<Map<string, ActionOpti
   return new Map(
     rows.map((row): [string, ActionOption] => [
       row.key,
-      toOption({
-        key: row.key,
-        label: row.label,
-        platform: row.platform?.key ?? null,
-        icon: row.icon,
-        behavior: row.behavior,
-        enabled: row.enabled,
-        position: row.position,
-        system: row.system,
-      }),
+      toOption(row),
     ]),
   )
 })
@@ -110,18 +117,9 @@ export const getEnabledActionOptions = cache(async (): Promise<ActionOption[]> =
     orderBy: ORDER,
     include: { platform: true },
   })
-  return rows.map((row) =>
-    toOption({
-      key: row.key,
-      label: row.label,
-      platform: row.platform?.key ?? null,
-      icon: row.icon,
-      behavior: row.behavior,
-      enabled: row.enabled,
-      position: row.position,
-      system: row.system,
-    }),
-  )
+  return rows
+    .map((row) => toOption(row))
+    .filter((option) => isOfferable(option.platform, option.key, option.system))
 })
 
 /** Every action, for the admin management screen. */
@@ -130,18 +128,7 @@ export const getAllActionOptions = cache(async (): Promise<ActionOption[]> => {
     orderBy: ORDER,
     include: { platform: true },
   })
-  return rows.map((row) =>
-    toOption({
-      key: row.key,
-      label: row.label,
-      platform: row.platform?.key ?? null,
-      icon: row.icon,
-      behavior: row.behavior,
-      enabled: row.enabled,
-      position: row.position,
-      system: row.system,
-    }),
-  )
+  return rows.map((row) => toOption(row))
 })
 
 /** All platforms with their action options. */
@@ -171,7 +158,15 @@ export const getAllPlatforms = cache(async (): Promise<Platform[]> => {
     enabled: p.enabled,
     position: p.position,
     system: p.system,
-    actionOptions: p.actionOptions.map(toPlatformOption),
+    // Retired built-ins leave the panel with their platform; custom entries stay
+    // manageable even though a custom platform is not offered to creators.
+    actionOptions: p.actionOptions
+      .filter(
+        (option) =>
+          !option.system ||
+          (SUPPORTED_PLATFORMS.has(p.key) && BUILT_IN_ACTION_KEYS.has(option.key)),
+      )
+      .map(toPlatformOption),
   }))
 })
 
@@ -196,14 +191,19 @@ export const getEnabledPlatforms = cache(async (): Promise<Platform[]> => {
       },
     },
   })
-  return platforms.map((p) => ({
-    id: p.id,
-    key: p.key,
-    label: p.label,
-    icon: p.icon,
-    enabled: p.enabled,
-    position: p.position,
-    system: p.system,
-    actionOptions: p.actionOptions.map(toPlatformOption),
-  }))
+  return platforms
+    .map((p) => ({
+      id: p.id,
+      key: p.key,
+      label: p.label,
+      icon: p.icon,
+      enabled: p.enabled,
+      position: p.position,
+      system: p.system,
+      actionOptions: p.actionOptions
+        .filter((option) => isOfferable(p.key, option.key, option.system))
+        .map(toPlatformOption),
+    }))
+    // A platform with nothing offerable has nothing to show.
+    .filter((platform) => platform.actionOptions.length > 0)
 })

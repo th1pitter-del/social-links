@@ -109,7 +109,7 @@
     "titleBefore": "Convierte cualquier enlace en un",
     "titleHighlight": "enlace con desbloqueo social",
     "titleAfter": ".",
-    "subtitle": "Solicita seguidores, suscripciones o una tarea rápida antes de que tu audiencia acceda al contenido que compartes. Tú controlas las acciones de cada enlace.",
+    "subtitle": "Pide seguidores, suscripciones o una tarea rápida antes de que tu audiencia acceda al contenido que compartes. Tú controlas las acciones de cada enlace.",
     "firstLinkFree": "Tu primer enlace es gratis — no necesitas cuenta.",
     "createFirstLink": "Crear tu primer enlace",
     "signInCta": "Iniciar sesión",
@@ -128,25 +128,25 @@
       }
     },
     "flow": {
-      "title": "Un flujo de desbloqueo claro y verificado",
-      "body": "Los visitantes siempre saben exactamente qué les queda por hacer. Cada paso se registra y verifica en nuestros servidores, y el botón Desbloquear solo aparece cuando se han completado todas las acciones requeridas.",
-      "serverBullet": "Verificación en el servidor de cada paso completado",
+      "title": "Un flujo de desbloqueo claro y controlado por el servidor",
+      "body": "Los visitantes siempre saben exactamente qué les queda por hacer. Cada paso se registra en nuestros servidores y, cuando la plataforma publica un registro público, lo comprobamos antes de mostrar el botón Desbloquear.",
+      "serverBullet": "Registro en el servidor y comprobación del registro público cuando la plataforma lo permite",
       "signedBullet": "Acceso firmado y con caducidad al contenido protegido",
       "progressBullet": "Progreso que sobrevive a una recarga accidental",
       "progressTitle": "Progreso del desbloqueo",
       "progressValue": "2 de 3 pasos",
-      "stepDone": "Suscribirse en YouTube",
+      "stepDone": "Comentó en YouTube",
       "completed": "Completado",
       "stepNext": "Acción final requerida",
-      "required": "Requerida · verificada al completarla",
+      "required": "Requerida · comprobada cuando es posible",
       "diagramTitle": "Qué ocurre entre el clic y el contenido",
       "nodes": {
         "visitor": "Abre el enlace",
         "visitorDetail": "Una URL corta: sin app y sin cuenta para empezar.",
         "action": "Acción cumplida",
-        "actionDetail": "Siguen, se suscriben, ven o escuchan a donde lleve la acción.",
-        "verify": "El servidor verifica",
-        "verifyDetail": "El paso solo cuenta cuando nuestro servidor lo confirma.",
+        "actionDetail": "Siguen, se suscriben, miran o escuchan adonde lleva la acción.",
+        "verify": "Comprobación en el servidor",
+        "verifyDetail": "Los pasos comprobables solo cuentan cuando nuestro servidor los confirma.",
         "deliver": "Contenido entregado",
         "deliverDetail": "Un enlace firmado y con caducidad entrega el destino."
       }
@@ -179,7 +179,7 @@
       "creatorsValue": "20K+",
       "creatorsLabel": "creadores",
       "unlocksValue": "15M+",
-      "unlocksLabel": "seguidores, suscripciones y uniones",
+      "unlocksLabel": "seguidores, suscripciones y entradas",
       "platformsLabel": "plataformas"
     },
     "worksWith": "Funciona con",
@@ -205,7 +205,7 @@
     "demoSteps": {
       "youtube": "Suscríbete en YouTube",
       "x": "Síguenos en X",
-      "twitch": "Síguenos en Twitch",
+      "spotify": "Escucha en Spotify",
       "instagram": "Síguenos en Instagram",
       "discord": "Únete al Discord"
     },
@@ -271,8 +271,8 @@
     "badge": "Primer enlace gratis — no necesitas cuenta",
     "title": "Crea un enlace gratis",
     "subtitle": "Configura tu destino y acciones. Tu primer enlace se publica de inmediato. Para crear más de un enlace — o editarlos y eliminarlos después — crea una cuenta gratuita.",
-    "bulletHidden": "El contenido permanece oculto hasta que se verifica cada paso.",
-    "bulletServer": "Cada paso se verifica en el servidor antes de liberar el contenido."
+    "bulletHidden": "El contenido permanece oculto hasta completar cada paso.",
+    "bulletServer": "Cuando la plataforma publica un registro público, lo comprobamos antes de liberar el contenido."
   },
   "unlock": {
     "previewBanner": "Modo de vista previa. Este enlace no está publicado, así que los visitantes aún no pueden abrir esta página y esta ejecución no se cuenta en tus analíticas.",
@@ -443,7 +443,7 @@
       "title": "Resumen de la plataforma",
       "description": "Contadores en vivo de toda la plataforma. La tasa de conversión es el {percent}% de las vistas registradas; las métricas son recuentos de eventos almacenados, nunca estimaciones.",
       "completedUnlocks": "Desbloqueos completados",
-      "kpiLabel": "Finalizaciones verificadas por el servidor en todos los enlaces",
+      "kpiLabel": "Finalizaciones registradas en todos los enlaces",
       "openReports": "Reportes abiertos",
       "needsModeration": "Requiere moderación",
       "registeredUsers": "Usuarios registrados",
@@ -991,6 +991,10 @@
           "label": "Clave de API web de Steam",
           "hint": "Gratuita en steamcommunity.com/dev/apikey; las consultas anónimas se rechazan. Una clave permite unas 100 llamadas cada 5 minutos para todos los visitantes y solo se pueden leer perfiles públicos de Steam."
         },
+        "verification_youtubeApiKey": {
+          "label": "Clave de API de YouTube",
+          "hint": "Gratis en console.cloud.google.com: activa YouTube Data API v3 y crea una clave. Los pasos de comentario se comprueban leyendo los comentarios públicos del vídeo; sin clave, todos los pasos quedan como confirmación propia. La cuota diaria gratuita alcanza para unos miles de comprobaciones."
+        },
         "verification_discordBotToken": {
           "label": "Token del bot de Discord",
           "hint": "Gratis en discord.com/developers: crea una aplicación, añade un bot, copia su token e invítalo a tu servidor. Leer miembros no requiere intents privilegiados. Un nombre de usuario que el bot no pueda resolver se reporta como sin verificar, nunca como rechazo."
@@ -1371,7 +1375,7 @@
     "invalidHeaderColor": "Usa un color hexadecimal como #5182EF o déjalo vacío.",
     "invalidWebhookUrl": "La URL debe empezar por http:// o https://",
     "confirmHandleRequired": "Escribe tu usuario de perfil para continuar.",
-    "confirmNotFollowing": "Revisamos {handle} y no vimos el seguimiento de {steps}. Completa el paso y confirma de nuevo.",
+    "confirmNotFollowing": "Revisamos {handle} y no pudimos confirmar {steps}. Completa el paso y confirma de nuevo.",
     "confirmProfileRequired": "Confirma tu perfil para mostrar el enlace."
   },
   "linkForm": {
@@ -1403,7 +1407,7 @@
     "uploadedFile": "Archivo subido",
     "removeFile": "Quitar archivo",
     "uploadFile": "Subir archivo",
-    "deliveredAfterVerification": "Se entrega solo después de la verificación.",
+    "deliveredAfterVerification": "Se entrega solo después de completar todos los pasos.",
     "manageFiles": "Gestionar archivos",
     "stepsTitle": "Pasos de desbloqueo",
     "stepsDescription": "Los visitantes deben completar estos pasos antes de que se desbloquee el contenido.",
@@ -1523,7 +1527,7 @@
     "verifiedCreator": "Creador verificado"
   },
   "actions": {
-    "VISIT": "Visita un enlace",
+    "VISIT": "Visita un sitio web",
     "YOUTUBE_SUBSCRIBE": "Suscríbete en YouTube",
     "YOUTUBE_VIDEO": "Mira un vídeo de YouTube",
     "YOUTUBE_LIKE": "Me gusta un vídeo de YouTube",
@@ -1542,7 +1546,7 @@
     "INSTAGRAM_REEL": "Mira un Reel de Instagram",
     "INSTAGRAM_STORY": "Mira una historia de Instagram",
     "INSTAGRAM_COMMENT": "Comenta un post de Instagram",
-    "FACEBOOK_LIKE": "Me gusta una página de Facebook",
+    "FACEBOOK_LIKE": "Me gusta un post de Facebook",
     "FACEBOOK_FOLLOW": "Sigue en Facebook",
     "FACEBOOK_POST": "Mira un post de Facebook",
     "FACEBOOK_SHARE": "Comparte un post de Facebook",

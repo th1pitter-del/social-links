@@ -13,6 +13,12 @@ type SearchedMember = {
   user?: { id?: string; username?: string; discriminator?: string }
 }
 
+type GuildMember = {
+  user?: { id?: string }
+  /** When the member started boosting, or null when they are not boosting. */
+  premium_since?: string | null
+}
+
 async function call<T>(
   path: string,
   token: string,
@@ -65,7 +71,11 @@ function parseRequested(input: string): { user: string; tag: string | null } | n
   return { user, tag: tag ?? null }
 }
 
-async function check(visitorHandle: string, creator: string): Promise<VerifyOutcome> {
+async function check(
+  visitorHandle: string,
+  creator: string,
+  actionType?: string,
+): Promise<VerifyOutcome> {
   const token = await configValue(VERIFICATION_SETTINGS.discordBotToken)
   if (!token) return { status: 'UNAVAILABLE', message: 'bot_not_configured' }
 
@@ -116,7 +126,7 @@ async function check(visitorHandle: string, creator: string): Promise<VerifyOutc
 
   const userId = exact[0].user!.id!
   const username = exact[0].user!.username!
-  const member = await call<{ user?: { id?: string } }>(
+  const member = await call<GuildMember>(
     `/guilds/${guildId}/members/${userId}`,
     token,
   )
@@ -129,6 +139,25 @@ async function check(visitorHandle: string, creator: string): Promise<VerifyOutc
     }
   }
   if (member.data.user?.id !== userId) return { status: 'UNAVAILABLE', message: 'member_read_mismatch' }
+
+  if (actionType === 'DISCORD_BOOST') {
+    // A missing field is not the same as "boosting = no": only a member object
+    // that actually carries the flag can prove or disprove a boost.
+    if (member.data.premium_since === undefined) {
+      return { status: 'UNAVAILABLE', message: 'member_read_incomplete' }
+    }
+    if (!member.data.premium_since) {
+      return {
+        status: 'NOT_FOLLOWING',
+        proof: `${username} (${userId}) is in Discord server ${guildId} but not currently boosting`,
+      }
+    }
+    return {
+      status: 'VERIFIED',
+      proof: `${username} (${userId}) has boosted Discord server ${guildId} since ${member.data.premium_since}`,
+    }
+  }
+
   return {
     status: 'VERIFIED',
     proof: `${username} (${userId}) is a member of Discord server ${guildId}`,
@@ -142,6 +171,9 @@ export async function isDiscordConfigured(): Promise<boolean> {
 registerVerifier('discord', () => ({
   platformKey: 'discord',
   mode: 'HANDLE',
+  // Membership and boosting are the only facts the bot can read; nothing else
+  // a step asks for (posting, roles) is exposed without privileged intents.
+  actionTypes: ['DISCORD_JOIN', 'DISCORD_BOOST'],
   parseCreator: extractDiscordTarget,
   check,
   handleExample: 'yourusername',

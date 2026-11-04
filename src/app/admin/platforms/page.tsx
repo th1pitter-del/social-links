@@ -1,11 +1,14 @@
 import { getTranslations } from 'next-intl/server'
 
 import { PageHeader } from '@/components/admin/page-header'
-import { requireAdmin } from '@/lib/session'
 import { getAllPlatforms } from '@/lib/action-catalog'
+import { SUPPORTED_PLATFORM_KEYS } from '@/lib/action-defaults'
+import { requireAdmin } from '@/lib/session'
 import { PlatformsTable } from '@/components/admin/platforms-table'
 
 export const dynamic = 'force-dynamic'
+
+const SUPPORTED = new Set<string>(SUPPORTED_PLATFORM_KEYS)
 
 export async function generateMetadata() {
   const t = await getTranslations('admin.meta')
@@ -15,7 +18,11 @@ export async function generateMetadata() {
 export default async function AdminPlatformsPage() {
   await requireAdmin()
   const t = await getTranslations('admin.platforms')
-  const platforms = await getAllPlatforms()
+  // Retired built-ins stay in the database; the panel only lists the supported
+  // catalog plus anything the administrator created themselves.
+  const platforms = (await getAllPlatforms()).filter(
+    (platform) => !platform.system || SUPPORTED.has(platform.key),
+  )
 
   return (
     <div className="space-y-6">

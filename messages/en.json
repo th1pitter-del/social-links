@@ -378,7 +378,7 @@
     "invalidHeaderColor": "Please use a hex color like #5182EF or leave it empty.",
     "invalidWebhookUrl": "The URL must start with http:// or https://",
     "confirmHandleRequired": "Enter your profile handle to continue.",
-    "confirmNotFollowing": "We checked {handle} and could not see the follow for {steps}. Please complete the step, then confirm again.",
+    "confirmNotFollowing": "We checked {handle} and could not confirm {steps}. Complete the step, then confirm again.",
     "confirmProfileRequired": "Confirm your profile to reveal the link."
   },
   "common": {
@@ -441,25 +441,25 @@
       }
     },
     "flow": {
-      "title": "A clear, verified unlocking flow",
-      "body": "Visitors always know exactly what is left to do. Every step is tracked and verified on our servers, and the Unlock button only appears once all required actions are complete.",
-      "serverBullet": "Server-side verification of every completed step",
+      "title": "A clear, server-gated unlocking flow",
+      "body": "Visitors always know exactly what is left to do. Every step is tracked on our servers, and where a platform publishes a public record we check it before the Unlock button appears.",
+      "serverBullet": "Server-side tracking, with public-record checks where a platform allows it",
       "signedBullet": "Signed, expiring access to protected content",
       "progressBullet": "Progress that survives an accidental refresh",
       "progressTitle": "Unlock progress",
       "progressValue": "2 of 3 steps",
-      "stepDone": "Subscribe on YouTube",
+      "stepDone": "Commented on YouTube",
       "completed": "Completed",
       "stepNext": "Final required action",
-      "required": "Required · verified when completed",
+      "required": "Required · checked where possible",
       "diagramTitle": "What happens between the click and the content",
       "nodes": {
         "visitor": "Visitor opens",
         "visitorDetail": "One short URL — no app and no account needed to start.",
         "action": "Action taken",
         "actionDetail": "They follow, subscribe, watch or listen wherever the action points.",
-        "verify": "Server verifies",
-        "verifyDetail": "A step only counts once our server can confirm it.",
+        "verify": "Server check",
+        "verifyDetail": "Checkable steps only count once our server confirms them.",
         "deliver": "Content delivered",
         "deliverDetail": "A signed link with an expiry hands over the destination."
       }
@@ -518,7 +518,7 @@
     "demoSteps": {
       "youtube": "Subscribe on YouTube",
       "x": "Follow on X",
-      "twitch": "Follow on Twitch",
+      "spotify": "Listen on Spotify",
       "instagram": "Follow on Instagram",
       "discord": "Join the Discord"
     },
@@ -584,8 +584,8 @@
     "badge": "First link free — no account needed",
     "title": "Create a free link",
     "subtitle": "Set up your destination and actions. Your first link goes live immediately. To create more than one link — or to edit and delete them later — create a free account.",
-    "bulletHidden": "Content stays hidden until every step is verified.",
-    "bulletServer": "Every step is verified server-side before content is released."
+    "bulletHidden": "Content stays hidden until every step is done.",
+    "bulletServer": "Where a platform publishes a public record, we check it before releasing the content."
   },
   "linkForm": {
     "uploadFailed": "Upload failed.",
@@ -616,7 +616,7 @@
     "uploadedFile": "Uploaded file",
     "removeFile": "Remove file",
     "uploadFile": "Upload file",
-    "deliveredAfterVerification": "Delivered only after verification.",
+    "deliveredAfterVerification": "Delivered only after every step is done.",
     "manageFiles": "Manage files",
     "stepsTitle": "Unlock steps",
     "stepsDescription": "Visitors must complete these steps before the content is unlocked.",
@@ -883,7 +883,7 @@
       "title": "Platform overview",
       "description": "Live counters across the platform. Conversion rate is {percent}% of recorded views — metrics are counts of stored events, never estimates.",
       "completedUnlocks": "Completed unlocks",
-      "kpiLabel": "Server-verified completions across all links",
+      "kpiLabel": "Recorded completions across all links",
       "openReports": "Open reports",
       "needsModeration": "Needs moderation",
       "registeredUsers": "Registered users",
@@ -1431,6 +1431,10 @@
           "label": "Steam Web API key",
           "hint": "Free from steamcommunity.com/dev/apikey; anonymous calls are refused. A key allows roughly 100 calls per 5 minutes across all visitors, and only public Steam profiles can be read."
         },
+        "verification_youtubeApiKey": {
+          "label": "YouTube API key",
+          "hint": "Free at console.cloud.google.com: enable YouTube Data API v3 and create an API key. Comment steps are proven by reading the video's public comments; without a key every step stays self-confirmed. The free daily quota covers a few thousand checks."
+        },
         "verification_discordBotToken": {
           "label": "Discord bot token",
           "hint": "Free at discord.com/developers: create an application, add a bot, copy its token and invite that bot to your server. Reading members needs no privileged intent. A username the bot cannot resolve is reported as unchecked, never as a refusal."
@@ -1523,7 +1527,7 @@
     "verifiedCreator": "Verified creator"
   },
   "actions": {
-    "VISIT": "Visit a link",
+    "VISIT": "Visit a website",
     "YOUTUBE_SUBSCRIBE": "Subscribe on YouTube",
     "YOUTUBE_VIDEO": "Watch a YouTube video",
     "YOUTUBE_LIKE": "Like a YouTube video",
@@ -1542,7 +1546,7 @@
     "INSTAGRAM_REEL": "Watch an Instagram Reel",
     "INSTAGRAM_STORY": "View an Instagram story",
     "INSTAGRAM_COMMENT": "Comment on an Instagram post",
-    "FACEBOOK_LIKE": "Like a Facebook page",
+    "FACEBOOK_LIKE": "Like a Facebook post",
     "FACEBOOK_FOLLOW": "Follow on Facebook",
     "FACEBOOK_POST": "View a Facebook post",
     "FACEBOOK_SHARE": "Share a Facebook post",

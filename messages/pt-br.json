@@ -128,25 +128,25 @@
       }
     },
     "flow": {
-      "title": "Um fluxo de desbloqueio claro e verificado",
-      "body": "Os visitantes sempre sabem exatamente o que falta fazer. Cada etapa é registrada e verificada em nossos servidores, e o botão Desbloquear só aparece quando todas as ações obrigatórias são concluídas.",
-      "serverBullet": "Verificação no servidor de cada etapa concluída",
+      "title": "Um fluxo de desbloqueio claro e controlado pelo servidor",
+      "body": "Os visitantes sempre sabem exatamente o que falta fazer. Cada etapa é registrada em nossos servidores e, quando a plataforma publica um registro público, nós o conferimos antes de mostrar o botão Desbloquear.",
+      "serverBullet": "Registro no servidor e checagem do registro público quando a plataforma permite",
       "signedBullet": "Acesso assinado e com expiração ao conteúdo protegido",
       "progressBullet": "Progresso que sobrevive a um recarregamento acidental",
       "progressTitle": "Progresso do desbloqueio",
       "progressValue": "2 de 3 etapas",
-      "stepDone": "Inscrever-se no YouTube",
+      "stepDone": "Comentou no YouTube",
       "completed": "Concluído",
       "stepNext": "Ação final obrigatória",
-      "required": "Obrigatória · verificada ao concluir",
+      "required": "Obrigatória · checada quando possível",
       "diagramTitle": "O que acontece entre o clique e o conteúdo",
       "nodes": {
         "visitor": "Abre o link",
         "visitorDetail": "Uma URL curta: sem app e sem conta para começar.",
         "action": "Ação concluída",
         "actionDetail": "Seguem, se inscrevem, assistem ou ouvem para onde a ação aponta.",
-        "verify": "Servidor verifica",
-        "verifyDetail": "A etapa só conta quando nosso servidor confirma.",
+        "verify": "Checagem no servidor",
+        "verifyDetail": "As etapas verificáveis só contam quando nosso servidor as confirma.",
         "deliver": "Conteúdo entregue",
         "deliverDetail": "Um link assinado e com expiração entrega o destino."
       }
@@ -205,7 +205,7 @@
     "demoSteps": {
       "youtube": "Inscreva-se no YouTube",
       "x": "Siga no X",
-      "twitch": "Siga no Twitch",
+      "spotify": "Ouça no Spotify",
       "instagram": "Siga no Instagram",
       "discord": "Entre no Discord"
     },
@@ -271,8 +271,8 @@
     "badge": "Primeiro link grátis — não precisa de conta",
     "title": "Crie um link grátis",
     "subtitle": "Configure seu destino e ações. Seu primeiro link entra no ar imediatamente. Para criar mais de um link — ou editá-los e excluí-los depois — crie uma conta grátis.",
-    "bulletHidden": "O conteúdo permanece oculto até que cada etapa seja verificada.",
-    "bulletServer": "Cada etapa é verificada no servidor antes de liberar o conteúdo."
+    "bulletHidden": "O conteúdo permanece oculto até que cada etapa seja concluída.",
+    "bulletServer": "Quando a plataforma publica um registro público, nós o conferimos antes de liberar o conteúdo."
   },
   "unlock": {
     "previewBanner": "Modo de visualização. Este link não está publicado, então os visitantes ainda não podem abrir esta página e esta execução não entra nas suas análises.",
@@ -443,7 +443,7 @@
       "title": "Visão geral da plataforma",
       "description": "Contadores em tempo real de toda a plataforma. A taxa de conversão é {percent}% das visualizações registradas — as métricas são contagens de eventos armazenados, nunca estimativas.",
       "completedUnlocks": "Desbloqueios concluídos",
-      "kpiLabel": "Conclusões verificadas pelo servidor em todos os links",
+      "kpiLabel": "Conclusões registradas em todos os links",
       "openReports": "Denúncias abertas",
       "needsModeration": "Precisa de moderação",
       "registeredUsers": "Usuários registrados",
@@ -991,6 +991,10 @@
           "label": "Chave da API web da Steam",
           "hint": "Gratuita em steamcommunity.com/dev/apikey; chamadas anônimas são recusadas. Uma chave permite cerca de 100 chamadas a cada 5 minutos para todos os visitantes e somente perfis públicos da Steam podem ser lidos."
         },
+        "verification_youtubeApiKey": {
+          "label": "Chave da API do YouTube",
+          "hint": "Grátis em console.cloud.google.com: ative a YouTube Data API v3 e crie uma chave. As etapas de comentário são conferidas lendo os comentários públicos do vídeo; sem a chave, todas as etapas ficam como confirmação própria. A cota diária gratuita cobre alguns milhares de verificações."
+        },
         "verification_discordBotToken": {
           "label": "Token do bot do Discord",
           "hint": "Gratuito em discord.com/developers: crie uma aplicação, adicione um bot, copie o token e convide esse bot para o seu servidor. Ler membros não exige intents privilegiados. Um usuário que o bot não consiga resolver é registrado como não verificado, nunca como recusa."
@@ -1371,7 +1375,7 @@
     "invalidHeaderColor": "Use uma cor hexadecimal como #5182EF ou deixe vazia.",
     "invalidWebhookUrl": "A URL deve começar com http:// ou https://",
     "confirmHandleRequired": "Digite seu perfil para continuar.",
-    "confirmNotFollowing": "Verificamos {handle} e não vimos o follow de {steps}. Conclua a etapa e confirme novamente.",
+    "confirmNotFollowing": "Verificamos {handle} e não conseguimos confirmar {steps}. Conclua a etapa e confirme novamente.",
     "confirmProfileRequired": "Confirme seu perfil para mostrar o link."
   },
   "linkForm": {
@@ -1403,7 +1407,7 @@
     "uploadedFile": "Arquivo enviado",
     "removeFile": "Remover arquivo",
     "uploadFile": "Enviar arquivo",
-    "deliveredAfterVerification": "Entregue somente depois da verificação.",
+    "deliveredAfterVerification": "Entregue somente depois que todas as etapas forem concluídas.",
     "manageFiles": "Gerenciar arquivos",
     "stepsTitle": "Etapas de desbloqueio",
     "stepsDescription": "Os visitantes precisam concluir estas etapas antes que o conteúdo seja desbloqueado.",
@@ -1523,7 +1527,7 @@
     "verifiedCreator": "Criador verificado"
   },
   "actions": {
-    "VISIT": "Visite um link",
+    "VISIT": "Visite um site",
     "YOUTUBE_SUBSCRIBE": "Inscreva-se no YouTube",
     "YOUTUBE_VIDEO": "Assista a um vídeo do YouTube",
     "YOUTUBE_LIKE": "Curta um vídeo do YouTube",
@@ -1542,7 +1546,7 @@
     "INSTAGRAM_REEL": "Assista a um Reel do Instagram",
     "INSTAGRAM_STORY": "Veja um story do Instagram",
     "INSTAGRAM_COMMENT": "Comente um post do Instagram",
-    "FACEBOOK_LIKE": "Curta uma página do Facebook",
+    "FACEBOOK_LIKE": "Curta um post do Facebook",
     "FACEBOOK_FOLLOW": "Siga no Facebook",
     "FACEBOOK_POST": "Veja um post do Facebook",
     "FACEBOOK_SHARE": "Compartilhe post do Facebook",

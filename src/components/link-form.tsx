@@ -44,20 +44,8 @@ import type { LinkInput } from '@/lib/validation'
 const MAX_ACTIONS = 10
 
 // Shown first in the action picker so the common choices are one click away.
-const POPULAR_ACTION_KEYS = [
-  'YOUTUBE_SUBSCRIBE',
-  'TIKTOK_FOLLOW',
-  'INSTAGRAM_FOLLOW',
-  'YOUTUBE_LIKE',
-  'TIKTOK_LIKE',
-  'FACEBOOK_LIKE',
-  'X_FOLLOW',
-  'DISCORD_JOIN',
-  'TELEGRAM_CHANNEL',
-  'SPOTIFY_FOLLOW',
-  'TWITCH_FOLLOW',
-  'EMAIL',
-]
+// Every offered action is provable, so the list is the catalog itself.
+const POPULAR_ACTION_KEYS = ACTION_OPTION_DEFAULTS.map((option) => option.key)
 
 type ActionRow = {
   type: string
@@ -104,6 +92,7 @@ export function LinkForm({
           key: option.key,
           label: option.label,
           platform: option.platform,
+          platformLabel: option.platform,
           icon: option.icon,
           behavior: option.behavior,
         }))
@@ -182,7 +171,7 @@ export function LinkForm({
     return options.filter(
       (option) =>
         option.label.toLowerCase().includes(query) ||
-        (option.platform ?? '').toLowerCase().includes(query),
+        (option.platformLabel ?? option.platform ?? '').toLowerCase().includes(query),
     )
   }, [options, pickerQuery])
 
@@ -197,7 +186,7 @@ export function LinkForm({
   const platformGroups = useMemo(() => {
     const groups = new Map<string, ActionOptionView[]>()
     for (const option of options) {
-      const label = option.platform ?? t('generalPlatform')
+      const label = option.platformLabel ?? option.platform ?? t('generalPlatform')
       const list = groups.get(label)
       if (list) list.push(option)
       else groups.set(label, [option])
@@ -549,7 +538,7 @@ export function LinkForm({
                               <p className="truncate text-sm font-medium">{labelFor(action.type)}</p>
                               {option?.platform ? (
                                 <Badge variant="secondary" className="hidden sm:inline-flex">
-                                  {option.platform}
+                                  {option.platformLabel ?? option.platform}
                                 </Badge>
                               ) : null}
                               <Button
@@ -837,7 +826,9 @@ export function LinkForm({
                           </span>
                         </span>
                         {searching && option.platform ? (
-                          <Badge variant="secondary">{option.platform}</Badge>
+                          <Badge variant="secondary">
+                            {option.platformLabel ?? option.platform}
+                          </Badge>
                         ) : null}
                         <Plus className="size-4 shrink-0 text-muted-foreground" />
                       </button>
