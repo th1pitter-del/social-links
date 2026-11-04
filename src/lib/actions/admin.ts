@@ -3,8 +3,6 @@
 import { revalidatePath } from 'next/cache'
 import { getTranslations } from 'next-intl/server'
 
-import type { Platform, PlatformActionOption } from '@/lib/action-catalog'
-import { isActionIcon } from '@/lib/action-icons'
 import { writeAudit } from '@/lib/admin-utils'
 import { deleteStoredFile } from '@/lib/file-storage'
 import { deleteMedia } from '@/lib/media'
@@ -12,14 +10,6 @@ import { prisma } from '@/lib/prisma'
 import { requireAdmin } from '@/lib/session'
 
 export type AdminActionResult = { ok: true } | { ok: false; error: string }
-
-export type CreatePlatformResult =
-  | { ok: true; platform: Platform }
-  | { ok: false; error: string }
-
-export type CreateActionOptionResult =
-  | { ok: true; option: PlatformActionOption }
-  | { ok: false; error: string }
 
 export async function setUserBanned(userId: string, banned: boolean): Promise<AdminActionResult> {
   const session = await requireAdmin()
@@ -284,78 +274,6 @@ export async function adminDeleteStoredFile(fileId: string): Promise<AdminAction
   return { ok: true }
 }
 
-function normalizeKey(value: string): string {
-  return value
-    .trim()
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '_')
-    .replace(/^_+|_+$/g, '')
-    .slice(0, 50)
-}
-
-function validateLabel(
-  raw: string,
-  t: (key: string) => string,
-): { ok: true; label: string } | { ok: false; error: string } {
-  const label = raw.trim().replace(/\s+/g, ' ')
-  if (!label) return { ok: false, error: t('labelEmpty') }
-  if (label.length > 60) return { ok: false, error: t('labelTooLong') }
-  return { ok: true, label }
-}
-
-export async function createPlatform(input: {
-  key: string
-  label: string
-  icon: string
-}): Promise<CreatePlatformResult> {
-  await requireAdmin()
-  const t = await getTranslations('errors')
-
-  const key = normalizeKey(input.key)
-  if (!/^[a-z][a-z0-9_]{1,49}$/.test(key)) {
-    return { ok: false, error: t('platformKeyPattern') }
-  }
-
-  const labelResult = validateLabel(input.label, t)
-  if (!labelResult.ok) return labelResult
-
-  const existing = await prisma.platform.findUnique({ where: { key }, select: { id: true } })
-  if (existing) return { ok: false, error: t('platformKeyExists') }
-
-  const icon = isActionIcon(input.icon) ? input.icon : 'globe'
-  const max = await prisma.platform.aggregate({ _max: { position: true } })
-  const position = (max._max.position ?? -1) + 1
-
-  const platform = await prisma.platform.create({
-    data: { key, label: labelResult.label, icon, position, system: false },
-    select: { id: true, key: true, label: true, icon: true, position: true },
-  })
-
-  await writeAudit({
-    action: 'platform.create',
-    targetType: 'platform',
-    targetId: key,
-    details: JSON.stringify({ label: labelResult.label }),
-  })
-
-  revalidatePath('/admin/platforms')
-  revalidatePath('/dashboard/links/new')
-
-  return {
-    ok: true,
-    platform: {
-      id: platform.id,
-      key: platform.key,
-      label: platform.label,
-      icon: platform.icon,
-      enabled: true,
-      position: platform.position,
-      system: false,
-      actionOptions: [],
-    },
-  }
-}
-
 export async function deletePlatform(key: string): Promise<AdminActionResult> {
   await requireAdmin()
   const t = await getTranslations('errors')
@@ -392,75 +310,6 @@ export async function deletePlatform(key: string): Promise<AdminActionResult> {
   revalidatePath('/admin/platforms')
   revalidatePath('/dashboard/links/new')
   return { ok: true }
-}
-
-export async function createActionOption(input: {
-  key: string
-  label: string
-  icon: string
-  behavior: 'URL' | 'EMAIL'
-  platformKey: string
-}): Promise<CreateActionOptionResult> {
-  const session = await requireAdmin()
-  const t = await getTranslations('errors')
-
-  const key = normalizeKey(input.key)
-  if (!/^[a-z][a-z0-9_]{1,49}$/.test(key)) {
-    return { ok: false, error: t('platformKeyPattern') }
-  }
-
-  const labelResult = validateLabel(input.label, t)
-  if (!labelResult.ok) return labelResult
-
-  const existing = await prisma.actionOption.findUnique({ where: { key }, select: { key: true } })
-  if (existing) return { ok: false, error: t('actionKeyExists') }
-
-  const platform = await prisma.platform.findUnique({
-    where: { key: input.platformKey },
-    select: { id: true, key: true },
-  })
-  if (!platform) return { ok: false, error: t('targetPlatformNotFound') }
-
-  const icon = isActionIcon(input.icon) ? input.icon : 'link'
-  const behavior = input.behavior === 'EMAIL' ? 'EMAIL' : 'URL'
-  const max = await prisma.actionOption.aggregate({ _max: { position: true } })
-  const position = (max._max.position ?? -1) + 1
-
-  await prisma.actionOption.create({
-    data: {
-      key,
-      label: labelResult.label,
-      platformId: platform.id,
-      icon,
-      behavior,
-      position,
-      system: false,
-      updatedBy: session.user.id,
-    },
-  })
-
-  await writeAudit({
-    action: 'actionOption.create',
-    targetType: 'actionOption',
-    targetId: key,
-    details: JSON.stringify({ label: labelResult.label, platform: platform.key }),
-  })
-
-  revalidatePath('/admin/platforms')
-  revalidatePath('/dashboard/links/new')
-
-  return {
-    ok: true,
-    option: {
-      key,
-      label: labelResult.label,
-      icon,
-      behavior,
-      enabled: true,
-      position,
-      system: false,
-    },
-  }
 }
 
 export async function deleteActionOption(key: string): Promise<AdminActionResult> {

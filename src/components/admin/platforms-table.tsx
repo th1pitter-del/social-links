@@ -3,13 +3,12 @@
 import { useMemo, useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { useTranslations } from 'next-intl'
-import { Check, Loader2, Pencil, Plus, Search, Trash2, X } from 'lucide-react'
+import { Check, Loader2, Pencil, Search, Trash2, X } from 'lucide-react'
 import { toast } from 'sonner'
 
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import {
   Dialog,
   DialogClose,
@@ -19,25 +18,15 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
 import { Panel } from '@/components/admin/panel'
 import {
-  createActionOption,
-  createPlatform,
   deleteActionOption,
   deletePlatform,
   setActionOptionEnabled,
   setPlatformEnabled,
   updateActionOptionLabel,
 } from '@/lib/actions/admin'
-import { ACTION_ICON_OPTIONS } from '@/lib/action-icons'
 import { ActionGlyph, PlatformGlyph } from '@/components/brand-icon'
 import type { Platform } from '@/lib/action-catalog'
 import { cn } from 'cn'
@@ -57,17 +46,6 @@ export function PlatformsTable({ initial }: { initial: Platform[] }) {
   const [draftLabel, setDraftLabel] = useState('')
   const [activeKey, setActiveKey] = useState(initial[0]?.key ?? '')
   const [, startTransition] = useTransition()
-
-  const [createPlatformOpen, setCreatePlatformOpen] = useState(false)
-  const [newPlatformKey, setNewPlatformKey] = useState('')
-  const [newPlatformLabel, setNewPlatformLabel] = useState('')
-  const [newPlatformIcon, setNewPlatformIcon] = useState('globe')
-
-  const [createActionOpen, setCreateActionOpen] = useState(false)
-  const [newActionKey, setNewActionKey] = useState('')
-  const [newActionLabel, setNewActionLabel] = useState('')
-  const [newActionIcon, setNewActionIcon] = useState('link')
-  const [newActionBehavior, setNewActionBehavior] = useState<'URL' | 'EMAIL'>('URL')
 
   const [confirm, setConfirm] = useState<ConfirmTarget | null>(null)
   const [busy, setBusy] = useState(false)
@@ -171,63 +149,6 @@ export function PlatformsTable({ initial }: { initial: Platform[] }) {
     })
   }
 
-  function submitCreatePlatform() {
-    setBusy(true)
-    startTransition(async () => {
-      const result = await createPlatform({
-        key: newPlatformKey,
-        label: newPlatformLabel,
-        icon: newPlatformIcon,
-      })
-      setBusy(false)
-      if (!result.ok) {
-        toast.error(result.error)
-        return
-      }
-      setPlatforms((current) => [...current, result.platform])
-      setActiveKey(result.platform.key)
-      setCreatePlatformOpen(false)
-      setNewPlatformKey('')
-      setNewPlatformLabel('')
-      setNewPlatformIcon('globe')
-      toast.success(t('toasts.platformCreated'))
-      router.refresh()
-    })
-  }
-
-  function submitCreateAction() {
-    if (!active) return
-    setBusy(true)
-    startTransition(async () => {
-      const result = await createActionOption({
-        key: newActionKey,
-        label: newActionLabel,
-        icon: newActionIcon,
-        behavior: newActionBehavior,
-        platformKey: active.key,
-      })
-      setBusy(false)
-      if (!result.ok) {
-        toast.error(result.error)
-        return
-      }
-      setPlatforms((current) =>
-        current.map((platform) =>
-          platform.key === active.key
-            ? { ...platform, actionOptions: [...platform.actionOptions, result.option] }
-            : platform,
-        ),
-      )
-      setCreateActionOpen(false)
-      setNewActionKey('')
-      setNewActionLabel('')
-      setNewActionIcon('link')
-      setNewActionBehavior('URL')
-      toast.success(t('toasts.actionCreated'))
-      router.refresh()
-    })
-  }
-
   function confirmDelete() {
     if (!confirm) return
     setBusy(true)
@@ -281,16 +202,6 @@ export function PlatformsTable({ initial }: { initial: Platform[] }) {
             <p className="mt-3 px-1 text-xs text-muted-foreground">
               {t('enabledCount', { enabled: enabledPlatforms, total: platforms.length })}
             </p>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              className="mt-3 w-full"
-              onClick={() => setCreatePlatformOpen(true)}
-            >
-              <Plus />
-              {t('newPlatform')}
-            </Button>
           </div>
 
           <nav
@@ -401,19 +312,10 @@ export function PlatformsTable({ initial }: { initial: Platform[] }) {
                 </span>
               </header>
 
-              <div className="flex items-center justify-between border-b border-border px-4 py-2 sm:px-5">
+              <div className="border-b border-border px-4 py-2 sm:px-5">
                 <p className="text-[11px] font-semibold tracking-widest text-muted-foreground uppercase">
                   {t('actionsHeading')}
                 </p>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="xs"
-                  onClick={() => setCreateActionOpen(true)}
-                >
-                  <Plus />
-                  {t('addAction')}
-                </Button>
               </div>
 
               <ul className="divide-y divide-border">
@@ -548,130 +450,6 @@ export function PlatformsTable({ initial }: { initial: Platform[] }) {
         </section>
       </div>
 
-      <Dialog open={createPlatformOpen} onOpenChange={setCreatePlatformOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>{t('newPlatformTitle')}</DialogTitle>
-            <DialogDescription>{t('newPlatformDescription')}</DialogDescription>
-          </DialogHeader>
-          <form
-            className="grid gap-4"
-            onSubmit={(event) => {
-              event.preventDefault()
-              submitCreatePlatform()
-            }}
-          >
-            <div className="grid gap-2">
-              <Label htmlFor="platform-label">{t('labelLabel')}</Label>
-              <Input
-                id="platform-label"
-                value={newPlatformLabel}
-                onChange={(event) => setNewPlatformLabel(event.target.value)}
-                maxLength={60}
-                placeholder={t('labelPlaceholder')}
-                autoFocus
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="platform-key">{t('keyLabel')}</Label>
-              <Input
-                id="platform-key"
-                value={newPlatformKey}
-                onChange={(event) => setNewPlatformKey(event.target.value)}
-                maxLength={50}
-                placeholder="pinterest_boards"
-              />
-              <p className="text-xs text-muted-foreground">{t('keyHint')}</p>
-            </div>
-            <div className="grid gap-2">
-              <Label>{t('iconLabel')}</Label>
-              <IconSelect value={newPlatformIcon} onChange={setNewPlatformIcon} />
-            </div>
-            <DialogFooter>
-              <DialogClose asChild>
-                <Button type="button" variant="outline" disabled={busy}>
-                  {tc('cancel')}
-                </Button>
-              </DialogClose>
-              <Button type="submit" disabled={busy}>
-                {busy ? tc('creating') : t('createPlatform')}
-              </Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
-
-      <Dialog open={createActionOpen} onOpenChange={setCreateActionOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>
-              {active ? t('addActionTitleTo', { platform: active.label }) : t('addAction')}
-            </DialogTitle>
-            <DialogDescription>{t('addActionDescription')}</DialogDescription>
-          </DialogHeader>
-          <form
-            className="grid gap-4"
-            onSubmit={(event) => {
-              event.preventDefault()
-              submitCreateAction()
-            }}
-          >
-            <div className="grid gap-2">
-              <Label htmlFor="action-label">{t('labelLabel')}</Label>
-              <Input
-                id="action-label"
-                value={newActionLabel}
-                onChange={(event) => setNewActionLabel(event.target.value)}
-                maxLength={60}
-                placeholder={t('actionLabelPlaceholder')}
-                autoFocus
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="action-key">{t('keyLabel')}</Label>
-              <Input
-                id="action-key"
-                value={newActionKey}
-                onChange={(event) => setNewActionKey(event.target.value)}
-                maxLength={50}
-                placeholder="pinterest_save_pin"
-              />
-            </div>
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div className="grid gap-2">
-                <Label>{t('iconLabel')}</Label>
-                <IconSelect value={newActionIcon} onChange={setNewActionIcon} />
-              </div>
-              <div className="grid gap-2">
-                <Label>{t('behaviorLabel')}</Label>
-                <Select
-                  value={newActionBehavior}
-                  onValueChange={(value) => setNewActionBehavior(value as 'URL' | 'EMAIL')}
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="URL">{t('behaviorUrl')}</SelectItem>
-                    <SelectItem value="EMAIL">{t('behaviorEmail')}</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-            <DialogFooter>
-              <DialogClose asChild>
-                <Button type="button" variant="outline" disabled={busy}>
-                  {tc('cancel')}
-                </Button>
-              </DialogClose>
-              <Button type="submit" disabled={busy}>
-                {busy ? tc('creating') : t('createAction')}
-              </Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
-
       <Dialog open={confirm !== null} onOpenChange={(open) => !open && setConfirm(null)}>
         <DialogContent>
           <DialogHeader>
@@ -695,23 +473,5 @@ export function PlatformsTable({ initial }: { initial: Platform[] }) {
         </DialogContent>
       </Dialog>
     </Panel>
-  )
-}
-
-function IconSelect({ value, onChange }: { value: string; onChange: (value: string) => void }) {
-  return (
-    <Select value={value} onValueChange={onChange}>
-      <SelectTrigger className="w-full">
-        <SelectValue />
-      </SelectTrigger>
-      <SelectContent>
-        {ACTION_ICON_OPTIONS.map((option) => (
-          <SelectItem key={option.id} value={option.id}>
-            <option.Icon className="size-4" />
-            {option.label}
-          </SelectItem>
-        ))}
-      </SelectContent>
-    </Select>
   )
 }
