@@ -11,6 +11,12 @@ type VerifierBase = {
   /** Extract the link owner's identity from the action target they pasted. */
   parseCreator(target: string): string | null
   /**
+   * The shape this platform's identity takes, shown as the placeholder of the
+   * one quiet profile field. Mastodon needs a server, Steam a profile name, so
+   * a generic hint otherwise invites handles that cannot be read.
+   */
+  handleExample?: string
+  /**
    * Whether the administrator has supplied what this provider needs. An
    * unconfigured provider must behave as if it did not exist, otherwise a
    * visitor would be sent into a verification flow that cannot complete.

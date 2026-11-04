@@ -85,6 +85,7 @@ registerVerifier('github', () => ({
   mode: 'HANDLE',
   parseCreator: extractGithubLogin,
   check,
+  handleExample: 'your-username',
   // A token raises the anonymous request ceiling but is not required to read
   // a public follow list, so this provider is always available.
   isConfigured: async () => true,

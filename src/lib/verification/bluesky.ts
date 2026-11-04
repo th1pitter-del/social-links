@@ -88,6 +88,7 @@ registerVerifier('bluesky', () => ({
   mode: 'HANDLE',
   parseCreator: extractBlueskyHandle,
   check,
+  handleExample: 'you.bsky.social',
   // The follow list is public, so no credential is needed to read it.
   isConfigured: async () => true,
 }))

@@ -544,7 +544,13 @@ export function UnlockExperience({
                       onKeyDown={(event) => {
                         if (event.key === 'Enter') handlePrimary()
                       }}
-                      placeholder={t('handlePlaceholder')}
+                      placeholder={
+                        state?.profileHandleExample
+                          ? t('handlePlaceholderWithExample', {
+                              example: state.profileHandleExample,
+                            })
+                          : t('handlePlaceholder')
+                      }
                       autoComplete="off"
                       className="h-9"
                     />

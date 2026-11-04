@@ -724,6 +724,7 @@
     "consent": "I agree to receive updates from this creator. My address is only shared with them.",
     "submitEmail": "Submit email",
     "handlePlaceholder": "Your profile handle",
+    "handlePlaceholderWithExample": "Your handle, like {example}",
     "start": "Start unlocking",
     "unlockButton": "Unlock content",
     "expired": "This session has expired. Reload the page to start again.",
@@ -1425,6 +1426,19 @@
         "verification_githubToken": {
           "label": "GitHub API token",
           "hint": "Optional. Anonymous checks are capped at 60 lookups per hour for the whole server; a classic token raises that to 5000."
+        },
+        "verification_steamWebApiKey": {
+          "label": "Steam Web API key",
+          "hint": "Free from steamcommunity.com/dev/apikey; anonymous calls are refused. A key allows roughly 100 calls per 5 minutes across all visitors, and only public Steam profiles can be read."
+        },
+        "verification_discordBotToken": {
+          "label": "Discord bot token",
+          "hint": "Free at discord.com/developers: create an application, add a bot, copy its token and invite that bot to your server. Reading members needs no privileged intent. A username the bot cannot resolve is reported as unchecked, never as a refusal."
+        },
+        "verification_discordGuildId": {
+          "label": "Discord server id",
+          "hint": "Optional. Left empty, the server comes from the invite link pasted on the unlock step. Set it to check every Discord step against one server.",
+          "placeholder": "1234567890123456789"
         },
         "email_webhookUrl": {
           "label": "Webhook URL",

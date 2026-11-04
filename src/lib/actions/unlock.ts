@@ -50,6 +50,8 @@ export type UnlockState = {
    * never as a per-step ceremony.
    */
   requiresProfileConfirm: boolean
+  /** Format the outstanding platform expects, shown in the profile field. */
+  profileHandleExample: string | null
   expiresAt: string
 }
 
@@ -195,6 +197,7 @@ async function buildState(sessionId: string): Promise<UnlockState | null> {
     allActionsCompleted,
     canUnlock: !expired && allActionsCompleted && verified,
     requiresProfileConfirm: outstanding.length > 0,
+    profileHandleExample: outstanding[0]?.verifier.handleExample ?? null,
     expiresAt: session.expiresAt.toISOString(),
   }
 }

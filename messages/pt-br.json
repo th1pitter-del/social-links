@@ -288,6 +288,7 @@
     "consent": "Aceito receber novidades deste criador. Meu endereço é compartilhado apenas com ele.",
     "submitEmail": "Enviar e-mail",
     "handlePlaceholder": "Seu usuário público",
+    "handlePlaceholderWithExample": "Seu usuário, como {example}",
     "start": "Começar a desbloquear",
     "unlockButton": "Desbloquear conteúdo",
     "expired": "Esta sessão expirou. Recarregue a página para começar de novo.",
@@ -985,6 +986,19 @@
         "verification_githubToken": {
           "label": "Token da API do GitHub",
           "hint": "Opcional. Consultas anônimas têm teto de 60 por hora em todo o servidor; um token clássico eleva para 5000."
+        },
+        "verification_steamWebApiKey": {
+          "label": "Chave da API web da Steam",
+          "hint": "Gratuita em steamcommunity.com/dev/apikey; chamadas anônimas são recusadas. Uma chave permite cerca de 100 chamadas a cada 5 minutos para todos os visitantes e somente perfis públicos da Steam podem ser lidos."
+        },
+        "verification_discordBotToken": {
+          "label": "Token do bot do Discord",
+          "hint": "Gratuito em discord.com/developers: crie uma aplicação, adicione um bot, copie o token e convide esse bot para o seu servidor. Ler membros não exige intents privilegiados. Um usuário que o bot não consiga resolver é registrado como não verificado, nunca como recusa."
+        },
+        "verification_discordGuildId": {
+          "label": "Id do servidor do Discord",
+          "hint": "Opcional. Vazio, o servidor vem do link de convite colado na etapa de desbloqueio. Defina para conferir todas as etapas do Discord contra um único servidor.",
+          "placeholder": "1234567890123456789"
         },
         "email_webhookUrl": {
           "label": "URL do webhook",
