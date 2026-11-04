@@ -1000,6 +1000,14 @@
           "hint": "Opcional. Si lo dejas vacío, el servidor se toma del enlace de invitación pegado en el paso de desbloqueo. Ponlo para comprobar todos los pasos de Discord contra un mismo servidor.",
           "placeholder": "1234567890123456789"
         },
+        "verification_twitchClientId": {
+          "label": "ID de cliente de Twitch",
+          "hint": "En la consola de desarrolladores de Twitch: registra una aplicación y pega aquí su ID de cliente. La comprobación de seguidores solo responde para el canal que conectes abajo."
+        },
+        "verification_twitchClientSecret": {
+          "label": "Secreto de cliente de Twitch",
+          "hint": "El secreto de la misma aplicación. Se guarda en el servidor y solo se usa para canjear el código de autorización del propietario del canal."
+        },
         "email_webhookUrl": {
           "label": "URL del webhook",
           "hint": "Vacío significa que los enlaces de restablecimiento solo se registran. Debe empezar por http:// o https://.",
@@ -1030,6 +1038,22 @@
         "noFile": "No se ha seleccionado ningún archivo.",
         "unsupportedType": "Tipo de archivo no admitido. Permitidos: PNG, JPEG, WEBP, GIF.",
         "tooLarge": "El archivo es demasiado grande. El tamaño máximo es {maxMb} MB."
+      },
+      "twitch": {
+        "title": "Comprobación de seguidores de Twitch",
+        "help": "Twitch solo muestra los seguidores de un canal a su propietario. Guarda arriba un ID y un secreto de cliente y luego autoriza el acceso una vez aquí; el sitio conserva los tokens y comprueba los seguidores por ti.",
+        "redirectLabel": "URI de redirección",
+        "redirectHelp": "Añade esta dirección exacta a la aplicación en la consola de desarrolladores de Twitch antes de conectar.",
+        "connect": "Conectar Twitch",
+        "reconnect": "Volver a conectar",
+        "disconnect": "Desconectar",
+        "connectedAs": "Conectado como {login}",
+        "notConnected": "Sin conectar",
+        "needClient": "Añade primero un ID y un secreto de cliente.",
+        "deniedNote": "Se denegó el acceso a Twitch, así que la comprobación sigue desactivada.",
+        "failedNote": "Twitch no completó la conexión. Inténtalo de nuevo.",
+        "connectedNote": "Twitch está conectado. Las acciones de seguir este canal ya se comprueban.",
+        "disconnectedToast": "Twitch desconectado."
       },
       "secretConfigured": "Configurado",
       "secretNotConfigured": "Sin configurar",

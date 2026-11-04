@@ -1440,6 +1440,14 @@
           "hint": "Optional. Left empty, the server comes from the invite link pasted on the unlock step. Set it to check every Discord step against one server.",
           "placeholder": "1234567890123456789"
         },
+        "verification_twitchClientId": {
+          "label": "Twitch client id",
+          "hint": "From the Twitch developer console: register an application, then paste its client id here. Follow checks answer only for the channel you connect below."
+        },
+        "verification_twitchClientSecret": {
+          "label": "Twitch client secret",
+          "hint": "The matching secret from the same application. Kept on the server and used only to exchange the channel owner's authorization code."
+        },
         "email_webhookUrl": {
           "label": "Webhook URL",
           "hint": "Empty means reset links are only logged. Must start with http:// or https://.",
@@ -1470,6 +1478,22 @@
         "noFile": "No file provided.",
         "unsupportedType": "Unsupported file type. Allowed: PNG, JPEG, WEBP, GIF.",
         "tooLarge": "File is too large. Maximum size is {maxMb} MB."
+      },
+      "twitch": {
+        "title": "Twitch follow check",
+        "help": "Twitch reveals a channel's followers only to that channel's owner. Save a client id and secret above, then approve access once here; the site keeps the tokens and checks followers on your behalf.",
+        "redirectLabel": "Redirect URI",
+        "redirectHelp": "Add this exact address to the application in the Twitch developer console before connecting.",
+        "connect": "Connect Twitch",
+        "reconnect": "Reconnect",
+        "disconnect": "Disconnect",
+        "connectedAs": "Connected as {login}",
+        "notConnected": "Not connected",
+        "needClient": "Add a client id and client secret first.",
+        "deniedNote": "Twitch access was denied, so the follow check stays off.",
+        "failedNote": "Twitch did not complete the connection. Try again.",
+        "connectedNote": "Twitch is connected. Follow steps for this channel are now checked.",
+        "disconnectedToast": "Twitch disconnected."
       },
       "secretConfigured": "Configured",
       "secretNotConfigured": "Not configured",

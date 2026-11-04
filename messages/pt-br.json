@@ -1000,6 +1000,14 @@
           "hint": "Opcional. Vazio, o servidor vem do link de convite colado na etapa de desbloqueio. Defina para conferir todas as etapas do Discord contra um único servidor.",
           "placeholder": "1234567890123456789"
         },
+        "verification_twitchClientId": {
+          "label": "ID do cliente Twitch",
+          "hint": "No console de desenvolvedores da Twitch: registre um aplicativo e cole aqui o ID do cliente. A verificação de seguidores só responde para o canal que você conectar abaixo."
+        },
+        "verification_twitchClientSecret": {
+          "label": "Segredo do cliente Twitch",
+          "hint": "O segredo do mesmo aplicativo. Fica no servidor e só é usado para trocar o código de autorização do dono do canal."
+        },
         "email_webhookUrl": {
           "label": "URL do webhook",
           "hint": "Vazio significa que os links de redefinição só são registrados. Deve começar com http:// ou https://.",
@@ -1030,6 +1038,22 @@
         "noFile": "Nenhum arquivo selecionado.",
         "unsupportedType": "Tipo de arquivo não suportado. Permitidos: PNG, JPEG, WEBP, GIF.",
         "tooLarge": "Arquivo grande demais. O tamanho máximo é {maxMb} MB."
+      },
+      "twitch": {
+        "title": "Verificação de seguidores na Twitch",
+        "help": "A Twitch só mostra os seguidores de um canal ao dono dele. Salve acima um ID e um segredo de cliente e depois autorize o acesso uma vez aqui; o site guarda os tokens e verifica os seguidores por você.",
+        "redirectLabel": "URI de redirecionamento",
+        "redirectHelp": "Adicione este endereço exato ao aplicativo no console de desenvolvedores da Twitch antes de conectar.",
+        "connect": "Conectar Twitch",
+        "reconnect": "Reconectar",
+        "disconnect": "Desconectar",
+        "connectedAs": "Conectado como {login}",
+        "notConnected": "Não conectado",
+        "needClient": "Adicione primeiro um ID e um segredo de cliente.",
+        "deniedNote": "O acesso à Twitch foi negado, então a verificação continua desligada.",
+        "failedNote": "A Twitch não concluiu a conexão. Tente novamente.",
+        "connectedNote": "A Twitch está conectada. As etapas de seguir este canal agora são verificadas.",
+        "disconnectedToast": "Twitch desconectada."
       },
       "secretConfigured": "Configurado",
       "secretNotConfigured": "Não configurado",

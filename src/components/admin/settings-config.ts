@@ -100,6 +100,8 @@ export const SETTINGS_GROUPS: SettingsGroup[] = [
       { key: 'verification.steamWebApiKey', secret: true },
       { key: 'verification.discordBotToken', secret: true },
       { key: 'verification.discordGuildId' },
+      { key: 'verification.twitchClientId' },
+      { key: 'verification.twitchClientSecret', secret: true },
     ],
   },
   {
