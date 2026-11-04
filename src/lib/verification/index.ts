@@ -6,7 +6,6 @@ import './github'
 import './mastodon'
 import './steam'
 import './telegram'
-import './twitch'
 import './youtube'
 
 export { activeVerifierFor, normalizeHandle, verifierFor } from './registry'

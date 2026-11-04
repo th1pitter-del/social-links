@@ -1419,18 +1419,6 @@
           "label": "Demo password",
           "hint": "Stored in plain text. Use a throwaway account."
         },
-        "verification_telegramBotToken": {
-          "label": "Telegram bot token",
-          "hint": "Create a bot with @BotFather, make it an administrator of the channel, then save its token here. Do not set a webhook on the bot: the site reads check-ins from the update queue."
-        },
-        "verification_githubToken": {
-          "label": "GitHub API token",
-          "hint": "Optional. Anonymous checks are capped at 60 lookups per hour for the whole server; a classic token raises that to 5000."
-        },
-        "verification_steamWebApiKey": {
-          "label": "Steam Web API key",
-          "hint": "Free from steamcommunity.com/dev/apikey; anonymous calls are refused. A key allows roughly 100 calls per 5 minutes across all visitors, and only public Steam profiles can be read."
-        },
         "verification_youtubeApiKey": {
           "label": "YouTube API key",
           "hint": "Free at console.cloud.google.com: enable YouTube Data API v3 and create an API key. Comment steps are proven by reading the video's public comments; without a key every step stays self-confirmed. The free daily quota covers a few thousand checks."
@@ -1443,14 +1431,6 @@
           "label": "Discord server id",
           "hint": "Optional. Left empty, the server comes from the invite link pasted on the unlock step. Set it to check every Discord step against one server.",
           "placeholder": "1234567890123456789"
-        },
-        "verification_twitchClientId": {
-          "label": "Twitch client id",
-          "hint": "From the Twitch developer console: register an application, then paste its client id here. Follow checks answer only for the channel you connect below."
-        },
-        "verification_twitchClientSecret": {
-          "label": "Twitch client secret",
-          "hint": "The matching secret from the same application. Kept on the server and used only to exchange the channel owner's authorization code."
         },
         "email_webhookUrl": {
           "label": "Webhook URL",
@@ -1482,22 +1462,6 @@
         "noFile": "No file provided.",
         "unsupportedType": "Unsupported file type. Allowed: PNG, JPEG, WEBP, GIF.",
         "tooLarge": "File is too large. Maximum size is {maxMb} MB."
-      },
-      "twitch": {
-        "title": "Twitch follow check",
-        "help": "Twitch reveals a channel's followers only to that channel's owner. Save a client id and secret above, then approve access once here; the site keeps the tokens and checks followers on your behalf.",
-        "redirectLabel": "Redirect URI",
-        "redirectHelp": "Add this exact address to the application in the Twitch developer console before connecting.",
-        "connect": "Connect Twitch",
-        "reconnect": "Reconnect",
-        "disconnect": "Disconnect",
-        "connectedAs": "Connected as {login}",
-        "notConnected": "Not connected",
-        "needClient": "Add a client id and client secret first.",
-        "deniedNote": "Twitch access was denied, so the follow check stays off.",
-        "failedNote": "Twitch did not complete the connection. Try again.",
-        "connectedNote": "Twitch is connected. Follow steps for this channel are now checked.",
-        "disconnectedToast": "Twitch disconnected."
       },
       "secretConfigured": "Configured",
       "secretNotConfigured": "Not configured",
