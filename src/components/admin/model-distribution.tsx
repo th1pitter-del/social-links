@@ -1,12 +1,15 @@
 import { cn } from "cn"
+import { formatNumber, formatPercent } from '@/lib/format'
 
 export function ModelDistribution({
   items,
   valueLabel,
+  locale,
 }: {
   items: { label: string; value: number; percent: number }[]
   /** Names the base the percentages are cut from, e.g. "3 completed steps". */
   valueLabel?: string
+  locale: string
 }) {
   return (
     <div className="space-y-1">
@@ -20,7 +23,7 @@ export function ModelDistribution({
           <div className="flex items-baseline justify-between gap-2 text-sm">
             <span className="truncate text-foreground">{item.label}</span>
             <span className="shrink-0 text-xs text-muted-foreground tabular-nums">
-              {item.value} · {item.percent}%
+              {formatNumber(locale, item.value)} · {formatPercent(locale, item.percent)}
             </span>
           </div>
           <div className="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-muted">

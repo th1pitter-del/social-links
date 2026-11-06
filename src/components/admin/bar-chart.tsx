@@ -4,6 +4,8 @@ import { useState } from 'react'
 import { useLocale, useTranslations } from 'next-intl'
 import { cn } from 'cn'
 
+import { formatNumber, formatPercent } from '@/lib/format'
+
 export type BarChartPoint = {
   label: string
   primary: number
@@ -19,13 +21,13 @@ export type BarChartPoint = {
  */
 export function BarChart({
   points,
-  primaryLabel = 'Series 1',
+  primaryLabel,
   secondaryLabel,
   startDate,
   className,
 }: {
   points: BarChartPoint[]
-  primaryLabel?: string
+  primaryLabel: string
   secondaryLabel?: string
   /** When given, each column is named by its real date instead of its index. */
   startDate?: Date
@@ -53,9 +55,9 @@ export function BarChart({
   }
 
   const valueParts = (point: BarChartPoint) => {
-    const parts = [`${primaryLabel} ${point.primary}`]
+    const parts = [`${primaryLabel} ${formatNumber(locale, point.primary)}`]
     if (hasSecondary && point.secondary !== undefined) {
-      parts.push(`${secondaryLabel} ${point.secondary}`)
+      parts.push(`${secondaryLabel} ${formatNumber(locale, point.secondary)}`)
     }
     return parts
   }
@@ -73,7 +75,7 @@ export function BarChart({
     if (totalPrimary > 0) {
       parts.push(
         t('chartShareOfTotal', {
-          percent: Math.round((current.primary / totalPrimary) * 100),
+          percent: formatPercent(locale, Math.round((current.primary / totalPrimary) * 100)),
         }),
       )
     }

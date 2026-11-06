@@ -1,5 +1,5 @@
 import { FileText, HardDrive } from 'lucide-react'
-import { getTranslations } from 'next-intl/server'
+import { getLocale, getTranslations } from 'next-intl/server'
 
 import { DeleteFileButton } from '@/components/files/delete-file-button'
 import { Button } from '@/components/ui/button'
@@ -16,6 +16,7 @@ export default async function FilesPage() {
   const session = await requireUser()
   const t = await getTranslations('dashboard.files')
   const tc = await getTranslations('dashboard.common')
+  const locale = await getLocale()
   const files = await prisma.storedFile.findMany({
     where: { ownerId: session.user.id },
     orderBy: { createdAt: 'desc' },
@@ -23,8 +24,16 @@ export default async function FilesPage() {
   })
 
   const totalBytes = files.reduce((sum, f) => sum + f.size, 0)
-  const formatMb = (bytes: number) => (bytes / (1024 * 1024)).toFixed(2)
-  const formatDate = (d: Date) => d.toISOString().slice(0, 10)
+  const sizeFormatter = new Intl.NumberFormat(locale, {
+    style: 'unit',
+    unit: 'megabyte',
+    unitDisplay: 'short',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })
+  const countFormatter = new Intl.NumberFormat(locale)
+  const dateFormatter = new Intl.DateTimeFormat(locale, { dateStyle: 'medium' })
+  const formatMb = (bytes: number) => sizeFormatter.format(bytes / (1024 * 1024))
 
   return (
     <div className="space-y-8">
@@ -41,14 +50,16 @@ export default async function FilesPage() {
             <span className="text-sm">{t('statFiles')}</span>
             <FileText className="size-4" />
           </div>
-          <p className="mt-3 text-3xl font-semibold tracking-tight">{files.length}</p>
+          <p className="mt-3 text-3xl font-semibold tracking-tight">
+            {countFormatter.format(files.length)}
+          </p>
         </div>
         <div className="rounded-2xl border bg-card p-5">
           <div className="flex items-center justify-between text-muted-foreground">
             <span className="text-sm">{t('statTotalSize')}</span>
             <HardDrive className="size-4" />
           </div>
-          <p className="mt-3 text-3xl font-semibold tracking-tight">{formatMb(totalBytes)} MB</p>
+          <p className="mt-3 text-3xl font-semibold tracking-tight">{formatMb(totalBytes)}</p>
         </div>
       </div>
 
@@ -77,8 +88,10 @@ export default async function FilesPage() {
                   <tr key={file.id}>
                     <td className="px-5 py-3 font-medium">{file.filename}</td>
                     <td className="px-5 py-3 text-muted-foreground">{file.mimeType}</td>
-                    <td className="px-5 py-3 text-muted-foreground">{formatMb(file.size)} MB</td>
-                    <td className="px-5 py-3 text-muted-foreground">{formatDate(file.createdAt)}</td>
+                    <td className="px-5 py-3 text-muted-foreground">{formatMb(file.size)}</td>
+                    <td className="px-5 py-3 text-muted-foreground">
+                      {dateFormatter.format(file.createdAt)}
+                    </td>
                     <td className="px-5 py-3 text-right">
                       <div className="flex items-center justify-end gap-2">
                         <a href={`/api/files/${file.id}`} target="_blank" rel="noopener noreferrer">

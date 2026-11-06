@@ -96,6 +96,8 @@ export const SETTINGS_GROUPS: SettingsGroup[] = [
     icon: ShieldCheck,
     fields: [
       { key: 'verification.youtubeApiKey', secret: true },
+      { key: 'verification.googleClientId' },
+      { key: 'verification.googleClientSecret', secret: true },
       { key: 'verification.discordBotToken', secret: true },
       { key: 'verification.discordGuildId' },
     ],

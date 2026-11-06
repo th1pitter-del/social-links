@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { getTranslations } from 'next-intl/server'
 
 import { getStoredFile, readStoredFileBytes } from '@/lib/file-storage'
 import { getSession } from '@/lib/session'
@@ -23,13 +24,14 @@ export async function GET(
 ) {
   const { id } = await context.params
   const asset = await getOwnedFile(id)
+  const t = await getTranslations('errors')
   if (!asset) {
-    return NextResponse.json({ error: 'Not found' }, { status: 404 })
+    return NextResponse.json({ error: t('fileNotFound') }, { status: 404 })
   }
 
   const data = await readStoredFileBytes(id).catch(() => null)
   if (!data) {
-    return NextResponse.json({ error: 'Not found' }, { status: 404 })
+    return NextResponse.json({ error: t('fileNotFound') }, { status: 404 })
   }
 
   const filename = asset.filename.replace(/["'\\]/g, '_')

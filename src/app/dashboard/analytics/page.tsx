@@ -1,11 +1,12 @@
 ﻿import Link from 'next/link'
 import { Eye, MousePointerClick, Rocket } from 'lucide-react'
-import { getTranslations } from 'next-intl/server'
+import { getLocale, getTranslations } from 'next-intl/server'
 
 import { BarChart, type BarChartPoint } from '@/components/admin/bar-chart'
 import { StatusPill } from '@/components/status-pill'
 import { Button } from '@/components/ui/button'
 import { buildDayBuckets, windowStart } from '@/lib/activity-buckets'
+import { formatNumber, formatPercent } from '@/lib/format'
 import { prisma } from '@/lib/prisma'
 import { requireUser } from '@/lib/session'
 
@@ -21,6 +22,7 @@ export default async function AnalyticsPage() {
   const t = await getTranslations('dashboard.analytics')
   const tc = await getTranslations('dashboard.common')
   const ts = await getTranslations('dashboard.status')
+  const locale = await getLocale()
   const ownerId = session.user.id
 
   const links = await prisma.link.findMany({
@@ -95,7 +97,7 @@ export default async function AnalyticsPage() {
   const stats = [
     { label: t('statViews'), value: views, hint: t('allTime'), icon: Eye },
     { label: t('statUnlockStarts'), value: starts, hint: t('allTime'), icon: Rocket },
-    { label: t('statCompleted'), value: completed, hint: t('percentOfViews', { percent: conversion }), icon: MousePointerClick },
+    { label: t('statCompleted'), value: completed, hint: t('percentOfViews', { percent: formatPercent(locale, conversion) }), icon: MousePointerClick },
   ]
 
   return (
@@ -117,7 +119,9 @@ export default async function AnalyticsPage() {
               <span className="text-sm">{stat.label}</span>
               <stat.icon className="size-4" />
             </div>
-            <p className="mt-3 text-3xl font-semibold tracking-tight">{stat.value}</p>
+            <p className="mt-3 text-3xl font-semibold tracking-tight">
+              {formatNumber(locale, stat.value)}
+            </p>
             <p className="mt-1 text-xs text-muted-foreground">{stat.hint}</p>
           </div>
         ))}
@@ -173,10 +177,14 @@ export default async function AnalyticsPage() {
                     <td className="px-5 py-3">
                       <StatusPill status={link.status} label={ts(link.status.toLowerCase())} />
                     </td>
-                    <td className="px-5 py-3">{linkViews}</td>
-                    <td className="px-5 py-3">{counts?.get('UNLOCK_START') ?? 0}</td>
-                    <td className="px-5 py-3">{linkCompleted}</td>
-                    <td className="px-5 py-3 text-muted-foreground">{linkConversion}%</td>
+                    <td className="px-5 py-3">{formatNumber(locale, linkViews)}</td>
+                    <td className="px-5 py-3">
+                      {formatNumber(locale, counts?.get('UNLOCK_START') ?? 0)}
+                    </td>
+                    <td className="px-5 py-3">{formatNumber(locale, linkCompleted)}</td>
+                    <td className="px-5 py-3 text-muted-foreground">
+                      {formatPercent(locale, linkConversion)}
+                    </td>
                   </tr>
                 )
               })}

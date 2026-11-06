@@ -1,7 +1,9 @@
 import { NextResponse } from 'next/server'
+import { getTranslations } from 'next-intl/server'
 
 import { prisma } from '@/lib/prisma'
 import { getStoredFile, createStoredFileStream } from '@/lib/file-storage'
+import { outstandingConfirmations } from '@/lib/unlock-confirm'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -11,8 +13,9 @@ export async function GET(
   context: { params: Promise<{ token: string }> },
 ) {
   const { token } = await context.params
+  const t = await getTranslations('errors')
   if (!token || token.length > 128) {
-    return NextResponse.json({ error: 'Invalid token' }, { status: 400 })
+    return NextResponse.json({ error: t('linkNotFound') }, { status: 400 })
   }
 
   const session = await prisma.unlockSession.findUnique({
@@ -26,36 +29,42 @@ export async function GET(
           id: true,
           contentType: true,
           file: { select: { id: true, filename: true, mimeType: true, size: true } },
-          actions: { select: { id: true } },
+          actions: { select: { id: true, type: true, label: true, target: true } },
         },
       },
-      completions: { select: { linkActionId: true } },
+      completions: { select: { linkActionId: true, verified: true, proof: true } },
     },
   })
 
   if (!session) {
-    return NextResponse.json({ error: 'Session not found' }, { status: 404 })
+    return NextResponse.json({ error: t('linkNotFound') }, { status: 404 })
   }
   if (session.expiresAt.getTime() <= Date.now()) {
-    return NextResponse.json({ error: 'Session expired' }, { status: 410 })
+    return NextResponse.json({ error: t('sessionExpired') }, { status: 410 })
   }
   if (session.status !== 'VERIFIED') {
-    return NextResponse.json({ error: 'Not verified' }, { status: 403 })
+    return NextResponse.json({ error: t('linkNotAvailable') }, { status: 403 })
   }
 
   const completed = new Set(session.completions.map((row) => row.linkActionId))
   const allDone = session.link.actions.every((action) => completed.has(action.id))
   if (!allDone) {
-    return NextResponse.json({ error: 'Actions incomplete' }, { status: 403 })
+    return NextResponse.json({ error: t('completeAllSteps') }, { status: 403 })
+  }
+
+  // The quiet confirmation gates the download too, not just the reveal button:
+  // otherwise a direct link would skip the platform check entirely.
+  if ((await outstandingConfirmations(session)).length > 0) {
+    return NextResponse.json({ error: t('confirmProfileRequired') }, { status: 403 })
   }
 
   if (session.link.contentType !== 'FILE' || !session.link.file) {
-    return NextResponse.json({ error: 'No file available' }, { status: 404 })
+    return NextResponse.json({ error: t('fileNotFound') }, { status: 404 })
   }
 
   const asset = await getStoredFile(session.link.file.id)
   if (!asset) {
-    return NextResponse.json({ error: 'File missing' }, { status: 404 })
+    return NextResponse.json({ error: t('fileNotFound') }, { status: 404 })
   }
 
   const filename = session.link.file.filename.replace(/["'\\]/g, '_')

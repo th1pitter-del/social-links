@@ -13,7 +13,9 @@ import { LinkRowActions } from '@/components/link-row-actions'
 import { Button } from '@/components/ui/button'
 import { getActionOptionMap, getEnabledActionOptions } from '@/lib/action-catalog'
 import type { ActionOptionView } from '@/lib/action-defaults'
+import { actionLabel, platformLabel } from '@/lib/action-label'
 import { buildDayBuckets, windowStart } from '@/lib/activity-buckets'
+import { formatPercent } from '@/lib/format'
 import { prisma } from '@/lib/prisma'
 import { verifierFor } from '@/lib/verification'
 import { requireUser } from '@/lib/session'
@@ -36,6 +38,8 @@ export default async function EditLinkPage({
   const t = await getTranslations('dashboard.editLink')
   const tc = await getTranslations('dashboard.common')
   const ts = await getTranslations('dashboard.status')
+  const actionT = await getTranslations('actions')
+  const platformT = await getTranslations('platforms')
   const locale = await getLocale()
 
   const link = await prisma.link.findFirst({
@@ -82,14 +86,17 @@ export default async function EditLinkPage({
       label: t('statStarts'),
       value: starts,
       share: startsShare,
-      note: t('shareOfViews', { percent: startsShare }),
+      note: t('shareOfViews', { percent: formatPercent(locale, startsShare) }),
     },
     {
       label: t('statCompleted'),
       value: completed,
       share: completedShare,
       note: t('shareOfStarts', {
-        percent: starts > 0 ? Math.round((completed / starts) * 100) : 0,
+        percent: formatPercent(
+          locale,
+          starts > 0 ? Math.round((completed / starts) * 100) : 0,
+        ),
       }),
     },
   ]
@@ -126,7 +133,8 @@ export default async function EditLinkPage({
           linkAction: {
             select: {
               label: true,
-              option: { select: { label: true, platform: { select: { label: true } } } },
+              type: true,
+              option: { select: { label: true, platform: { select: { key: true, label: true } } } },
             },
           },
         },
@@ -161,7 +169,9 @@ export default async function EditLinkPage({
         const option = actionCatalog.get(type)
         return {
           key: type,
-          label: t('hiddenAction', { label: option?.label ?? type }),
+          label: t('hiddenAction', {
+            label: option ? actionLabel(option, actionT) : type,
+          }),
           platform: option?.platform ?? null,
           platformLabel: option?.platformLabel ?? null,
           icon: option?.icon ?? 'link',
@@ -309,7 +319,17 @@ export default async function EditLinkPage({
                   {proofs.map((row) => (
                     <tr key={row.id}>
                       <td className="px-5 py-3 whitespace-nowrap">
-                        {row.linkAction.option?.platform?.label ?? row.linkAction.label}
+                        {row.linkAction.option?.platform
+                          ? platformLabel(row.linkAction.option.platform, platformT)
+                          : row.linkAction.option
+                            ? actionLabel(
+                                {
+                                  key: row.linkAction.type,
+                                  label: row.linkAction.option.label,
+                                },
+                                actionT,
+                              )
+                            : row.linkAction.label}
                       </td>
                       <td className="px-5 py-3 text-muted-foreground" dir="ltr">
                         {row.proof}

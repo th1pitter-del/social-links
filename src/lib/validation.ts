@@ -40,7 +40,7 @@ function makeCoverImageSchema(t: ValidatorMessages) {
   return z
     .string()
     .trim()
-    .max(2048)
+    .max(2048, t('tooLong', { max: 2048 }))
     .refine(
       (value) =>
         value === '' ||
@@ -53,8 +53,8 @@ function makeCoverImageSchema(t: ValidatorMessages) {
 export function makeActionSchema(t: ValidatorMessages) {
   return z.object({
     type: z.string().trim().regex(ACTION_KEY_PATTERN, t('invalidActionType')),
-    label: z.string().trim().max(120).optional().or(z.literal('')),
-    target: z.string().trim().max(2048),
+    label: z.string().trim().max(120, t('tooLong', { max: 120 })).optional().or(z.literal('')),
+    target: z.string().trim().max(2048, t('tooLong', { max: 2048 })),
   })
 }
 
@@ -65,7 +65,7 @@ export function makeLinkInputSchema(t: ValidatorMessages) {
 
   return z
     .object({
-      title: z.string().trim().min(3, t('titleTooShort')).max(140),
+      title: z.string().trim().min(3, t('titleTooShort')).max(140, t('tooLong', { max: 140 })),
       coverImage: coverImageSchema,
       slug: z
         .string()
@@ -74,11 +74,21 @@ export function makeLinkInputSchema(t: ValidatorMessages) {
         .optional()
         .or(z.literal('')),
       contentType: z.enum(LINK_CONTENT_TYPES),
-      targetUrl: z.string().trim().max(2048).optional().or(z.literal('')),
-      textContent: z.string().trim().max(20000).optional().or(z.literal('')),
-      fileId: z.string().trim().max(64).optional().or(z.literal('')),
+      targetUrl: z
+        .string()
+        .trim()
+        .max(2048, t('tooLong', { max: 2048 }))
+        .optional()
+        .or(z.literal('')),
+      textContent: z
+        .string()
+        .trim()
+        .max(20000, t('tooLong', { max: 20000 }))
+        .optional()
+        .or(z.literal('')),
+      fileId: z.string().trim().max(64, t('tooLong', { max: 64 })).optional().or(z.literal('')),
       expiresAt: z.string().trim().optional().or(z.literal('')),
-      actions: z.array(actionSchema).max(10),
+      actions: z.array(actionSchema).max(10, t('tooManyItems', { max: 10 })),
     })
     .superRefine((value, ctx) => {
       if (value.contentType === 'URL') {
@@ -132,7 +142,7 @@ export function makeProfileInputSchema(t: ValidatorMessages) {
   const httpUrl = makeHttpUrlSchema(t)
 
   const profileLinkSchema = z.object({
-    label: z.string().trim().min(1, t('labelRequired')).max(60),
+    label: z.string().trim().min(1, t('labelRequired')).max(60, t('tooLong', { max: 60 })),
     url: httpUrl,
   })
 
@@ -141,12 +151,17 @@ export function makeProfileInputSchema(t: ValidatorMessages) {
       .string()
       .trim()
       .regex(HANDLE_PATTERN, t('invalidHandle')),
-    displayName: z.string().trim().max(80).optional().or(z.literal('')),
-    bio: z.string().trim().max(500).optional().or(z.literal('')),
+    displayName: z
+      .string()
+      .trim()
+      .max(80, t('tooLong', { max: 80 }))
+      .optional()
+      .or(z.literal('')),
+    bio: z.string().trim().max(500, t('tooLong', { max: 500 })).optional().or(z.literal('')),
     avatarUrl: z
       .string()
       .trim()
-      .max(2048)
+      .max(2048, t('tooLong', { max: 2048 }))
       .refine(
         (value) =>
           value === '' ||
@@ -156,7 +171,7 @@ export function makeProfileInputSchema(t: ValidatorMessages) {
       )
       .optional()
       .or(z.literal('')),
-    links: z.array(profileLinkSchema).max(20),
+    links: z.array(profileLinkSchema).max(20, t('tooManyItems', { max: 20 })),
   })
 }
 
@@ -173,9 +188,13 @@ export const ABUSE_REASONS = [
 
 export function makeAbuseReportSchema(t: ValidatorMessages) {
   return z.object({
-    slug: z.string().trim().max(64),
+    slug: z.string().trim().max(64, t('tooLong', { max: 64 })),
     reason: z.enum(ABUSE_REASONS),
-    details: z.string().trim().min(10, t('describeProblem')).max(2000),
+    details: z
+      .string()
+      .trim()
+      .min(10, t('describeProblem'))
+      .max(2000, t('tooLong', { max: 2000 })),
     reporterEmail: z.email({ error: t('invalidEmail') }).optional().or(z.literal('')),
   })
 }

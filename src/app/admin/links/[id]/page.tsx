@@ -11,6 +11,7 @@ import { Badge } from '@/components/ui/badge'
 import { StatusPill } from '@/components/status-pill'
 import { Timestamp } from '@/components/timestamp'
 import { getActionOptionMap } from '@/lib/action-catalog'
+import { actionLabel } from '@/lib/action-label'
 import { prisma } from '@/lib/prisma'
 import { requireAdmin } from '@/lib/session'
 
@@ -25,7 +26,11 @@ export default async function AdminLinkDetailPage({
   params: Promise<{ id: string }>
 }) {
   await requireAdmin()
-  const [t, tr] = await Promise.all([getTranslations('admin'), getTranslations('report')])
+  const [t, tr, actionT] = await Promise.all([
+    getTranslations('admin'),
+    getTranslations('report'),
+    getTranslations('actions'),
+  ])
   const { id } = await params
 
   const link = await prisma.link.findUnique({
@@ -71,6 +76,10 @@ export default async function AdminLinkDetailPage({
   if (!link) notFound()
 
   const actionCatalog = await getActionOptionMap()
+  const actionName = (type: string) => {
+    const option = actionCatalog.get(type)
+    return option ? actionLabel(option, actionT) : type
+  }
 
   const openReports = link.abuseReports.filter((report) => report.status === 'OPEN').length
 
@@ -91,7 +100,7 @@ export default async function AdminLinkDetailPage({
 
       <div className="flex flex-wrap items-center gap-2">
         <StatusPill status={link.status} label={t(`status.${link.status.toLowerCase()}`)} />
-        <Badge variant="outline">{link.contentType.toLowerCase()}</Badge>
+        <Badge variant="outline">{t(`linkDetail.contentTypes.${link.contentType}`)}</Badge>
         {openReports > 0 ? (
           <Badge variant="destructive">{t('linkDetail.openReports', { count: openReports })}</Badge>
         ) : null}
@@ -195,9 +204,7 @@ export default async function AdminLinkDetailPage({
               <tbody className="divide-y divide-border">
                 {link.actions.map((action) => (
                   <tr key={action.id} className="hover:bg-muted/40">
-                    <td className="px-5 py-3">
-                      {actionCatalog.get(action.type)?.label ?? action.type}
-                    </td>
+                    <td className="px-5 py-3">{actionName(action.type)}</td>
                     <td className="px-5 py-3 text-muted-foreground">{action.label ?? '—'}</td>
                     <td className="hidden max-w-xs truncate px-5 py-3 font-mono text-xs sm:table-cell">
                       {action.target}

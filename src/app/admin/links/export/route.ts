@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server'
+import { getTranslations } from 'next-intl/server'
 
 import { prisma } from '@/lib/prisma'
 import { getSession } from '@/lib/session'
@@ -21,12 +22,13 @@ const statusMap = {
  * status filters as the links table.
  */
 export async function GET(request: NextRequest) {
+  const t = await getTranslations('exports')
   const session = await getSession()
   if (!session) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    return NextResponse.json({ error: t('errors.unauthorized') }, { status: 401 })
   }
   if (session.user.role !== 'ADMIN') {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    return NextResponse.json({ error: t('errors.forbidden') }, { status: 403 })
   }
 
   const url = new URL(request.url)
@@ -62,9 +64,7 @@ export async function GET(request: NextRequest) {
     },
   })
 
-  const rows: string[] = [
-    'id,title,slug,status,content_type,owner_email,sessions,events,email_leads,created_at',
-  ]
+  const rows: string[] = [(t.raw('links') as string[]).join(',')]
   for (const link of links) {
     rows.push(
       [
@@ -73,7 +73,7 @@ export async function GET(request: NextRequest) {
         escapeCsvValue(link.slug),
         escapeCsvValue(link.status),
         escapeCsvValue(link.contentType),
-        escapeCsvValue(link.owner?.email ?? 'guest'),
+        escapeCsvValue(link.owner?.email ?? t('guest')),
         escapeCsvValue(link._count.unlocks),
         escapeCsvValue(link._count.events),
         escapeCsvValue(link._count.emailLeads),

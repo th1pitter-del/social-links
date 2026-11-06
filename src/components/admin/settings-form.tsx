@@ -27,6 +27,7 @@ export function SettingsGroupForm({
   const router = useRouter()
   const t = useTranslations('admin.settings')
   const tc = useTranslations('admin.common')
+  const uploadT = useTranslations('uploads.errors')
   const [values, setValues] = useState<Record<string, string>>(settings)
   const [pendingKey, setPendingKey] = useState<string | null>(null)
   const [uploadingKey, setUploadingKey] = useState<string | null>(null)
@@ -58,10 +59,10 @@ export function SettingsGroupForm({
   // Upload failures arrive as a stable code plus legacy English text; the code
   // lets this panel speak the visitor's locale, the text is the fallback.
   function uploadErrorMessage(data: { error?: string; code?: string; maxMb?: number }) {
-    if (data.code && t.has(`uploadErrors.${data.code}`)) {
-      return t(`uploadErrors.${data.code}`, { maxMb: data.maxMb ?? '' })
+    if (data.code && uploadT.has(data.code)) {
+      return uploadT(data.code, { maxMb: data.maxMb ?? '' })
     }
-    return data.error ?? t('imageUploadFailed')
+    return t('imageUploadFailed')
   }
 
   async function uploadImage(key: string, file: File) {

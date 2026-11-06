@@ -7,8 +7,8 @@ import { getTranslations } from 'next-intl/server'
 
 import { prisma } from '@/lib/prisma'
 import { getActionOptionMap } from '@/lib/action-catalog'
+import { actionLabel } from '@/lib/action-label'
 import {
-  activeVerifierFor,
   buildCheckinLink,
   findCheckinVisitor,
   getBotUsername,
@@ -16,12 +16,16 @@ import {
   normalizeHandle,
   readMemberStatus,
   verifierFor,
-  type Verifier,
 } from '@/lib/verification'
 import { consumeBySetting } from '@/lib/rate-limit'
 import { getSession } from '@/lib/session'
 import { createHash } from 'node:crypto'
 import type { UnlockStatus } from '@/generated/prisma/enums'
+import {
+  outstandingConfirmations,
+  recordConfirmation,
+  type HandleConfirmation,
+} from '@/lib/unlock-confirm'
 
 const UNLOCK_SESSION_TTL_MS = 2 * 60 * 60 * 1000
 
@@ -52,6 +56,11 @@ export type UnlockState = {
   requiresProfileConfirm: boolean
   /** Format the outstanding platform expects, shown in the profile field. */
   profileHandleExample: string | null
+  /**
+   * A step whose platform answers only for the visitor's signed-in account is
+   * still unconfirmed. The visitor connects the provider once at release.
+   */
+  requiresAccountConfirm: boolean
   expiresAt: string
 }
 
@@ -76,78 +85,6 @@ async function getClientContext() {
 
 function generateToken() {
   return randomBytes(24).toString('base64url')
-}
-
-type HandleVerifier = Extract<Verifier, { mode: 'HANDLE' }>
-
-type ConfirmableSession = {
-  link: { actions: { id: string; type: string; label: string | null; target: string }[] }
-  completions: { linkActionId: string; verified: boolean; proof: string | null }[]
-}
-
-type OutstandingConfirmation = {
-  actionId: string
-  actionType: string
-  label: string
-  /** The platform whose public record answers for this step. */
-  platformKey: string
-  /** The administrator's own platform name, so stored evidence reads properly. */
-  platformName: string
-  verifier: HandleVerifier
-  creator: string
-}
-
-type ConfirmationCandidate = Omit<OutstandingConfirmation, 'platformName'>
-
-/**
- * Completed steps whose platform publishes a public record we can read, and
- * which have neither been confirmed by that record nor already attempted. This
- * is the whole reason the quiet confirmation exists.
- */
-async function outstandingConfirmations(
-  session: ConfirmableSession,
-): Promise<OutstandingConfirmation[]> {
-  const catalog = await getActionOptionMap()
-  const byAction = new Map(session.completions.map((row) => [row.linkActionId, row]))
-  const found: ConfirmationCandidate[] = []
-
-  for (const action of session.link.actions) {
-    const completion = byAction.get(action.id)
-    // An existing proof means the lookup already ran; do not repeat it.
-    if (!completion || completion.verified || completion.proof) continue
-    const option = catalog.get(action.type)
-    const verifier = await activeVerifierFor(option?.platform)
-    if (!verifier || verifier.mode !== 'HANDLE') continue
-    if (verifier.actionTypes && !verifier.actionTypes.includes(action.type)) continue
-    const creator = verifier.parseCreator(action.target)
-    if (!creator) continue
-    found.push({
-      actionId: action.id,
-      actionType: action.type,
-      label: action.label?.trim() || option?.label || action.type,
-      platformKey: verifier.platformKey,
-      verifier,
-      creator,
-    })
-  }
-
-  if (!found.length) return []
-
-  const rows = await prisma.platform.findMany({
-    where: { key: { in: found.map((item) => item.platformKey) } },
-    select: { key: true, label: true },
-  })
-  const nameByKey = new Map(rows.map((row) => [row.key, row.label]))
-
-  return found.map((item) => ({
-    actionId: item.actionId,
-    actionType: item.actionType,
-    label: item.label,
-    platformKey: item.platformKey,
-    platformName: nameByKey.get(item.platformKey) ?? item.platformKey,
-    verifier: item.verifier,
-    creator: item.creator,
-  }))
 }
 
 async function buildState(sessionId: string): Promise<UnlockState | null> {
@@ -175,12 +112,15 @@ async function buildState(sessionId: string): Promise<UnlockState | null> {
   const completed = new Set(session.completions.map((row) => row.linkActionId))
   const expired = session.expiresAt.getTime() <= Date.now()
   const catalog = await getActionOptionMap()
+  const actionCopy = await getTranslations('actions')
   const actions: UnlockActionView[] = session.link.actions.map((action) => {
     const option = catalog.get(action.type)
     return {
       id: action.id,
       type: action.type,
-      label: action.label?.trim() || option?.label || action.type,
+      label:
+        action.label?.trim() ||
+        (option ? actionLabel(option, actionCopy) : action.type),
       target: action.target,
       completed: completed.has(action.id),
       behavior: option?.behavior ?? 'URL',
@@ -192,6 +132,9 @@ async function buildState(sessionId: string): Promise<UnlockState | null> {
   const allActionsCompleted = actions.every((action) => action.completed)
   const verified = session.status === 'VERIFIED'
   const outstanding = await outstandingConfirmations(session)
+  const handleOutstanding = outstanding.filter(
+    (item): item is HandleConfirmation => item.mode === 'HANDLE',
+  )
 
   return {
     token: session.id,
@@ -201,8 +144,9 @@ async function buildState(sessionId: string): Promise<UnlockState | null> {
     actions,
     allActionsCompleted,
     canUnlock: !expired && allActionsCompleted && verified,
-    requiresProfileConfirm: outstanding.length > 0,
-    profileHandleExample: outstanding[0]?.verifier.handleExample ?? null,
+    requiresProfileConfirm: handleOutstanding.length > 0,
+    profileHandleExample: handleOutstanding[0]?.verifier.handleExample ?? null,
+    requiresAccountConfirm: outstanding.some((item) => item.mode === 'OAUTH'),
     expiresAt: session.expiresAt.toISOString(),
   }
 }
@@ -406,21 +350,6 @@ export type ConfirmProfileResult =
   | { ok: true; state: UnlockState }
   | { ok: false; error: string }
 
-/** Writes what a lookup found onto the step the visitor already opened. */
-async function recordConfirmation(
-  sessionId: string,
-  actionId: string,
-  verified: boolean,
-  proof: string,
-): Promise<void> {
-  await prisma.unlockActionCompletion.update({
-    where: {
-      unlockSessionId_linkActionId: { unlockSessionId: sessionId, linkActionId: actionId },
-    },
-    data: { verified, proof },
-  })
-}
-
 /**
  * The quiet confirmation. The visitor names one profile and we read that
  * account's public record for every step that can be read, without them seeing
@@ -456,7 +385,11 @@ export async function confirmProfile(input: {
     return { ok: false, error: t('sessionExpiredReloadLong') }
   }
 
-  const outstanding = await outstandingConfirmations(session)
+  // Only a public-record step can be answered by naming a profile; the
+  // account-only steps wait for their own connect flow below.
+  const outstanding = (await outstandingConfirmations(session)).filter(
+    (item): item is HandleConfirmation => item.mode === 'HANDLE',
+  )
   if (!outstanding.length) {
     const built = await buildState(token)
     return built ? { ok: true, state: built } : { ok: false, error: t('updateSessionFailed') }

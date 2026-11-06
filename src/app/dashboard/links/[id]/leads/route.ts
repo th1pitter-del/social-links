@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server'
+import { getTranslations } from 'next-intl/server'
 
 import { prisma } from '@/lib/prisma'
 import { getSession } from '@/lib/session'
@@ -18,10 +19,11 @@ export async function GET(
   context: { params: Promise<{ id: string }> },
 ) {
   const { id } = await context.params
+  const t = await getTranslations('exports')
 
   const session = await getSession()
   if (!session) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    return NextResponse.json({ error: t('errors.unauthorized') }, { status: 401 })
   }
 
   const link = await prisma.link.findFirst({
@@ -29,7 +31,7 @@ export async function GET(
     select: { id: true, slug: true, title: true },
   })
   if (!link) {
-    return NextResponse.json({ error: 'Not found' }, { status: 404 })
+    return NextResponse.json({ error: t('errors.notFound') }, { status: 404 })
   }
 
   const leads = await prisma.emailLead.findMany({
@@ -38,7 +40,7 @@ export async function GET(
     select: { email: true, consentAt: true },
   })
 
-  const rows: string[] = ['email,consented_at,source_link']
+  const rows: string[] = [(t.raw('linkLeads') as string[]).join(',')]
   for (const lead of leads) {
     rows.push(
       [

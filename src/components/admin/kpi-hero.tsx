@@ -1,16 +1,20 @@
 import { cn } from "cn"
+import { formatPercent } from '@/lib/format'
 
 export function KpiHero({
   title,
   value,
   label,
   percentage,
+  locale,
   className,
 }: {
   title: string
   value: string | number
   label: string
   percentage?: number
+  /** Locale for the ring's percentage readout. */
+  locale: string
   className?: string
 }) {
   const pct = percentage ?? 0
@@ -55,7 +59,7 @@ export function KpiHero({
             />
           </svg>
           <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <span className="text-lg font-semibold">{pct}%</span>
+            <span className="text-lg font-semibold">{formatPercent(locale, pct)}</span>
           </div>
         </div>
       </div>

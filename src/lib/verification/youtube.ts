@@ -1,7 +1,13 @@
 import 'server-only'
 
 import { configValue, VERIFICATION_SETTINGS } from '@/lib/config'
-import { normalizeHandle, registerVerifier, type VerifyOutcome } from './registry'
+import {
+  normalizeHandle,
+  registerOAuthVerifier,
+  registerVerifier,
+  type VerifyOutcome,
+} from './registry'
+import { isGoogleConfigured } from './google-oauth'
 
 const API = 'https://www.googleapis.com/youtube/v3'
 const VIDEO_ID_RE = /^[A-Za-z0-9_-]{11}$/
@@ -14,15 +20,24 @@ const PAGE_SIZE = 100
 const MAX_PAGES = 5
 
 /**
- * Only a comment can be proven from YouTube without the visitor's account: a
- * like, a subscription and a video view leave no public record naming them.
+ * A comment can be proven from the public record without the visitor signing in.
+ * A like or a subscription leaves no public trace, so those are proven from the
+ * visitor's own Google account instead (see the OAuth verifier below).
  */
 const PROVABLE_ACTIONS = ['YOUTUBE_COMMENT'] as const
+const ACCOUNT_PROVABLE_ACTIONS = ['YOUTUBE_LIKE', 'YOUTUBE_SUBSCRIBE'] as const
 
 type ApiFailure = { ok: false; reason: string }
 type ApiResult<T> = { ok: true; data: T } | ApiFailure
 
 type ChannelList = { items?: { id?: string }[] }
+
+type VideoRating = { items?: { videoId?: string; rating?: string }[] }
+
+type SubscriptionList = {
+  pageInfo?: { totalResults?: number }
+  items?: unknown[]
+}
 
 type CommentThreadList = {
   nextPageToken?: string
@@ -57,6 +72,40 @@ async function api<T>(
     if (!response.ok) {
       // Google names the failure in the body; `commentsDisabled` and
       // `quotaExceeded` decide whether the visitor is at fault (they are not).
+      return {
+        ok: false,
+        reason: body?.error?.errors?.[0]?.reason ?? `http_${response.status}`,
+      }
+    }
+    return { ok: true, data: body as T }
+  } catch {
+    return { ok: false, reason: 'network' }
+  }
+}
+
+/** Same calls, but against the visitor's own account instead of the public API key. */
+async function apiOAuth<T>(
+  path: string,
+  params: Record<string, string | undefined>,
+  accessToken: string,
+): Promise<ApiResult<T>> {
+  const url = new URL(`${API}/${path}`)
+  for (const [name, value] of Object.entries(params)) {
+    if (value) url.searchParams.set(name, value)
+  }
+
+  try {
+    const response = await fetch(url, {
+      signal: AbortSignal.timeout(8000),
+      headers: {
+        accept: 'application/json',
+        authorization: `Bearer ${accessToken}`,
+      },
+    })
+    const body = (await response.json().catch(() => null)) as
+      | (T & { error?: { errors?: { reason?: string }[] } })
+      | null
+    if (!response.ok) {
       return {
         ok: false,
         reason: body?.error?.errors?.[0]?.reason ?? `http_${response.status}`,
@@ -205,6 +254,66 @@ export async function isYoutubeConfigured(): Promise<boolean> {
   return Boolean(await configValue(VERIFICATION_SETTINGS.youtubeApiKey))
 }
 
+/**
+ * A like leaves no public record, so it is read back from the visitor's own
+ * account: `videos/getRating` answers for the signed-in user only.
+ */
+async function checkLike(accessToken: string, videoId: string): Promise<VerifyOutcome> {
+  const rating = await apiOAuth<VideoRating>('videos/getRating', { id: videoId }, accessToken)
+  if (!rating.ok) return { status: 'UNAVAILABLE', message: rating.reason }
+
+  const value = rating.data.items?.[0]?.rating
+  // No rating item means Google could not answer for this video; that is a
+  // lookup problem, not a reason to tell the visitor they did not act.
+  if (!value) return { status: 'UNAVAILABLE', message: 'rating_unreadable' }
+  if (value === 'like') {
+    return { status: 'VERIFIED', proof: `visitor liked youtube video ${videoId}` }
+  }
+  return { status: 'NOT_FOLLOWING', proof: `visitor has not liked youtube video ${videoId}` }
+}
+
+/**
+ * Subscriptions are private to the subscriber, so the check lists the signed-in
+ * visitor's subscriptions filtered to the link owner's channel.
+ */
+async function checkSubscribe(accessToken: string, target: string): Promise<VerifyOutcome> {
+  const query = parseVisitorChannel(target)
+  if (!query) return { status: 'INVALID_HANDLE', message: 'bad_format' }
+
+  const channel = await apiOAuth<ChannelList>(
+    'channels',
+    { part: 'id', [query.field]: query.value },
+    accessToken,
+  )
+  if (!channel.ok) return { status: 'UNAVAILABLE', message: channel.reason }
+
+  const channelId = channel.data.items?.[0]?.id
+  if (!channelId) return { status: 'INVALID_HANDLE', message: 'unknown_creator' }
+
+  const subscriptions = await apiOAuth<SubscriptionList>(
+    'subscriptions',
+    { part: 'snippet', mine: 'true', forChannelId: channelId, maxResults: '1' },
+    accessToken,
+  )
+  if (!subscriptions.ok) return { status: 'UNAVAILABLE', message: subscriptions.reason }
+
+  const total = subscriptions.data.pageInfo?.totalResults ?? subscriptions.data.items?.length ?? 0
+  if (total > 0) {
+    return { status: 'VERIFIED', proof: `visitor subscribed to youtube channel ${channelId}` }
+  }
+  return { status: 'NOT_FOLLOWING', proof: `visitor is not subscribed to youtube channel ${channelId}` }
+}
+
+async function checkOAuth(
+  accessToken: string,
+  creator: string,
+  actionType: string,
+): Promise<VerifyOutcome> {
+  if (actionType === 'YOUTUBE_LIKE') return checkLike(accessToken, creator)
+  if (actionType === 'YOUTUBE_SUBSCRIBE') return checkSubscribe(accessToken, creator)
+  return { status: 'UNAVAILABLE', message: 'unsupported_action' }
+}
+
 registerVerifier('youtube', () => ({
   platformKey: 'youtube',
   mode: 'HANDLE',
@@ -213,4 +322,17 @@ registerVerifier('youtube', () => ({
   check,
   handleExample: '@yourhandle',
   isConfigured: isYoutubeConfigured,
+}))
+
+registerOAuthVerifier(() => ({
+  platformKey: 'youtube',
+  provider: 'google',
+  actionTypes: ACCOUNT_PROVABLE_ACTIONS,
+  parseCreator(target, actionType) {
+    if (actionType === 'YOUTUBE_LIKE') return extractYoutubeVideo(target)
+    if (actionType === 'YOUTUBE_SUBSCRIBE') return target.trim() || null
+    return null
+  },
+  check: checkOAuth,
+  isConfigured: isGoogleConfigured,
 }))

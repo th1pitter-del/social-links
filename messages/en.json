@@ -103,9 +103,9 @@
       "statUnlockStarts": "Unlock starts",
       "statConversions": "Conversions",
       "allTime": "all time",
-      "percentOfViews": "{percent}% of views",
+      "percentOfViews": "{percent} of views",
       "completedUnlocks": "Completed unlocks",
-      "conversionFromViews": "{percent}% conversion from recorded views",
+      "conversionFromViews": "{percent} conversion from recorded views",
       "heatmapTitle": "Activity heatmap",
       "heatmapDescription": "Last 84 days",
       "recentLinks": "Recent links",
@@ -117,7 +117,7 @@
       "funnelTitle": "Unlock funnel",
       "funnelDescription": "Recorded events, all time",
       "funnelEmpty": "No views recorded yet. The funnel fills in as visitors arrive.",
-      "continuedFrom": "{percent}% of {from}",
+      "continuedFrom": "{percent} of {from}",
       "createdOn": "Created {date}",
       "expiresOn": "Expires {date}",
       "eventsCount": "{count} events",
@@ -148,8 +148,8 @@
       "statCompleted": "Completed unlocks",
       "funnelTitle": "From visit to unlock",
       "funnelDescription": "Every count is an event stored for this link.",
-      "shareOfViews": "{percent}% of views",
-      "shareOfStarts": "{percent}% of starts",
+      "shareOfViews": "{percent} of views",
+      "shareOfStarts": "{percent} of starts",
       "noVisits": "No visits recorded yet.",
       "publicUrl": "Public unlock URL",
       "leadsTitle": "Collected email addresses",
@@ -175,7 +175,7 @@
       "statUnlockStarts": "Unlock starts",
       "statCompleted": "Completed",
       "allTime": "all time",
-      "percentOfViews": "{percent}% of views",
+      "percentOfViews": "{percent} of views",
       "lastDays": "Last {days} days",
       "viewsVsUnlocks": "Views vs completed unlocks",
       "chartViews": "Views",
@@ -374,7 +374,11 @@
     "invalidWebhookUrl": "The URL must start with http:// or https://",
     "confirmHandleRequired": "Enter your profile handle to continue.",
     "confirmNotFollowing": "We checked {handle} and could not confirm {steps}. Complete the step, then confirm again.",
-    "confirmProfileRequired": "Confirm your profile to reveal the link."
+    "confirmProfileRequired": "Confirm your profile to reveal the link.",
+    "tooLong": "Must be {max} characters or fewer.",
+    "tooManyItems": "Too many items. The maximum is {max}.",
+    "userAlreadyExists": "An account with this email already exists.",
+    "labelEmpty": "Add a label"
   },
   "common": {
     "siteName": "Link Unlocker",
@@ -393,7 +397,8 @@
     "copy": "Copy",
     "copied": "Copied",
     "back": "Back",
-    "toggleTheme": "Toggle light and dark theme"
+    "toggleTheme": "Toggle light and dark theme",
+    "close": "Close"
   },
   "nav": {
     "howItWorks": "How it works",
@@ -742,7 +747,11 @@
     "expiredMessage": "The unlock window for this link has closed.",
     "goHome": "Go to homepage",
     "confirmButton": "Reveal link",
-    "stepsFirst": "Complete all steps above first"
+    "connectAccount": "Connect Google",
+    "verifyNotDone": "We could not confirm that yet. Complete the step, then connect again.",
+    "verifyUnavailable": "We could not check that right now. Try again in a moment.",
+    "stepsFirst": "Complete all steps above first",
+    "guestOwner": "Guest"
   },
   "report": {
     "title": "Report a link",
@@ -781,7 +790,7 @@
     "faq": {
       "metaTitle": "FAQ",
       "title": "Frequently asked questions",
-      "content": "### Is Link Unlocker free?\nYes. Every feature available to creators is free. There are no premium plans or subscriptions.\n### Are the social actions automatically verified?\nMost social actions are prompted and confirmed by the visitor, not automatically verified, because the social platforms do not allow reliable third-party verification. We label each action honestly instead of claiming a verification we cannot perform.\n### What happens if a link expires or is disabled?\nExpired or disabled links stop unlocking immediately and show a clear message to visitors. You can re-enable a disabled link from your dashboard at any time.\n### Who can see the content I protect?\nOnly visitors who complete every required step for that link. Content is never served through guessable direct URLs, and incomplete sessions are refused by the server.\n### Can I collect email addresses?\nYes, as an optional action on your link. Visitors must consent, and only you can see or export the addresses collected through your own links."
+      "content": "### Is Link Unlocker free?\nYes. Every feature available to creators is free. There are no premium plans or subscriptions.\n### Are the social actions automatically verified?\nSome are. Where a platform publishes a public record we can read — a video's public comments, or membership of a Discord server — that step is checked: the visitor names one profile at the end, we read what that profile made public, and your dashboard shows what we found. Steps on platforms that publish no such record are confirmed when the visitor opens them, and the product does not claim more than that.\n### What happens if a link expires or is disabled?\nExpired or disabled links stop unlocking immediately and show a clear message to visitors. You can re-enable a disabled link from your dashboard at any time.\n### Who can see the content I protect?\nOnly visitors who complete every required step for that link. Content is never served through guessable direct URLs, and incomplete sessions are refused by the server.\n### Can I collect email addresses?\nYes, as an optional action on your link. Visitors must consent, and only you can see or export the addresses collected through your own links."
     },
     "privacy": {
       "metaTitle": "Privacy policy",
@@ -875,7 +884,7 @@
     },
     "overview": {
       "title": "Platform overview",
-      "description": "Live counters across the platform. Conversion rate is {percent}% of recorded views — metrics are counts of stored events, never estimates.",
+      "description": "Live counters across the platform. Conversion rate is {percent} of recorded views — metrics are counts of stored events, never estimates.",
       "completedUnlocks": "Completed unlocks",
       "kpiLabel": "Recorded completions across all links",
       "openReports": "Open reports",
@@ -885,13 +894,13 @@
       "activeHint": "{count} active",
       "views": "Views",
       "unlockStarts": "Unlock starts",
-      "completedHint": "{percent}% of views",
+      "completedHint": "{percent} of views",
       "activityTitle": "Activity — last 14 days",
       "activityDescription": "Daily view and completed-unlock events.",
       "chartViews": "Views",
       "chartUnlocks": "Unlocks",
       "chartDays": "{days} days",
-      "chartShareOfTotal": "{percent}% of the period total",
+      "chartShareOfTotal": "{percent} of the period total",
       "executionTitle": "Execution activity",
       "executionDescription": "Last 84 days heatmap",
       "heatmapLess": "Less",
@@ -925,7 +934,73 @@
       "colTime": "Time",
       "colActor": "Actor",
       "colAction": "Action",
-      "colTarget": "Target"
+      "colTarget": "Target",
+      "actionLabels": {
+        "user": {
+          "ban": "Banned user",
+          "unban": "Unbanned user",
+          "promote": "Promoted user to admin",
+          "demote": "Changed user to member",
+          "bulk_ban": "Banned users",
+          "bulk_unban": "Unbanned users"
+        },
+        "link": {
+          "status": "Changed link status",
+          "bulk_status": "Changed link statuses"
+        },
+        "platform": {
+          "enable": "Enabled platform",
+          "disable": "Disabled platform",
+          "delete": "Deleted platform"
+        },
+        "actionOption": {
+          "enable": "Enabled action",
+          "disable": "Disabled action",
+          "rename": "Renamed action",
+          "delete": "Deleted action"
+        },
+        "media": {
+          "delete": "Deleted media"
+        },
+        "storedFile": {
+          "delete": "Deleted file"
+        },
+        "setting": {
+          "update": "Updated setting"
+        },
+        "ad": {
+          "create": "Created ad",
+          "update": "Updated ad",
+          "enable": "Enabled ad",
+          "disable": "Disabled ad",
+          "delete": "Deleted ad"
+        },
+        "headerLink": {
+          "create": "Created header link",
+          "update": "Updated header link",
+          "enable": "Enabled header link",
+          "disable": "Disabled header link",
+          "delete": "Deleted header link"
+        },
+        "report": {
+          "resolved": "Resolved report",
+          "dismissed": "Dismissed report",
+          "resolve_disable": "Resolved report and disabled link"
+        },
+        "unknown": "Unknown action"
+      },
+      "targetLabels": {
+        "user": "User",
+        "link": "Link",
+        "platform": "Platform",
+        "actionOption": "Action",
+        "media": "Media",
+        "storedFile": "File",
+        "setting": "Setting",
+        "abuseReport": "Report",
+        "adUnit": "Ad",
+        "headerLink": "Header link"
+      }
     },
     "content": {
       "title": "Site content",
@@ -1028,7 +1103,12 @@
       "reportsTitle": "Abuse reports",
       "noReports": "No reports for this link.",
       "colDate": "Date",
-      "colReason": "Reason"
+      "colReason": "Reason",
+      "contentTypes": {
+        "URL": "Website URL",
+        "TEXT": "Text",
+        "FILE": "File download"
+      }
     },
     "reports": {
       "title": "Abuse reports",
@@ -1398,6 +1478,14 @@
           "label": "YouTube API key",
           "hint": "Free at console.cloud.google.com: enable YouTube Data API v3 and create an API key. Comment steps are proven by reading the video's public comments; without a key every step stays self-confirmed. The free daily quota covers a few thousand checks."
         },
+        "verification_googleClientId": {
+          "label": "Google OAuth client id",
+          "hint": "Free at console.cloud.google.com: create an OAuth client (Web application), add https://<your-domain>/api/verify/callback as an authorized redirect URI, and paste the client id here. With it, a visitor can prove a YouTube like or subscription from their own Google account."
+        },
+        "verification_googleClientSecret": {
+          "label": "Google OAuth client secret",
+          "hint": "Issued next to the client id. Stored on the server and never sent to visitors."
+        },
         "verification_discordBotToken": {
           "label": "Discord bot token",
           "hint": "Free at discord.com/developers: create an application, add a bot, copy its token and invite that bot to your server. Reading members needs no privileged intent. A username the bot cannot resolve is reported as unchecked, never as a refusal."
@@ -1430,14 +1518,6 @@
       "uploadImage": "Upload image",
       "imageUploadedToast": "Image uploaded. Save to apply.",
       "imageUploadFailed": "Upload failed. Please try again.",
-      "uploadErrors": {
-        "unauthorized": "Sign in to upload files.",
-        "rateLimited": "Too many uploads. Please try again later.",
-        "invalidBody": "Invalid upload body.",
-        "noFile": "No file provided.",
-        "unsupportedType": "Unsupported file type. Allowed: PNG, JPEG, WEBP, GIF.",
-        "tooLarge": "File is too large. Maximum size is {maxMb} MB."
-      },
       "secretConfigured": "Configured",
       "secretNotConfigured": "Not configured",
       "secretReplacePlaceholder": "Paste a new value to replace it",
@@ -1567,5 +1647,71 @@
     "MUSIC": "Listen to music",
     "VIDEO": "Watch a video",
     "EMAIL": "Collect email address"
+  },
+  "platforms": {
+    "youtube": "YouTube",
+    "instagram": "Instagram",
+    "facebook": "Facebook",
+    "tiktok": "TikTok",
+    "discord": "Discord",
+    "spotify": "Spotify",
+    "none": "Website"
+  },
+  "uploads": {
+    "errors": {
+      "unauthorized": "Sign in to upload files.",
+      "rateLimited": "Too many uploads. Please try again later.",
+      "invalidBody": "Invalid upload body.",
+      "noFile": "No file provided.",
+      "unsupportedType": "Unsupported file type. Allowed: PNG, JPEG, WEBP, GIF.",
+      "unsupportedFileType": "Unsupported file type.",
+      "tooLarge": "File is too large. Maximum size is {maxMb} MB."
+    }
+  },
+  "exports": {
+    "users": [
+      "ID",
+      "Name",
+      "Email",
+      "Role",
+      "Status",
+      "Email verified",
+      "Links",
+      "Created"
+    ],
+    "links": [
+      "ID",
+      "Title",
+      "Slug",
+      "Status",
+      "Content type",
+      "Owner email",
+      "Sessions",
+      "Events",
+      "Email leads",
+      "Created"
+    ],
+    "leads": [
+      "Email",
+      "Consented at",
+      "Source link",
+      "Source title"
+    ],
+    "linkLeads": [
+      "Email",
+      "Consented at",
+      "Source link"
+    ],
+    "errors": {
+      "unauthorized": "Unauthorized",
+      "forbidden": "Forbidden",
+      "notFound": "Not found"
+    },
+    "guest": "Guest"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "description": "The page you're looking for doesn't exist or has moved.",
+    "backHome": "Back to home"
   }
 }

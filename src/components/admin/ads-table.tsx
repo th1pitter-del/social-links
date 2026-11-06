@@ -100,6 +100,7 @@ export function AdsTable({ initial }: { initial: AdUnitData[] }) {
   const router = useRouter()
   const t = useTranslations('admin.ads')
   const tc = useTranslations('admin.common')
+  const uploadT = useTranslations('uploads.errors')
   const [ads, setAds] = useState<AdUnitData[]>(initial)
   const [pending, setPending] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
@@ -140,15 +141,27 @@ export function AdsTable({ initial }: { initial: AdUnitData[] }) {
     setDialogOpen(true)
   }
 
+  function uploadError(data: { error?: string; code?: string; maxMb?: number }) {
+    if (data.code && uploadT.has(data.code)) {
+      return uploadT(data.code, { maxMb: data.maxMb ?? '' })
+    }
+    return t('imageUploadFailed')
+  }
+
   async function uploadImage(file: File) {
     setUploading(true)
     try {
       const body = new FormData()
       body.append('file', file)
       const response = await fetch('/api/uploads', { method: 'POST', body })
-      const data = (await response.json()) as { url?: string; error?: string }
+      const data = (await response.json()) as {
+        url?: string
+        error?: string
+        code?: string
+        maxMb?: number
+      }
       if (!response.ok || !data.url) {
-        toast.error(data.error ?? t('imageUploadFailed'))
+        toast.error(uploadError(data))
         return
       }
       setForm((current) => ({ ...current, imageUrl: data.url as string }))

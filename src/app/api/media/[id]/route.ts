@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { getTranslations } from 'next-intl/server'
 
 import { getMediaAsset, readMediaBytes } from '@/lib/media'
 
@@ -11,13 +12,14 @@ export async function GET(
 ) {
   const { id } = await context.params
   const asset = await getMediaAsset(id)
+  const t = await getTranslations('errors')
   if (!asset) {
-    return NextResponse.json({ error: 'Not found' }, { status: 404 })
+    return NextResponse.json({ error: t('fileNotFound') }, { status: 404 })
   }
 
   const data = await readMediaBytes(id).catch(() => null)
   if (!data) {
-    return NextResponse.json({ error: 'Not found' }, { status: 404 })
+    return NextResponse.json({ error: t('fileNotFound') }, { status: 404 })
   }
 
   return new Response(new Blob([data as unknown as BlobPart], { type: asset.mimeType }), {

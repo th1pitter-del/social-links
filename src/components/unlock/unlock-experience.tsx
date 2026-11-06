@@ -3,13 +3,14 @@
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useTranslations } from 'next-intl'
-import { Check, CheckCircle2, Download, ExternalLink, Eye, FileLock, FileText, Loader2, Lock, Mail, Share2, Unlock } from 'lucide-react'
+import { useLocale, useTranslations } from 'next-intl'
+import { Check, CheckCircle2, Download, ExternalLink, Eye, FileLock, FileText, Loader2, Lock, LogIn, Mail, Share2, Unlock } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
 import { PlatformGlyph, platformTint } from '@/components/brand-icon'
+import { formatBytes, formatNumber } from '@/lib/format'
 import { cn } from 'cn'
 import {
   claimContent,
@@ -74,6 +75,7 @@ export function UnlockExperience({
   viewCount = 0,
   unlockCount = 0,
   steps = [],
+  notice = null,
 }: {
   slug: string
   title: string
@@ -84,12 +86,14 @@ export function UnlockExperience({
   viewCount?: number
   unlockCount?: number
   steps?: UnlockStepPreview[]
+  notice?: string | null
 }) {
   const t = useTranslations('unlock')
+  const locale = useLocale()
   const router = useRouter()
   const [state, setState] = useState<UnlockState | null>(null)
   const [busy, setBusy] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(notice)
   const [email, setEmail] = useState('')
   const [consent, setConsent] = useState(false)
   const [profile, setProfile] = useState('')
@@ -240,12 +244,20 @@ export function UnlockExperience({
   const started = Boolean(state)
   const expired = Boolean(state?.expired)
   const ready = Boolean(state?.canUnlock)
-  // Same slot, same shape, four possible meanings.
+  // Same slot, same shape, five possible meanings.
   const ctaLabel = !started
     ? t('start')
     : ready && state?.requiresProfileConfirm
       ? t('confirmButton')
-      : t('unlockButton')
+      : ready && state?.requiresAccountConfirm
+        ? t('connectAccount')
+        : t('unlockButton')
+  // The account check is a real navigation to the provider, so it is a link
+  // rather than a scripted redirect and survives a slow connection.
+  const connectHref =
+    ready && !state?.requiresProfileConfirm && state?.requiresAccountConfirm
+      ? `/api/verify/start?token=${encodeURIComponent(state.token)}`
+      : null
 
   const actionSteps: StepAction[] = state
     ? state.actions.map((action) => ({ ...action }))
@@ -307,12 +319,16 @@ export function UnlockExperience({
               <div className="flex items-center gap-6">
                 <div className="flex items-center gap-1.5">
                   <Unlock className="size-3.5 text-muted-foreground" />
-                  <span className="text-sm font-medium tabular-nums">{unlockCount}</span>
+                  <span className="text-sm font-medium tabular-nums">
+                    {formatNumber(locale, unlockCount)}
+                  </span>
                   <span className="text-xs text-muted-foreground">{t('unlocks')}</span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <Eye className="size-3.5 text-muted-foreground" />
-                  <span className="text-sm font-medium tabular-nums">{viewCount}</span>
+                  <span className="text-sm font-medium tabular-nums">
+                    {formatNumber(locale, viewCount)}
+                  </span>
                   <span className="text-xs text-muted-foreground">{t('views')}</span>
                 </div>
               </div>
@@ -517,21 +533,37 @@ export function UnlockExperience({
                     reveals depending on where the visitor stands. It matches a task
                     row so it reads as the next row rather than a smaller control. */}
                 <div className="relative mx-auto mt-3 h-[3.25rem] w-[92%]">
-                  <Button
-                    size="sm"
-                    // Neutral until the tasks are all in, lime the moment the reward
-                    // is real: the colour itself is the progress signal.
-                    variant={ready ? 'default' : 'secondary'}
-                    onClick={handlePrimary}
-                    disabled={busy || expired}
-                    className={cn(
-                      'absolute inset-0 h-full rounded-xl text-sm [&_svg]:size-4',
-                      'transition-[background-color,color] duration-500',
-                    )}
-                  >
-                    {busy ? <Loader2 className="animate-spin" /> : ready ? <Unlock /> : <Lock />}
-                    {ctaLabel}
-                  </Button>
+                  {connectHref ? (
+                    <Button
+                      size="sm"
+                      asChild
+                      className={cn(
+                        'absolute inset-0 h-full rounded-xl text-sm [&_svg]:size-4',
+                        'transition-[background-color,color] duration-500',
+                      )}
+                    >
+                      <a href={connectHref}>
+                        <LogIn />
+                        {ctaLabel}
+                      </a>
+                    </Button>
+                  ) : (
+                    <Button
+                      size="sm"
+                      // Neutral until the tasks are all in, lime the moment the reward
+                      // is real: the colour itself is the progress signal.
+                      variant={ready ? 'default' : 'secondary'}
+                      onClick={handlePrimary}
+                      disabled={busy || expired}
+                      className={cn(
+                        'absolute inset-0 h-full rounded-xl text-sm [&_svg]:size-4',
+                        'transition-[background-color,color] duration-500',
+                      )}
+                    >
+                      {busy ? <Loader2 className="animate-spin" /> : ready ? <Unlock /> : <Lock />}
+                      {ctaLabel}
+                    </Button>
+                  )}
                 </div>
 
                 {/* The quiet confirmation only exists once it has been asked for, so
@@ -585,7 +617,7 @@ export function UnlockExperience({
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-sm font-medium">{claimed.file.filename}</p>
                       <p className="text-xs text-muted-foreground">
-                        {(claimed.file.size / (1024 * 1024)).toFixed(2)} MB
+                        {formatBytes(locale, claimed.file.size)}
                       </p>
                     </div>
                   </div>

@@ -1,3 +1,6 @@
+import { getTranslations } from 'next-intl/server'
+
+import { actionLabel, platformLabel } from '@/lib/action-label'
 import { prisma } from '@/lib/prisma'
 
 export type ActionMixItem = { label: string; value: number; percent: number }
@@ -20,13 +23,32 @@ export async function getActionMix(
 
   const actions = await prisma.linkAction.findMany({
     where: { id: { in: grouped.map((row) => row.linkActionId) } },
-    select: { id: true, label: true, option: { select: { label: true, platform: { select: { label: true } } } } },
+    select: {
+      id: true,
+      label: true,
+      option: {
+        select: {
+          key: true,
+          label: true,
+          platform: { select: { key: true, label: true } },
+        },
+      },
+    },
   })
+  const [actionCopy, platformCopy] = await Promise.all([
+    getTranslations('actions'),
+    getTranslations('platforms'),
+  ])
   const labels = new Map(
-    actions.map((action) => [
-      action.id,
-      action.option?.platform?.label ?? action.option?.label ?? action.label?.trim() ?? '',
-    ]),
+    actions.map((action) => {
+      if (action.option?.platform) {
+        return [action.id, platformLabel(action.option.platform, platformCopy)]
+      }
+      if (action.option) {
+        return [action.id, actionLabel(action.option, actionCopy)]
+      }
+      return [action.id, action.label?.trim() ?? '']
+    }),
   )
 
   const totals = new Map<string, number>()

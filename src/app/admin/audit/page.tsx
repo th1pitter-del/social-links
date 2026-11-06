@@ -24,6 +24,11 @@ export default async function AdminAuditPage({
   const { q } = await searchParams
   const query = (q ?? '').trim().slice(0, 100)
 
+  const actionLabel = (code: string) =>
+    t.has(`audit.actionLabels.${code}`) ? t(`audit.actionLabels.${code}`) : code
+  const targetLabel = (type: string) =>
+    t.has(`audit.targetLabels.${type}`) ? t(`audit.targetLabels.${type}`) : type
+
   const logs = await prisma.auditLog.findMany({
     where: query
       ? {
@@ -80,9 +85,11 @@ export default async function AdminAuditPage({
                       {<Timestamp value={log.createdAt} />}
                     </td>
                     <td className="px-5 py-3">{log.actorEmail ?? log.actorName ?? log.actorId}</td>
-                    <td className="px-5 py-3 font-medium">{log.action}</td>
+                    <td className="px-5 py-3 font-medium">{actionLabel(log.action)}</td>
                     <td className="hidden px-5 py-3 text-muted-foreground sm:table-cell">
-                      {log.targetType}:{log.targetId?.slice(0, 8) ?? '—'}
+                      {log.targetType
+                        ? `${targetLabel(log.targetType)}:${log.targetId?.slice(0, 8) ?? '—'}`
+                        : '—'}
                     </td>
                   </tr>
                 ))}

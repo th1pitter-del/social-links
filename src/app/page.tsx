@@ -3,7 +3,7 @@ import {
   ArrowRight,
   BadgeCheck,
 } from 'lucide-react'
-import { getTranslations } from 'next-intl/server'
+import { getLocale, getTranslations } from 'next-intl/server'
 
 import { SiteFooter } from '@/components/site-footer'
 import { SiteHeader } from '@/components/site-header'
@@ -17,7 +17,8 @@ import { UnlockDemo, type DemoStep } from '@/components/home/unlock-demo'
 import { Reveal } from '@/components/motion/reveal'
 import { getSession } from '@/lib/session'
 import { getEnabledPlatforms } from '@/lib/action-catalog'
-import { actionLabel } from '@/lib/action-label'
+import { actionLabel, platformLabel } from '@/lib/action-label'
+import { formatNumber } from '@/lib/format'
 
 export const dynamic = 'force-dynamic'
 
@@ -30,16 +31,28 @@ export const dynamic = 'force-dynamic'
  * prefers-reduced-motion, and never replaces the text it animates.
  */
 export default async function HomePage() {
-  const [t, nav, common, unlockCopy, motionCopy, actionCopy, session, platformRows] =
-    await Promise.all([
+  const [
+    t,
+    nav,
+    common,
+    unlockCopy,
+    motionCopy,
+    actionCopy,
+    platformCopy,
+    session,
+    platformRows,
+    locale,
+  ] = await Promise.all([
       getTranslations('home'),
       getTranslations('nav'),
       getTranslations('common'),
       getTranslations('unlock'),
       getTranslations('motion'),
       getTranslations('actions'),
+      getTranslations('platforms'),
       getSession(),
       getEnabledPlatforms(),
+      getLocale(),
     ])
   const signedIn = Boolean(session)
 
@@ -53,7 +66,7 @@ export default async function HomePage() {
 
   const platforms: DemoPlatform[] = platformRows.map((platform) => ({
     key: platform.key,
-    label: platform.label,
+    label: platformLabel(platform, platformCopy),
     icon: platform.icon,
     actions: platform.actionOptions.map((option) => ({
       key: option.key,
@@ -67,7 +80,7 @@ export default async function HomePage() {
     { value: t('stats.unlocksValue'), label: t('stats.unlocksLabel') },
     // Counted, not written: this is the same set of enabled platforms the ring
     // below walks through, so an admin switching one on moves this number.
-    { value: `${platforms.length}`, label: t('stats.platformsLabel') },
+    { value: formatNumber(locale, platforms.length), label: t('stats.platformsLabel') },
   ]
 
   const flowNodes = [

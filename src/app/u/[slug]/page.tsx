@@ -6,12 +6,13 @@ import { getTranslations } from 'next-intl/server'
 
 import { UnlockExperience, type UnlockStepPreview } from '@/components/unlock/unlock-experience'
 import { Button } from '@/components/ui/button'
+import { actionLabel } from '@/lib/action-label'
 import { getSession } from '@/lib/session'
 import { getPublicUnlockLink, isExpired, recordShortLinkVisit, type PublicUnlockLink } from '@/lib/unlock'
 
 type PageProps = {
   params: Promise<{ slug: string }>
-  searchParams: Promise<{ token?: string; preview?: string }>
+  searchParams: Promise<{ token?: string; preview?: string; verify?: string }>
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -22,22 +23,31 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
   return {
     title: `${link.title} · ${t('metaTitleSuffix')}`,
-    description: link.description ?? t('metaDescription', { owner: link.ownerName }),
+    description: link.description ?? t('metaDescription', { owner: link.ownerName ?? t('guestOwner') }),
     robots: { index: false, follow: false },
   }
 }
 
 export default async function UnlockPage({ params, searchParams }: PageProps) {
   const { slug } = await params
-  const { token, preview } = await searchParams
+  const { token, preview, verify } = await searchParams
   const t = await getTranslations('unlock')
+
+  // A return trip from the account check either confirms the step silently or
+  // says, in one quiet line, that the account does not show it yet.
+  const notice =
+    verify === 'notdone'
+      ? t('verifyNotDone')
+      : verify === 'unavailable'
+        ? t('verifyUnavailable')
+        : null
 
   const link = await getPublicUnlockLink(slug)
   if (!link) {
     notFound()
   }
 
-  const steps = toSteps(link)
+  const steps = toSteps(link, await getTranslations('actions'))
   const stats = { viewCount: link.viewCount, unlockCount: link.unlockCount }
 
   if (link.status === 'DISABLED') {
@@ -72,6 +82,7 @@ export default async function UnlockPage({ params, searchParams }: PageProps) {
         coverImage={link.coverImage}
         initialToken={token && token.length <= 128 ? token : null}
         steps={steps}
+        notice={notice}
         {...stats}
         preview
       />
@@ -103,15 +114,23 @@ export default async function UnlockPage({ params, searchParams }: PageProps) {
       coverImage={link.coverImage}
       initialToken={token && token.length <= 128 ? token : null}
       steps={steps}
+      notice={notice}
       {...stats}
     />
   )
 }
 
-function toSteps(link: PublicUnlockLink): UnlockStepPreview[] {
+function toSteps(
+  link: PublicUnlockLink,
+  messages: Parameters<typeof actionLabel>[1],
+): UnlockStepPreview[] {
   return link.actions.map((action) => ({
     id: action.id,
-    label: action.label?.trim() || action.optionLabel || action.type,
+    label:
+      action.label?.trim() ||
+      (action.optionLabel
+        ? actionLabel({ key: action.type, label: action.optionLabel }, messages)
+        : action.type),
     platform: action.platform,
     icon: action.icon,
     behavior: action.behavior,

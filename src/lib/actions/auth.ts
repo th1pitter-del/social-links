@@ -21,16 +21,6 @@ async function clientKey(scope: string) {
   return `${scope}:${ip}`
 }
 
-function firstFieldError(fieldErrors: unknown): Record<string, string> | undefined {
-  if (!fieldErrors || typeof fieldErrors !== 'object') return undefined
-  const result: Record<string, string> = {}
-  for (const [key, value] of Object.entries(fieldErrors as Record<string, unknown>)) {
-    const message = Array.isArray(value) ? String(value[0]) : String(value)
-    if (message && message !== 'undefined') result[key] = message
-  }
-  return Object.keys(result).length > 0 ? result : undefined
-}
-
 export async function signUpAction(
   _prev: AuthFormState,
   formData: FormData,
@@ -59,13 +49,16 @@ export async function signUpAction(
     const result = await auth.api.signUpEmail({ body: { name, email, password } })
     userId = result.user.id
   } catch (error) {
-    const fieldErrors = firstFieldError(
-      (error as { body?: { fieldErrors?: unknown } })?.body?.fieldErrors,
-    )
-    return {
-      error: fieldErrors ? undefined : t('signUpFailed'),
-      fieldErrors,
+    // Provider messages are English-only, so surface a translated duplicate
+    // hint and fall back to the generic failure otherwise.
+    const code = (error as { body?: { code?: string } })?.body?.code
+    if (code?.startsWith('USER_ALREADY_EXISTS')) {
+      return {
+        error: t('userAlreadyExists'),
+        fieldErrors: { email: t('userAlreadyExists') },
+      }
     }
+    return { error: t('signUpFailed') }
   }
 
   // Move any links created as a guest onto the new account.

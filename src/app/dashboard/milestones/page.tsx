@@ -4,6 +4,7 @@ import { getLocale, getTranslations } from 'next-intl/server'
 
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
+import { formatPercent } from '@/lib/format'
 import { prisma } from '@/lib/prisma'
 import { requireUser } from '@/lib/session'
 
@@ -99,11 +100,11 @@ export default async function MilestonesPage() {
               </div>
               <div className="mt-4 space-y-1.5">
                 <div className="flex items-center justify-between text-xs text-muted-foreground">
-                  <span>
+                  <span dir="ltr">
                     {Math.min(milestone.value, milestone.target).toLocaleString(locale)} /{' '}
                     {milestone.target.toLocaleString(locale)}
                   </span>
-                  <span>{percent}%</span>
+                  <span>{formatPercent(locale, percent)}</span>
                 </div>
                 <Progress value={percent} />
               </div>

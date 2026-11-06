@@ -27,7 +27,7 @@ export type PublicUnlockLink = {
   contentType: 'URL' | 'TEXT' | 'FILE'
   targetUrl: string | null
   expiresAt: Date | null
-  ownerName: string
+  ownerName: string | null
   actions: PublicAction[]
   viewCount: number
   unlockCount: number
@@ -77,7 +77,7 @@ export async function getPublicUnlockLink(slug: string): Promise<PublicUnlockLin
     contentType: link.contentType,
     targetUrl: link.targetUrl,
     expiresAt: link.expiresAt,
-    ownerName: link.owner?.name ?? 'Guest',
+    ownerName: link.owner?.name ?? null,
     actions: link.actions.map((action) => {
       const option = catalog.get(action.type)
       return {

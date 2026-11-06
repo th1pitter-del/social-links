@@ -1,6 +1,8 @@
 import type { ComponentType, ReactNode } from 'react'
+import { getLocale } from 'next-intl/server'
 
 import { cn } from 'cn'
+import { formatNumber } from '@/lib/format'
 
 const TONES = {
   indigo: {
@@ -42,7 +44,7 @@ const TONES = {
 
 export type StatTone = keyof typeof TONES
 
-export function StatCard({
+export async function StatCard({
   label,
   value,
   icon: Icon,
@@ -56,6 +58,8 @@ export function StatCard({
   tone?: StatTone
 }) {
   const colors = TONES[tone]
+  const display =
+    typeof value === 'number' ? formatNumber(await getLocale(), value) : value
 
   return (
     <div
@@ -71,7 +75,7 @@ export function StatCard({
       <div className="flex items-start justify-between gap-3 ps-1.5">
         <div className="min-w-0">
           <p className="text-xs font-medium tracking-wide text-muted-foreground uppercase">{label}</p>
-          <p className="mt-2 text-2xl font-semibold tracking-tight text-foreground">{value}</p>
+          <p className="mt-2 text-2xl font-semibold tracking-tight text-foreground">{display}</p>
           {hint ? <p className="mt-1 text-xs text-muted-foreground">{hint}</p> : null}
         </div>
         <span

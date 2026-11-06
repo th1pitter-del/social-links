@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { Download, Mail } from 'lucide-react'
-import { getTranslations } from 'next-intl/server'
+import { getLocale, getTranslations } from 'next-intl/server'
 
 import { DeleteLeadButton } from '@/components/leads/delete-lead-button'
 import { Button } from '@/components/ui/button'
@@ -16,6 +16,9 @@ export async function generateMetadata() {
 export default async function LeadsPage() {
   const session = await requireUser()
   const t = await getTranslations('dashboard.leads')
+  const locale = await getLocale()
+  const countFormatter = new Intl.NumberFormat(locale)
+  const dateFormatter = new Intl.DateTimeFormat(locale, { dateStyle: 'medium' })
   const leads = await prisma.emailLead.findMany({
     where: { link: { ownerId: session.user.id } },
     orderBy: { createdAt: 'desc' },
@@ -51,14 +54,18 @@ export default async function LeadsPage() {
             <span className="text-sm">{t('statTotal')}</span>
             <Mail className="size-4" />
           </div>
-          <p className="mt-3 text-3xl font-semibold tracking-tight">{leads.length}</p>
+          <p className="mt-3 text-3xl font-semibold tracking-tight">
+            {countFormatter.format(leads.length)}
+          </p>
         </div>
         <div className="rounded-2xl border bg-card p-5">
           <div className="flex items-center justify-between text-muted-foreground">
             <span className="text-sm">{t('statUnique')}</span>
             <Mail className="size-4" />
           </div>
-          <p className="mt-3 text-3xl font-semibold tracking-tight">{uniqueEmails}</p>
+          <p className="mt-3 text-3xl font-semibold tracking-tight">
+            {countFormatter.format(uniqueEmails)}
+          </p>
         </div>
       </div>
 
@@ -94,7 +101,7 @@ export default async function LeadsPage() {
                       </Link>
                     </td>
                     <td className="px-5 py-3 text-muted-foreground">
-                      {lead.consentAt.toISOString().slice(0, 10)}
+                      {dateFormatter.format(lead.consentAt)}
                     </td>
                     <td className="px-5 py-3 text-right">
                       <DeleteLeadButton id={lead.id} action={deleteEmailLead} />

@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server'
+import { getTranslations } from 'next-intl/server'
 
 import { prisma } from '@/lib/prisma'
 import { getSession } from '@/lib/session'
@@ -15,12 +16,13 @@ function escapeCsvValue(value: unknown) {
  * status filters as the users table. Authorization is enforced server-side.
  */
 export async function GET(request: NextRequest) {
+  const t = await getTranslations('exports')
   const session = await getSession()
   if (!session) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    return NextResponse.json({ error: t('errors.unauthorized') }, { status: 401 })
   }
   if (session.user.role !== 'ADMIN') {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    return NextResponse.json({ error: t('errors.forbidden') }, { status: 403 })
   }
 
   const url = new URL(request.url)
@@ -49,7 +51,7 @@ export async function GET(request: NextRequest) {
     },
   })
 
-  const rows: string[] = ['id,name,email,role,status,email_verified,links,created_at']
+  const rows: string[] = [(t.raw('users') as string[]).join(',')]
   for (const user of users) {
     rows.push(
       [

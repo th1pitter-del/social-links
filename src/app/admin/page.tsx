@@ -22,6 +22,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { getActionMix } from '@/lib/action-mix'
 import { buildHeatBuckets, windowStart, HEAT_DAYS } from '@/lib/activity-buckets'
+import { formatNumber, formatPercent } from '@/lib/format'
 import { prisma } from '@/lib/prisma'
 
 export async function generateMetadata() {
@@ -141,7 +142,7 @@ export default async function AdminOverviewPage() {
     {
       label: t('overview.completedUnlocks'),
       value: completed,
-      hint: t('overview.completedHint', { percent: conversion }),
+      hint: t('overview.completedHint', { percent: formatPercent(locale, conversion) }),
       icon: CheckCircle2,
       tone: 'emerald' as const,
     },
@@ -156,7 +157,7 @@ export default async function AdminOverviewPage() {
     <div className="space-y-6">
       <PageHeader
         title={t('overview.title')}
-        description={t('overview.description', { percent: conversion })}
+        description={t('overview.description', { percent: formatPercent(locale, conversion) })}
       />
 
       <div className="grid gap-4 lg:grid-cols-3">
@@ -166,6 +167,7 @@ export default async function AdminOverviewPage() {
             value={completed.toLocaleString(locale)}
             label={t('overview.kpiLabel')}
             percentage={conversion}
+            locale={locale}
           />
         </div>
         <StatCard
@@ -343,7 +345,7 @@ export default async function AdminOverviewPage() {
                           />
                         </td>
                         <td className="px-5 py-3 text-end font-medium tabular-nums">
-                          {group._count.linkId}
+                          {formatNumber(locale, group._count.linkId)}
                         </td>
                       </tr>
                     )
@@ -365,6 +367,7 @@ export default async function AdminOverviewPage() {
               <ModelDistribution
                 items={actionMix.items}
                 valueLabel={t('overview.completedSteps', { count: actionMix.total })}
+                locale={locale}
               />
             )}
           </PanelContent>

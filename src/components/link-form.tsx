@@ -39,6 +39,8 @@ import {
 } from '@/components/ui/dialog'
 import { createGuestLink, createLink, updateLink } from '@/lib/actions/links'
 import { ACTION_OPTION_DEFAULTS, type ActionOptionView } from '@/lib/action-defaults'
+import { actionLabel, platformLabel } from '@/lib/action-label'
+import { formatNumber } from '@/lib/format'
 import type { LinkInput } from '@/lib/validation'
 
 const MAX_ACTIONS = 10
@@ -85,6 +87,10 @@ export function LinkForm({
   centered?: boolean
 }) {
   const t = useTranslations('linkForm')
+  const actionT = useTranslations('actions')
+  const platformT = useTranslations('platforms')
+  const uploadT = useTranslations('uploads.errors')
+  const locale = useLocale()
   const options: ActionOptionView[] =
     actionTypes && actionTypes.length > 0
       ? actionTypes
@@ -97,7 +103,10 @@ export function LinkForm({
           behavior: option.behavior,
         }))
   const optionFor = (type: string) => options.find((option) => option.key === type)
-  const labelFor = (type: string) => optionFor(type)?.label ?? type
+  const labelFor = (type: string) => {
+    const option = optionFor(type)
+    return option ? actionLabel(option, actionT) : type
+  }
   const behaviorFor = (type: string) => optionFor(type)?.behavior ?? 'URL'
 
   const router = useRouter()
@@ -168,12 +177,16 @@ export function LinkForm({
   const searchResults = useMemo(() => {
     const query = pickerQuery.trim().toLowerCase()
     if (!query) return []
-    return options.filter(
-      (option) =>
-        option.label.toLowerCase().includes(query) ||
-        (option.platformLabel ?? option.platform ?? '').toLowerCase().includes(query),
-    )
-  }, [options, pickerQuery])
+    return options.filter((option) => {
+      const platform = option.platform
+        ? platformLabel({ key: option.platform, label: option.platformLabel }, platformT)
+        : t('generalPlatform')
+      return (
+        actionLabel(option, actionT).toLowerCase().includes(query) ||
+        platform.toLowerCase().includes(query)
+      )
+    })
+  }, [options, pickerQuery, actionT, platformT, t])
 
   const popularOptions = useMemo(
     () =>
@@ -186,7 +199,9 @@ export function LinkForm({
   const platformGroups = useMemo(() => {
     const groups = new Map<string, ActionOptionView[]>()
     for (const option of options) {
-      const label = option.platformLabel ?? option.platform ?? t('generalPlatform')
+      const label = option.platform
+        ? platformLabel({ key: option.platform, label: option.platformLabel }, platformT)
+        : t('generalPlatform')
       const list = groups.get(label)
       if (list) list.push(option)
       else groups.set(label, [option])
@@ -194,13 +209,17 @@ export function LinkForm({
     return [...groups.entries()]
       .map(([label, items]) => ({ label, items }))
       .sort((a, b) => b.items.length - a.items.length || a.label.localeCompare(b.label))
-  }, [options, t])
+  }, [options, t, platformT])
 
   const activeOptions = searching
     ? searchResults
     : pickerPlatform === 'popular'
       ? popularOptions
       : (platformGroups.find((group) => group.label === pickerPlatform)?.items ?? [])
+
+  function uploadError(code?: string, maxMb?: number) {
+    return code && uploadT.has(code) ? uploadT(code, { maxMb: maxMb ?? '' }) : t('uploadFailed')
+  }
 
   async function uploadCover(file: File) {
     setUploading(true)
@@ -209,10 +228,10 @@ export function LinkForm({
       body.append('file', file)
       const response = await fetch('/api/uploads', { method: 'POST', body })
       const payload = (await response.json().catch(() => null)) as
-        | { url?: string; error?: string }
+        | { url?: string; error?: string; code?: string; maxMb?: number }
         | null
       if (!response.ok || !payload?.url) {
-        toast.error(payload?.error ?? t('uploadFailed'))
+        toast.error(uploadError(payload?.code, payload?.maxMb))
         return
       }
       update('coverImage', payload.url)
@@ -232,10 +251,10 @@ export function LinkForm({
       body.append('file', file)
       const response = await fetch('/api/uploads/file', { method: 'POST', body })
       const payload = (await response.json().catch(() => null)) as
-        | { id?: string; error?: string }
+        | { id?: string; error?: string; code?: string; maxMb?: number }
         | null
       if (!response.ok || !payload?.id) {
-        toast.error(payload?.error ?? t('uploadFailed'))
+        toast.error(uploadError(payload?.code, payload?.maxMb))
         return
       }
       setValues((current) => ({ ...current, fileId: payload.id as string, fileName: file.name }))
@@ -538,7 +557,10 @@ export function LinkForm({
                               <p className="truncate text-sm font-medium">{labelFor(action.type)}</p>
                               {option?.platform ? (
                                 <Badge variant="secondary" className="hidden sm:inline-flex">
-                                  {option.platformLabel ?? option.platform}
+                                  {platformLabel(
+                                    { key: option.platform, label: option.platformLabel },
+                                    platformT,
+                                  )}
                                 </Badge>
                               ) : null}
                               <Button
@@ -779,7 +801,9 @@ export function LinkForm({
                       className="size-4 shrink-0 text-muted-foreground"
                     />
                     <span className="min-w-0 flex-1 truncate">{group.label}</span>
-                    <span className="text-xs text-muted-foreground">{group.items.length}</span>
+                    <span className="text-xs text-muted-foreground">
+                      {formatNumber(locale, group.items.length)}
+                    </span>
                   </button>
                 )
               })}
@@ -794,7 +818,9 @@ export function LinkForm({
                       ? t('popularActions')
                       : pickerPlatform}
                 </p>
-                <span className="text-xs text-muted-foreground">{activeOptions.length}</span>
+                <span className="text-xs text-muted-foreground">
+                  {formatNumber(locale, activeOptions.length)}
+                </span>
               </div>
 
               {activeOptions.length === 0 ? (
@@ -820,14 +846,19 @@ export function LinkForm({
                           />
                         </span>
                         <span className="min-w-0 flex-1">
-                          <span className="block truncate text-sm">{option.label}</span>
+                          <span className="block truncate text-sm">
+                            {actionLabel(option, actionT)}
+                          </span>
                           <span className="block text-xs text-muted-foreground">
                             {option.behavior === 'EMAIL' ? t('collectsEmail') : t('opensLink')}
                           </span>
                         </span>
                         {searching && option.platform ? (
                           <Badge variant="secondary">
-                            {option.platformLabel ?? option.platform}
+                            {platformLabel(
+                              { key: option.platform, label: option.platformLabel },
+                              platformT,
+                            )}
                           </Badge>
                         ) : null}
                         <Plus className="size-4 shrink-0 text-muted-foreground" />
@@ -852,6 +883,7 @@ function LinkPreview({
   options: ActionOptionView[]
 }) {
   const t = useTranslations('linkForm')
+  const actionT = useTranslations('actions')
   const locale = useLocale()
   const optionFor = (type: string) => options.find((option) => option.key === type)
   const title = values.title.trim() || t('previewTitleFallback')
@@ -937,7 +969,9 @@ function LinkPreview({
             <ol className="space-y-2">
               {actions.map((action, index) => {
                 const option = optionFor(action.type)
-                const label = action.label.trim() || option?.label || action.type
+                const label =
+                  action.label.trim() ||
+                  (option ? actionLabel(option, actionT) : action.type)
                 return (
                   <li
                     key={index}

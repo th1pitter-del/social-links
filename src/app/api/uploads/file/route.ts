@@ -12,7 +12,10 @@ const MAX_FILENAME_FIELD = 200
 export async function POST(request: Request) {
   const session = await getSession()
   if (!session) {
-    return NextResponse.json({ error: 'Sign in to upload files.' }, { status: 401 })
+    return NextResponse.json(
+      { code: 'unauthorized', error: 'Sign in to upload files.' },
+      { status: 401 },
+    )
   }
 
   const limited = await consumeBySetting(
@@ -23,7 +26,7 @@ export async function POST(request: Request) {
   )
   if (!limited.ok) {
     return NextResponse.json(
-      { error: 'Too many uploads. Please try again later.' },
+      { code: 'rateLimited', error: 'Too many uploads. Please try again later.' },
       { status: 429, headers: { 'Retry-After': String(limited.retryAfterSeconds) } },
     )
   }
@@ -32,22 +35,26 @@ export async function POST(request: Request) {
   try {
     form = await request.formData()
   } catch {
-    return NextResponse.json({ error: 'Invalid upload body.' }, { status: 400 })
+    return NextResponse.json({ code: 'invalidBody', error: 'Invalid upload body.' }, { status: 400 })
   }
 
   const file = form.get('file')
   if (!(file instanceof File)) {
-    return NextResponse.json({ error: 'No file provided.' }, { status: 400 })
+    return NextResponse.json({ code: 'noFile', error: 'No file provided.' }, { status: 400 })
   }
 
   if (!isAllowedLockedFileType(file.type)) {
-    return NextResponse.json({ error: 'Unsupported file type.' }, { status: 415 })
+    return NextResponse.json(
+      { code: 'unsupportedFileType', error: 'Unsupported file type.' },
+      { status: 415 },
+    )
   }
 
   const maxBytes = await getFileMaxBytes()
   if (file.size > maxBytes) {
+    const maxMb = Math.floor(maxBytes / (1024 * 1024))
     return NextResponse.json(
-      { error: `File is too large. Maximum size is ${Math.floor(maxBytes / (1024 * 1024))} MB.` },
+      { code: 'tooLarge', maxMb, error: `File is too large. Maximum size is ${maxMb} MB.` },
       { status: 413 },
     )
   }

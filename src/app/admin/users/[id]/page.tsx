@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { getTranslations } from 'next-intl/server'
+import { getLocale, getTranslations } from 'next-intl/server'
 import { Activity, CalendarDays, Link2 } from 'lucide-react'
 
 import { EmptyState, Panel, PanelHeader } from '@/components/admin/panel'
@@ -10,6 +10,7 @@ import { UserDetailActions } from '@/components/admin/user-detail-actions'
 import { Timestamp } from '@/components/timestamp'
 import { Badge } from '@/components/ui/badge'
 import { prisma } from '@/lib/prisma'
+import { formatNumber } from '@/lib/format'
 import { requireAdmin } from '@/lib/session'
 
 export async function generateMetadata() {
@@ -24,6 +25,7 @@ export default async function AdminUserDetailPage({
 }) {
   const session = await requireAdmin()
   const t = await getTranslations('admin')
+  const locale = await getLocale()
   const { id } = await params
 
   const user = await prisma.user.findUnique({
@@ -162,10 +164,10 @@ export default async function AdminUserDetailPage({
                       </Badge>
                     </td>
                     <td className="hidden px-5 py-3 text-end text-muted-foreground md:table-cell tabular-nums">
-                      {link._count.unlocks}
+                      {formatNumber(locale, link._count.unlocks)}
                     </td>
                     <td className="hidden px-5 py-3 text-end text-muted-foreground md:table-cell tabular-nums">
-                      {link._count.abuseReports}
+                      {formatNumber(locale, link._count.abuseReports)}
                     </td>
                   </tr>
                 ))}

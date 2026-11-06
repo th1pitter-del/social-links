@@ -3,10 +3,11 @@
 import { useMemo, useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import { toast } from 'sonner'
 
 import { UserRowActions } from '@/components/admin/user-row-actions'
+import { formatNumber } from '@/lib/format'
 import { Badge } from '@/components/ui/badge'
 import { StatusPill } from '@/components/status-pill'
 import { Timestamp } from '@/components/timestamp'
@@ -33,6 +34,7 @@ export function AdminUsersTable({
 }) {
   const router = useRouter()
   const t = useTranslations('admin')
+  const locale = useLocale()
   const [selected, setSelected] = useState<Set<string>>(new Set())
   const [pending, startTransition] = useTransition()
 
@@ -140,7 +142,7 @@ export function AdminUsersTable({
                   </Badge>
                 </td>
                 <td className="hidden px-5 py-4 text-muted-foreground lg:table-cell tabular-nums">
-                  {user.linkCount}
+                  {formatNumber(locale, user.linkCount)}
                 </td>
                 <td className="hidden px-5 py-4 text-muted-foreground lg:table-cell tabular-nums">
                   <Timestamp value={new Date(user.createdAt)} withTime={false} />

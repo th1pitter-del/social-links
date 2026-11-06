@@ -2,7 +2,7 @@
 
 import { useMemo, useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import { Check, Loader2, Pencil, Search, Trash2, X } from 'lucide-react'
 import { toast } from 'sonner'
 
@@ -28,6 +28,8 @@ import {
   updateActionOptionLabel,
 } from '@/lib/actions/admin'
 import { ActionGlyph, PlatformGlyph } from '@/components/brand-icon'
+import { actionLabel, platformLabel } from '@/lib/action-label'
+import { formatNumber } from '@/lib/format'
 import type { Platform } from '@/lib/action-catalog'
 import { cn } from 'cn'
 
@@ -38,7 +40,13 @@ type ConfirmTarget =
 export function PlatformsTable({ initial }: { initial: Platform[] }) {
   const router = useRouter()
   const t = useTranslations('admin.platforms')
+  const locale = useLocale()
   const tc = useTranslations('admin.common')
+  const actionT = useTranslations('actions')
+  const platformT = useTranslations('platforms')
+  const platformName = (platform: { key: string; label: string }) =>
+    platformLabel(platform, platformT)
+  const actionName = (option: { key: string; label: string }) => actionLabel(option, actionT)
   const [platforms, setPlatforms] = useState<Platform[]>(initial)
   const [pending, setPending] = useState<string | null>(null)
   const [query, setQuery] = useState('')
@@ -57,10 +65,15 @@ export function PlatformsTable({ initial }: { initial: Platform[] }) {
     if (!q) return platforms
     return platforms.filter(
       (platform) =>
+        platformLabel(platform, platformT).toLowerCase().includes(q) ||
         platform.label.toLowerCase().includes(q) ||
-        platform.actionOptions.some((option) => option.label.toLowerCase().includes(q)),
+        platform.actionOptions.some(
+          (option) =>
+            actionLabel(option, actionT).toLowerCase().includes(q) ||
+            option.label.toLowerCase().includes(q),
+        ),
     )
-  }, [platforms, query])
+  }, [platforms, query, actionT, platformT])
 
   const active =
     platforms.find((platform) => platform.key === activeKey) ?? filtered[0] ?? platforms[0]
@@ -227,18 +240,18 @@ export function PlatformsTable({ initial }: { initial: Platform[] }) {
                   )}
                 >
                   <PlatformGlyph
-                    platform={platform.label}
+                    platform={platform.key}
                     icon={platform.icon}
                     className="size-4 shrink-0"
                   />
-                  <span className="truncate">{platform.label}</span>
+                  <span className="truncate">{platformName(platform)}</span>
                   {!platform.enabled ? (
                     <Badge variant="secondary" className="shrink-0">
                       {tc('off')}
                     </Badge>
                   ) : null}
                   <span className="ms-auto shrink-0 text-xs tabular-nums text-muted-foreground">
-                    {enabledCount}/{platform.actionOptions.length}
+                    {formatNumber(locale, enabledCount)}/{formatNumber(locale, platform.actionOptions.length)}
                   </span>
                 </button>
               )
@@ -262,7 +275,7 @@ export function PlatformsTable({ initial }: { initial: Platform[] }) {
                     active.enabled ? 'text-foreground' : 'text-muted-foreground',
                   )}
                 >
-                  <PlatformGlyph platform={active.label} icon={active.icon} className="size-4" />
+                  <PlatformGlyph platform={active.key} icon={active.icon} className="size-4" />
                 </span>
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
@@ -272,7 +285,7 @@ export function PlatformsTable({ initial }: { initial: Platform[] }) {
                         !active.enabled && 'text-muted-foreground',
                       )}
                     >
-                      {active.label}
+                      {platformName(active)}
                     </h2>
                     {!active.enabled ? <Badge variant="secondary">{tc('disabled')}</Badge> : null}
                     {active.system ? null : <Badge variant="outline">{tc('custom')}</Badge>}
@@ -293,9 +306,9 @@ export function PlatformsTable({ initial }: { initial: Platform[] }) {
                     type="button"
                     variant="ghost"
                     size="icon-sm"
-                    aria-label={t('deletePlatformAria', { label: active.label })}
+                    aria-label={t('deletePlatformAria', { label: platformName(active) })}
                     onClick={() =>
-                      setConfirm({ type: 'platform', key: active.key, label: active.label })
+                      setConfirm({ type: 'platform', key: active.key, label: platformName(active) })
                     }
                   >
                     <Trash2 />
@@ -307,7 +320,7 @@ export function PlatformsTable({ initial }: { initial: Platform[] }) {
                     checked={active.enabled}
                     disabled={pending === active.key}
                     onCheckedChange={(checked) => setEnabled(active.key, checked)}
-                    aria-label={t('enablePlatformAria', { label: active.label })}
+                    aria-label={t('enablePlatformAria', { label: platformName(active) })}
                   />
                 </span>
               </header>
@@ -331,7 +344,7 @@ export function PlatformsTable({ initial }: { initial: Platform[] }) {
                         <span className="flex min-w-0 flex-1 items-center gap-3">
                           <span className="flex size-8 shrink-0 items-center justify-center rounded-md bg-muted text-muted-foreground">
                             <ActionGlyph
-                              platform={active.label}
+                              platform={active.key}
                               icon={option.icon}
                               className="size-4"
                             />
@@ -348,7 +361,7 @@ export function PlatformsTable({ initial }: { initial: Platform[] }) {
                               onChange={(event) => setDraftLabel(event.target.value)}
                               maxLength={60}
                               autoFocus
-                              aria-label={t('displayLabelAria', { label: option.label })}
+                              aria-label={t('displayLabelAria', { label: actionName(option) })}
                               className="h-8 max-w-xs"
                             />
                             <button
@@ -383,12 +396,12 @@ export function PlatformsTable({ initial }: { initial: Platform[] }) {
                         >
                           <span className="flex size-8 shrink-0 items-center justify-center rounded-md bg-muted text-muted-foreground">
                             <ActionGlyph
-                              platform={active.label}
+                              platform={active.key}
                               icon={option.icon}
                               className="size-4"
                             />
                           </span>
-                          <span className="truncate">{option.label}</span>
+                          <span className="truncate">{actionName(option)}</span>
                           {option.behavior === 'EMAIL' ? (
                             <Badge variant="secondary" className="shrink-0">
                               {tc('email')}
@@ -398,7 +411,7 @@ export function PlatformsTable({ initial }: { initial: Platform[] }) {
                           <button
                             type="button"
                             onClick={() => startEditLabel(option.key, option.label)}
-                            aria-label={t('editLabelAria', { label: option.label })}
+                            aria-label={t('editLabelAria', { label: actionName(option) })}
                             className="flex size-7 shrink-0 items-center justify-center rounded-md text-muted-foreground opacity-0 transition-opacity hover:bg-muted hover:text-foreground focus-visible:opacity-100 group-hover:opacity-100"
                           >
                             <Pencil className="size-3.5" />
@@ -414,13 +427,13 @@ export function PlatformsTable({ initial }: { initial: Platform[] }) {
                             type="button"
                             variant="ghost"
                             size="icon-xs"
-                            aria-label={t('deleteActionAria', { label: option.label })}
+                            aria-label={t('deleteActionAria', { label: actionName(option) })}
                             className="opacity-0 transition-opacity focus-visible:opacity-100 group-hover:opacity-100"
                             onClick={() =>
                               setConfirm({
                                 type: 'action',
                                 key: option.key,
-                                label: option.label,
+                                label: actionName(option),
                               })
                             }
                           >
@@ -431,7 +444,7 @@ export function PlatformsTable({ initial }: { initial: Platform[] }) {
                           checked={option.enabled}
                           disabled={actionBusy || isEditing || !active.enabled}
                           onCheckedChange={(checked) => setActionEnabled(option.key, checked)}
-                          aria-label={t('enableActionAria', { label: option.label })}
+                          aria-label={t('enableActionAria', { label: actionName(option) })}
                         />
                       </span>
                     </li>

@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { ExternalLink } from 'lucide-react'
-import { getTranslations } from 'next-intl/server'
+import { getLocale, getTranslations } from 'next-intl/server'
 
 import { CopyButton } from '@/components/copy-button'
 import { prisma } from '@/lib/prisma'
@@ -14,6 +14,8 @@ export async function generateMetadata() {
 export default async function MyUnlocksPage() {
   const session = await requireUser()
   const t = await getTranslations('dashboard.unlocks')
+  const locale = await getLocale()
+  const dateFormatter = new Intl.DateTimeFormat(locale, { dateStyle: 'medium' })
   const unlocks = await prisma.userUnlock.findMany({
     where: { userId: session.user.id },
     orderBy: { unlockedAt: 'desc' },
@@ -60,7 +62,7 @@ export default async function MyUnlocksPage() {
                     </Link>
                     <p className="truncate text-xs text-muted-foreground">
                       /u/{u.link.slug} ·{' '}
-                      {t('unlockedOn', { date: u.unlockedAt.toISOString().slice(0, 10) })}
+                      {t('unlockedOn', { date: dateFormatter.format(u.unlockedAt) })}
                     </p>
                   </div>
                   <div className="flex items-center gap-2">

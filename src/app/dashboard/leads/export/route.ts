@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { getTranslations } from 'next-intl/server'
 
 import { prisma } from '@/lib/prisma'
 import { getSession } from '@/lib/session'
@@ -14,9 +15,10 @@ function escapeCsvValue(value: string) {
  * links. Ownership is enforced server-side.
  */
 export async function GET() {
+  const t = await getTranslations('exports')
   const session = await getSession()
   if (!session) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    return NextResponse.json({ error: t('errors.unauthorized') }, { status: 401 })
   }
 
   const leads = await prisma.emailLead.findMany({
@@ -29,7 +31,7 @@ export async function GET() {
     },
   })
 
-  const rows: string[] = ['email,consented_at,source_link,source_title']
+  const rows: string[] = [(t.raw('leads') as string[]).join(',')]
   for (const lead of leads) {
     rows.push(
       [

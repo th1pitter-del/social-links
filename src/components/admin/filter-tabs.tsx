@@ -1,6 +1,8 @@
 import Link from 'next/link'
+import { getLocale } from 'next-intl/server'
 
 import { cn } from 'cn'
+import { formatNumber } from '@/lib/format'
 
 export type FilterTab = {
   label: string
@@ -9,7 +11,8 @@ export type FilterTab = {
   count?: number
 }
 
-export function FilterTabs({ items }: { items: FilterTab[] }) {
+export async function FilterTabs({ items }: { items: FilterTab[] }) {
+  const locale = await getLocale()
   return (
     <div className="inline-flex flex-wrap items-center gap-1 rounded-lg border border-border bg-card p-1">
       {items.map((item) => (
@@ -31,7 +34,7 @@ export function FilterTabs({ items }: { items: FilterTab[] }) {
                 item.active ? 'bg-black/15 text-primary-foreground' : 'bg-muted text-muted-foreground',
               )}
             >
-              {item.count}
+              {formatNumber(locale, item.count)}
             </span>
           ) : null}
         </Link>

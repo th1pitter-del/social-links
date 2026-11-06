@@ -3,10 +3,11 @@
 import { useMemo, useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import { toast } from 'sonner'
 
 import { AdminLinkRowActions } from '@/components/admin/link-row-actions'
+import { formatNumber } from '@/lib/format'
 import { StatusPill } from '@/components/status-pill'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -25,6 +26,7 @@ export type AdminLinkTableRow = {
 export function AdminLinksTable({ links }: { links: AdminLinkTableRow[] }) {
   const router = useRouter()
   const t = useTranslations('admin')
+  const locale = useLocale()
   const [selected, setSelected] = useState<Set<string>>(new Set())
   const [pending, startTransition] = useTransition()
 
@@ -143,10 +145,10 @@ export function AdminLinksTable({ links }: { links: AdminLinkTableRow[] }) {
                   />
                 </td>
                 <td className="hidden px-5 py-4 text-end text-muted-foreground lg:table-cell tabular-nums">
-                  {link.unlocks}
+                  {formatNumber(locale, link.unlocks)}
                 </td>
                 <td className="hidden px-5 py-4 text-end text-muted-foreground lg:table-cell tabular-nums">
-                  {link.events}
+                  {formatNumber(locale, link.events)}
                 </td>
                 <td className="px-5 py-4 text-end">
                   <AdminLinkRowActions linkId={link.id} status={link.status} />

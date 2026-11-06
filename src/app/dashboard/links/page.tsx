@@ -1,10 +1,11 @@
 import Link from 'next/link'
 import { Link2 } from 'lucide-react'
-import { getTranslations } from 'next-intl/server'
+import { getLocale, getTranslations } from 'next-intl/server'
 
 import { LinkRowActions } from '@/components/link-row-actions'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { formatNumber } from '@/lib/format'
 import { prisma } from '@/lib/prisma'
 import { requireUser } from '@/lib/session'
 
@@ -18,6 +19,7 @@ export default async function LinksPage() {
   const t = await getTranslations('dashboard.links')
   const tc = await getTranslations('dashboard.common')
   const ts = await getTranslations('dashboard.status')
+  const locale = await getLocale()
 
   const links = await prisma.link.findMany({
     where: { ownerId: session.user.id },
@@ -85,10 +87,10 @@ export default async function LinksPage() {
                     </Badge>
                   </td>
                   <td className="hidden px-5 py-4 text-muted-foreground md:table-cell">
-                    {link._count.unlocks}
+                    {formatNumber(locale, link._count.unlocks)}
                   </td>
                   <td className="hidden px-5 py-4 text-muted-foreground md:table-cell">
-                    {link._count.events}
+                    {formatNumber(locale, link._count.events)}
                   </td>
                   <td className="px-5 py-4">
                     <LinkRowActions id={link.id} slug={link.slug} status={link.status} />

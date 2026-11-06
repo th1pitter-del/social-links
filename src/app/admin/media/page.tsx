@@ -1,11 +1,12 @@
 import { HardDrive } from 'lucide-react'
-import { getTranslations } from 'next-intl/server'
+import { getLocale, getTranslations } from 'next-intl/server'
 
 import { MediaRowActions } from '@/components/admin/media-row-actions'
 import { EmptyState, Panel, PanelHeader } from '@/components/admin/panel'
 import { PageHeader } from '@/components/admin/page-header'
 import { Timestamp } from '@/components/timestamp'
 import { StatCard } from '@/components/admin/stat-card'
+import { formatBytes } from '@/lib/format'
 import { prisma } from '@/lib/prisma'
 import { requireAdmin } from '@/lib/session'
 
@@ -16,15 +17,10 @@ export async function generateMetadata() {
   return { title: t('media') }
 }
 
-function formatSize(bytes: number) {
-  if (bytes < 1024) return `${bytes} B`
-  if (bytes < 1024 * 1024) return `${Math.round(bytes / 1024)} KB`
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
-}
-
 export default async function AdminMediaPage() {
   await requireAdmin()
   const t = await getTranslations('admin')
+  const locale = await getLocale()
 
   const [assets, agg] = await Promise.all([
     prisma.mediaAsset.findMany({
@@ -56,7 +52,7 @@ export default async function AdminMediaPage() {
         <StatCard label={t('media.totalFiles')} value={agg._count._all} tone="sky" icon={HardDrive} />
         <StatCard
           label={t('media.storageUsed')}
-          value={formatSize(agg._sum.size ?? 0)}
+          value={formatBytes(locale, agg._sum.size ?? 0)}
           tone="violet"
           icon={HardDrive}
         />
@@ -98,7 +94,7 @@ export default async function AdminMediaPage() {
                       {asset.owner.email}
                     </td>
                     <td className="hidden px-5 py-3 text-muted-foreground md:table-cell tabular-nums">
-                      {formatSize(asset.size)}
+                      {formatBytes(locale, asset.size)}
                     </td>
                     <td className="hidden px-5 py-3 text-muted-foreground lg:table-cell tabular-nums">
                       {<Timestamp value={asset.createdAt} />}

@@ -1,11 +1,12 @@
 import { FileLock2 } from 'lucide-react'
-import { getTranslations } from 'next-intl/server'
+import { getLocale, getTranslations } from 'next-intl/server'
 
 import { FileRowActions } from '@/components/admin/file-row-actions'
 import { EmptyState, Panel, PanelHeader } from '@/components/admin/panel'
 import { PageHeader } from '@/components/admin/page-header'
 import { Timestamp } from '@/components/timestamp'
 import { StatCard } from '@/components/admin/stat-card'
+import { formatBytes } from '@/lib/format'
 import { prisma } from '@/lib/prisma'
 import { requireAdmin } from '@/lib/session'
 
@@ -16,15 +17,10 @@ export async function generateMetadata() {
   return { title: t('lockedFiles') }
 }
 
-function formatSize(bytes: number) {
-  if (bytes < 1024) return `${bytes} B`
-  if (bytes < 1024 * 1024) return `${Math.round(bytes / 1024)} KB`
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
-}
-
 export default async function AdminFilesPage() {
   await requireAdmin()
   const t = await getTranslations('admin')
+  const locale = await getLocale()
 
   const [files, agg] = await Promise.all([
     prisma.storedFile.findMany({
@@ -57,7 +53,7 @@ export default async function AdminFilesPage() {
         <StatCard label={t('files.totalFiles')} value={agg._count._all} tone="sky" icon={FileLock2} />
         <StatCard
           label={t('files.storageUsed')}
-          value={formatSize(agg._sum.size ?? 0)}
+          value={formatBytes(locale, agg._sum.size ?? 0)}
           tone="violet"
           icon={FileLock2}
         />
@@ -91,7 +87,7 @@ export default async function AdminFilesPage() {
                       {file.owner.email}
                     </td>
                     <td className="hidden px-5 py-3 text-muted-foreground md:table-cell tabular-nums">
-                      {formatSize(file.size)}
+                      {formatBytes(locale, file.size)}
                     </td>
                     <td className="hidden px-5 py-3 text-muted-foreground lg:table-cell">
                       {file.links.length === 0 ? (

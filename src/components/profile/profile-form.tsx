@@ -27,6 +27,7 @@ const MAX_LINKS = 20
 
 export function ProfileForm({ initial }: { initial: ProfileFormValues }) {
   const t = useTranslations('profileForm')
+  const uploadT = useTranslations('uploads.errors')
   const router = useRouter()
   const [pending, startTransition] = useTransition()
   const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({})
@@ -57,6 +58,10 @@ export function ProfileForm({ initial }: { initial: ProfileFormValues }) {
     setValues((current) => ({ ...current, links: current.links.filter((_, i) => i !== index) }))
   }
 
+  function uploadError(code?: string, maxMb?: number) {
+    return code && uploadT.has(code) ? uploadT(code, { maxMb: maxMb ?? '' }) : t('uploadFailed')
+  }
+
   async function uploadAvatar(file: File) {
     setUploading(true)
     try {
@@ -64,10 +69,10 @@ export function ProfileForm({ initial }: { initial: ProfileFormValues }) {
       body.append('file', file)
       const response = await fetch('/api/uploads', { method: 'POST', body })
       const payload = (await response.json().catch(() => null)) as
-        | { url?: string; error?: string }
+        | { url?: string; error?: string; code?: string; maxMb?: number }
         | null
       if (!response.ok || !payload?.url) {
-        toast.error(payload?.error ?? t('uploadFailed'))
+        toast.error(uploadError(payload?.code, payload?.maxMb))
         return
       }
       update('avatarUrl', payload.url)

@@ -85,7 +85,8 @@
     "copy": "Copiar",
     "copied": "Copiado",
     "back": "Volver",
-    "toggleTheme": "Alternar tema claro/oscuro"
+    "toggleTheme": "Alternar tema claro/oscuro",
+    "close": "Cerrar"
   },
   "nav": {
     "howItWorks": "Cómo funciona",
@@ -311,7 +312,11 @@
     "goHome": "Ir a la página principal",
     "metaTitleSuffix": "Link Unlocker",
     "confirmButton": "Mostrar enlace",
-    "stepsFirst": "Completa primero todos los pasos de arriba"
+    "connectAccount": "Conectar con Google",
+    "verifyNotDone": "Aún no pudimos confirmarlo. Completa el paso y vuelve a conectar.",
+    "verifyUnavailable": "No pudimos comprobarlo ahora mismo. Inténtalo de nuevo en un momento.",
+    "stepsFirst": "Completa primero todos los pasos de arriba",
+    "guestOwner": "Invitado"
   },
   "report": {
     "title": "Reportar un enlace",
@@ -346,7 +351,7 @@
     "faq": {
       "metaTitle": "Preguntas frecuentes",
       "title": "Preguntas frecuentes",
-      "content": "### ¿Es gratis Link Unlocker?\nSí. Todas las funciones disponibles para creadores son gratuitas. No existen planes premium ni suscripciones.\n### ¿Las acciones sociales se verifican automáticamente?\nLa mayoría de las acciones sociales las solicita y confirma el visitante; no se verifican automáticamente, porque las plataformas sociales no permiten una verificación fiable por terceros. En su lugar, etiquetamos cada acción con honestidad en vez de afirmar una verificación que no podemos realizar.\n### ¿Qué ocurre si un enlace caduca o se desactiva?\nLos enlaces caducados o desactivados dejan de desbloquearse de inmediato y muestran un mensaje claro a los visitantes. Puedes reactivar un enlace desactivado desde tu panel en cualquier momento.\n### ¿Quién puede ver el contenido que protejo?\nSolo los visitantes que completen todos los pasos requeridos de ese enlace. El contenido nunca se sirve mediante URL directas adivinables, y el servidor rechaza las sesiones incompletas.\n### ¿Puedo recopilar direcciones de correo electrónico?\nSí, como acción opcional en tu enlace. Los visitantes deben dar su consentimiento, y solo tú puedes ver o exportar las direcciones recopiladas a través de tus propios enlaces."
+      "content": "### ¿Es gratis Link Unlocker?\nSí. Todas las funciones disponibles para creadores son gratuitas. No existen planes premium ni suscripciones.\n### ¿Las acciones sociales se verifican automáticamente?\nAlgunas sí. Cuando una plataforma publica un registro público que podemos leer —los comentarios públicos de un vídeo o la pertenencia a un servidor de Discord—, comprobamos ese paso: el visitante indica un perfil, leemos lo que ese perfil ha hecho público y tu panel muestra lo que encontramos. Cuando la plataforma no publica ese registro, el paso se confirma al abrirlo el visitante y no afirmamos más que eso.\n### ¿Qué ocurre si un enlace caduca o se desactiva?\nLos enlaces caducados o desactivados dejan de desbloquearse de inmediato y muestran un mensaje claro a los visitantes. Puedes reactivar un enlace desactivado desde tu panel en cualquier momento.\n### ¿Quién puede ver el contenido que protejo?\nSolo los visitantes que completen todos los pasos requeridos de ese enlace. El contenido nunca se sirve mediante URL directas adivinables, y el servidor rechaza las sesiones incompletas.\n### ¿Puedo recopilar direcciones de correo electrónico?\nSí, como acción opcional en tu enlace. Los visitantes deben dar su consentimiento, y solo tú puedes ver o exportar las direcciones recopiladas a través de tus propios enlaces."
     },
     "privacy": {
       "metaTitle": "Política de privacidad",
@@ -440,7 +445,7 @@
     },
     "overview": {
       "title": "Resumen de la plataforma",
-      "description": "Contadores en vivo de toda la plataforma. La tasa de conversión es el {percent}% de las vistas registradas; las métricas son recuentos de eventos almacenados, nunca estimaciones.",
+      "description": "Contadores en vivo de toda la plataforma. La tasa de conversión es el {percent} de las vistas registradas; las métricas son recuentos de eventos almacenados, nunca estimaciones.",
       "completedUnlocks": "Desbloqueos completados",
       "kpiLabel": "Finalizaciones registradas en todos los enlaces",
       "openReports": "Reportes abiertos",
@@ -450,13 +455,13 @@
       "activeHint": "{count} activos",
       "views": "Vistas",
       "unlockStarts": "Inicio de desbloqueos",
-      "completedHint": "{percent}% de las vistas",
+      "completedHint": "{percent} de las vistas",
       "activityTitle": "Actividad — últimos 14 días",
       "activityDescription": "Eventos diarios de vistas y desbloqueos completados.",
       "chartViews": "Vistas",
       "chartUnlocks": "Desbloqueos",
       "chartDays": "{days} días",
-      "chartShareOfTotal": "{percent}% del total del período",
+      "chartShareOfTotal": "{percent} del total del período",
       "executionTitle": "Actividad de ejecución",
       "executionDescription": "Mapa de calor de los últimos 84 días",
       "heatmapLess": "Menos",
@@ -490,7 +495,73 @@
       "colTime": "Hora",
       "colActor": "Actor",
       "colAction": "Acción",
-      "colTarget": "Destino"
+      "colTarget": "Destino",
+      "actionLabels": {
+        "user": {
+          "ban": "Suspendió a un usuario",
+          "unban": "Reactivó a un usuario",
+          "promote": "Ascendió a un usuario a administrador",
+          "demote": "Cambió a un usuario a miembro",
+          "bulk_ban": "Suspendió usuarios",
+          "bulk_unban": "Reactivó usuarios"
+        },
+        "link": {
+          "status": "Cambió el estado del enlace",
+          "bulk_status": "Cambió los estados de los enlaces"
+        },
+        "platform": {
+          "enable": "Activó la plataforma",
+          "disable": "Desactivó la plataforma",
+          "delete": "Eliminó la plataforma"
+        },
+        "actionOption": {
+          "enable": "Activó la acción",
+          "disable": "Desactivó la acción",
+          "rename": "Renombró la acción",
+          "delete": "Eliminó la acción"
+        },
+        "media": {
+          "delete": "Eliminó el medio"
+        },
+        "storedFile": {
+          "delete": "Eliminó el archivo"
+        },
+        "setting": {
+          "update": "Actualizó la configuración"
+        },
+        "ad": {
+          "create": "Creó un anuncio",
+          "update": "Actualizó un anuncio",
+          "enable": "Activó un anuncio",
+          "disable": "Desactivó un anuncio",
+          "delete": "Eliminó un anuncio"
+        },
+        "headerLink": {
+          "create": "Creó un enlace de cabecera",
+          "update": "Actualizó un enlace de cabecera",
+          "enable": "Activó un enlace de cabecera",
+          "disable": "Desactivó un enlace de cabecera",
+          "delete": "Eliminó un enlace de cabecera"
+        },
+        "report": {
+          "resolved": "Resolvió el reporte",
+          "dismissed": "Descartó el reporte",
+          "resolve_disable": "Resolvió el reporte y desactivó el enlace"
+        },
+        "unknown": "Acción desconocida"
+      },
+      "targetLabels": {
+        "user": "Usuario",
+        "link": "Enlace",
+        "platform": "Plataforma",
+        "actionOption": "Acción",
+        "media": "Medio",
+        "storedFile": "Archivo",
+        "setting": "Configuración",
+        "abuseReport": "Reporte",
+        "adUnit": "Anuncio",
+        "headerLink": "Enlace de cabecera"
+      }
     },
     "content": {
       "title": "Contenido del sitio",
@@ -593,7 +664,12 @@
       "reportsTitle": "Reportes de abuso",
       "noReports": "No hay reportes para este enlace.",
       "colDate": "Fecha",
-      "colReason": "Motivo"
+      "colReason": "Motivo",
+      "contentTypes": {
+        "URL": "URL del sitio web",
+        "TEXT": "Texto",
+        "FILE": "Descarga de archivo"
+      }
     },
     "reports": {
       "title": "Reportes de abuso",
@@ -963,6 +1039,14 @@
           "label": "Clave de API de YouTube",
           "hint": "Gratis en console.cloud.google.com: activa YouTube Data API v3 y crea una clave. Los pasos de comentario se comprueban leyendo los comentarios públicos del vídeo; sin clave, todos los pasos quedan como confirmación propia. La cuota diaria gratuita alcanza para unos miles de comprobaciones."
         },
+        "verification_googleClientId": {
+          "label": "ID de cliente OAuth de Google",
+          "hint": "Gratis en console.cloud.google.com: crea un cliente OAuth (aplicación web), añade https://<tu-dominio>/api/verify/callback como URI de redirección autorizada y pega aquí el ID de cliente. Con él, un visitante puede demostrar un me gusta o una suscripción de YouTube desde su propia cuenta de Google."
+        },
+        "verification_googleClientSecret": {
+          "label": "Secreto de cliente OAuth de Google",
+          "hint": "Se emite junto al ID de cliente. Se guarda en el servidor y nunca se envía a los visitantes."
+        },
         "verification_discordBotToken": {
           "label": "Token del bot de Discord",
           "hint": "Gratis en discord.com/developers: crea una aplicación, añade un bot, copia su token e invítalo a tu servidor. Leer miembros no requiere intents privilegiados. Un nombre de usuario que el bot no pueda resolver se reporta como sin verificar, nunca como rechazo."
@@ -995,14 +1079,6 @@
       "uploadImage": "Subir imagen",
       "imageUploadedToast": "Imagen subida. Guarda para aplicar.",
       "imageUploadFailed": "Error al subir. Inténtalo de nuevo.",
-      "uploadErrors": {
-        "unauthorized": "Inicia sesión para subir archivos.",
-        "rateLimited": "Demasiados envíos. Inténtalo de nuevo más tarde.",
-        "invalidBody": "Datos de envío no válidos.",
-        "noFile": "No se ha seleccionado ningún archivo.",
-        "unsupportedType": "Tipo de archivo no admitido. Permitidos: PNG, JPEG, WEBP, GIF.",
-        "tooLarge": "El archivo es demasiado grande. El tamaño máximo es {maxMb} MB."
-      },
       "secretConfigured": "Configurado",
       "secretNotConfigured": "Sin configurar",
       "secretReplacePlaceholder": "Pega un valor nuevo para reemplazarlo",
@@ -1044,9 +1120,9 @@
       "statUnlockStarts": "Inicios de desbloqueo",
       "statConversions": "Conversiones",
       "allTime": "total histórico",
-      "percentOfViews": "{percent}% de las vistas",
+      "percentOfViews": "{percent} de las vistas",
       "completedUnlocks": "Desbloqueos completados",
-      "conversionFromViews": "{percent}% de conversión desde las vistas registradas",
+      "conversionFromViews": "{percent} de conversión desde las vistas registradas",
       "heatmapTitle": "Mapa de actividad",
       "heatmapDescription": "Últimos 84 días",
       "recentLinks": "Enlaces recientes",
@@ -1058,7 +1134,7 @@
       "funnelTitle": "Embudo de desbloqueo",
       "funnelDescription": "Eventos registrados, desde siempre",
       "funnelEmpty": "Aún no hay vistas registradas. El embudo se llena cuando llegan visitantes.",
-      "continuedFrom": "{percent}% de {from}",
+      "continuedFrom": "{percent} de {from}",
       "createdOn": "Creado el {date}",
       "expiresOn": "Caduca el {date}",
       "eventsCount": "{count} eventos",
@@ -1089,8 +1165,8 @@
       "statCompleted": "Desbloqueos completados",
       "funnelTitle": "De la visita al desbloqueo",
       "funnelDescription": "Cada cifra es un evento guardado de este enlace.",
-      "shareOfViews": "{percent}% de las visitas",
-      "shareOfStarts": "{percent}% de los inicios",
+      "shareOfViews": "{percent} de las visitas",
+      "shareOfStarts": "{percent} de los inicios",
       "noVisits": "Aún no hay visitas registradas.",
       "publicUrl": "URL pública de desbloqueo",
       "leadsTitle": "Direcciones de correo recogidas",
@@ -1116,7 +1192,7 @@
       "statUnlockStarts": "Inicios de desbloqueo",
       "statCompleted": "Completados",
       "allTime": "total histórico",
-      "percentOfViews": "{percent}% de las vistas",
+      "percentOfViews": "{percent} de las vistas",
       "lastDays": "Últimos {days} días",
       "viewsVsUnlocks": "Vistas frente a desbloqueos completados",
       "chartViews": "Vistas",
@@ -1315,7 +1391,11 @@
     "invalidWebhookUrl": "La URL debe empezar por http:// o https://",
     "confirmHandleRequired": "Escribe tu usuario de perfil para continuar.",
     "confirmNotFollowing": "Revisamos {handle} y no pudimos confirmar {steps}. Completa el paso y confirma de nuevo.",
-    "confirmProfileRequired": "Confirma tu perfil para mostrar el enlace."
+    "confirmProfileRequired": "Confirma tu perfil para mostrar el enlace.",
+    "tooLong": "Debe tener {max} caracteres o menos.",
+    "tooManyItems": "Demasiados elementos. El máximo es {max}.",
+    "userAlreadyExists": "Ya existe una cuenta con este correo.",
+    "labelEmpty": "Añade una etiqueta"
   },
   "linkForm": {
     "uploadFailed": "Error al subir.",
@@ -1567,5 +1647,71 @@
     "MUSIC": "Escucha música",
     "VIDEO": "Mira un vídeo",
     "EMAIL": "Recoge tu correo electrónico"
+  },
+  "platforms": {
+    "youtube": "YouTube",
+    "instagram": "Instagram",
+    "facebook": "Facebook",
+    "tiktok": "TikTok",
+    "discord": "Discord",
+    "spotify": "Spotify",
+    "none": "Sitio web"
+  },
+  "uploads": {
+    "errors": {
+      "unauthorized": "Inicia sesión para subir archivos.",
+      "rateLimited": "Demasiados envíos. Inténtalo de nuevo más tarde.",
+      "invalidBody": "Datos de envío no válidos.",
+      "noFile": "No se ha seleccionado ningún archivo.",
+      "unsupportedType": "Tipo de archivo no admitido. Permitidos: PNG, JPEG, WEBP, GIF.",
+      "unsupportedFileType": "Tipo de archivo no admitido.",
+      "tooLarge": "El archivo es demasiado grande. El tamaño máximo es {maxMb} MB."
+    }
+  },
+  "exports": {
+    "users": [
+      "ID",
+      "Nombre",
+      "Correo",
+      "Rol",
+      "Estado",
+      "Correo verificado",
+      "Enlaces",
+      "Creado"
+    ],
+    "links": [
+      "ID",
+      "Título",
+      "Slug",
+      "Estado",
+      "Tipo de contenido",
+      "Correo del propietario",
+      "Sesiones",
+      "Eventos",
+      "Correos captados",
+      "Creado"
+    ],
+    "leads": [
+      "Correo",
+      "Consentimiento",
+      "Enlace de origen",
+      "Título de origen"
+    ],
+    "linkLeads": [
+      "Correo",
+      "Consentimiento",
+      "Enlace de origen"
+    ],
+    "errors": {
+      "unauthorized": "No autorizado",
+      "forbidden": "Prohibido",
+      "notFound": "No encontrado"
+    },
+    "guest": "Invitado"
+  },
+  "notFound": {
+    "title": "Página no encontrada",
+    "description": "La página que buscas no existe o ha cambiado de dirección.",
+    "backHome": "Volver al inicio"
   }
 }

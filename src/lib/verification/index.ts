@@ -3,13 +3,27 @@ import 'server-only'
 import './bluesky'
 import './discord'
 import './github'
+import './google-oauth'
 import './mastodon'
 import './steam'
 import './telegram'
 import './youtube'
 
-export { activeVerifierFor, normalizeHandle, verifierFor } from './registry'
-export type { Verifier, VerifyMode, VerifyOutcome } from './registry'
+export {
+  activeOAuthVerifierForAction,
+  activeVerifierFor,
+  normalizeHandle,
+  oauthProvider,
+  oauthVerifierForAction,
+  verifierFor,
+} from './registry'
+export type {
+  OAuthProvider,
+  OAuthVerifier,
+  Verifier,
+  VerifyMode,
+  VerifyOutcome,
+} from './registry'
 export {
   buildCheckinLink,
   findCheckinVisitor,

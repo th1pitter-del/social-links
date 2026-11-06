@@ -11,6 +11,7 @@ import { StatusPill, statusTone } from '@/components/status-pill'
 import { Button } from '@/components/ui/button'
 import { getActionMix } from '@/lib/action-mix'
 import { buildHeatBuckets } from '@/lib/activity-buckets'
+import { formatNumber, formatPercent } from '@/lib/format'
 import { prisma } from '@/lib/prisma'
 import { requireUser } from '@/lib/session'
 import { cn } from 'cn'
@@ -77,14 +78,20 @@ export default async function DashboardOverviewPage() {
       label: t('statUnlockStarts'),
       value: unlockStarts,
       share: startsShare,
-      note: t('continuedFrom', { percent: startsShare, from: t('statViews').toLowerCase() }),
+      note: t('continuedFrom', {
+        percent: formatPercent(locale, startsShare),
+        from: t('statViews').toLowerCase(),
+      }),
     },
     {
       label: t('completedUnlocks'),
       value: completed,
       share: completedShare,
       note: t('continuedFrom', {
-        percent: unlockStarts > 0 ? Math.round((completed / unlockStarts) * 100) : 0,
+        percent: formatPercent(
+          locale,
+          unlockStarts > 0 ? Math.round((completed / unlockStarts) * 100) : 0,
+        ),
         from: t('statUnlockStarts').toLowerCase(),
       }),
     },
@@ -118,8 +125,9 @@ export default async function DashboardOverviewPage() {
           <KpiHero
             title={t('completedUnlocks')}
             value={completed.toLocaleString(locale)}
-            label={t('conversionFromViews', { percent: conversion })}
+            label={t('conversionFromViews', { percent: formatPercent(locale, conversion) })}
             percentage={conversion}
+            locale={locale}
           />
         </div>
         <Panel>
@@ -148,7 +156,9 @@ export default async function DashboardOverviewPage() {
                       className={cn('size-2 shrink-0 rounded-full', statusTone(row.status))}
                     />
                     <span className="min-w-0 flex-1 truncate text-muted-foreground">{row.label}</span>
-                    <span className="shrink-0 font-medium tabular-nums">{row.count}</span>
+                    <span className="shrink-0 font-medium tabular-nums">
+                      {formatNumber(locale, row.count)}
+                    </span>
                   </li>
                 ))}
               </ul>
@@ -239,6 +249,7 @@ export default async function DashboardOverviewPage() {
               <ModelDistribution
                 items={actionMix.items}
                 valueLabel={t('completedSteps', { count: actionMix.total })}
+                locale={locale}
               />
             )}
           </PanelContent>
