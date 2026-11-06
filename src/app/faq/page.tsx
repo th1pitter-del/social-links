@@ -1,28 +1,40 @@
 import type { Metadata } from 'next'
-import { getTranslations } from 'next-intl/server'
+import { getLocale, getTranslations } from 'next-intl/server'
 
-import { Markdown } from '@/components/markdown'
+import { ContentPage } from '@/components/content-page'
 import { SiteFooter } from '@/components/site-footer'
 import { SiteHeader } from '@/components/site-header'
 import { getPageContent } from '@/lib/settings'
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('pages.faq')
-  return { title: t('metaTitle') }
+  return { title: t('metaTitle'), description: t('intro') }
 }
 
 export default async function FaqPage() {
-  const [content, t] = await Promise.all([getPageContent('faq'), getTranslations('pages.faq')])
+  const [content, t, locale] = await Promise.all([
+    getPageContent('faq'),
+    getTranslations('pages.faq'),
+    getLocale(),
+  ])
 
   return (
     <>
       <SiteHeader />
-      <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-16">
-        <h1 className="text-3xl font-semibold tracking-tight">{t('title')}</h1>
-        <div className="mt-10">
-          <Markdown content={content} />
-        </div>
-      </main>
+      <ContentPage
+        kind="faq"
+        title={t('title')}
+        eyebrow={t('eyebrow')}
+        intro={t('intro')}
+        content={content}
+        tocLabel={t('toc')}
+        readTimeLabel={t('readTime')}
+        updatedLabel={t('updated')}
+        helpTitle={t('helpTitle')}
+        helpBody={t('helpBody')}
+        helpCta={t('helpCta')}
+        locale={locale}
+      />
       <SiteFooter />
     </>
   )

@@ -4,6 +4,7 @@ import { cache } from 'react'
 import { getMessages } from 'next-intl/server'
 
 import { prisma } from '@/lib/prisma'
+import { DEFAULT_PAGE_CONTENT } from '@/lib/default-page-content'
 
 
 export const DEFAULT_SITE_NAME = 'Link Unlocker'
@@ -12,34 +13,7 @@ export const DEFAULT_TAGLINE = 'Free social unlock links'
 export const CONTENT_PAGES = ['faq', 'privacy', 'terms', 'contact'] as const
 export type ContentPage = (typeof CONTENT_PAGES)[number]
 
-export const DEFAULT_CONTENT: Record<ContentPage, string> = {
-  faq: `### Is Link Unlocker free?
-Yes. Every feature available to creators is free. There are no premium plans or subscriptions.
-### Are the social actions automatically verified?
-Where a platform publishes a public record we can read — a video's public comments, or membership of a Discord server — that step is checked: the visitor names one profile at the end, we read what that profile made public, and your dashboard shows what we found. Steps on platforms that publish no such record are confirmed when the visitor opens them, and the product does not claim more than that.
-### What happens if a link expires or is disabled?
-Expired or disabled links stop unlocking immediately and show a clear message to visitors. You can re-enable a disabled link from your dashboard at any time.
-### Who can see the content I protect?
-Only visitors who complete every required step for that link. Content is never served through guessable direct URLs, and incomplete sessions are refused by the server.
-### Can I collect email addresses?
-Yes, as an optional action on your link. Visitors must consent, and only you can see or export the addresses collected through your own links.`,
-  privacy: `## What we collect
-Account details you provide (name, email address and a hashed password), the content and configuration of links you create, and event data about how your links perform (views, unlock starts and completions). Visitor IP addresses are stored only as salted hashes for rate limiting and abuse prevention.
-## Email collection
-If you enable the optional email action on a link, addresses are stored with a record of consent and are only visible to the link owner. Owners can export or delete them.
-## Retention
-Unlock sessions expire automatically. Analytics events are kept for as long as the link exists. You can delete a link at any time, which removes its analytics and collected emails.
-## Sharing
-We do not sell personal data. We share the minimum data required with email delivery providers when you trigger password reset emails.`,
-  terms: `## The service
-Link Unlocker lets creators publish links that require visitors to complete configured actions before the protected content is revealed. The service is free to use and has no paid plans.
-## Your responsibilities
-Do not use Link Unlocker for unlawful content, deception, malware distribution or to violate the terms of the platforms you ask visitors to interact with. We may disable links or accounts that breach these terms or generate abuse reports.
-## Availability
-The service is provided as is. We may modify or discontinue features, and we will attempt to give notice of material changes.`,
-  contact: `Questions about a link, your account or the platform? Email us at [support@linkunlock.app](mailto:support@linkunlock.app).
-Abuse reports are triaged first. Include the public link URL so we can investigate quickly.`,
-}
+export const DEFAULT_CONTENT: Record<ContentPage, string> = DEFAULT_PAGE_CONTENT
 
 type LocalizedDefaults = {
   name: string

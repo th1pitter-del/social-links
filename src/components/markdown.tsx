@@ -15,12 +15,15 @@ import { Fragment, type ReactNode } from 'react'
  * Output is built from React elements only; raw HTML is never injected.
  */
 
-function renderInline(text: string, keyPrefix: string): ReactNode[] {
+export type MarkdownVariant = 'default' | 'article'
+
+function renderInline(text: string, keyPrefix: string, variant: MarkdownVariant): ReactNode[] {
   const nodes: ReactNode[] = []
   const pattern = /\[([^\]]+)\]\((https?:\/\/[^\s)]+|mailto:[^\s)]+)\)|\*\*([^*]+)\*\*/g
   let lastIndex = 0
   let match: RegExpExecArray | null
   let index = 0
+  const article = variant === 'article'
 
   while ((match = pattern.exec(text)) !== null) {
     if (match.index > lastIndex) {
@@ -29,13 +32,24 @@ function renderInline(text: string, keyPrefix: string): ReactNode[] {
     const key = `${keyPrefix}-inline-${index++}`
     if (match[1] && match[2]) {
       nodes.push(
-        <a key={key} href={match[2]} className="font-medium text-foreground underline">
+        <a
+          key={key}
+          href={match[2]}
+          className={
+            article
+              ? 'font-medium text-accent-text underline decoration-accent-text/40 underline-offset-4 transition-colors hover:decoration-accent-text'
+              : 'font-medium text-foreground underline'
+          }
+        >
           {match[1]}
         </a>,
       )
     } else if (match[3]) {
       nodes.push(
-        <strong key={key} className="font-medium text-foreground">
+        <strong
+          key={key}
+          className={article ? 'font-semibold text-foreground' : 'font-medium text-foreground'}
+        >
           {match[3]}
         </strong>,
       )
@@ -50,7 +64,14 @@ function renderInline(text: string, keyPrefix: string): ReactNode[] {
   return nodes
 }
 
-export function Markdown({ content }: { content: string }) {
+export function Markdown({
+  content,
+  variant = 'default',
+}: {
+  content: string
+  variant?: MarkdownVariant
+}) {
+  const article = variant === 'article'
   const lines = content.replace(/\r\n/g, '\n').split('\n')
   const blocks: ReactNode[] = []
   let paragraph: string[] = []
@@ -60,7 +81,7 @@ export function Markdown({ content }: { content: string }) {
     if (paragraph.length === 0) return
     const text = paragraph.join(' ')
     blocks.push(
-      <p key={`p-${blocks.length}`}>{renderInline(text, `p-${blocks.length}`)}</p>,
+      <p key={`p-${blocks.length}`}>{renderInline(text, `p-${blocks.length}`, variant)}</p>,
     )
     paragraph = []
   }
@@ -68,9 +89,16 @@ export function Markdown({ content }: { content: string }) {
   function flushList() {
     if (list.length === 0) return
     blocks.push(
-      <ul key={`ul-${blocks.length}`} className="list-inside list-disc space-y-1">
+      <ul
+        key={`ul-${blocks.length}`}
+        className={
+          article
+            ? 'list-disc space-y-2 pl-5 marker:text-accent-text'
+            : 'list-inside list-disc space-y-1'
+        }
+      >
         {list.map((item, i) => (
-          <li key={i}>{renderInline(item, `li-${blocks.length}-${i}`)}</li>
+          <li key={i}>{renderInline(item, `li-${blocks.length}-${i}`, variant)}</li>
         ))}
       </ul>,
     )
@@ -93,9 +121,18 @@ export function Markdown({ content }: { content: string }) {
       flushParagraph()
       flushList()
       blocks.push(
-        <h3 key={`h3-${blocks.length}`} className="font-medium text-foreground">
-          {renderInline(line.slice(4).trim(), `h3-${blocks.length}`)}
-        </h3>,
+        article ? (
+          <h3
+            key={`h3-${blocks.length}`}
+            className="text-lg font-semibold tracking-tight text-foreground sm:text-xl"
+          >
+            {renderInline(line.slice(4).trim(), `h3-${blocks.length}`, variant)}
+          </h3>
+        ) : (
+          <h3 key={`h3-${blocks.length}`} className="font-medium text-foreground">
+            {renderInline(line.slice(4).trim(), `h3-${blocks.length}`, variant)}
+          </h3>
+        ),
       )
       continue
     }
@@ -103,9 +140,18 @@ export function Markdown({ content }: { content: string }) {
       flushParagraph()
       flushList()
       blocks.push(
-        <h2 key={`h2-${blocks.length}`} className="font-medium text-foreground">
-          {renderInline(line.slice(3).trim(), `h2-${blocks.length}`)}
-        </h2>,
+        article ? (
+          <h2
+            key={`h2-${blocks.length}`}
+            className="text-xl font-semibold tracking-tight text-foreground sm:text-2xl"
+          >
+            {renderInline(line.slice(3).trim(), `h2-${blocks.length}`, variant)}
+          </h2>
+        ) : (
+          <h2 key={`h2-${blocks.length}`} className="font-medium text-foreground">
+            {renderInline(line.slice(3).trim(), `h2-${blocks.length}`, variant)}
+          </h2>
+        ),
       )
       continue
     }
@@ -116,7 +162,13 @@ export function Markdown({ content }: { content: string }) {
   flushList()
 
   return (
-    <div className="space-y-4 text-sm text-muted-foreground">
+    <div
+      className={
+        article
+          ? 'space-y-5 text-base leading-7 text-muted-foreground sm:text-[17px] sm:leading-8'
+          : 'space-y-4 text-sm text-muted-foreground'
+      }
+    >
       {blocks.map((block, i) => (
         <Fragment key={i}>{block}</Fragment>
       ))}
