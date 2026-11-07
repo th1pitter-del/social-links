@@ -31,14 +31,18 @@ type ClaimedContent =
 export type UnlockStepPreview = {
   /** The real action id, so a row can be completed the moment it is pressed. */
   id: string
+  type: string
   label: string
   platform: string | null
   icon: string
   behavior: 'URL' | 'EMAIL'
+  /** Where the row goes. Known up front so the first press opens it too. */
+  target: string
 }
 
 type StepAction = {
   id: string
+  type: string
   label: string
   platform: string | null
   icon: string
@@ -48,6 +52,17 @@ type StepAction = {
 }
 
 const emptySubscribe = () => () => {}
+
+/** Adds YouTube's one-click subscribe prompt when the row is a subscribe step. */
+function withSubConfirmation(target: string): string {
+  try {
+    const url = new URL(target)
+    url.searchParams.set('sub_confirmation', '1')
+    return url.toString()
+  } catch {
+    return target
+  }
+}
 
 /** The completed tick, drawn the same way as the hero's demonstration card. */
 const ROW_CHECK =
@@ -143,7 +158,7 @@ export function UnlockExperience({
     router.refresh()
   }
 
-  async function handleAction(actionId: string, target: string, isEmail: boolean) {
+  async function handleAction(actionId: string, isEmail: boolean) {
     // The row is the visitor's first move, so the session begins here instead of
     // behind a separate "start" press: one action per step, like the card shows.
     let session = state
@@ -163,9 +178,6 @@ export function UnlockExperience({
       router.refresh()
     }
 
-    if (!isEmail && target) {
-      window.open(target, '_blank', 'noopener,noreferrer')
-    }
     setBusy(true)
     setError(null)
     const result = await markActionComplete({
@@ -263,12 +275,13 @@ export function UnlockExperience({
     ? state.actions.map((action) => ({ ...action }))
     : steps.map((step) => ({
         id: step.id,
+        type: step.type,
         label: step.label,
         platform: step.platform,
         icon: step.icon,
         behavior: step.behavior,
         completed: false,
-        target: '',
+        target: step.target,
       }))
 
   const totalSteps = actionSteps.length
@@ -395,7 +408,13 @@ export function UnlockExperience({
                     const isEmail = action.behavior === 'EMAIL'
                     const done = action.completed
                     const tint = platformTint(action.platform)
-                    const clickable = !done && !expired
+                    const clickable = !done && !expired && !busy
+                    // A subscription row lands on the channel with the subscribe
+                    // prompt already open; the channel link itself still works.
+                    const href =
+                      action.type === 'YOUTUBE_SUBSCRIBE'
+                        ? withSubConfirmation(action.target)
+                        : action.target
                     const surface = cn(
                       'relative flex w-full items-center justify-center gap-3 px-4 py-3.5 text-sm backdrop-blur-md transition-[filter,background-color] duration-500 motion-reduce:transition-none',
                       // A finished task drops its brand wash and settles to the
@@ -482,7 +501,7 @@ export function UnlockExperience({
                                 </label>
                                 <Button
                                   size="sm"
-                                  onClick={() => handleAction(action.id, '', true)}
+                                  onClick={() => handleAction(action.id, true)}
                                   disabled={busy || !email || !consent}
                                 >
                                   {t('submitEmail')}
@@ -494,36 +513,52 @@ export function UnlockExperience({
                       )
                     }
 
+                    const rowContent = (
+                      <>
+                        {glyph}
+                        {label}
+                        {/* The badge sits in a slot that takes no part in the row's
+                            layout, so the row never changes height as it finishes. */}
+                        <span
+                          aria-hidden
+                          className="pointer-events-none absolute inset-y-0 end-4 flex items-center"
+                        >
+                          <span
+                            className={cn(
+                              ROW_CHECK,
+                              done
+                                ? 'motion-safe:animate-[demo-check_0.24s_ease-out]'
+                                : 'opacity-0',
+                            )}
+                          >
+                            <Check className="size-3 shrink-0 strokeWidth={3}" />
+                          </span>
+                        </span>
+                        {done ? <span className="sr-only">{t('completed')}</span> : null}
+                      </>
+                    )
+
                     return (
                       <li key={action.id} className="overflow-hidden rounded-xl">
-                        <button
-                          type="button"
-                          onClick={() => handleAction(action.id, action.target, false)}
-                          disabled={!clickable || busy}
-                          style={tintVars}
-                          className={surface}
-                        >
-                          {glyph}
-                          {label}
-                          {/* The badge sits in a slot that takes no part in the row's
-                              layout, so the row never changes height as it finishes. */}
-                          <span
-                            aria-hidden
-                            className="pointer-events-none absolute inset-y-0 end-4 flex items-center"
+                        {clickable && href ? (
+                          // A real anchor, not a scripted popup: the browser opens
+                          // it on the visitor's own gesture, including the first
+                          // press before the unlock session exists.
+                          <a
+                            href={href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={() => handleAction(action.id, false)}
+                            style={tintVars}
+                            className={cn(surface, 'no-underline')}
                           >
-                            <span
-                              className={cn(
-                                ROW_CHECK,
-                                done
-                                  ? 'motion-safe:animate-[demo-check_0.24s_ease-out]'
-                                  : 'opacity-0',
-                              )}
-                            >
-                              <Check className="size-3 shrink-0 strokeWidth={3}" />
-                            </span>
-                          </span>
-                          {done ? <span className="sr-only">{t('completed')}</span> : null}
-                        </button>
+                            {rowContent}
+                          </a>
+                        ) : (
+                          <button type="button" disabled style={tintVars} className={surface}>
+                            {rowContent}
+                          </button>
+                        )}
                       </li>
                     )
                   })}

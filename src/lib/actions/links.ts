@@ -198,7 +198,7 @@ async function createLinkRecord({
   }
 }
 
-/** Authenticated link creation: owned by the account and saved as a draft. */
+/** Authenticated link creation: owned by the account and published immediately. */
 export async function createLink(raw: unknown): Promise<ActionResult> {
   const session = await requireUser()
   const t = await getTranslations('errors')
@@ -213,7 +213,7 @@ export async function createLink(raw: unknown): Promise<ActionResult> {
     return { ok: false, error: t('linkCreateRateLimited') }
   }
 
-  return createLinkRecord({ raw, ownerId: session.user.id, guestToken: null, status: 'DRAFT' })
+  return createLinkRecord({ raw, ownerId: session.user.id, guestToken: null, status: 'ACTIVE' })
 }
 
 /**

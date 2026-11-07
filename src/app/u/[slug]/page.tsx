@@ -126,6 +126,7 @@ function toSteps(
 ): UnlockStepPreview[] {
   return link.actions.map((action) => ({
     id: action.id,
+    type: action.type,
     label:
       action.label?.trim() ||
       (action.optionLabel
@@ -134,6 +135,7 @@ function toSteps(
     platform: action.platform,
     icon: action.icon,
     behavior: action.behavior,
+    target: action.target,
   }))
 }
 
