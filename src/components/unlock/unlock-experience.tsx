@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from '
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useLocale, useTranslations } from 'next-intl'
-import { Check, CheckCircle2, Download, ExternalLink, Eye, FileLock, FileText, Loader2, Lock, LogIn, Mail, Share2, Unlock } from 'lucide-react'
+import { Check, CheckCircle2, Download, ExternalLink, Eye, FileLock, FileText, Loader2, Lock, Mail, Share2, Unlock } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -14,7 +14,6 @@ import { formatBytes, formatNumber } from '@/lib/format'
 import { cn } from 'cn'
 import {
   claimContent,
-  confirmProfile,
   getUnlockState,
   markActionComplete,
   startUnlock,
@@ -111,8 +110,6 @@ export function UnlockExperience({
   const [error, setError] = useState<string | null>(notice)
   const [email, setEmail] = useState('')
   const [consent, setConsent] = useState(false)
-  const [profile, setProfile] = useState('')
-  const [confirming, setConfirming] = useState(false)
   const [claimed, setClaimed] = useState<ClaimedContent>(null)
   const shareUrl = useShareUrl(slug)
   /** Token already loaded or created locally; keeps a route refresh from re-fetching it. */
@@ -194,23 +191,6 @@ export function UnlockExperience({
     setState(result.state)
   }
 
-  async function handleConfirm() {
-    if (!state) return
-    const handle = profile.trim()
-    if (!handle) return
-    setBusy(true)
-    setError(null)
-    const result = await confirmProfile({ token: state.token, handle })
-    setBusy(false)
-    if (!result.ok) {
-      setError(result.error)
-      return
-    }
-    setProfile('')
-    setConfirming(false)
-    setState(result.state)
-  }
-
   async function handleClaim() {
     if (!state) return
     setBusy(true)
@@ -231,8 +211,7 @@ export function UnlockExperience({
   }
 
   // The card has one call to action, the way the demonstration card has one.
-  // What it does depends on where the visitor stands: begin, remind, confirm,
-  // reveal.
+  // What it does depends on where the visitor stands: begin, remind, reveal.
   function handlePrimary() {
     if (!started) {
       void handleStart()
@@ -242,34 +221,13 @@ export function UnlockExperience({
       setError(t('stepsFirst'))
       return
     }
-    if (state.requiresProfileConfirm) {
-      if (!confirming) {
-        setConfirming(true)
-        return
-      }
-      void handleConfirm()
-      return
-    }
     void handleClaim()
   }
 
   const started = Boolean(state)
   const expired = Boolean(state?.expired)
   const ready = Boolean(state?.canUnlock)
-  // Same slot, same shape, five possible meanings.
-  const ctaLabel = !started
-    ? t('start')
-    : ready && state?.requiresProfileConfirm
-      ? t('confirmButton')
-      : ready && state?.requiresAccountConfirm
-        ? t('connectAccount')
-        : t('unlockButton')
-  // The account check is a real navigation to the provider, so it is a link
-  // rather than a scripted redirect and survives a slow connection.
-  const connectHref =
-    ready && !state?.requiresProfileConfirm && state?.requiresAccountConfirm
-      ? `/api/verify/start?token=${encodeURIComponent(state.token)}`
-      : null
+  const ctaLabel = !started ? t('start') : t('unlockButton')
 
   const actionSteps: StepAction[] = state
     ? state.actions.map((action) => ({ ...action }))
@@ -564,65 +522,26 @@ export function UnlockExperience({
                   })}
                 </ol>
 
-                {/* One slot, one call to action - it begins, reminds, confirms or
-                    reveals depending on where the visitor stands. It matches a task
-                    row so it reads as the next row rather than a smaller control. */}
+                {/* One slot, one call to action - it begins, reminds or reveals
+                    depending on where the visitor stands. It matches a task row so
+                    it reads as the next row rather than a smaller control. */}
                 <div className="relative mx-auto mt-3 h-[3.25rem] w-[92%]">
-                  {connectHref ? (
-                    <Button
-                      size="sm"
-                      asChild
-                      className={cn(
-                        'absolute inset-0 h-full rounded-xl text-sm [&_svg]:size-4',
-                        'transition-[background-color,color] duration-500',
-                      )}
-                    >
-                      <a href={connectHref}>
-                        <LogIn />
-                        {ctaLabel}
-                      </a>
-                    </Button>
-                  ) : (
-                    <Button
-                      size="sm"
-                      // Neutral until the tasks are all in, lime the moment the reward
-                      // is real: the colour itself is the progress signal.
-                      variant={ready ? 'default' : 'secondary'}
-                      onClick={handlePrimary}
-                      disabled={busy || expired}
-                      className={cn(
-                        'absolute inset-0 h-full rounded-xl text-sm [&_svg]:size-4',
-                        'transition-[background-color,color] duration-500',
-                      )}
-                    >
-                      {busy ? <Loader2 className="animate-spin" /> : ready ? <Unlock /> : <Lock />}
-                      {ctaLabel}
-                    </Button>
-                  )}
+                  <Button
+                    size="sm"
+                    // Neutral until the tasks are all in, lime the moment the reward
+                    // is real: the colour itself is the progress signal.
+                    variant={ready ? 'default' : 'secondary'}
+                    onClick={handlePrimary}
+                    disabled={busy || expired}
+                    className={cn(
+                      'absolute inset-0 h-full rounded-xl text-sm [&_svg]:size-4',
+                      'transition-[background-color,color] duration-500',
+                    )}
+                  >
+                    {busy ? <Loader2 className="animate-spin" /> : ready ? <Unlock /> : <Lock />}
+                    {ctaLabel}
+                  </Button>
                 </div>
-
-                {/* The quiet confirmation only exists once it has been asked for, so
-                    the card never shows an audit field before it is needed. */}
-                {confirming ? (
-                  <div className="mx-auto mt-2 w-[92%]">
-                    <Input
-                      value={profile}
-                      onChange={(event) => setProfile(event.target.value)}
-                      onKeyDown={(event) => {
-                        if (event.key === 'Enter') handlePrimary()
-                      }}
-                      placeholder={
-                        state?.profileHandleExample
-                          ? t('handlePlaceholderWithExample', {
-                              example: state.profileHandleExample,
-                            })
-                          : t('handlePlaceholder')
-                      }
-                      autoComplete="off"
-                      className="h-9"
-                    />
-                  </div>
-                ) : null}
 
                 {error ? <p className="mt-3 text-sm text-destructive">{error}</p> : null}
                 {expired ? <p className="mt-3 text-sm text-destructive">{t('expired')}</p> : null}

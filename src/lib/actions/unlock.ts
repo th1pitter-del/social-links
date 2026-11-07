@@ -48,19 +48,6 @@ export type UnlockState = {
   actions: UnlockActionView[]
   allActionsCompleted: boolean
   canUnlock: boolean
-  /**
-   * A step whose platform publishes a record we can read is still unconfirmed.
-   * The visitor sees this as one quiet profile field at the moment of release,
-   * never as a per-step ceremony.
-   */
-  requiresProfileConfirm: boolean
-  /** Format the outstanding platform expects, shown in the profile field. */
-  profileHandleExample: string | null
-  /**
-   * A step whose platform answers only for the visitor's signed-in account is
-   * still unconfirmed. The visitor connects the provider once at release.
-   */
-  requiresAccountConfirm: boolean
   expiresAt: string
 }
 
@@ -131,10 +118,6 @@ async function buildState(sessionId: string): Promise<UnlockState | null> {
 
   const allActionsCompleted = actions.every((action) => action.completed)
   const verified = session.status === 'VERIFIED'
-  const outstanding = await outstandingConfirmations(session)
-  const handleOutstanding = outstanding.filter(
-    (item): item is HandleConfirmation => item.mode === 'HANDLE',
-  )
 
   return {
     token: session.id,
@@ -144,9 +127,6 @@ async function buildState(sessionId: string): Promise<UnlockState | null> {
     actions,
     allActionsCompleted,
     canUnlock: !expired && allActionsCompleted && verified,
-    requiresProfileConfirm: handleOutstanding.length > 0,
-    profileHandleExample: handleOutstanding[0]?.verifier.handleExample ?? null,
-    requiresAccountConfirm: outstanding.some((item) => item.mode === 'OAUTH'),
     expiresAt: session.expiresAt.toISOString(),
   }
 }
@@ -651,10 +631,6 @@ export async function claimContent(
   const completed = new Set(session.completions.map((row) => row.linkActionId))
   if (!session.link.actions.every((action) => completed.has(action.id))) {
     return { ok: false, error: t('completeAllSteps') }
-  }
-  // The quiet confirmation is part of the gate, not just of the interface.
-  if ((await outstandingConfirmations(session)).length > 0) {
-    return { ok: false, error: t('confirmProfileRequired') }
   }
 
   await prisma.analyticsEvent.create({

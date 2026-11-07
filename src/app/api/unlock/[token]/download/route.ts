@@ -3,7 +3,6 @@ import { getTranslations } from 'next-intl/server'
 
 import { prisma } from '@/lib/prisma'
 import { getStoredFile, createStoredFileStream } from '@/lib/file-storage'
-import { outstandingConfirmations } from '@/lib/unlock-confirm'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -50,12 +49,6 @@ export async function GET(
   const allDone = session.link.actions.every((action) => completed.has(action.id))
   if (!allDone) {
     return NextResponse.json({ error: t('completeAllSteps') }, { status: 403 })
-  }
-
-  // The quiet confirmation gates the download too, not just the reveal button:
-  // otherwise a direct link would skip the platform check entirely.
-  if ((await outstandingConfirmations(session)).length > 0) {
-    return NextResponse.json({ error: t('confirmProfileRequired') }, { status: 403 })
   }
 
   if (session.link.contentType !== 'FILE' || !session.link.file) {
