@@ -136,6 +136,7 @@ function toSteps(
     icon: action.icon,
     behavior: action.behavior,
     target: action.target,
+    waitSeconds: action.waitSeconds,
   }))
 }
 

@@ -38,12 +38,23 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { createGuestLink, createLink, updateLink } from '@/lib/actions/links'
-import { ACTION_OPTION_DEFAULTS, type ActionOptionView } from '@/lib/action-defaults'
+import {
+  ACTION_OPTION_DEFAULTS,
+  defaultWaitSeconds,
+  MAX_ACTION_WAIT_SECONDS,
+  type ActionOptionView,
+} from '@/lib/action-defaults'
 import { actionLabel, platformLabel } from '@/lib/action-label'
 import { formatNumber } from '@/lib/format'
 import type { LinkInput } from '@/lib/validation'
 
 const MAX_ACTIONS = 10
+
+function clampWait(value: string): number {
+  const parsed = Number.parseInt(value, 10)
+  if (!Number.isFinite(parsed)) return 0
+  return Math.min(MAX_ACTION_WAIT_SECONDS, Math.max(0, parsed))
+}
 
 // Shown first in the action picker so the common choices are one click away.
 // Every offered action is provable, so the list is the catalog itself.
@@ -53,6 +64,7 @@ type ActionRow = {
   type: string
   label: string
   target: string
+  waitSeconds: number
 }
 
 export type LinkFormValues = {
@@ -155,7 +167,13 @@ export function LinkForm({
     setValues((current) =>
       current.actions.length >= MAX_ACTIONS
         ? current
-        : { ...current, actions: [...current.actions, { type, label: '', target: '' }] },
+        : {
+            ...current,
+            actions: [
+              ...current.actions,
+              { type, label: '', target: '', waitSeconds: defaultWaitSeconds(type) },
+            ],
+          },
     )
   }
 
@@ -281,6 +299,7 @@ export function LinkForm({
         type: action.type,
         label: action.label.trim(),
         target: action.target.trim(),
+        waitSeconds: action.waitSeconds,
       })),
     }
 
@@ -591,6 +610,37 @@ export function LinkForm({
                                 {t('emailNote')}
                               </p>
                             )}
+                            {behaviorFor(action.type) === 'URL' ? (
+                              <div className="space-y-1">
+                                <div className="flex flex-wrap items-center gap-2">
+                                  <Label
+                                    htmlFor={`wait-${index}`}
+                                    className="text-xs text-muted-foreground"
+                                  >
+                                    {t('waitLabel')}
+                                  </Label>
+                                  <Input
+                                    id={`wait-${index}`}
+                                    type="number"
+                                    min={0}
+                                    max={MAX_ACTION_WAIT_SECONDS}
+                                    inputMode="numeric"
+                                    value={action.waitSeconds}
+                                    onChange={(event) =>
+                                      updateAction(index, {
+                                        waitSeconds: clampWait(event.target.value),
+                                      })
+                                    }
+                                    className="h-7 w-20 text-xs"
+                                    aria-label={t('waitAria')}
+                                  />
+                                  <span className="text-xs text-muted-foreground">
+                                    {t('waitUnit')}
+                                  </span>
+                                </div>
+                                <p className="text-xs text-muted-foreground">{t('waitHint')}</p>
+                              </div>
+                            ) : null}
                             <Input
                               value={action.label}
                               onChange={(event) => updateAction(index, { label: event.target.value })}
@@ -993,7 +1043,11 @@ function LinkPreview({
                         <span className="truncate">{label}</span>
                       </p>
                       <p className="mt-0.5 text-xs text-muted-foreground">
-                        {option?.behavior === 'EMAIL' ? t('collectsEmailLong') : t('opensNewTab')}
+                        {option?.behavior === 'EMAIL'
+                          ? t('collectsEmailLong')
+                          : action.waitSeconds > 0
+                            ? t('opensWithWait', { seconds: action.waitSeconds })
+                            : t('opensNewTab')}
                       </p>
                     </div>
                   </li>

@@ -77,6 +77,14 @@ export type LinkAction = Prisma.LinkActionModel
  */
 export type UnlockSession = Prisma.UnlockSessionModel
 /**
+ * Model UnlockActionStart
+ * *
+ *  * The moment a visitor first opened a step that has a waiting period. It is
+ *  * created once per session and action, so reloading or pressing again cannot
+ *  * shorten or restart the wait.
+ */
+export type UnlockActionStart = Prisma.UnlockActionStartModel
+/**
  * Model UnlockActionCompletion
  * 
  */

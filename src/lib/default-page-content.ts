@@ -19,10 +19,10 @@ The visitor never needs a Link Unlocker account unless the link asks for one.
 The built-in catalog covers YouTube, Instagram, Facebook, TikTok, Discord, Spotify and any other website. It includes 17 actions, such as subscribe, like, comment, watch, follow, join a server, boost a server, listen to a track and visit a page. You can combine several actions on one link and ask for an email address as an extra step.
 
 ### Are the actions verified?
-Some are, and the card says which. Where a platform publishes a record we can read — the public comments on a YouTube video, or membership of a Discord server — the step is checked and the result is stored. For a YouTube like or subscription, the visitor can connect their own Google account so the action is confirmed against that account. Steps that leave no readable record are completed when the visitor opens them; they are recorded as confirmed, not verified, and we do not claim otherwise.
+No. Every step is completed by the visitor: they open the link, wait the time the creator set, and mark the step as done. We do not check whether a subscription, like, comment, share or view actually happened on YouTube or anywhere else, and we never ask a visitor to sign in to Google or connect an account. The card records a step as completed, not verified.
 
-### What does the visitor have to share during a check?
-Only what the check needs. For a public-record check the visitor names one profile at the end; we read what that profile has already made public. For a connected-account check the visitor signs in with the provider once and we read the single fact the action needs. We never ask for a password on Link Unlocker and we never post, follow or subscribe on the visitor's behalf.
+### What does the visitor have to share?
+Nothing beyond what a step asks for — an email address, only if the creator added the optional email step. There is no Google sign-in, no account connection and no password.
 
 ### What happens if a link expires or is paused?
 You can set an expiry date on any link. Once a link expires, or while it is paused, the unlock page stops immediately and tells the visitor that the link is no longer available. You can re-enable a paused link from your dashboard at any time. An expired session cannot be extended from the browser; the visitor starts again with a fresh session.
@@ -54,8 +54,8 @@ Use the report link shown on the unlock page, or send us the short link through 
 ### Can I delete my data?
 Deleting a link also deletes its unlock sessions, analytics and collected email addresses. You can delete individual addresses from your email list at any time. To close your account and remove your profile data, contact us — there is no self-service delete button yet, so we handle it manually.
 
-### What if a platform changes its API or a check fails?
-Public checks rely on the platform's own API and permissions. If a check becomes unavailable through no fault of the visitor, the step falls back to a confirmation so the visitor is not blocked, and the record shows which steps were actually verified. We would rather report an honest result than claim a check that could not run.
+### What if a platform changes its API?
+Our steps do not depend on a platform API: the visitor opens the link, waits and marks the step done. If a target page stops working, the creator can update it. No step claims to be verified, so a platform change cannot invalidate a completed step.
 
 ### How do I get help?
 Email [support@linkunlock.app](mailto:support@linkunlock.app) for product questions or account help, and use the report link on an unlock page for abuse. Including the short link and the step you are stuck on helps us answer faster.`,
@@ -94,11 +94,8 @@ When a visitor opens a link, we create a short-lived session that expires after 
 ## Email addresses collected by creators
 The email action is optional and only appears when a creator adds it to a link. The address is stored with the time of consent, only the owner of that link can see or export it, and it is deleted when the link is deleted or when the owner removes it. Creators are responsible for using those addresses lawfully and for honouring any withdrawal of consent they receive.
 
-## Public verification and connected accounts
-Some actions can be checked against a public record or a connected account. When a visitor takes part:
-- For a public-record check, we read information the platform already shows publicly, such as a comment author or server membership. We store a short result description as proof for the creator's dashboard, never for public display.
-- For a connected-account check, the provider (for example Google) asks the visitor to approve a limited read-only scope. We receive an access token for that single check and use it only to read the fact the action needs. We do not keep the token longer than the check requires, do not post anything, and never receive the visitor's password.
-- We never expose the proof description to other visitors or to the public.
+## Completed steps, not account checks
+Some steps point at a social platform, but we do not connect to the visitor's account there. A step is recorded as completed when the visitor opens it, waits the time the creator configured and marks it done. We store the completion time per step and session. We do not verify that a subscription, like, comment, share or view actually happened, and we do not ask for a Google sign-in.
 
 ## Files and uploads
 Files and images you upload are stored by the service and delivered only to sessions that completed the link's steps. File names, sizes and MIME types are stored so the file can be streamed and shown in the dashboard. Deleting a file disables the links that referenced it.
@@ -107,7 +104,7 @@ Files and images you upload are stored by the service and delivered only to sess
 We do not sell personal data. We share the minimum necessary with:
 - Hosting and database providers that run the service.
 - Email delivery providers, when a password-reset or contact email has to be sent.
-- Platform APIs used for a verification the visitor chose to complete, for example Google/YouTube or Discord.
+- Platform APIs used for optional checks the operator has enabled.
 - Authorities or other parties when the law requires it, or when it is necessary to investigate credible abuse.
 These providers process data on our instructions or under their own terms, and may operate in countries other than yours. Where required, we rely on appropriate safeguards for those transfers.
 
@@ -157,7 +154,7 @@ Do not use Link Unlocker to:
 We may remove content or disable links and accounts that breach these rules.
 
 ## Third-party platforms
-The actions in a link happen on third-party platforms. We do not control those platforms, their availability, their rules or their data practices. Completing an action does not create any relationship between you and us beyond these terms, and a platform may change its API, permissions or limits at any time. Verification is best-effort: it confirms what a public record or connected account shows at the moment of the check, not that a visitor continues to follow, like or subscribe afterwards.
+The actions in a link happen on third-party platforms. We do not control those platforms, their availability, their rules or their data practices. Completing an action does not create any relationship between you and us beyond these terms, and a platform may change its API, permissions or limits at any time. Steps are self-reported: a step counts once the visitor opens it and the configured wait has passed. We do not confirm that a subscription, like, comment, share or view actually happened, and we do not ask visitors to connect a Google account.
 
 ## Content and ownership
 You keep the rights you already hold in the content you upload or link to. You give us a limited licence to store, display and deliver that content for the purpose of running your links and showing them in your dashboard. You confirm that you have the rights needed to grant that licence. We own the service, its software and its branding; these terms do not transfer any of that ownership to you.

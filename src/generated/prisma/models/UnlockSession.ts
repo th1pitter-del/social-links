@@ -216,6 +216,7 @@ export type UnlockSessionWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"UnlockSession"> | Date | string
   link?: Prisma.XOR<Prisma.LinkScalarRelationFilter, Prisma.LinkWhereInput>
   completions?: Prisma.UnlockActionCompletionListRelationFilter
+  starts?: Prisma.UnlockActionStartListRelationFilter
   events?: Prisma.AnalyticsEventListRelationFilter
   checkins?: Prisma.TelegramCheckinListRelationFilter
 }
@@ -232,6 +233,7 @@ export type UnlockSessionOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   link?: Prisma.LinkOrderByWithRelationInput
   completions?: Prisma.UnlockActionCompletionOrderByRelationAggregateInput
+  starts?: Prisma.UnlockActionStartOrderByRelationAggregateInput
   events?: Prisma.AnalyticsEventOrderByRelationAggregateInput
   checkins?: Prisma.TelegramCheckinOrderByRelationAggregateInput
   _relevance?: Prisma.UnlockSessionOrderByRelevanceInput
@@ -252,6 +254,7 @@ export type UnlockSessionWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"UnlockSession"> | Date | string
   link?: Prisma.XOR<Prisma.LinkScalarRelationFilter, Prisma.LinkWhereInput>
   completions?: Prisma.UnlockActionCompletionListRelationFilter
+  starts?: Prisma.UnlockActionStartListRelationFilter
   events?: Prisma.AnalyticsEventListRelationFilter
   checkins?: Prisma.TelegramCheckinListRelationFilter
 }, "id">
@@ -297,6 +300,7 @@ export type UnlockSessionCreateInput = {
   updatedAt?: Date | string
   link: Prisma.LinkCreateNestedOneWithoutUnlocksInput
   completions?: Prisma.UnlockActionCompletionCreateNestedManyWithoutUnlockSessionInput
+  starts?: Prisma.UnlockActionStartCreateNestedManyWithoutUnlockSessionInput
   events?: Prisma.AnalyticsEventCreateNestedManyWithoutUnlockSessionInput
   checkins?: Prisma.TelegramCheckinCreateNestedManyWithoutUnlockSessionInput
 }
@@ -312,6 +316,7 @@ export type UnlockSessionUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   completions?: Prisma.UnlockActionCompletionUncheckedCreateNestedManyWithoutUnlockSessionInput
+  starts?: Prisma.UnlockActionStartUncheckedCreateNestedManyWithoutUnlockSessionInput
   events?: Prisma.AnalyticsEventUncheckedCreateNestedManyWithoutUnlockSessionInput
   checkins?: Prisma.TelegramCheckinUncheckedCreateNestedManyWithoutUnlockSessionInput
 }
@@ -327,6 +332,7 @@ export type UnlockSessionUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   link?: Prisma.LinkUpdateOneRequiredWithoutUnlocksNestedInput
   completions?: Prisma.UnlockActionCompletionUpdateManyWithoutUnlockSessionNestedInput
+  starts?: Prisma.UnlockActionStartUpdateManyWithoutUnlockSessionNestedInput
   events?: Prisma.AnalyticsEventUpdateManyWithoutUnlockSessionNestedInput
   checkins?: Prisma.TelegramCheckinUpdateManyWithoutUnlockSessionNestedInput
 }
@@ -342,6 +348,7 @@ export type UnlockSessionUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completions?: Prisma.UnlockActionCompletionUncheckedUpdateManyWithoutUnlockSessionNestedInput
+  starts?: Prisma.UnlockActionStartUncheckedUpdateManyWithoutUnlockSessionNestedInput
   events?: Prisma.AnalyticsEventUncheckedUpdateManyWithoutUnlockSessionNestedInput
   checkins?: Prisma.TelegramCheckinUncheckedUpdateManyWithoutUnlockSessionNestedInput
 }
@@ -489,6 +496,20 @@ export type EnumUnlockStatusFieldUpdateOperationsInput = {
   set?: $Enums.UnlockStatus
 }
 
+export type UnlockSessionCreateNestedOneWithoutStartsInput = {
+  create?: Prisma.XOR<Prisma.UnlockSessionCreateWithoutStartsInput, Prisma.UnlockSessionUncheckedCreateWithoutStartsInput>
+  connectOrCreate?: Prisma.UnlockSessionCreateOrConnectWithoutStartsInput
+  connect?: Prisma.UnlockSessionWhereUniqueInput
+}
+
+export type UnlockSessionUpdateOneRequiredWithoutStartsNestedInput = {
+  create?: Prisma.XOR<Prisma.UnlockSessionCreateWithoutStartsInput, Prisma.UnlockSessionUncheckedCreateWithoutStartsInput>
+  connectOrCreate?: Prisma.UnlockSessionCreateOrConnectWithoutStartsInput
+  upsert?: Prisma.UnlockSessionUpsertWithoutStartsInput
+  connect?: Prisma.UnlockSessionWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UnlockSessionUpdateToOneWithWhereWithoutStartsInput, Prisma.UnlockSessionUpdateWithoutStartsInput>, Prisma.UnlockSessionUncheckedUpdateWithoutStartsInput>
+}
+
 export type UnlockSessionCreateNestedOneWithoutCompletionsInput = {
   create?: Prisma.XOR<Prisma.UnlockSessionCreateWithoutCompletionsInput, Prisma.UnlockSessionUncheckedCreateWithoutCompletionsInput>
   connectOrCreate?: Prisma.UnlockSessionCreateOrConnectWithoutCompletionsInput
@@ -543,6 +564,7 @@ export type UnlockSessionCreateWithoutLinkInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   completions?: Prisma.UnlockActionCompletionCreateNestedManyWithoutUnlockSessionInput
+  starts?: Prisma.UnlockActionStartCreateNestedManyWithoutUnlockSessionInput
   events?: Prisma.AnalyticsEventCreateNestedManyWithoutUnlockSessionInput
   checkins?: Prisma.TelegramCheckinCreateNestedManyWithoutUnlockSessionInput
 }
@@ -557,6 +579,7 @@ export type UnlockSessionUncheckedCreateWithoutLinkInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   completions?: Prisma.UnlockActionCompletionUncheckedCreateNestedManyWithoutUnlockSessionInput
+  starts?: Prisma.UnlockActionStartUncheckedCreateNestedManyWithoutUnlockSessionInput
   events?: Prisma.AnalyticsEventUncheckedCreateNestedManyWithoutUnlockSessionInput
   checkins?: Prisma.TelegramCheckinUncheckedCreateNestedManyWithoutUnlockSessionInput
 }
@@ -602,6 +625,82 @@ export type UnlockSessionScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"UnlockSession"> | Date | string
 }
 
+export type UnlockSessionCreateWithoutStartsInput = {
+  id: string
+  status?: $Enums.UnlockStatus
+  ipHash?: string | null
+  userAgent?: string | null
+  referrer?: string | null
+  expiresAt: Date | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  link: Prisma.LinkCreateNestedOneWithoutUnlocksInput
+  completions?: Prisma.UnlockActionCompletionCreateNestedManyWithoutUnlockSessionInput
+  events?: Prisma.AnalyticsEventCreateNestedManyWithoutUnlockSessionInput
+  checkins?: Prisma.TelegramCheckinCreateNestedManyWithoutUnlockSessionInput
+}
+
+export type UnlockSessionUncheckedCreateWithoutStartsInput = {
+  id: string
+  linkId: string
+  status?: $Enums.UnlockStatus
+  ipHash?: string | null
+  userAgent?: string | null
+  referrer?: string | null
+  expiresAt: Date | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  completions?: Prisma.UnlockActionCompletionUncheckedCreateNestedManyWithoutUnlockSessionInput
+  events?: Prisma.AnalyticsEventUncheckedCreateNestedManyWithoutUnlockSessionInput
+  checkins?: Prisma.TelegramCheckinUncheckedCreateNestedManyWithoutUnlockSessionInput
+}
+
+export type UnlockSessionCreateOrConnectWithoutStartsInput = {
+  where: Prisma.UnlockSessionWhereUniqueInput
+  create: Prisma.XOR<Prisma.UnlockSessionCreateWithoutStartsInput, Prisma.UnlockSessionUncheckedCreateWithoutStartsInput>
+}
+
+export type UnlockSessionUpsertWithoutStartsInput = {
+  update: Prisma.XOR<Prisma.UnlockSessionUpdateWithoutStartsInput, Prisma.UnlockSessionUncheckedUpdateWithoutStartsInput>
+  create: Prisma.XOR<Prisma.UnlockSessionCreateWithoutStartsInput, Prisma.UnlockSessionUncheckedCreateWithoutStartsInput>
+  where?: Prisma.UnlockSessionWhereInput
+}
+
+export type UnlockSessionUpdateToOneWithWhereWithoutStartsInput = {
+  where?: Prisma.UnlockSessionWhereInput
+  data: Prisma.XOR<Prisma.UnlockSessionUpdateWithoutStartsInput, Prisma.UnlockSessionUncheckedUpdateWithoutStartsInput>
+}
+
+export type UnlockSessionUpdateWithoutStartsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumUnlockStatusFieldUpdateOperationsInput | $Enums.UnlockStatus
+  ipHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  link?: Prisma.LinkUpdateOneRequiredWithoutUnlocksNestedInput
+  completions?: Prisma.UnlockActionCompletionUpdateManyWithoutUnlockSessionNestedInput
+  events?: Prisma.AnalyticsEventUpdateManyWithoutUnlockSessionNestedInput
+  checkins?: Prisma.TelegramCheckinUpdateManyWithoutUnlockSessionNestedInput
+}
+
+export type UnlockSessionUncheckedUpdateWithoutStartsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  linkId?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumUnlockStatusFieldUpdateOperationsInput | $Enums.UnlockStatus
+  ipHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  completions?: Prisma.UnlockActionCompletionUncheckedUpdateManyWithoutUnlockSessionNestedInput
+  events?: Prisma.AnalyticsEventUncheckedUpdateManyWithoutUnlockSessionNestedInput
+  checkins?: Prisma.TelegramCheckinUncheckedUpdateManyWithoutUnlockSessionNestedInput
+}
+
 export type UnlockSessionCreateWithoutCompletionsInput = {
   id: string
   status?: $Enums.UnlockStatus
@@ -612,6 +711,7 @@ export type UnlockSessionCreateWithoutCompletionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   link: Prisma.LinkCreateNestedOneWithoutUnlocksInput
+  starts?: Prisma.UnlockActionStartCreateNestedManyWithoutUnlockSessionInput
   events?: Prisma.AnalyticsEventCreateNestedManyWithoutUnlockSessionInput
   checkins?: Prisma.TelegramCheckinCreateNestedManyWithoutUnlockSessionInput
 }
@@ -626,6 +726,7 @@ export type UnlockSessionUncheckedCreateWithoutCompletionsInput = {
   expiresAt: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
+  starts?: Prisma.UnlockActionStartUncheckedCreateNestedManyWithoutUnlockSessionInput
   events?: Prisma.AnalyticsEventUncheckedCreateNestedManyWithoutUnlockSessionInput
   checkins?: Prisma.TelegramCheckinUncheckedCreateNestedManyWithoutUnlockSessionInput
 }
@@ -656,6 +757,7 @@ export type UnlockSessionUpdateWithoutCompletionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   link?: Prisma.LinkUpdateOneRequiredWithoutUnlocksNestedInput
+  starts?: Prisma.UnlockActionStartUpdateManyWithoutUnlockSessionNestedInput
   events?: Prisma.AnalyticsEventUpdateManyWithoutUnlockSessionNestedInput
   checkins?: Prisma.TelegramCheckinUpdateManyWithoutUnlockSessionNestedInput
 }
@@ -670,6 +772,7 @@ export type UnlockSessionUncheckedUpdateWithoutCompletionsInput = {
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  starts?: Prisma.UnlockActionStartUncheckedUpdateManyWithoutUnlockSessionNestedInput
   events?: Prisma.AnalyticsEventUncheckedUpdateManyWithoutUnlockSessionNestedInput
   checkins?: Prisma.TelegramCheckinUncheckedUpdateManyWithoutUnlockSessionNestedInput
 }
@@ -685,6 +788,7 @@ export type UnlockSessionCreateWithoutEventsInput = {
   updatedAt?: Date | string
   link: Prisma.LinkCreateNestedOneWithoutUnlocksInput
   completions?: Prisma.UnlockActionCompletionCreateNestedManyWithoutUnlockSessionInput
+  starts?: Prisma.UnlockActionStartCreateNestedManyWithoutUnlockSessionInput
   checkins?: Prisma.TelegramCheckinCreateNestedManyWithoutUnlockSessionInput
 }
 
@@ -699,6 +803,7 @@ export type UnlockSessionUncheckedCreateWithoutEventsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   completions?: Prisma.UnlockActionCompletionUncheckedCreateNestedManyWithoutUnlockSessionInput
+  starts?: Prisma.UnlockActionStartUncheckedCreateNestedManyWithoutUnlockSessionInput
   checkins?: Prisma.TelegramCheckinUncheckedCreateNestedManyWithoutUnlockSessionInput
 }
 
@@ -729,6 +834,7 @@ export type UnlockSessionUpdateWithoutEventsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   link?: Prisma.LinkUpdateOneRequiredWithoutUnlocksNestedInput
   completions?: Prisma.UnlockActionCompletionUpdateManyWithoutUnlockSessionNestedInput
+  starts?: Prisma.UnlockActionStartUpdateManyWithoutUnlockSessionNestedInput
   checkins?: Prisma.TelegramCheckinUpdateManyWithoutUnlockSessionNestedInput
 }
 
@@ -743,6 +849,7 @@ export type UnlockSessionUncheckedUpdateWithoutEventsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completions?: Prisma.UnlockActionCompletionUncheckedUpdateManyWithoutUnlockSessionNestedInput
+  starts?: Prisma.UnlockActionStartUncheckedUpdateManyWithoutUnlockSessionNestedInput
   checkins?: Prisma.TelegramCheckinUncheckedUpdateManyWithoutUnlockSessionNestedInput
 }
 
@@ -757,6 +864,7 @@ export type UnlockSessionCreateWithoutCheckinsInput = {
   updatedAt?: Date | string
   link: Prisma.LinkCreateNestedOneWithoutUnlocksInput
   completions?: Prisma.UnlockActionCompletionCreateNestedManyWithoutUnlockSessionInput
+  starts?: Prisma.UnlockActionStartCreateNestedManyWithoutUnlockSessionInput
   events?: Prisma.AnalyticsEventCreateNestedManyWithoutUnlockSessionInput
 }
 
@@ -771,6 +879,7 @@ export type UnlockSessionUncheckedCreateWithoutCheckinsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   completions?: Prisma.UnlockActionCompletionUncheckedCreateNestedManyWithoutUnlockSessionInput
+  starts?: Prisma.UnlockActionStartUncheckedCreateNestedManyWithoutUnlockSessionInput
   events?: Prisma.AnalyticsEventUncheckedCreateNestedManyWithoutUnlockSessionInput
 }
 
@@ -801,6 +910,7 @@ export type UnlockSessionUpdateWithoutCheckinsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   link?: Prisma.LinkUpdateOneRequiredWithoutUnlocksNestedInput
   completions?: Prisma.UnlockActionCompletionUpdateManyWithoutUnlockSessionNestedInput
+  starts?: Prisma.UnlockActionStartUpdateManyWithoutUnlockSessionNestedInput
   events?: Prisma.AnalyticsEventUpdateManyWithoutUnlockSessionNestedInput
 }
 
@@ -815,6 +925,7 @@ export type UnlockSessionUncheckedUpdateWithoutCheckinsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completions?: Prisma.UnlockActionCompletionUncheckedUpdateManyWithoutUnlockSessionNestedInput
+  starts?: Prisma.UnlockActionStartUncheckedUpdateManyWithoutUnlockSessionNestedInput
   events?: Prisma.AnalyticsEventUncheckedUpdateManyWithoutUnlockSessionNestedInput
 }
 
@@ -839,6 +950,7 @@ export type UnlockSessionUpdateWithoutLinkInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completions?: Prisma.UnlockActionCompletionUpdateManyWithoutUnlockSessionNestedInput
+  starts?: Prisma.UnlockActionStartUpdateManyWithoutUnlockSessionNestedInput
   events?: Prisma.AnalyticsEventUpdateManyWithoutUnlockSessionNestedInput
   checkins?: Prisma.TelegramCheckinUpdateManyWithoutUnlockSessionNestedInput
 }
@@ -853,6 +965,7 @@ export type UnlockSessionUncheckedUpdateWithoutLinkInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completions?: Prisma.UnlockActionCompletionUncheckedUpdateManyWithoutUnlockSessionNestedInput
+  starts?: Prisma.UnlockActionStartUncheckedUpdateManyWithoutUnlockSessionNestedInput
   events?: Prisma.AnalyticsEventUncheckedUpdateManyWithoutUnlockSessionNestedInput
   checkins?: Prisma.TelegramCheckinUncheckedUpdateManyWithoutUnlockSessionNestedInput
 }
@@ -875,12 +988,14 @@ export type UnlockSessionUncheckedUpdateManyWithoutLinkInput = {
 
 export type UnlockSessionCountOutputType = {
   completions: number
+  starts: number
   events: number
   checkins: number
 }
 
 export type UnlockSessionCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   completions?: boolean | UnlockSessionCountOutputTypeCountCompletionsArgs
+  starts?: boolean | UnlockSessionCountOutputTypeCountStartsArgs
   events?: boolean | UnlockSessionCountOutputTypeCountEventsArgs
   checkins?: boolean | UnlockSessionCountOutputTypeCountCheckinsArgs
 }
@@ -900,6 +1015,13 @@ export type UnlockSessionCountOutputTypeDefaultArgs<ExtArgs extends runtime.Type
  */
 export type UnlockSessionCountOutputTypeCountCompletionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.UnlockActionCompletionWhereInput
+}
+
+/**
+ * UnlockSessionCountOutputType without action
+ */
+export type UnlockSessionCountOutputTypeCountStartsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.UnlockActionStartWhereInput
 }
 
 /**
@@ -929,6 +1051,7 @@ export type UnlockSessionSelect<ExtArgs extends runtime.Types.Extensions.Interna
   updatedAt?: boolean
   link?: boolean | Prisma.LinkDefaultArgs<ExtArgs>
   completions?: boolean | Prisma.UnlockSession$completionsArgs<ExtArgs>
+  starts?: boolean | Prisma.UnlockSession$startsArgs<ExtArgs>
   events?: boolean | Prisma.UnlockSession$eventsArgs<ExtArgs>
   checkins?: boolean | Prisma.UnlockSession$checkinsArgs<ExtArgs>
   _count?: boolean | Prisma.UnlockSessionCountOutputTypeDefaultArgs<ExtArgs>
@@ -952,6 +1075,7 @@ export type UnlockSessionOmit<ExtArgs extends runtime.Types.Extensions.InternalA
 export type UnlockSessionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   link?: boolean | Prisma.LinkDefaultArgs<ExtArgs>
   completions?: boolean | Prisma.UnlockSession$completionsArgs<ExtArgs>
+  starts?: boolean | Prisma.UnlockSession$startsArgs<ExtArgs>
   events?: boolean | Prisma.UnlockSession$eventsArgs<ExtArgs>
   checkins?: boolean | Prisma.UnlockSession$checkinsArgs<ExtArgs>
   _count?: boolean | Prisma.UnlockSessionCountOutputTypeDefaultArgs<ExtArgs>
@@ -962,6 +1086,7 @@ export type $UnlockSessionPayload<ExtArgs extends runtime.Types.Extensions.Inter
   objects: {
     link: Prisma.$LinkPayload<ExtArgs>
     completions: Prisma.$UnlockActionCompletionPayload<ExtArgs>[]
+    starts: Prisma.$UnlockActionStartPayload<ExtArgs>[]
     events: Prisma.$AnalyticsEventPayload<ExtArgs>[]
     checkins: Prisma.$TelegramCheckinPayload<ExtArgs>[]
   }
@@ -1317,6 +1442,7 @@ export interface Prisma__UnlockSessionClient<T, Null = never, ExtArgs extends ru
   readonly [Symbol.toStringTag]: "PrismaPromise"
   link<T extends Prisma.LinkDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LinkDefaultArgs<ExtArgs>>): Prisma.Prisma__LinkClient<runtime.Types.Result.GetResult<Prisma.$LinkPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   completions<T extends Prisma.UnlockSession$completionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UnlockSession$completionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UnlockActionCompletionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  starts<T extends Prisma.UnlockSession$startsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UnlockSession$startsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UnlockActionStartPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   events<T extends Prisma.UnlockSession$eventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UnlockSession$eventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AnalyticsEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   checkins<T extends Prisma.UnlockSession$checkinsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UnlockSession$checkinsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TelegramCheckinPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
@@ -1726,6 +1852,30 @@ export type UnlockSession$completionsArgs<ExtArgs extends runtime.Types.Extensio
   take?: number
   skip?: number
   distinct?: Prisma.UnlockActionCompletionScalarFieldEnum | Prisma.UnlockActionCompletionScalarFieldEnum[]
+}
+
+/**
+ * UnlockSession.starts
+ */
+export type UnlockSession$startsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the UnlockActionStart
+   */
+  select?: Prisma.UnlockActionStartSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the UnlockActionStart
+   */
+  omit?: Prisma.UnlockActionStartOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UnlockActionStartInclude<ExtArgs> | null
+  where?: Prisma.UnlockActionStartWhereInput
+  orderBy?: Prisma.UnlockActionStartOrderByWithRelationInput | Prisma.UnlockActionStartOrderByWithRelationInput[]
+  cursor?: Prisma.UnlockActionStartWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.UnlockActionStartScalarFieldEnum | Prisma.UnlockActionStartScalarFieldEnum[]
 }
 
 /**

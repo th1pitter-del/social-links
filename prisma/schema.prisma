@@ -139,6 +139,8 @@ model LinkAction {
   label         String?
   target        String             @db.Text
   verification  ActionVerification @default(AUTO_PROMPT)
+  /** Seconds between opening this step and being allowed to mark it done. Null uses the catalog default. */
+  waitSeconds   Int?
   position      Int                @default(0)
   createdAt     DateTime           @default(now())
   updatedAt     DateTime           @updatedAt
@@ -146,6 +148,7 @@ model LinkAction {
   link        Link                    @relation(fields: [linkId], references: [id], onDelete: Cascade)
   option      ActionOption            @relation(fields: [type], references: [key], onDelete: Restrict)
   completions UnlockActionCompletion[]
+  starts      UnlockActionStart[]
   checkins    TelegramCheckin[]
 
   @@index([linkId, position])
@@ -170,10 +173,31 @@ model UnlockSession {
 
   link        Link                   @relation(fields: [linkId], references: [id], onDelete: Cascade)
   completions UnlockActionCompletion[]
+  starts      UnlockActionStart[]
   events      AnalyticsEvent[]
   checkins    TelegramCheckin[]
 
   @@index([linkId])
+}
+
+/**
+ * The moment a visitor first opened a step that has a waiting period. It is
+ * created once per session and action, so reloading or pressing again cannot
+ * shorten or restart the wait.
+ */
+model UnlockActionStart {
+  id              String   @id @default(cuid())
+  unlockSessionId String
+  linkActionId    String
+  /** Server-computed deadline; completion is refused before this moment. */
+  readyAt         DateTime
+  createdAt       DateTime @default(now())
+
+  unlockSession UnlockSession @relation(fields: [unlockSessionId], references: [id], onDelete: Cascade)
+  linkAction    LinkAction    @relation(fields: [linkActionId], references: [id], onDelete: Cascade)
+
+  @@unique([unlockSessionId, linkActionId])
+  @@index([linkActionId])
 }
 
 model UnlockActionCompletion {

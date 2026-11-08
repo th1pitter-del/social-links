@@ -31,17 +31,6 @@ export const VERIFICATION_SETTINGS = {
   telegramBotToken: { dbKey: 'verification.telegramBotToken', envName: 'TELEGRAM_BOT_TOKEN' },
   githubToken: { dbKey: 'verification.githubToken', envName: 'VERIFIER_GITHUB_TOKEN' },
   steamWebApiKey: { dbKey: 'verification.steamWebApiKey', envName: 'STEAM_WEB_API_KEY' },
-  youtubeApiKey: { dbKey: 'verification.youtubeApiKey', envName: 'YOUTUBE_API_KEY' },
-  /**
-   * Google OAuth client used to read the visitor's own likes and subscriptions.
-   * The API key above only reads public comments; these two let a visitor prove
-   * a like or a subscription from their own Google account.
-   */
-  googleClientId: { dbKey: 'verification.googleClientId', envName: 'GOOGLE_CLIENT_ID' },
-  googleClientSecret: {
-    dbKey: 'verification.googleClientSecret',
-    envName: 'GOOGLE_CLIENT_SECRET',
-  },
   discordBotToken: { dbKey: 'verification.discordBotToken', envName: 'DISCORD_BOT_TOKEN' },
   /** Optional: lets the bot check any invite link the owner pastes. */
   discordGuildId: { dbKey: 'verification.discordGuildId', envName: 'DISCORD_GUILD_ID' },

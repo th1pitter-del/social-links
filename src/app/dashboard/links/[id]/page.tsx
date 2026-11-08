@@ -12,7 +12,7 @@ import { LinkForm, type LinkFormValues } from '@/components/link-form'
 import { LinkRowActions } from '@/components/link-row-actions'
 import { Button } from '@/components/ui/button'
 import { getActionOptionMap, getEnabledActionOptions } from '@/lib/action-catalog'
-import type { ActionOptionView } from '@/lib/action-defaults'
+import { defaultWaitSeconds, type ActionOptionView } from '@/lib/action-defaults'
 import { actionLabel, platformLabel } from '@/lib/action-label'
 import { buildDayBuckets, windowStart } from '@/lib/activity-buckets'
 import { formatPercent } from '@/lib/format'
@@ -55,7 +55,10 @@ export default async function EditLinkPage({
       fileId: true,
       file: { select: { filename: true } },
       expiresAt: true,
-      actions: { orderBy: { position: 'asc' }, select: { type: true, label: true, target: true } },
+      actions: {
+        orderBy: { position: 'asc' },
+        select: { type: true, label: true, target: true, waitSeconds: true },
+      },
       _count: { select: { unlocks: true } },
     },
   })
@@ -154,6 +157,7 @@ export default async function EditLinkPage({
       type: action.type,
       label: action.label ?? '',
       target: action.target,
+      waitSeconds: action.waitSeconds ?? defaultWaitSeconds(action.type),
     })),
   }
 

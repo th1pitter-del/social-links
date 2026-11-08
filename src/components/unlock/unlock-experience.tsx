@@ -4,19 +4,22 @@ import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from '
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useLocale, useTranslations } from 'next-intl'
-import { Check, CheckCircle2, Download, ExternalLink, Eye, FileLock, FileText, Loader2, Lock, Mail, Share2, Unlock } from 'lucide-react'
+import { Check, CheckCircle2, Clock, Download, ExternalLink, Eye, FileLock, FileText, Loader2, Lock, Mail, Share2, Unlock } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
 import { PlatformGlyph, platformTint } from '@/components/brand-icon'
+import { targetDisplayName, withTargetName } from '@/lib/action-target'
 import { formatBytes, formatNumber } from '@/lib/format'
 import { cn } from 'cn'
 import {
+  beginAction,
   claimContent,
   getUnlockState,
   markActionComplete,
   startUnlock,
+  type UnlockActionStatus,
   type UnlockState,
 } from '@/lib/actions/unlock'
 
@@ -37,6 +40,8 @@ export type UnlockStepPreview = {
   behavior: 'URL' | 'EMAIL'
   /** Where the row goes. Known up front so the first press opens it too. */
   target: string
+  /** Seconds the server makes the visitor wait after opening the step. */
+  waitSeconds: number
 }
 
 type StepAction = {
@@ -48,6 +53,10 @@ type StepAction = {
   behavior: 'URL' | 'EMAIL'
   completed: boolean
   target: string
+  waitSeconds: number
+  readyAt: string | null
+  waitRemaining: number
+  status: UnlockActionStatus
 }
 
 const emptySubscribe = () => () => {}
@@ -103,6 +112,9 @@ export function UnlockExperience({
   notice?: string | null
 }) {
   const t = useTranslations('unlock')
+  const actionT = useTranslations('actions')
+  const namedT = useTranslations('actionsNamed')
+  const platformT = useTranslations('platforms')
   const locale = useLocale()
   const router = useRouter()
   const [state, setState] = useState<UnlockState | null>(null)
@@ -111,12 +123,17 @@ export function UnlockExperience({
   const [email, setEmail] = useState('')
   const [consent, setConsent] = useState(false)
   const [claimed, setClaimed] = useState<ClaimedContent>(null)
+  const [receivedAt, setReceivedAt] = useState(0)
+  const [now, setNow] = useState(() => Date.now())
   const shareUrl = useShareUrl(slug)
   /** Token already loaded or created locally; keeps a route refresh from re-fetching it. */
   const loadedTokenRef = useRef<string | null>(null)
   const applyState = useCallback((next: UnlockState) => {
     loadedTokenRef.current = next.token
     setState(next)
+    const at = Date.now()
+    setReceivedAt(at)
+    setNow(at)
     const url = new URL(window.location.href)
     url.searchParams.set('token', next.token)
     window.history.replaceState(null, '', url.toString())
@@ -126,55 +143,63 @@ export function UnlockExperience({
     if (!initialToken || initialToken === loadedTokenRef.current) return
     let cancelled = false
     void getUnlockState(initialToken).then((next) => {
-      if (!cancelled && next) {
-        loadedTokenRef.current = next.token
-        setState(next)
-        const url = new URL(window.location.href)
-        url.searchParams.set('token', next.token)
-        window.history.replaceState(null, '', url.toString())
-      }
+      if (!cancelled && next) applyState(next)
     })
     return () => {
       cancelled = true
     }
-  }, [initialToken])
+  }, [initialToken, applyState])
 
-  async function handleStart() {
+  // Only tick while a wait is still running; the countdown is relative to the
+  // moment the server state arrived, so a wrong device clock cannot shorten it.
+  const hasWaiting = state?.actions.some((action) => action.status === 'WAITING') ?? false
+  useEffect(() => {
+    if (!hasWaiting) return
+    const timer = window.setInterval(() => setNow(Date.now()), 1000)
+    return () => window.clearInterval(timer)
+  }, [hasWaiting])
+
+  // The row is the visitor's first move, so the session begins here instead of
+  // behind a separate "start" press: one action per step, like the card shows.
+  async function ensureSession(): Promise<UnlockState | null> {
+    if (state) return state
     setBusy(true)
     setError(null)
     const result = await startUnlock(slug, { preview })
     setBusy(false)
     if (!result.ok) {
       setError(result.error)
-      return
+      return null
     }
     applyState(result.state)
     // Starting a session records a view server-side, so the public counters on
-    // this page are now stale. Refresh them in place instead of waiting for
-    // the visitor to reload.
+    // this page are now stale. Refresh them in place rather than waiting.
     router.refresh()
+    return result.state
   }
 
-  async function handleAction(actionId: string, isEmail: boolean) {
-    // The row is the visitor's first move, so the session begins here instead of
-    // behind a separate "start" press: one action per step, like the card shows.
-    let session = state
-    if (!session) {
-      setBusy(true)
-      setError(null)
-      const begin = await startUnlock(slug, { preview })
-      setBusy(false)
-      if (!begin.ok) {
-        setError(begin.error)
-        return
-      }
-      applyState(begin.state)
-      session = begin.state
-      // Starting a session records a view server-side, so the public counters on
-      // this page are now stale. Refresh them in place rather than waiting.
-      router.refresh()
-    }
+  async function handleStart() {
+    await ensureSession()
+  }
 
+  /** Opens a waiting step and lets the server set its deadline. */
+  async function handleBegin(actionId: string) {
+    const session = await ensureSession()
+    if (!session) return
+    setBusy(true)
+    setError(null)
+    const result = await beginAction({ token: session.token, actionId })
+    setBusy(false)
+    if (!result.ok) {
+      setError(result.error)
+      return
+    }
+    applyState(result.state)
+  }
+
+  async function handleComplete(actionId: string, isEmail = false) {
+    const session = await ensureSession()
+    if (!session) return
     setBusy(true)
     setError(null)
     const result = await markActionComplete({
@@ -188,7 +213,7 @@ export function UnlockExperience({
       setError(result.error)
       return
     }
-    setState(result.state)
+    applyState(result.state)
   }
 
   async function handleClaim() {
@@ -240,6 +265,10 @@ export function UnlockExperience({
         behavior: step.behavior,
         completed: false,
         target: step.target,
+        waitSeconds: step.waitSeconds,
+        readyAt: null,
+        waitRemaining: 0,
+        status: 'PENDING' as const,
       }))
 
   const totalSteps = actionSteps.length
@@ -366,13 +395,24 @@ export function UnlockExperience({
                     const isEmail = action.behavior === 'EMAIL'
                     const done = action.completed
                     const tint = platformTint(action.platform)
-                    const clickable = !done && !expired && !busy
+                    // The countdown is measured from the moment the server state
+                    // arrived, so a wrong device clock cannot skip a wait.
+                    const elapsed = receivedAt ? Math.max(0, Math.floor((now - receivedAt) / 1000)) : 0
+                    const waitLeft =
+                      action.status === 'WAITING' ? Math.max(0, action.waitRemaining - elapsed) : 0
+                    const waiting = !done && action.status === 'WAITING' && waitLeft > 0
+                    const readyNow =
+                      !done && (action.status === 'READY' || (action.status === 'WAITING' && waitLeft === 0))
+                    const pending = !done && !waiting && !readyNow
+                    const clickable = pending && !expired && !busy
+                    const interactive = (clickable || readyNow) && !expired && !busy
                     // A subscription row lands on the channel with the subscribe
                     // prompt already open; the channel link itself still works.
-                    const href =
-                      action.type === 'YOUTUBE_SUBSCRIBE'
+                    const href = action.target
+                      ? action.type === 'YOUTUBE_SUBSCRIBE'
                         ? withSubConfirmation(action.target)
                         : action.target
+                      : null
                     const surface = cn(
                       'relative flex w-full items-center justify-center gap-3 px-4 py-3.5 text-sm backdrop-blur-md transition-[filter,background-color] duration-500 motion-reduce:transition-none',
                       // A finished task drops its brand wash and settles to the
@@ -382,7 +422,7 @@ export function UnlockExperience({
                         : tint
                           ? 'bg-[var(--tint-l)] bg-gradient-to-b from-[var(--ramp-l)] to-transparent dark:bg-[var(--tint-d)] dark:from-[var(--ramp-d)]'
                           : 'bg-transparent',
-                      clickable && 'cursor-pointer hover:brightness-105 dark:hover:brightness-125',
+                      interactive && 'cursor-pointer hover:brightness-105 dark:hover:brightness-125',
                     )
                     const tintVars = tint
                       ? ({
@@ -406,6 +446,22 @@ export function UnlockExperience({
                         )}
                       />
                     )
+                    // Name the actual channel or site the step opens, with that
+                    // language's grammar: "Subscribe to MrBeast", not
+                    // "Subscribe on YouTube". Owner-written labels stay as-is.
+                    const platformName =
+                      action.platform && platformT.has(action.platform)
+                        ? platformT(action.platform)
+                        : null
+                    const targetName = targetDisplayName(action.platform, action.target)
+                    const builtInLabel =
+                      actionT.has(action.type) && action.label === actionT(action.type)
+                    const shownLabel =
+                      builtInLabel && targetName && namedT.has(action.type)
+                        ? namedT(action.type, { name: targetName })
+                        : builtInLabel
+                          ? withTargetName(action.label, platformName, targetName)
+                          : action.label
                     const label = (
                       <span
                         className={cn(
@@ -416,7 +472,7 @@ export function UnlockExperience({
                             'text-muted-foreground line-through decoration-muted-foreground/50',
                         )}
                       >
-                        {action.label}
+                        {shownLabel}
                       </span>
                     )
 
@@ -459,7 +515,7 @@ export function UnlockExperience({
                                 </label>
                                 <Button
                                   size="sm"
-                                  onClick={() => handleAction(action.id, true)}
+                                  onClick={() => void handleComplete(action.id, true)}
                                   disabled={busy || !email || !consent}
                                 >
                                   {t('submitEmail')}
@@ -475,6 +531,22 @@ export function UnlockExperience({
                       <>
                         {glyph}
                         {label}
+                        {/* Every non-finished row states its own condition, so the
+                            visitor never has to guess whether a wait is still on. */}
+                        {done ? null : waiting ? (
+                          <span
+                            aria-live="polite"
+                            className="flex shrink-0 items-center gap-1 rounded-full bg-background/70 px-2 py-0.5 text-[0.7rem] font-medium text-foreground tabular-nums ring-1 ring-border"
+                          >
+                            <Clock className="size-3" />
+                            {t('waiting', { seconds: waitLeft })}
+                          </span>
+                        ) : readyNow ? (
+                          <span className="flex shrink-0 items-center gap-1 rounded-full bg-primary/15 px-2 py-0.5 text-[0.7rem] font-medium text-foreground ring-1 ring-primary/30">
+                            <Check className="size-3" />
+                            {t('markDone')}
+                          </span>
+                        ) : null}
                         {/* The badge sits in a slot that takes no part in the row's
                             layout, so the row never changes height as it finishes. */}
                         <span
@@ -501,17 +573,32 @@ export function UnlockExperience({
                         {clickable && href ? (
                           // A real anchor, not a scripted popup: the browser opens
                           // it on the visitor's own gesture, including the first
-                          // press before the unlock session exists.
+                          // press before the unlock session exists. The server
+                          // stamps the deadline only when the step has a wait.
                           <a
                             href={href}
                             target="_blank"
                             rel="noopener noreferrer"
-                            onClick={() => handleAction(action.id, false)}
+                            onClick={() =>
+                              void (action.waitSeconds > 0
+                                ? handleBegin(action.id)
+                                : handleComplete(action.id))
+                            }
                             style={tintVars}
                             className={cn(surface, 'no-underline')}
                           >
                             {rowContent}
                           </a>
+                        ) : readyNow ? (
+                          <button
+                            type="button"
+                            onClick={() => void handleComplete(action.id)}
+                            disabled={busy || expired}
+                            style={tintVars}
+                            className={surface}
+                          >
+                            {rowContent}
+                          </button>
                         ) : (
                           <button type="button" disabled style={tintVars} className={surface}>
                             {rowContent}

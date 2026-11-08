@@ -1,6 +1,7 @@
 import 'server-only'
 
 import { getActionOptionMap } from '@/lib/action-catalog'
+import { defaultWaitSeconds } from '@/lib/action-defaults'
 import { prisma } from '@/lib/prisma'
 
 export type PublicAction = {
@@ -14,6 +15,7 @@ export type PublicAction = {
   behavior: 'URL' | 'EMAIL'
   icon: string
   platform: string | null
+  waitSeconds: number
 }
 
 export type PublicUnlockLink = {
@@ -52,7 +54,14 @@ export async function getPublicUnlockLink(slug: string): Promise<PublicUnlockLin
       file: { select: { id: true, filename: true, size: true } },
       actions: {
         orderBy: { position: 'asc' },
-        select: { id: true, type: true, label: true, target: true, position: true },
+        select: {
+          id: true,
+          type: true,
+          label: true,
+          target: true,
+          waitSeconds: true,
+          position: true,
+        },
       },
     },
   })
@@ -86,6 +95,7 @@ export async function getPublicUnlockLink(slug: string): Promise<PublicUnlockLin
         behavior: option?.behavior ?? 'URL',
         icon: option?.icon ?? 'link',
         platform: option?.platform ?? null,
+        waitSeconds: action.waitSeconds ?? defaultWaitSeconds(action.type),
       }
     }),
     viewCount,

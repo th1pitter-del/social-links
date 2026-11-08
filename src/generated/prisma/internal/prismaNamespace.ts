@@ -404,6 +404,7 @@ export const ModelName = {
   Link: 'Link',
   LinkAction: 'LinkAction',
   UnlockSession: 'UnlockSession',
+  UnlockActionStart: 'UnlockActionStart',
   UnlockActionCompletion: 'UnlockActionCompletion',
   AnalyticsEvent: 'AnalyticsEvent',
   EmailLead: 'EmailLead',
@@ -436,7 +437,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "session" | "account" | "verification" | "link" | "linkAction" | "unlockSession" | "unlockActionCompletion" | "analyticsEvent" | "emailLead" | "rateLimitBucket" | "abuseReport" | "setting" | "adUnit" | "headerLink" | "auditLog" | "platform" | "actionOption" | "mediaAsset" | "storedFile" | "userUnlock" | "profile" | "bioLink" | "telegramCheckin"
+    modelProps: "user" | "session" | "account" | "verification" | "link" | "linkAction" | "unlockSession" | "unlockActionStart" | "unlockActionCompletion" | "analyticsEvent" | "emailLead" | "rateLimitBucket" | "abuseReport" | "setting" | "adUnit" | "headerLink" | "auditLog" | "platform" | "actionOption" | "mediaAsset" | "storedFile" | "userUnlock" | "profile" | "bioLink" | "telegramCheckin"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -899,6 +900,72 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.UnlockSessionCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.UnlockSessionCountAggregateOutputType> | number
+        }
+      }
+    }
+    UnlockActionStart: {
+      payload: Prisma.$UnlockActionStartPayload<ExtArgs>
+      fields: Prisma.UnlockActionStartFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.UnlockActionStartFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UnlockActionStartPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.UnlockActionStartFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UnlockActionStartPayload>
+        }
+        findFirst: {
+          args: Prisma.UnlockActionStartFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UnlockActionStartPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.UnlockActionStartFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UnlockActionStartPayload>
+        }
+        findMany: {
+          args: Prisma.UnlockActionStartFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UnlockActionStartPayload>[]
+        }
+        create: {
+          args: Prisma.UnlockActionStartCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UnlockActionStartPayload>
+        }
+        createMany: {
+          args: Prisma.UnlockActionStartCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.UnlockActionStartDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UnlockActionStartPayload>
+        }
+        update: {
+          args: Prisma.UnlockActionStartUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UnlockActionStartPayload>
+        }
+        deleteMany: {
+          args: Prisma.UnlockActionStartDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.UnlockActionStartUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.UnlockActionStartUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UnlockActionStartPayload>
+        }
+        aggregate: {
+          args: Prisma.UnlockActionStartAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateUnlockActionStart>
+        }
+        groupBy: {
+          args: Prisma.UnlockActionStartGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UnlockActionStartGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.UnlockActionStartCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UnlockActionStartCountAggregateOutputType> | number
         }
       }
     }
@@ -2154,6 +2221,7 @@ export const LinkActionScalarFieldEnum = {
   label: 'label',
   target: 'target',
   verification: 'verification',
+  waitSeconds: 'waitSeconds',
   position: 'position',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -2175,6 +2243,17 @@ export const UnlockSessionScalarFieldEnum = {
 } as const
 
 export type UnlockSessionScalarFieldEnum = (typeof UnlockSessionScalarFieldEnum)[keyof typeof UnlockSessionScalarFieldEnum]
+
+
+export const UnlockActionStartScalarFieldEnum = {
+  id: 'id',
+  unlockSessionId: 'unlockSessionId',
+  linkActionId: 'linkActionId',
+  readyAt: 'readyAt',
+  createdAt: 'createdAt'
+} as const
+
+export type UnlockActionStartScalarFieldEnum = (typeof UnlockActionStartScalarFieldEnum)[keyof typeof UnlockActionStartScalarFieldEnum]
 
 
 export const UnlockActionCompletionScalarFieldEnum = {
@@ -2511,6 +2590,15 @@ export const UnlockSessionOrderByRelevanceFieldEnum = {
 } as const
 
 export type UnlockSessionOrderByRelevanceFieldEnum = (typeof UnlockSessionOrderByRelevanceFieldEnum)[keyof typeof UnlockSessionOrderByRelevanceFieldEnum]
+
+
+export const UnlockActionStartOrderByRelevanceFieldEnum = {
+  id: 'id',
+  unlockSessionId: 'unlockSessionId',
+  linkActionId: 'linkActionId'
+} as const
+
+export type UnlockActionStartOrderByRelevanceFieldEnum = (typeof UnlockActionStartOrderByRelevanceFieldEnum)[keyof typeof UnlockActionStartOrderByRelevanceFieldEnum]
 
 
 export const UnlockActionCompletionOrderByRelevanceFieldEnum = {
@@ -2961,6 +3049,7 @@ export type GlobalOmitConfig = {
   link?: Prisma.LinkOmit
   linkAction?: Prisma.LinkActionOmit
   unlockSession?: Prisma.UnlockSessionOmit
+  unlockActionStart?: Prisma.UnlockActionStartOmit
   unlockActionCompletion?: Prisma.UnlockActionCompletionOmit
   analyticsEvent?: Prisma.AnalyticsEventOmit
   emailLead?: Prisma.EmailLeadOmit

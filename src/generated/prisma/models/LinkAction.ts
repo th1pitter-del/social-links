@@ -27,10 +27,12 @@ export type AggregateLinkAction = {
 }
 
 export type LinkActionAvgAggregateOutputType = {
+  waitSeconds: number | null
   position: number | null
 }
 
 export type LinkActionSumAggregateOutputType = {
+  waitSeconds: number | null
   position: number | null
 }
 
@@ -41,6 +43,7 @@ export type LinkActionMinAggregateOutputType = {
   label: string | null
   target: string | null
   verification: $Enums.ActionVerification | null
+  waitSeconds: number | null
   position: number | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -53,6 +56,7 @@ export type LinkActionMaxAggregateOutputType = {
   label: string | null
   target: string | null
   verification: $Enums.ActionVerification | null
+  waitSeconds: number | null
   position: number | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -65,6 +69,7 @@ export type LinkActionCountAggregateOutputType = {
   label: number
   target: number
   verification: number
+  waitSeconds: number
   position: number
   createdAt: number
   updatedAt: number
@@ -73,10 +78,12 @@ export type LinkActionCountAggregateOutputType = {
 
 
 export type LinkActionAvgAggregateInputType = {
+  waitSeconds?: true
   position?: true
 }
 
 export type LinkActionSumAggregateInputType = {
+  waitSeconds?: true
   position?: true
 }
 
@@ -87,6 +94,7 @@ export type LinkActionMinAggregateInputType = {
   label?: true
   target?: true
   verification?: true
+  waitSeconds?: true
   position?: true
   createdAt?: true
   updatedAt?: true
@@ -99,6 +107,7 @@ export type LinkActionMaxAggregateInputType = {
   label?: true
   target?: true
   verification?: true
+  waitSeconds?: true
   position?: true
   createdAt?: true
   updatedAt?: true
@@ -111,6 +120,7 @@ export type LinkActionCountAggregateInputType = {
   label?: true
   target?: true
   verification?: true
+  waitSeconds?: true
   position?: true
   createdAt?: true
   updatedAt?: true
@@ -210,6 +220,7 @@ export type LinkActionGroupByOutputType = {
   label: string | null
   target: string
   verification: $Enums.ActionVerification
+  waitSeconds: number | null
   position: number
   createdAt: Date
   updatedAt: Date
@@ -245,12 +256,14 @@ export type LinkActionWhereInput = {
   label?: Prisma.StringNullableFilter<"LinkAction"> | string | null
   target?: Prisma.StringFilter<"LinkAction"> | string
   verification?: Prisma.EnumActionVerificationFilter<"LinkAction"> | $Enums.ActionVerification
+  waitSeconds?: Prisma.IntNullableFilter<"LinkAction"> | number | null
   position?: Prisma.IntFilter<"LinkAction"> | number
   createdAt?: Prisma.DateTimeFilter<"LinkAction"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"LinkAction"> | Date | string
   link?: Prisma.XOR<Prisma.LinkScalarRelationFilter, Prisma.LinkWhereInput>
   option?: Prisma.XOR<Prisma.ActionOptionScalarRelationFilter, Prisma.ActionOptionWhereInput>
   completions?: Prisma.UnlockActionCompletionListRelationFilter
+  starts?: Prisma.UnlockActionStartListRelationFilter
   checkins?: Prisma.TelegramCheckinListRelationFilter
 }
 
@@ -261,12 +274,14 @@ export type LinkActionOrderByWithRelationInput = {
   label?: Prisma.SortOrderInput | Prisma.SortOrder
   target?: Prisma.SortOrder
   verification?: Prisma.SortOrder
+  waitSeconds?: Prisma.SortOrderInput | Prisma.SortOrder
   position?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   link?: Prisma.LinkOrderByWithRelationInput
   option?: Prisma.ActionOptionOrderByWithRelationInput
   completions?: Prisma.UnlockActionCompletionOrderByRelationAggregateInput
+  starts?: Prisma.UnlockActionStartOrderByRelationAggregateInput
   checkins?: Prisma.TelegramCheckinOrderByRelationAggregateInput
   _relevance?: Prisma.LinkActionOrderByRelevanceInput
 }
@@ -281,12 +296,14 @@ export type LinkActionWhereUniqueInput = Prisma.AtLeast<{
   label?: Prisma.StringNullableFilter<"LinkAction"> | string | null
   target?: Prisma.StringFilter<"LinkAction"> | string
   verification?: Prisma.EnumActionVerificationFilter<"LinkAction"> | $Enums.ActionVerification
+  waitSeconds?: Prisma.IntNullableFilter<"LinkAction"> | number | null
   position?: Prisma.IntFilter<"LinkAction"> | number
   createdAt?: Prisma.DateTimeFilter<"LinkAction"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"LinkAction"> | Date | string
   link?: Prisma.XOR<Prisma.LinkScalarRelationFilter, Prisma.LinkWhereInput>
   option?: Prisma.XOR<Prisma.ActionOptionScalarRelationFilter, Prisma.ActionOptionWhereInput>
   completions?: Prisma.UnlockActionCompletionListRelationFilter
+  starts?: Prisma.UnlockActionStartListRelationFilter
   checkins?: Prisma.TelegramCheckinListRelationFilter
 }, "id">
 
@@ -297,6 +314,7 @@ export type LinkActionOrderByWithAggregationInput = {
   label?: Prisma.SortOrderInput | Prisma.SortOrder
   target?: Prisma.SortOrder
   verification?: Prisma.SortOrder
+  waitSeconds?: Prisma.SortOrderInput | Prisma.SortOrder
   position?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -317,6 +335,7 @@ export type LinkActionScalarWhereWithAggregatesInput = {
   label?: Prisma.StringNullableWithAggregatesFilter<"LinkAction"> | string | null
   target?: Prisma.StringWithAggregatesFilter<"LinkAction"> | string
   verification?: Prisma.EnumActionVerificationWithAggregatesFilter<"LinkAction"> | $Enums.ActionVerification
+  waitSeconds?: Prisma.IntNullableWithAggregatesFilter<"LinkAction"> | number | null
   position?: Prisma.IntWithAggregatesFilter<"LinkAction"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"LinkAction"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"LinkAction"> | Date | string
@@ -327,12 +346,14 @@ export type LinkActionCreateInput = {
   label?: string | null
   target: string
   verification?: $Enums.ActionVerification
+  waitSeconds?: number | null
   position?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   link: Prisma.LinkCreateNestedOneWithoutActionsInput
   option: Prisma.ActionOptionCreateNestedOneWithoutActionsInput
   completions?: Prisma.UnlockActionCompletionCreateNestedManyWithoutLinkActionInput
+  starts?: Prisma.UnlockActionStartCreateNestedManyWithoutLinkActionInput
   checkins?: Prisma.TelegramCheckinCreateNestedManyWithoutLinkActionInput
 }
 
@@ -343,10 +364,12 @@ export type LinkActionUncheckedCreateInput = {
   label?: string | null
   target: string
   verification?: $Enums.ActionVerification
+  waitSeconds?: number | null
   position?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   completions?: Prisma.UnlockActionCompletionUncheckedCreateNestedManyWithoutLinkActionInput
+  starts?: Prisma.UnlockActionStartUncheckedCreateNestedManyWithoutLinkActionInput
   checkins?: Prisma.TelegramCheckinUncheckedCreateNestedManyWithoutLinkActionInput
 }
 
@@ -355,12 +378,14 @@ export type LinkActionUpdateInput = {
   label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   target?: Prisma.StringFieldUpdateOperationsInput | string
   verification?: Prisma.EnumActionVerificationFieldUpdateOperationsInput | $Enums.ActionVerification
+  waitSeconds?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   position?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   link?: Prisma.LinkUpdateOneRequiredWithoutActionsNestedInput
   option?: Prisma.ActionOptionUpdateOneRequiredWithoutActionsNestedInput
   completions?: Prisma.UnlockActionCompletionUpdateManyWithoutLinkActionNestedInput
+  starts?: Prisma.UnlockActionStartUpdateManyWithoutLinkActionNestedInput
   checkins?: Prisma.TelegramCheckinUpdateManyWithoutLinkActionNestedInput
 }
 
@@ -371,10 +396,12 @@ export type LinkActionUncheckedUpdateInput = {
   label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   target?: Prisma.StringFieldUpdateOperationsInput | string
   verification?: Prisma.EnumActionVerificationFieldUpdateOperationsInput | $Enums.ActionVerification
+  waitSeconds?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   position?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completions?: Prisma.UnlockActionCompletionUncheckedUpdateManyWithoutLinkActionNestedInput
+  starts?: Prisma.UnlockActionStartUncheckedUpdateManyWithoutLinkActionNestedInput
   checkins?: Prisma.TelegramCheckinUncheckedUpdateManyWithoutLinkActionNestedInput
 }
 
@@ -385,6 +412,7 @@ export type LinkActionCreateManyInput = {
   label?: string | null
   target: string
   verification?: $Enums.ActionVerification
+  waitSeconds?: number | null
   position?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -395,6 +423,7 @@ export type LinkActionUpdateManyMutationInput = {
   label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   target?: Prisma.StringFieldUpdateOperationsInput | string
   verification?: Prisma.EnumActionVerificationFieldUpdateOperationsInput | $Enums.ActionVerification
+  waitSeconds?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   position?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -407,6 +436,7 @@ export type LinkActionUncheckedUpdateManyInput = {
   label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   target?: Prisma.StringFieldUpdateOperationsInput | string
   verification?: Prisma.EnumActionVerificationFieldUpdateOperationsInput | $Enums.ActionVerification
+  waitSeconds?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   position?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -435,12 +465,14 @@ export type LinkActionCountOrderByAggregateInput = {
   label?: Prisma.SortOrder
   target?: Prisma.SortOrder
   verification?: Prisma.SortOrder
+  waitSeconds?: Prisma.SortOrder
   position?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type LinkActionAvgOrderByAggregateInput = {
+  waitSeconds?: Prisma.SortOrder
   position?: Prisma.SortOrder
 }
 
@@ -451,6 +483,7 @@ export type LinkActionMaxOrderByAggregateInput = {
   label?: Prisma.SortOrder
   target?: Prisma.SortOrder
   verification?: Prisma.SortOrder
+  waitSeconds?: Prisma.SortOrder
   position?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -463,12 +496,14 @@ export type LinkActionMinOrderByAggregateInput = {
   label?: Prisma.SortOrder
   target?: Prisma.SortOrder
   verification?: Prisma.SortOrder
+  waitSeconds?: Prisma.SortOrder
   position?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type LinkActionSumOrderByAggregateInput = {
+  waitSeconds?: Prisma.SortOrder
   position?: Prisma.SortOrder
 }
 
@@ -523,12 +558,34 @@ export type EnumActionVerificationFieldUpdateOperationsInput = {
   set?: $Enums.ActionVerification
 }
 
+export type NullableIntFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
 export type IntFieldUpdateOperationsInput = {
   set?: number
   increment?: number
   decrement?: number
   multiply?: number
   divide?: number
+}
+
+export type LinkActionCreateNestedOneWithoutStartsInput = {
+  create?: Prisma.XOR<Prisma.LinkActionCreateWithoutStartsInput, Prisma.LinkActionUncheckedCreateWithoutStartsInput>
+  connectOrCreate?: Prisma.LinkActionCreateOrConnectWithoutStartsInput
+  connect?: Prisma.LinkActionWhereUniqueInput
+}
+
+export type LinkActionUpdateOneRequiredWithoutStartsNestedInput = {
+  create?: Prisma.XOR<Prisma.LinkActionCreateWithoutStartsInput, Prisma.LinkActionUncheckedCreateWithoutStartsInput>
+  connectOrCreate?: Prisma.LinkActionCreateOrConnectWithoutStartsInput
+  upsert?: Prisma.LinkActionUpsertWithoutStartsInput
+  connect?: Prisma.LinkActionWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.LinkActionUpdateToOneWithWhereWithoutStartsInput, Prisma.LinkActionUpdateWithoutStartsInput>, Prisma.LinkActionUncheckedUpdateWithoutStartsInput>
 }
 
 export type LinkActionCreateNestedOneWithoutCompletionsInput = {
@@ -606,11 +663,13 @@ export type LinkActionCreateWithoutLinkInput = {
   label?: string | null
   target: string
   verification?: $Enums.ActionVerification
+  waitSeconds?: number | null
   position?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   option: Prisma.ActionOptionCreateNestedOneWithoutActionsInput
   completions?: Prisma.UnlockActionCompletionCreateNestedManyWithoutLinkActionInput
+  starts?: Prisma.UnlockActionStartCreateNestedManyWithoutLinkActionInput
   checkins?: Prisma.TelegramCheckinCreateNestedManyWithoutLinkActionInput
 }
 
@@ -620,10 +679,12 @@ export type LinkActionUncheckedCreateWithoutLinkInput = {
   label?: string | null
   target: string
   verification?: $Enums.ActionVerification
+  waitSeconds?: number | null
   position?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   completions?: Prisma.UnlockActionCompletionUncheckedCreateNestedManyWithoutLinkActionInput
+  starts?: Prisma.UnlockActionStartUncheckedCreateNestedManyWithoutLinkActionInput
   checkins?: Prisma.TelegramCheckinUncheckedCreateNestedManyWithoutLinkActionInput
 }
 
@@ -663,9 +724,86 @@ export type LinkActionScalarWhereInput = {
   label?: Prisma.StringNullableFilter<"LinkAction"> | string | null
   target?: Prisma.StringFilter<"LinkAction"> | string
   verification?: Prisma.EnumActionVerificationFilter<"LinkAction"> | $Enums.ActionVerification
+  waitSeconds?: Prisma.IntNullableFilter<"LinkAction"> | number | null
   position?: Prisma.IntFilter<"LinkAction"> | number
   createdAt?: Prisma.DateTimeFilter<"LinkAction"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"LinkAction"> | Date | string
+}
+
+export type LinkActionCreateWithoutStartsInput = {
+  id?: string
+  label?: string | null
+  target: string
+  verification?: $Enums.ActionVerification
+  waitSeconds?: number | null
+  position?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  link: Prisma.LinkCreateNestedOneWithoutActionsInput
+  option: Prisma.ActionOptionCreateNestedOneWithoutActionsInput
+  completions?: Prisma.UnlockActionCompletionCreateNestedManyWithoutLinkActionInput
+  checkins?: Prisma.TelegramCheckinCreateNestedManyWithoutLinkActionInput
+}
+
+export type LinkActionUncheckedCreateWithoutStartsInput = {
+  id?: string
+  linkId: string
+  type: string
+  label?: string | null
+  target: string
+  verification?: $Enums.ActionVerification
+  waitSeconds?: number | null
+  position?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  completions?: Prisma.UnlockActionCompletionUncheckedCreateNestedManyWithoutLinkActionInput
+  checkins?: Prisma.TelegramCheckinUncheckedCreateNestedManyWithoutLinkActionInput
+}
+
+export type LinkActionCreateOrConnectWithoutStartsInput = {
+  where: Prisma.LinkActionWhereUniqueInput
+  create: Prisma.XOR<Prisma.LinkActionCreateWithoutStartsInput, Prisma.LinkActionUncheckedCreateWithoutStartsInput>
+}
+
+export type LinkActionUpsertWithoutStartsInput = {
+  update: Prisma.XOR<Prisma.LinkActionUpdateWithoutStartsInput, Prisma.LinkActionUncheckedUpdateWithoutStartsInput>
+  create: Prisma.XOR<Prisma.LinkActionCreateWithoutStartsInput, Prisma.LinkActionUncheckedCreateWithoutStartsInput>
+  where?: Prisma.LinkActionWhereInput
+}
+
+export type LinkActionUpdateToOneWithWhereWithoutStartsInput = {
+  where?: Prisma.LinkActionWhereInput
+  data: Prisma.XOR<Prisma.LinkActionUpdateWithoutStartsInput, Prisma.LinkActionUncheckedUpdateWithoutStartsInput>
+}
+
+export type LinkActionUpdateWithoutStartsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  target?: Prisma.StringFieldUpdateOperationsInput | string
+  verification?: Prisma.EnumActionVerificationFieldUpdateOperationsInput | $Enums.ActionVerification
+  waitSeconds?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  position?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  link?: Prisma.LinkUpdateOneRequiredWithoutActionsNestedInput
+  option?: Prisma.ActionOptionUpdateOneRequiredWithoutActionsNestedInput
+  completions?: Prisma.UnlockActionCompletionUpdateManyWithoutLinkActionNestedInput
+  checkins?: Prisma.TelegramCheckinUpdateManyWithoutLinkActionNestedInput
+}
+
+export type LinkActionUncheckedUpdateWithoutStartsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  linkId?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  target?: Prisma.StringFieldUpdateOperationsInput | string
+  verification?: Prisma.EnumActionVerificationFieldUpdateOperationsInput | $Enums.ActionVerification
+  waitSeconds?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  position?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  completions?: Prisma.UnlockActionCompletionUncheckedUpdateManyWithoutLinkActionNestedInput
+  checkins?: Prisma.TelegramCheckinUncheckedUpdateManyWithoutLinkActionNestedInput
 }
 
 export type LinkActionCreateWithoutCompletionsInput = {
@@ -673,11 +811,13 @@ export type LinkActionCreateWithoutCompletionsInput = {
   label?: string | null
   target: string
   verification?: $Enums.ActionVerification
+  waitSeconds?: number | null
   position?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   link: Prisma.LinkCreateNestedOneWithoutActionsInput
   option: Prisma.ActionOptionCreateNestedOneWithoutActionsInput
+  starts?: Prisma.UnlockActionStartCreateNestedManyWithoutLinkActionInput
   checkins?: Prisma.TelegramCheckinCreateNestedManyWithoutLinkActionInput
 }
 
@@ -688,9 +828,11 @@ export type LinkActionUncheckedCreateWithoutCompletionsInput = {
   label?: string | null
   target: string
   verification?: $Enums.ActionVerification
+  waitSeconds?: number | null
   position?: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  starts?: Prisma.UnlockActionStartUncheckedCreateNestedManyWithoutLinkActionInput
   checkins?: Prisma.TelegramCheckinUncheckedCreateNestedManyWithoutLinkActionInput
 }
 
@@ -715,11 +857,13 @@ export type LinkActionUpdateWithoutCompletionsInput = {
   label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   target?: Prisma.StringFieldUpdateOperationsInput | string
   verification?: Prisma.EnumActionVerificationFieldUpdateOperationsInput | $Enums.ActionVerification
+  waitSeconds?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   position?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   link?: Prisma.LinkUpdateOneRequiredWithoutActionsNestedInput
   option?: Prisma.ActionOptionUpdateOneRequiredWithoutActionsNestedInput
+  starts?: Prisma.UnlockActionStartUpdateManyWithoutLinkActionNestedInput
   checkins?: Prisma.TelegramCheckinUpdateManyWithoutLinkActionNestedInput
 }
 
@@ -730,9 +874,11 @@ export type LinkActionUncheckedUpdateWithoutCompletionsInput = {
   label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   target?: Prisma.StringFieldUpdateOperationsInput | string
   verification?: Prisma.EnumActionVerificationFieldUpdateOperationsInput | $Enums.ActionVerification
+  waitSeconds?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   position?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  starts?: Prisma.UnlockActionStartUncheckedUpdateManyWithoutLinkActionNestedInput
   checkins?: Prisma.TelegramCheckinUncheckedUpdateManyWithoutLinkActionNestedInput
 }
 
@@ -741,11 +887,13 @@ export type LinkActionCreateWithoutOptionInput = {
   label?: string | null
   target: string
   verification?: $Enums.ActionVerification
+  waitSeconds?: number | null
   position?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   link: Prisma.LinkCreateNestedOneWithoutActionsInput
   completions?: Prisma.UnlockActionCompletionCreateNestedManyWithoutLinkActionInput
+  starts?: Prisma.UnlockActionStartCreateNestedManyWithoutLinkActionInput
   checkins?: Prisma.TelegramCheckinCreateNestedManyWithoutLinkActionInput
 }
 
@@ -755,10 +903,12 @@ export type LinkActionUncheckedCreateWithoutOptionInput = {
   label?: string | null
   target: string
   verification?: $Enums.ActionVerification
+  waitSeconds?: number | null
   position?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   completions?: Prisma.UnlockActionCompletionUncheckedCreateNestedManyWithoutLinkActionInput
+  starts?: Prisma.UnlockActionStartUncheckedCreateNestedManyWithoutLinkActionInput
   checkins?: Prisma.TelegramCheckinUncheckedCreateNestedManyWithoutLinkActionInput
 }
 
@@ -793,12 +943,14 @@ export type LinkActionCreateWithoutCheckinsInput = {
   label?: string | null
   target: string
   verification?: $Enums.ActionVerification
+  waitSeconds?: number | null
   position?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   link: Prisma.LinkCreateNestedOneWithoutActionsInput
   option: Prisma.ActionOptionCreateNestedOneWithoutActionsInput
   completions?: Prisma.UnlockActionCompletionCreateNestedManyWithoutLinkActionInput
+  starts?: Prisma.UnlockActionStartCreateNestedManyWithoutLinkActionInput
 }
 
 export type LinkActionUncheckedCreateWithoutCheckinsInput = {
@@ -808,10 +960,12 @@ export type LinkActionUncheckedCreateWithoutCheckinsInput = {
   label?: string | null
   target: string
   verification?: $Enums.ActionVerification
+  waitSeconds?: number | null
   position?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   completions?: Prisma.UnlockActionCompletionUncheckedCreateNestedManyWithoutLinkActionInput
+  starts?: Prisma.UnlockActionStartUncheckedCreateNestedManyWithoutLinkActionInput
 }
 
 export type LinkActionCreateOrConnectWithoutCheckinsInput = {
@@ -835,12 +989,14 @@ export type LinkActionUpdateWithoutCheckinsInput = {
   label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   target?: Prisma.StringFieldUpdateOperationsInput | string
   verification?: Prisma.EnumActionVerificationFieldUpdateOperationsInput | $Enums.ActionVerification
+  waitSeconds?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   position?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   link?: Prisma.LinkUpdateOneRequiredWithoutActionsNestedInput
   option?: Prisma.ActionOptionUpdateOneRequiredWithoutActionsNestedInput
   completions?: Prisma.UnlockActionCompletionUpdateManyWithoutLinkActionNestedInput
+  starts?: Prisma.UnlockActionStartUpdateManyWithoutLinkActionNestedInput
 }
 
 export type LinkActionUncheckedUpdateWithoutCheckinsInput = {
@@ -850,10 +1006,12 @@ export type LinkActionUncheckedUpdateWithoutCheckinsInput = {
   label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   target?: Prisma.StringFieldUpdateOperationsInput | string
   verification?: Prisma.EnumActionVerificationFieldUpdateOperationsInput | $Enums.ActionVerification
+  waitSeconds?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   position?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completions?: Prisma.UnlockActionCompletionUncheckedUpdateManyWithoutLinkActionNestedInput
+  starts?: Prisma.UnlockActionStartUncheckedUpdateManyWithoutLinkActionNestedInput
 }
 
 export type LinkActionCreateManyLinkInput = {
@@ -862,6 +1020,7 @@ export type LinkActionCreateManyLinkInput = {
   label?: string | null
   target: string
   verification?: $Enums.ActionVerification
+  waitSeconds?: number | null
   position?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -872,11 +1031,13 @@ export type LinkActionUpdateWithoutLinkInput = {
   label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   target?: Prisma.StringFieldUpdateOperationsInput | string
   verification?: Prisma.EnumActionVerificationFieldUpdateOperationsInput | $Enums.ActionVerification
+  waitSeconds?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   position?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   option?: Prisma.ActionOptionUpdateOneRequiredWithoutActionsNestedInput
   completions?: Prisma.UnlockActionCompletionUpdateManyWithoutLinkActionNestedInput
+  starts?: Prisma.UnlockActionStartUpdateManyWithoutLinkActionNestedInput
   checkins?: Prisma.TelegramCheckinUpdateManyWithoutLinkActionNestedInput
 }
 
@@ -886,10 +1047,12 @@ export type LinkActionUncheckedUpdateWithoutLinkInput = {
   label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   target?: Prisma.StringFieldUpdateOperationsInput | string
   verification?: Prisma.EnumActionVerificationFieldUpdateOperationsInput | $Enums.ActionVerification
+  waitSeconds?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   position?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completions?: Prisma.UnlockActionCompletionUncheckedUpdateManyWithoutLinkActionNestedInput
+  starts?: Prisma.UnlockActionStartUncheckedUpdateManyWithoutLinkActionNestedInput
   checkins?: Prisma.TelegramCheckinUncheckedUpdateManyWithoutLinkActionNestedInput
 }
 
@@ -899,6 +1062,7 @@ export type LinkActionUncheckedUpdateManyWithoutLinkInput = {
   label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   target?: Prisma.StringFieldUpdateOperationsInput | string
   verification?: Prisma.EnumActionVerificationFieldUpdateOperationsInput | $Enums.ActionVerification
+  waitSeconds?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   position?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -910,6 +1074,7 @@ export type LinkActionCreateManyOptionInput = {
   label?: string | null
   target: string
   verification?: $Enums.ActionVerification
+  waitSeconds?: number | null
   position?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -920,11 +1085,13 @@ export type LinkActionUpdateWithoutOptionInput = {
   label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   target?: Prisma.StringFieldUpdateOperationsInput | string
   verification?: Prisma.EnumActionVerificationFieldUpdateOperationsInput | $Enums.ActionVerification
+  waitSeconds?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   position?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   link?: Prisma.LinkUpdateOneRequiredWithoutActionsNestedInput
   completions?: Prisma.UnlockActionCompletionUpdateManyWithoutLinkActionNestedInput
+  starts?: Prisma.UnlockActionStartUpdateManyWithoutLinkActionNestedInput
   checkins?: Prisma.TelegramCheckinUpdateManyWithoutLinkActionNestedInput
 }
 
@@ -934,10 +1101,12 @@ export type LinkActionUncheckedUpdateWithoutOptionInput = {
   label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   target?: Prisma.StringFieldUpdateOperationsInput | string
   verification?: Prisma.EnumActionVerificationFieldUpdateOperationsInput | $Enums.ActionVerification
+  waitSeconds?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   position?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completions?: Prisma.UnlockActionCompletionUncheckedUpdateManyWithoutLinkActionNestedInput
+  starts?: Prisma.UnlockActionStartUncheckedUpdateManyWithoutLinkActionNestedInput
   checkins?: Prisma.TelegramCheckinUncheckedUpdateManyWithoutLinkActionNestedInput
 }
 
@@ -947,6 +1116,7 @@ export type LinkActionUncheckedUpdateManyWithoutOptionInput = {
   label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   target?: Prisma.StringFieldUpdateOperationsInput | string
   verification?: Prisma.EnumActionVerificationFieldUpdateOperationsInput | $Enums.ActionVerification
+  waitSeconds?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   position?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -959,11 +1129,13 @@ export type LinkActionUncheckedUpdateManyWithoutOptionInput = {
 
 export type LinkActionCountOutputType = {
   completions: number
+  starts: number
   checkins: number
 }
 
 export type LinkActionCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   completions?: boolean | LinkActionCountOutputTypeCountCompletionsArgs
+  starts?: boolean | LinkActionCountOutputTypeCountStartsArgs
   checkins?: boolean | LinkActionCountOutputTypeCountCheckinsArgs
 }
 
@@ -987,6 +1159,13 @@ export type LinkActionCountOutputTypeCountCompletionsArgs<ExtArgs extends runtim
 /**
  * LinkActionCountOutputType without action
  */
+export type LinkActionCountOutputTypeCountStartsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.UnlockActionStartWhereInput
+}
+
+/**
+ * LinkActionCountOutputType without action
+ */
 export type LinkActionCountOutputTypeCountCheckinsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.TelegramCheckinWhereInput
 }
@@ -999,12 +1178,14 @@ export type LinkActionSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   label?: boolean
   target?: boolean
   verification?: boolean
+  waitSeconds?: boolean
   position?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   link?: boolean | Prisma.LinkDefaultArgs<ExtArgs>
   option?: boolean | Prisma.ActionOptionDefaultArgs<ExtArgs>
   completions?: boolean | Prisma.LinkAction$completionsArgs<ExtArgs>
+  starts?: boolean | Prisma.LinkAction$startsArgs<ExtArgs>
   checkins?: boolean | Prisma.LinkAction$checkinsArgs<ExtArgs>
   _count?: boolean | Prisma.LinkActionCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["linkAction"]>
@@ -1018,16 +1199,18 @@ export type LinkActionSelectScalar = {
   label?: boolean
   target?: boolean
   verification?: boolean
+  waitSeconds?: boolean
   position?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type LinkActionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "linkId" | "type" | "label" | "target" | "verification" | "position" | "createdAt" | "updatedAt", ExtArgs["result"]["linkAction"]>
+export type LinkActionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "linkId" | "type" | "label" | "target" | "verification" | "waitSeconds" | "position" | "createdAt" | "updatedAt", ExtArgs["result"]["linkAction"]>
 export type LinkActionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   link?: boolean | Prisma.LinkDefaultArgs<ExtArgs>
   option?: boolean | Prisma.ActionOptionDefaultArgs<ExtArgs>
   completions?: boolean | Prisma.LinkAction$completionsArgs<ExtArgs>
+  starts?: boolean | Prisma.LinkAction$startsArgs<ExtArgs>
   checkins?: boolean | Prisma.LinkAction$checkinsArgs<ExtArgs>
   _count?: boolean | Prisma.LinkActionCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -1038,6 +1221,7 @@ export type $LinkActionPayload<ExtArgs extends runtime.Types.Extensions.Internal
     link: Prisma.$LinkPayload<ExtArgs>
     option: Prisma.$ActionOptionPayload<ExtArgs>
     completions: Prisma.$UnlockActionCompletionPayload<ExtArgs>[]
+    starts: Prisma.$UnlockActionStartPayload<ExtArgs>[]
     checkins: Prisma.$TelegramCheckinPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -1047,6 +1231,10 @@ export type $LinkActionPayload<ExtArgs extends runtime.Types.Extensions.Internal
     label: string | null
     target: string
     verification: $Enums.ActionVerification
+    /**
+     * * Seconds between opening this step and being allowed to mark it done. Null uses the catalog default.
+     */
+    waitSeconds: number | null
     position: number
     createdAt: Date
     updatedAt: Date
@@ -1393,6 +1581,7 @@ export interface Prisma__LinkActionClient<T, Null = never, ExtArgs extends runti
   link<T extends Prisma.LinkDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LinkDefaultArgs<ExtArgs>>): Prisma.Prisma__LinkClient<runtime.Types.Result.GetResult<Prisma.$LinkPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   option<T extends Prisma.ActionOptionDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ActionOptionDefaultArgs<ExtArgs>>): Prisma.Prisma__ActionOptionClient<runtime.Types.Result.GetResult<Prisma.$ActionOptionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   completions<T extends Prisma.LinkAction$completionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LinkAction$completionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UnlockActionCompletionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  starts<T extends Prisma.LinkAction$startsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LinkAction$startsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UnlockActionStartPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   checkins<T extends Prisma.LinkAction$checkinsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LinkAction$checkinsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TelegramCheckinPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1429,6 +1618,7 @@ export interface LinkActionFieldRefs {
   readonly label: Prisma.FieldRef<"LinkAction", 'String'>
   readonly target: Prisma.FieldRef<"LinkAction", 'String'>
   readonly verification: Prisma.FieldRef<"LinkAction", 'ActionVerification'>
+  readonly waitSeconds: Prisma.FieldRef<"LinkAction", 'Int'>
   readonly position: Prisma.FieldRef<"LinkAction", 'Int'>
   readonly createdAt: Prisma.FieldRef<"LinkAction", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"LinkAction", 'DateTime'>
@@ -1801,6 +1991,30 @@ export type LinkAction$completionsArgs<ExtArgs extends runtime.Types.Extensions.
   take?: number
   skip?: number
   distinct?: Prisma.UnlockActionCompletionScalarFieldEnum | Prisma.UnlockActionCompletionScalarFieldEnum[]
+}
+
+/**
+ * LinkAction.starts
+ */
+export type LinkAction$startsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the UnlockActionStart
+   */
+  select?: Prisma.UnlockActionStartSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the UnlockActionStart
+   */
+  omit?: Prisma.UnlockActionStartOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UnlockActionStartInclude<ExtArgs> | null
+  where?: Prisma.UnlockActionStartWhereInput
+  orderBy?: Prisma.UnlockActionStartOrderByWithRelationInput | Prisma.UnlockActionStartOrderByWithRelationInput[]
+  cursor?: Prisma.UnlockActionStartWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.UnlockActionStartScalarFieldEnum | Prisma.UnlockActionStartScalarFieldEnum[]
 }
 
 /**

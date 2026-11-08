@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { getTranslations } from 'next-intl/server'
 
 import { BrandMark } from '@/components/brand-mark'
+import { FloatingHeader } from '@/components/floating-header'
 import { LanguageSwitcher } from '@/components/language-switcher'
 import { navIcons } from '@/components/site-nav-icons'
 import { SiteNavMenu, type SiteNavItem } from '@/components/site-nav'
@@ -63,10 +64,11 @@ export async function SiteHeader() {
 
   const linkClass = (item: SiteNavItem) =>
     cn(
-      'whitespace-nowrap text-sm font-medium transition-colors',
+      'flex items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-2 text-sm font-medium transition-colors',
       item.toneColor &&
         'text-(--menu-tint)! hover:text-(--menu-tint)/75!',
-      item.toneClass ?? 'text-muted-foreground hover:text-foreground',
+      item.toneClass ??
+        'text-muted-foreground hover:bg-foreground/[0.05] hover:text-foreground',
     )
 
   const linkStyle = (item: SiteNavItem) =>
@@ -88,17 +90,23 @@ export async function SiteHeader() {
   }
 
   return (
-    <header className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur">
-      <div className="mx-auto flex h-16 w-full max-w-[1200px] items-center justify-between gap-4 px-4">
+    <FloatingHeader>
+      {/* Logo left, navigation centred, actions right. Once the inline row is
+          shown, equal side columns keep the links on the container's centre
+          line regardless of how wide the logo or account actions grow. */}
+      <div className="grid w-full grid-cols-[auto_1fr_auto] items-center gap-2 sm:gap-4 xl:grid-cols-[1fr_auto_1fr]">
         {/* min-w-0 + truncate: the site name is admin-set, so a long one has to
             give way here rather than push the nav and actions out of the row. */}
         <Link href="/" className="flex min-w-0 items-center gap-2 font-semibold">
           <BrandMark className="size-6 shrink-0" src={site.logoUrl || null} />
           <span className="hidden truncate sm:inline">{site.name}</span>
         </Link>
-        {/* Normal/large screens: the admin-managed menus live inline in the row.
-            Account actions do not — they are in the user menu at every width. */}
-        <nav aria-label={nav('sections')} className="hidden items-center gap-5 lg:flex">
+        {/* Wide screens: the admin-managed menus live inline in the row. Account
+            actions do not — they are in the user menu at every width. */}
+        <nav
+          aria-label={nav('sections')}
+          className="hidden items-center justify-center gap-0.5 xl:flex"
+        >
           {links.map((item) =>
             item.external ? (
               <a
@@ -107,7 +115,7 @@ export async function SiteHeader() {
                 target="_blank"
                 rel="noopener noreferrer"
                 style={linkStyle(item)}
-                className={cn(linkClass(item), 'flex items-center gap-1.5')}
+                className={linkClass(item)}
               >
                 {labelled(item)}
               </a>
@@ -116,14 +124,14 @@ export async function SiteHeader() {
                 key={item.label}
                 href={item.href ?? '/'}
                 style={linkStyle(item)}
-                className={cn(linkClass(item), 'flex items-center gap-1.5')}
+                className={linkClass(item)}
               >
                 {labelled(item)}
               </Link>
             ),
           )}
         </nav>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center justify-end gap-1.5 sm:gap-2">
           <LanguageSwitcher />
           <ThemeSwitcher />
           {user ? (
@@ -151,9 +159,9 @@ export async function SiteHeader() {
               </Button>
             </>
           )}
-          {/* Medium/small screens only: the menu is the sole home for the
-              admin-managed nav links once the inline row no longer fits. */}
-          <div className="lg:hidden">
+          {/* Below the inline row's width: the menu is the sole home for the
+              admin-managed nav links. */}
+          <div className="xl:hidden">
             <SiteNavMenu
               links={links}
               menuLabel={nav('menu')}
@@ -162,6 +170,6 @@ export async function SiteHeader() {
           </div>
         </div>
       </div>
-    </header>
+    </FloatingHeader>
   )
 }

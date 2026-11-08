@@ -88,6 +88,15 @@ function verificationFor(
   return catalog.get(type)?.behavior === 'EMAIL' ? 'EMAIL_SUBMITTED' : 'AUTO_PROMPT'
 }
 
+/** A stored wait overrides the catalog default; 0 explicitly means "no wait". */
+function waitFor(
+  action: ActionInput,
+  catalog: Map<string, ActionOption>,
+): number | null {
+  if (catalog.get(action.type)?.behavior === 'EMAIL') return 0
+  return action.waitSeconds ?? null
+}
+
 /**
  * Shared link creation used by both the authenticated and the guest flows. The
  * caller decides the owner (account or guest token) and the initial status.
@@ -180,6 +189,7 @@ async function createLinkRecord({
               label: action.label || null,
               target: action.target,
               verification: verificationFor(action.type, catalog),
+              waitSeconds: waitFor(action, catalog),
               position: index,
             })),
           },
@@ -359,6 +369,7 @@ export async function updateLink(id: string, raw: unknown): Promise<ActionResult
             label: action.label || null,
             target: action.target,
             verification: verificationFor(action.type, catalog),
+            waitSeconds: waitFor(action, catalog),
             position: index,
           })),
         })

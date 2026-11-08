@@ -7,6 +7,7 @@ import { getTranslations } from 'next-intl/server'
 
 import { prisma } from '@/lib/prisma'
 import { getActionOptionMap } from '@/lib/action-catalog'
+import { defaultWaitSeconds } from '@/lib/action-defaults'
 import { actionLabel } from '@/lib/action-label'
 import {
   buildCheckinLink,
@@ -29,6 +30,8 @@ import {
 
 const UNLOCK_SESSION_TTL_MS = 2 * 60 * 60 * 1000
 
+export type UnlockActionStatus = 'PENDING' | 'WAITING' | 'READY' | 'COMPLETED'
+
 export type UnlockActionView = {
   id: string
   type: string
@@ -38,6 +41,13 @@ export type UnlockActionView = {
   behavior: 'URL' | 'EMAIL'
   icon: string
   platform: string | null
+  /** Configured wait between opening and being allowed to mark the step done. */
+  waitSeconds: number
+  /** Server deadline once the visitor has opened a waiting step. */
+  readyAt: string | null
+  /** Whole seconds left when this state was built; 0 once the wait is over. */
+  waitRemaining: number
+  status: UnlockActionStatus
 }
 
 export type UnlockState = {
@@ -86,22 +96,44 @@ async function buildState(sessionId: string): Promise<UnlockState | null> {
           title: true,
           actions: {
             orderBy: { position: 'asc' },
-            select: { id: true, type: true, label: true, target: true },
+            select: {
+              id: true,
+              type: true,
+              label: true,
+              target: true,
+              waitSeconds: true,
+            },
           },
         },
       },
       completions: { select: { linkActionId: true, verified: true, proof: true } },
+      starts: { select: { linkActionId: true, readyAt: true } },
     },
   })
 
   if (!session) return null
 
   const completed = new Set(session.completions.map((row) => row.linkActionId))
-  const expired = session.expiresAt.getTime() <= Date.now()
+  const startedAt = new Map(session.starts.map((row) => [row.linkActionId, row.readyAt]))
+  const now = Date.now()
+  const expired = session.expiresAt.getTime() <= now
   const catalog = await getActionOptionMap()
   const actionCopy = await getTranslations('actions')
   const actions: UnlockActionView[] = session.link.actions.map((action) => {
     const option = catalog.get(action.type)
+    const done = completed.has(action.id)
+    const readyAt = startedAt.get(action.id) ?? null
+    const waitRemaining = readyAt
+      ? Math.max(0, Math.ceil((readyAt.getTime() - now) / 1000))
+      : 0
+    const status: UnlockActionStatus = done
+      ? 'COMPLETED'
+      : readyAt && waitRemaining > 0
+        ? 'WAITING'
+        : readyAt
+          ? 'READY'
+          : 'PENDING'
+
     return {
       id: action.id,
       type: action.type,
@@ -109,10 +141,14 @@ async function buildState(sessionId: string): Promise<UnlockState | null> {
         action.label?.trim() ||
         (option ? actionLabel(option, actionCopy) : action.type),
       target: action.target,
-      completed: completed.has(action.id),
+      completed: done,
       behavior: option?.behavior ?? 'URL',
       icon: option?.icon ?? 'link',
       platform: option?.platform ?? null,
+      waitSeconds: action.waitSeconds ?? defaultWaitSeconds(action.type),
+      readyAt: readyAt?.toISOString() ?? null,
+      waitRemaining,
+      status,
     }
   })
 
@@ -219,7 +255,59 @@ export async function startUnlock(
 }
 
 /**
- * Marks a creator-configured action as done for a visitor session.
+ * Starts a waiting step. The first press creates the session's deadline; every
+ * later press keeps the original one, so a reload cannot shorten the wait.
+ */
+export async function beginAction(input: {
+  token: string
+  actionId: string
+}): Promise<{ ok: true; state: UnlockState } | { ok: false; error: string }> {
+  const t = await getTranslations('errors')
+
+  const session = await prisma.unlockSession.findUnique({
+    where: { id: input.token },
+    select: {
+      id: true,
+      expiresAt: true,
+      link: { select: { actions: { select: { id: true, type: true, waitSeconds: true } } } },
+      completions: { select: { linkActionId: true } },
+    },
+  })
+  if (!session) return { ok: false, error: t('sessionExpiredReload') }
+  if (session.expiresAt.getTime() <= Date.now()) {
+    return { ok: false, error: t('sessionExpiredReloadLong') }
+  }
+
+  const action = session.link.actions.find((candidate) => candidate.id === input.actionId)
+  if (!action) return { ok: false, error: t('unknownAction') }
+
+  const done = session.completions.some((row) => row.linkActionId === action.id)
+  const waitSeconds = Math.max(0, action.waitSeconds ?? defaultWaitSeconds(action.type))
+  if (!done && waitSeconds > 0) {
+    await prisma.unlockActionStart.upsert({
+      where: {
+        unlockSessionId_linkActionId: {
+          unlockSessionId: session.id,
+          linkActionId: action.id,
+        },
+      },
+      create: {
+        unlockSessionId: session.id,
+        linkActionId: action.id,
+        readyAt: new Date(Date.now() + waitSeconds * 1000),
+      },
+      update: {},
+    })
+  }
+
+  const state = await buildState(session.id)
+  if (!state) return { ok: false, error: t('updateSessionFailed') }
+  return { ok: true, state }
+}
+
+/**
+ * Marks a creator-configured action as done for a visitor session. A step with
+ * a waiting period is refused until the server's own deadline has passed.
  */
 export async function markActionComplete(input: {
   token: string
@@ -237,7 +325,8 @@ export async function markActionComplete(input: {
       linkId: true,
       status: true,
       expiresAt: true,
-      link: { select: { actions: { select: { id: true, type: true } } } },
+      link: { select: { actions: { select: { id: true, type: true, waitSeconds: true } } } },
+      starts: { select: { linkActionId: true, readyAt: true } },
     },
   })
   if (!session) return { ok: false, error: t('sessionExpiredReload') }
@@ -250,6 +339,20 @@ export async function markActionComplete(input: {
 
   const option = (await getActionOptionMap()).get(action.type)
   const behavior = option?.behavior ?? 'URL'
+
+  if (behavior === 'URL') {
+    const waitSeconds = Math.max(0, action.waitSeconds ?? defaultWaitSeconds(action.type))
+    if (waitSeconds > 0) {
+      const started = session.starts.find((row) => row.linkActionId === action.id)
+      if (!started) return { ok: false, error: t('openStepFirst') }
+
+      const remaining = Math.ceil((started.readyAt.getTime() - Date.now()) / 1000)
+      if (remaining > 0) {
+        return { ok: false, error: t('waitBeforeComplete', { seconds: remaining }) }
+      }
+    }
+  }
+
   if (behavior === 'EMAIL') {
     const email = input.email?.trim().toLowerCase() ?? ''
     const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)

@@ -126,8 +126,8 @@ function NavGroup({ label, items, labelledBy }: { label: string; items: SiteNavI
 }
 
 /**
- * The hamburger menu for the public header below lg, holding the admin-managed
- * nav links. Above lg the header renders those inline instead, so the menu is
+ * The hamburger menu for the public header below xl, holding the admin-managed
+ * nav links. From xl the header renders those inline instead, so the menu is
  * hidden there. Account actions are not here: the user menu carries them at
  * every width (see site-user-menu.tsx).
  */

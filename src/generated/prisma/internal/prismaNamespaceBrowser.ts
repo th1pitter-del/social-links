@@ -58,6 +58,7 @@ export const ModelName = {
   Link: 'Link',
   LinkAction: 'LinkAction',
   UnlockSession: 'UnlockSession',
+  UnlockActionStart: 'UnlockActionStart',
   UnlockActionCompletion: 'UnlockActionCompletion',
   AnalyticsEvent: 'AnalyticsEvent',
   EmailLead: 'EmailLead',
@@ -184,6 +185,7 @@ export const LinkActionScalarFieldEnum = {
   label: 'label',
   target: 'target',
   verification: 'verification',
+  waitSeconds: 'waitSeconds',
   position: 'position',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -205,6 +207,17 @@ export const UnlockSessionScalarFieldEnum = {
 } as const
 
 export type UnlockSessionScalarFieldEnum = (typeof UnlockSessionScalarFieldEnum)[keyof typeof UnlockSessionScalarFieldEnum]
+
+
+export const UnlockActionStartScalarFieldEnum = {
+  id: 'id',
+  unlockSessionId: 'unlockSessionId',
+  linkActionId: 'linkActionId',
+  readyAt: 'readyAt',
+  createdAt: 'createdAt'
+} as const
+
+export type UnlockActionStartScalarFieldEnum = (typeof UnlockActionStartScalarFieldEnum)[keyof typeof UnlockActionStartScalarFieldEnum]
 
 
 export const UnlockActionCompletionScalarFieldEnum = {
@@ -541,6 +554,15 @@ export const UnlockSessionOrderByRelevanceFieldEnum = {
 } as const
 
 export type UnlockSessionOrderByRelevanceFieldEnum = (typeof UnlockSessionOrderByRelevanceFieldEnum)[keyof typeof UnlockSessionOrderByRelevanceFieldEnum]
+
+
+export const UnlockActionStartOrderByRelevanceFieldEnum = {
+  id: 'id',
+  unlockSessionId: 'unlockSessionId',
+  linkActionId: 'linkActionId'
+} as const
+
+export type UnlockActionStartOrderByRelevanceFieldEnum = (typeof UnlockActionStartOrderByRelevanceFieldEnum)[keyof typeof UnlockActionStartOrderByRelevanceFieldEnum]
 
 
 export const UnlockActionCompletionOrderByRelevanceFieldEnum = {
