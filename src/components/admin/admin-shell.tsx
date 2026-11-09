@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import {
+  AtSign,
   ChevronRight,
   ExternalLink,
   FileText,
@@ -90,6 +91,7 @@ export function AdminShell({
         { href: '/admin/reports', label: t('nav.abuseReports'), icon: Flag, badge: openReports },
         { href: '/admin/links', label: t('nav.links'), icon: Link2 },
         { href: '/admin/short-links', label: t('nav.shortLinks'), icon: Scissors },
+        { href: '/admin/bio', label: t('nav.bioPages'), icon: AtSign },
         { href: '/admin/users', label: t('nav.users'), icon: Users },
       ],
     },

@@ -15,7 +15,7 @@ import {
  * `x-locale-area` header, and admin requests resolve `NEXT_LOCALE_ADMIN`
  * first, falling back to the site choice, then negotiation.
  */
-export default getRequestConfig(async () => {
+export default getRequestConfig(async ({ locale: explicitLocale }) => {
   const [cookieStore, headerList] = await Promise.all([cookies(), headers()]);
   const isAdminArea = headerList.get(localeAreaHeader) === "admin";
 
@@ -25,11 +25,15 @@ export default getRequestConfig(async () => {
     : undefined;
 
   const negotiated = negotiateLocale(headerList.get("accept-language"));
-  const locale = isLocale(adminCookie)
-    ? adminCookie
-    : isLocale(siteCookie)
-      ? siteCookie
-      : negotiated;
+  // An explicit locale (e.g. `getTranslations({ locale: 'en' })`) wins so
+  // server code can read another catalog while rendering this request.
+  const locale = isLocale(explicitLocale)
+    ? explicitLocale
+    : isLocale(adminCookie)
+      ? adminCookie
+      : isLocale(siteCookie)
+        ? siteCookie
+        : negotiated;
 
   return {
     locale,

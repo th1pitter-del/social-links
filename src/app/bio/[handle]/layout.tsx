@@ -1,36 +1,57 @@
-import Link from 'next/link'
-import { getTranslations } from 'next-intl/server'
+import type { CSSProperties } from 'react'
 
-import { AdSlot } from '@/components/ads/ad-slot'
-import { BrandMark } from '@/components/brand-mark'
 import { SiteFooter } from '@/components/site-footer'
-import { Button } from '@/components/ui/button'
-import { getSiteSettings } from '@/lib/settings'
+import { SiteHeader } from '@/components/site-header'
+import { resolveBioPalette, resolveBioTheme } from '@/lib/bio-themes'
+import { prisma } from '@/lib/prisma'
 
-export default async function BioLayout({ children }: { children: React.ReactNode }) {
-  const site = await getSiteSettings()
-  const t = await getTranslations('bio')
+type LayoutProps = {
+  children: React.ReactNode
+  params: Promise<{ handle: string }>
+}
+
+export default async function BioLayout({ children, params }: LayoutProps) {
+  const { handle } = await params
+  const profile = await prisma.profile.findFirst({
+    where: { handle: handle.toLowerCase(), published: true },
+    select: { theme: true, accent: true },
+  })
+
+  // The profile's theme paints the whole surface, chrome included: the header
+  // rail is transparent and it plus the footer resolve text, borders, controls
+  // and CTA from the same palette, so no part of the page keeps the site's own
+  // colours.
+  const theme = profile ? resolveBioTheme(profile.theme) : null
+  const palette = profile ? resolveBioPalette(profile.theme, profile.accent) : null
+  const themeStyle = palette
+    ? ({
+        '--background': palette.background,
+        '--foreground': palette.text,
+        '--muted': palette.surface,
+        '--muted-foreground': palette.muted,
+        '--accent': palette.surface,
+        '--accent-foreground': palette.text,
+        '--border': palette.border,
+        '--input': palette.border,
+        '--ring': palette.accent,
+        '--primary': palette.accent,
+        '--primary-foreground': palette.onAccent,
+        '--brand-mark-bg': palette.accent,
+        '--brand-mark-fg': palette.onAccent,
+        '--bio-accent': palette.accent,
+        backgroundColor: palette.background,
+        backgroundImage: theme?.backdrop,
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: theme?.backdropSize ?? 'cover',
+        color: palette.text,
+        fontFamily: theme?.bodyFont,
+      } as CSSProperties)
+    : undefined
 
   return (
-    <div className="flex min-h-full flex-1 flex-col">
-      <header className="sticky top-0 z-40 bg-background/80 backdrop-blur">
-        <div className="mx-auto flex h-16 w-full max-w-5xl items-center justify-between gap-4 px-4">
-          <Link href="/" className="flex items-center gap-2 font-semibold">
-            <BrandMark className="size-6" src={site.logoUrl || null} />
-            <span>{site.name}</span>
-          </Link>
-          <Button size="sm" asChild>
-            <Link href="/create">{t('createOwnLink')}</Link>
-          </Button>
-        </div>
-      </header>
-
-      <div className="flex flex-1 flex-col">
-        <AdSlot placement="bio-top" className="mx-auto w-full max-w-lg px-4 pt-6" />
-        {children}
-        <AdSlot placement="bio-bottom" className="mx-auto w-full max-w-lg px-4 pb-8" />
-      </div>
-
+    <div className="flex min-h-full flex-1 flex-col" style={themeStyle}>
+      <SiteHeader variant="bio" />
+      <div className="flex flex-1 flex-col">{children}</div>
       <SiteFooter bordered={false} showBrand={false} compact />
     </div>
   )

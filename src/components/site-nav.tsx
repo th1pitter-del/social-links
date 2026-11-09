@@ -14,6 +14,9 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { cn } from 'cn'
@@ -32,24 +35,12 @@ export type SiteNavItem = {
   toneClass?: string
   /** Signs the user out, so the row is tinted as a destructive action. */
   destructive?: boolean
+  /** Sub-links opened from this menu row, when the admin nested links under it. */
+  children?: SiteNavItem[]
 }
 
-type NavRowProps = { item: SiteNavItem } & React.ComponentPropsWithoutRef<'a'> & {
-  ref?: React.Ref<HTMLElement>
-}
-
-/**
- * Rendered inside DropdownMenuItem asChild, so every prop Radix puts on the slot
- * (role, tabIndex, id, the select/keyboard handlers and the item ref) has to reach
- * the DOM node. Dropping them made the rows unhighlightable and arrow keys threw
- * "Cannot read properties of null (reading 'focus')" inside Radix.
- */
-export function NavRow({ item, className, ref, style, ...rest }: NavRowProps) {
-  const Icon = navIcons[item.icon]
-  const toneStyle = item.toneColor
-    ? ({ ...style, '--menu-tint': item.toneColor } as React.CSSProperties)
-    : style
-  const classes = cn(
+function rowClasses(item: SiteNavItem, className?: string) {
+  return cn(
     // min-h-9: 28px rows feel cramped under a finger, and the menu is now the only
     // place these controls exist on a phone.
     'flex w-full items-center gap-2 rounded-md px-2 py-2 min-h-9 whitespace-nowrap transition-colors',
@@ -66,7 +57,15 @@ export function NavRow({ item, className, ref, style, ...rest }: NavRowProps) {
     item.toneClass ?? 'hover:text-foreground',
     className,
   )
-  const content = (
+}
+
+function rowToneStyle(item: SiteNavItem): React.CSSProperties | undefined {
+  return item.toneColor ? ({ '--menu-tint': item.toneColor } as React.CSSProperties) : undefined
+}
+
+function RowContent({ item }: { item: SiteNavItem }) {
+  const Icon = navIcons[item.icon]
+  return (
     <>
       {/* text-inherit! keeps the icon on the row's own colour: the shared item
           styles every descendant on focus, which would otherwise turn just the
@@ -75,6 +74,22 @@ export function NavRow({ item, className, ref, style, ...rest }: NavRowProps) {
       {item.label}
     </>
   )
+}
+
+type NavRowProps = { item: SiteNavItem } & React.ComponentPropsWithoutRef<'a'> & {
+  ref?: React.Ref<HTMLElement>
+}
+
+/**
+ * Rendered inside DropdownMenuItem asChild, so every prop Radix puts on the slot
+ * (role, tabIndex, id, the select/keyboard handlers and the item ref) has to reach
+ * the DOM node. Dropping them made the rows unhighlightable and arrow keys threw
+ * "Cannot read properties of null (reading 'focus')" inside Radix.
+ */
+export function NavRow({ item, className, ref, style, ...rest }: NavRowProps) {
+  const toneStyle = item.toneColor ? { ...style, ...rowToneStyle(item) } : style
+  const classes = rowClasses(item, className)
+  const content = <RowContent item={item} />
 
   if (item.external) {
     return (
@@ -116,11 +131,26 @@ function NavGroup({ label, items, labelledBy }: { label: string; items: SiteNavI
   return (
     <DropdownMenuGroup aria-labelledby={labelledBy}>
       <DropdownMenuLabel id={labelledBy}>{label}</DropdownMenuLabel>
-      {items.map((item) => (
-        <DropdownMenuItem key={item.label} asChild>
-          <NavRow item={item} />
-        </DropdownMenuItem>
-      ))}
+      {items.map((item, index) =>
+        item.children?.length ? (
+          <DropdownMenuSub key={`${item.label}-${index}`}>
+            <DropdownMenuSubTrigger style={rowToneStyle(item)} className={rowClasses(item)}>
+              <RowContent item={item} />
+            </DropdownMenuSubTrigger>
+            <DropdownMenuSubContent className="w-56">
+              {item.children.map((child, childIndex) => (
+                <DropdownMenuItem key={`${child.label}-${childIndex}`} asChild>
+                  <NavRow item={child} />
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuSubContent>
+          </DropdownMenuSub>
+        ) : (
+          <DropdownMenuItem key={`${item.label}-${index}`} asChild>
+            <NavRow item={item} />
+          </DropdownMenuItem>
+        ),
+      )}
     </DropdownMenuGroup>
   )
 }
@@ -135,10 +165,13 @@ export function SiteNavMenu({
   menuLabel,
   navLabel,
   links,
+  extra,
 }: {
   menuLabel: string
   navLabel: string
   links: SiteNavItem[]
+  /** Controls that only exist in the menu (bio header account actions). */
+  extra?: React.ReactNode
 }) {
   // Radix pins dir="ltr" on the portalled content unless the root says otherwise,
   // which left the Arabic panel anchored to the wrong edge with icons on the left.
@@ -157,6 +190,7 @@ export function SiteNavMenu({
         className="flex w-60 flex-col gap-1 text-sm"
       >
         <NavGroup label={navLabel} items={links} labelledBy="site-nav-menu-navigation" />
+        {extra}
       </DropdownMenuContent>
     </DropdownMenu>
   )

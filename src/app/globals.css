@@ -240,21 +240,73 @@
 }
 
 /*
- * One short confetti scatter for the hero unlock celebration. Each particle
- * carries its own destination through the custom properties below, so the burst
- * fans out from a single origin and fades without ever looping.
+ * The hero unlock celebration. Each particle carries its own destination
+ * through the custom properties below: it springs out, drifts past its apex and
+ * settles back down while fading, so the burst reads as confetti rather than
+ * as straight lines.
  */
 @keyframes demo-confetti {
-  from {
-    opacity: 1;
-    transform: translate(0, 0) rotate(0deg) scale(1);
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) rotate(0deg) scale(0.4);
   }
-  70% {
+  10% {
     opacity: 1;
+  }
+  55% {
+    opacity: 1;
+    transform: translate(calc(var(--demo-x) * 0.72), calc(var(--demo-y) * 1.06))
+      rotate(calc(var(--demo-r) * 0.45)) scale(1);
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--demo-x), calc(var(--demo-y) * 0.55))
+      rotate(var(--demo-r)) scale(0.5);
+  }
+}
+
+/* Two rings opening from the unlock button under the confetti. */
+@keyframes demo-shockwave {
+  0% {
+    opacity: 0.55;
+    transform: scale(0.35);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(2.5);
+  }
+}
+
+/* One glow breath across the whole card at the moment it unlocks. */
+@keyframes demo-card-celebrate {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 color-mix(in oklab, var(--primary) 0%, transparent);
+  }
+  30% {
+    transform: scale(1.008);
+    box-shadow:
+      0 0 0 3px color-mix(in oklab, var(--primary) 38%, transparent),
+      0 0 56px 8px color-mix(in oklab, var(--primary) 26%, transparent);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 color-mix(in oklab, var(--primary) 0%, transparent);
+  }
+}
+
+/* The success notice popping in above the button. */
+@keyframes demo-notice-pop {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.94);
   }
   to {
-    opacity: 0;
-    transform: translate(var(--demo-x), var(--demo-y)) rotate(var(--demo-r)) scale(0.6);
+    opacity: 1;
+    transform: none;
   }
 }
 
@@ -285,5 +337,49 @@
   to {
     opacity: 1;
     transform: scale(1);
+  }
+}
+
+/*
+ * Bio link buttons. A theme paints its finish through custom properties so the
+ * public page and the editor preview share one set of hover rules. Themes that
+ * set no hover values fall back to their resting look, which keeps older
+ * presets exactly as they were: the same surface, plus a 1% scale.
+ */
+.bio-link {
+  background-color: var(--bio-button-bg);
+  background-image: var(--bio-button-image, none);
+  color: var(--bio-button-text);
+  border-width: 1px;
+  border-style: solid;
+  border-color: var(--bio-button-border);
+  border-radius: var(--bio-button-radius);
+  box-shadow: var(--bio-button-shadow, none);
+  font-weight: var(--bio-button-weight, 600);
+  transition:
+    background-color 180ms ease,
+    border-color 180ms ease,
+    color 180ms ease,
+    box-shadow 200ms ease,
+    filter 200ms ease,
+    transform 200ms ease;
+}
+
+.bio-link:hover {
+  background-color: var(--bio-button-hover-bg, var(--bio-button-bg));
+  border-color: var(--bio-button-hover-border, var(--bio-button-border));
+  box-shadow: var(--bio-button-hover-shadow, var(--bio-button-shadow, none));
+  filter: var(--bio-button-hover-filter, none);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .bio-link:hover {
+    transform: var(--bio-button-hover-transform, scale(1.01));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bio-link {
+    transition: none;
   }
 }

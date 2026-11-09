@@ -327,6 +327,7 @@ model AdUnit {
 
 // Admin-managed link shown in the public site header menu on every page.
 // labelKey rows are built-in menus whose label comes from the nav translations.
+// parentId turns a link into a sub-link of a top-level menu (one level deep).
 model HeaderLink {
   id        String   @id @default(cuid())
   label     String
@@ -337,10 +338,19 @@ model HeaderLink {
   newTab    Boolean  @default(true)
   enabled   Boolean  @default(true)
   position  Int      @default(0)
+  parentId  String?
+  /** Per-locale label overrides (`{ en, es, 'pt-br', ar }`) for this menu row. */
+  labels    Json?
+  /** Seeded menus keep their catalog key; the admin editor renders them read-only. */
+  builtIn   Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  parent   HeaderLink?  @relation("HeaderLinkChildren", fields: [parentId], references: [id], onDelete: Cascade)
+  children HeaderLink[] @relation("HeaderLinkChildren")
+
   @@index([position])
+  @@index([parentId, position])
 }
 
 model AuditLog {
@@ -446,6 +456,10 @@ model Profile {
   displayName String?
   bio         String?  @db.Text
   avatarUrl   String?  @db.Text
+  /** Link-in-bio palette preset; see src/lib/bio-themes.ts. */
+  theme       String   @default("pulse")
+  /** Optional #RRGGBB override for buttons and highlights. */
+  accent      String?
   published   Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -461,6 +475,8 @@ model BioLink {
   profileId String
   label     String
   url       String   @db.Text
+  /** Brand slug from src/lib/bio-platforms.ts; null for a custom link. */
+  platform  String?
   position  Int      @default(0)
   createdAt DateTime @default(now())
 

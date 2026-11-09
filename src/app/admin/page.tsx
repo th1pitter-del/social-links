@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { getLocale, getTranslations } from 'next-intl/server'
 import {
+  AtSign,
   CheckCircle2,
   Eye,
   Flag,
@@ -59,6 +60,9 @@ export default async function AdminOverviewPage() {
     shortLinkCount,
     shortLinkClicks,
     topShortLinks,
+    bioCount,
+    bioPublished,
+    recentBios,
   ] = await Promise.all([
     prisma.user.count(),
     prisma.link.count(),
@@ -115,6 +119,20 @@ export default async function AdminOverviewPage() {
         status: true,
         clicks: true,
         owner: { select: { email: true } },
+      },
+    }),
+    prisma.profile.count(),
+    prisma.profile.count({ where: { published: true } }),
+    prisma.profile.findMany({
+      orderBy: { updatedAt: 'desc' },
+      take: 5,
+      select: {
+        id: true,
+        handle: true,
+        displayName: true,
+        published: true,
+        _count: { select: { links: true } },
+        user: { select: { email: true } },
       },
     }),
   ])
@@ -453,6 +471,78 @@ export default async function AdminOverviewPage() {
                     </td>
                     <td className="px-5 py-3 text-end font-medium tabular-nums">
                       {formatNumber(locale, link.clicks)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </Panel>
+
+      <Panel>
+        <PanelHeader
+          title={t('overview.bioTitle')}
+          description={t('overview.bioDescription', {
+            count: bioCount,
+            published: bioPublished,
+          })}
+          actions={
+            <Button variant="ghost" size="sm" asChild>
+              <Link href="/admin/bio">{t('common.viewAll')}</Link>
+            </Button>
+          }
+        />
+        {recentBios.length === 0 ? (
+          <PanelContent>
+            <p className="text-sm text-muted-foreground">{t('overview.noBios')}</p>
+          </PanelContent>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="border-b border-border text-start text-xs text-muted-foreground">
+                <tr>
+                  <th className="px-5 py-3 font-medium">{t('overview.colBio')}</th>
+                  <th className="hidden px-5 py-3 font-medium sm:table-cell">
+                    {t('overview.colOwner')}
+                  </th>
+                  <th className="hidden px-5 py-3 text-end font-medium md:table-cell">
+                    {t('overview.colBioLinks')}
+                  </th>
+                  <th className="hidden px-5 py-3 font-medium md:table-cell">
+                    {t('overview.colStatus')}
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border">
+                {recentBios.map((bio) => (
+                  <tr key={bio.id} className="hover:bg-muted/40">
+                    <td className="px-5 py-3">
+                      <a
+                        href={`/bio/${bio.handle}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="font-medium hover:underline"
+                      >
+                        /bio/{bio.handle}
+                      </a>
+                      {bio.displayName ? (
+                        <p className="mt-0.5 max-w-64 truncate text-xs text-muted-foreground">
+                          {bio.displayName}
+                        </p>
+                      ) : null}
+                    </td>
+                    <td className="hidden px-5 py-3 text-muted-foreground sm:table-cell">
+                      {bio.user.email}
+                    </td>
+                    <td className="hidden px-5 py-3 text-end text-muted-foreground tabular-nums md:table-cell">
+                      {formatNumber(locale, bio._count.links)}
+                    </td>
+                    <td className="hidden px-5 py-3 md:table-cell">
+                      <StatusPill
+                        status={bio.published ? 'ACTIVE' : 'DRAFT'}
+                        label={bio.published ? t('bioPages.published') : t('bioPages.draft')}
+                      />
                     </td>
                   </tr>
                 ))}

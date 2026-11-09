@@ -1,6 +1,7 @@
 import { getTranslations } from 'next-intl/server'
 
 import { ProfileForm, type ProfileFormValues } from '@/components/profile/profile-form'
+import { BIO_THEME_DEFAULT } from '@/lib/bio-themes'
 import { prisma } from '@/lib/prisma'
 import { requireUser } from '@/lib/session'
 
@@ -29,10 +30,12 @@ export default async function ProfilePage() {
       displayName: true,
       bio: true,
       avatarUrl: true,
+      theme: true,
+      accent: true,
       published: true,
       links: {
         orderBy: { position: 'asc' },
-        select: { label: true, url: true },
+        select: { label: true, url: true, platform: true },
       },
     },
   })
@@ -43,15 +46,23 @@ export default async function ProfilePage() {
         displayName: profile.displayName ?? '',
         bio: profile.bio ?? '',
         avatarUrl: profile.avatarUrl ?? '',
+        theme: profile.theme,
+        accent: profile.accent ?? '',
         published: profile.published,
-        links: profile.links.map((link) => ({ label: link.label, url: link.url })),
+        links: profile.links.map((link) => ({
+          label: link.label,
+          url: link.url,
+          platform: link.platform ?? '',
+        })),
       }
     : {
         handle: suggestHandle(session.user.name, session.user.email),
         displayName: session.user.name ?? '',
         bio: '',
         avatarUrl: '',
-        published: false,
+        theme: BIO_THEME_DEFAULT,
+        accent: '',
+        published: true,
         links: [],
       }
 
@@ -61,7 +72,10 @@ export default async function ProfilePage() {
         <h1 className="text-2xl font-semibold tracking-tight">{t('title')}</h1>
         <p className="text-sm text-muted-foreground">{t('description')}</p>
       </div>
-      <ProfileForm initial={initial} />
+      <ProfileForm
+        initial={initial}
+        liveHref={profile ? `/bio/${profile.handle}` : undefined}
+      />
     </div>
   )
 }

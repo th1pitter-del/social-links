@@ -39,6 +39,7 @@ export type BioLinkMinAggregateOutputType = {
   profileId: string | null
   label: string | null
   url: string | null
+  platform: string | null
   position: number | null
   createdAt: Date | null
 }
@@ -48,6 +49,7 @@ export type BioLinkMaxAggregateOutputType = {
   profileId: string | null
   label: string | null
   url: string | null
+  platform: string | null
   position: number | null
   createdAt: Date | null
 }
@@ -57,6 +59,7 @@ export type BioLinkCountAggregateOutputType = {
   profileId: number
   label: number
   url: number
+  platform: number
   position: number
   createdAt: number
   _all: number
@@ -76,6 +79,7 @@ export type BioLinkMinAggregateInputType = {
   profileId?: true
   label?: true
   url?: true
+  platform?: true
   position?: true
   createdAt?: true
 }
@@ -85,6 +89,7 @@ export type BioLinkMaxAggregateInputType = {
   profileId?: true
   label?: true
   url?: true
+  platform?: true
   position?: true
   createdAt?: true
 }
@@ -94,6 +99,7 @@ export type BioLinkCountAggregateInputType = {
   profileId?: true
   label?: true
   url?: true
+  platform?: true
   position?: true
   createdAt?: true
   _all?: true
@@ -190,6 +196,7 @@ export type BioLinkGroupByOutputType = {
   profileId: string
   label: string
   url: string
+  platform: string | null
   position: number
   createdAt: Date
   _count: BioLinkCountAggregateOutputType | null
@@ -222,6 +229,7 @@ export type BioLinkWhereInput = {
   profileId?: Prisma.StringFilter<"BioLink"> | string
   label?: Prisma.StringFilter<"BioLink"> | string
   url?: Prisma.StringFilter<"BioLink"> | string
+  platform?: Prisma.StringNullableFilter<"BioLink"> | string | null
   position?: Prisma.IntFilter<"BioLink"> | number
   createdAt?: Prisma.DateTimeFilter<"BioLink"> | Date | string
   profile?: Prisma.XOR<Prisma.ProfileScalarRelationFilter, Prisma.ProfileWhereInput>
@@ -232,6 +240,7 @@ export type BioLinkOrderByWithRelationInput = {
   profileId?: Prisma.SortOrder
   label?: Prisma.SortOrder
   url?: Prisma.SortOrder
+  platform?: Prisma.SortOrderInput | Prisma.SortOrder
   position?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   profile?: Prisma.ProfileOrderByWithRelationInput
@@ -246,6 +255,7 @@ export type BioLinkWhereUniqueInput = Prisma.AtLeast<{
   profileId?: Prisma.StringFilter<"BioLink"> | string
   label?: Prisma.StringFilter<"BioLink"> | string
   url?: Prisma.StringFilter<"BioLink"> | string
+  platform?: Prisma.StringNullableFilter<"BioLink"> | string | null
   position?: Prisma.IntFilter<"BioLink"> | number
   createdAt?: Prisma.DateTimeFilter<"BioLink"> | Date | string
   profile?: Prisma.XOR<Prisma.ProfileScalarRelationFilter, Prisma.ProfileWhereInput>
@@ -256,6 +266,7 @@ export type BioLinkOrderByWithAggregationInput = {
   profileId?: Prisma.SortOrder
   label?: Prisma.SortOrder
   url?: Prisma.SortOrder
+  platform?: Prisma.SortOrderInput | Prisma.SortOrder
   position?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.BioLinkCountOrderByAggregateInput
@@ -273,6 +284,7 @@ export type BioLinkScalarWhereWithAggregatesInput = {
   profileId?: Prisma.StringWithAggregatesFilter<"BioLink"> | string
   label?: Prisma.StringWithAggregatesFilter<"BioLink"> | string
   url?: Prisma.StringWithAggregatesFilter<"BioLink"> | string
+  platform?: Prisma.StringNullableWithAggregatesFilter<"BioLink"> | string | null
   position?: Prisma.IntWithAggregatesFilter<"BioLink"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"BioLink"> | Date | string
 }
@@ -281,6 +293,7 @@ export type BioLinkCreateInput = {
   id?: string
   label: string
   url: string
+  platform?: string | null
   position?: number
   createdAt?: Date | string
   profile: Prisma.ProfileCreateNestedOneWithoutLinksInput
@@ -291,6 +304,7 @@ export type BioLinkUncheckedCreateInput = {
   profileId: string
   label: string
   url: string
+  platform?: string | null
   position?: number
   createdAt?: Date | string
 }
@@ -299,6 +313,7 @@ export type BioLinkUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.StringFieldUpdateOperationsInput | string
   url?: Prisma.StringFieldUpdateOperationsInput | string
+  platform?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   position?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   profile?: Prisma.ProfileUpdateOneRequiredWithoutLinksNestedInput
@@ -309,6 +324,7 @@ export type BioLinkUncheckedUpdateInput = {
   profileId?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.StringFieldUpdateOperationsInput | string
   url?: Prisma.StringFieldUpdateOperationsInput | string
+  platform?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   position?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -318,6 +334,7 @@ export type BioLinkCreateManyInput = {
   profileId: string
   label: string
   url: string
+  platform?: string | null
   position?: number
   createdAt?: Date | string
 }
@@ -326,6 +343,7 @@ export type BioLinkUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.StringFieldUpdateOperationsInput | string
   url?: Prisma.StringFieldUpdateOperationsInput | string
+  platform?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   position?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -335,6 +353,7 @@ export type BioLinkUncheckedUpdateManyInput = {
   profileId?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.StringFieldUpdateOperationsInput | string
   url?: Prisma.StringFieldUpdateOperationsInput | string
+  platform?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   position?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -360,6 +379,7 @@ export type BioLinkCountOrderByAggregateInput = {
   profileId?: Prisma.SortOrder
   label?: Prisma.SortOrder
   url?: Prisma.SortOrder
+  platform?: Prisma.SortOrder
   position?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -373,6 +393,7 @@ export type BioLinkMaxOrderByAggregateInput = {
   profileId?: Prisma.SortOrder
   label?: Prisma.SortOrder
   url?: Prisma.SortOrder
+  platform?: Prisma.SortOrder
   position?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -382,6 +403,7 @@ export type BioLinkMinOrderByAggregateInput = {
   profileId?: Prisma.SortOrder
   label?: Prisma.SortOrder
   url?: Prisma.SortOrder
+  platform?: Prisma.SortOrder
   position?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -436,6 +458,7 @@ export type BioLinkCreateWithoutProfileInput = {
   id?: string
   label: string
   url: string
+  platform?: string | null
   position?: number
   createdAt?: Date | string
 }
@@ -444,6 +467,7 @@ export type BioLinkUncheckedCreateWithoutProfileInput = {
   id?: string
   label: string
   url: string
+  platform?: string | null
   position?: number
   createdAt?: Date | string
 }
@@ -482,6 +506,7 @@ export type BioLinkScalarWhereInput = {
   profileId?: Prisma.StringFilter<"BioLink"> | string
   label?: Prisma.StringFilter<"BioLink"> | string
   url?: Prisma.StringFilter<"BioLink"> | string
+  platform?: Prisma.StringNullableFilter<"BioLink"> | string | null
   position?: Prisma.IntFilter<"BioLink"> | number
   createdAt?: Prisma.DateTimeFilter<"BioLink"> | Date | string
 }
@@ -490,6 +515,7 @@ export type BioLinkCreateManyProfileInput = {
   id?: string
   label: string
   url: string
+  platform?: string | null
   position?: number
   createdAt?: Date | string
 }
@@ -498,6 +524,7 @@ export type BioLinkUpdateWithoutProfileInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.StringFieldUpdateOperationsInput | string
   url?: Prisma.StringFieldUpdateOperationsInput | string
+  platform?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   position?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -506,6 +533,7 @@ export type BioLinkUncheckedUpdateWithoutProfileInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.StringFieldUpdateOperationsInput | string
   url?: Prisma.StringFieldUpdateOperationsInput | string
+  platform?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   position?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -514,6 +542,7 @@ export type BioLinkUncheckedUpdateManyWithoutProfileInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.StringFieldUpdateOperationsInput | string
   url?: Prisma.StringFieldUpdateOperationsInput | string
+  platform?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   position?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -525,6 +554,7 @@ export type BioLinkSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   profileId?: boolean
   label?: boolean
   url?: boolean
+  platform?: boolean
   position?: boolean
   createdAt?: boolean
   profile?: boolean | Prisma.ProfileDefaultArgs<ExtArgs>
@@ -537,11 +567,12 @@ export type BioLinkSelectScalar = {
   profileId?: boolean
   label?: boolean
   url?: boolean
+  platform?: boolean
   position?: boolean
   createdAt?: boolean
 }
 
-export type BioLinkOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "profileId" | "label" | "url" | "position" | "createdAt", ExtArgs["result"]["bioLink"]>
+export type BioLinkOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "profileId" | "label" | "url" | "platform" | "position" | "createdAt", ExtArgs["result"]["bioLink"]>
 export type BioLinkInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   profile?: boolean | Prisma.ProfileDefaultArgs<ExtArgs>
 }
@@ -556,6 +587,10 @@ export type $BioLinkPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     profileId: string
     label: string
     url: string
+    /**
+     * * Brand slug from src/lib/bio-platforms.ts; null for a custom link.
+     */
+    platform: string | null
     position: number
     createdAt: Date
   }, ExtArgs["result"]["bioLink"]>
@@ -932,6 +967,7 @@ export interface BioLinkFieldRefs {
   readonly profileId: Prisma.FieldRef<"BioLink", 'String'>
   readonly label: Prisma.FieldRef<"BioLink", 'String'>
   readonly url: Prisma.FieldRef<"BioLink", 'String'>
+  readonly platform: Prisma.FieldRef<"BioLink", 'String'>
   readonly position: Prisma.FieldRef<"BioLink", 'Int'>
   readonly createdAt: Prisma.FieldRef<"BioLink", 'DateTime'>
 }

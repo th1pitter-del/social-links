@@ -44,6 +44,8 @@ export type HeaderLinkMinAggregateOutputType = {
   newTab: boolean | null
   enabled: boolean | null
   position: number | null
+  parentId: string | null
+  builtIn: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -58,6 +60,8 @@ export type HeaderLinkMaxAggregateOutputType = {
   newTab: boolean | null
   enabled: boolean | null
   position: number | null
+  parentId: string | null
+  builtIn: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -72,6 +76,9 @@ export type HeaderLinkCountAggregateOutputType = {
   newTab: number
   enabled: number
   position: number
+  parentId: number
+  labels: number
+  builtIn: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -96,6 +103,8 @@ export type HeaderLinkMinAggregateInputType = {
   newTab?: true
   enabled?: true
   position?: true
+  parentId?: true
+  builtIn?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -110,6 +119,8 @@ export type HeaderLinkMaxAggregateInputType = {
   newTab?: true
   enabled?: true
   position?: true
+  parentId?: true
+  builtIn?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -124,6 +135,9 @@ export type HeaderLinkCountAggregateInputType = {
   newTab?: true
   enabled?: true
   position?: true
+  parentId?: true
+  labels?: true
+  builtIn?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -225,6 +239,9 @@ export type HeaderLinkGroupByOutputType = {
   newTab: boolean
   enabled: boolean
   position: number
+  parentId: string | null
+  labels: runtime.JsonValue | null
+  builtIn: boolean
   createdAt: Date
   updatedAt: Date
   _count: HeaderLinkCountAggregateOutputType | null
@@ -262,8 +279,13 @@ export type HeaderLinkWhereInput = {
   newTab?: Prisma.BoolFilter<"HeaderLink"> | boolean
   enabled?: Prisma.BoolFilter<"HeaderLink"> | boolean
   position?: Prisma.IntFilter<"HeaderLink"> | number
+  parentId?: Prisma.StringNullableFilter<"HeaderLink"> | string | null
+  labels?: Prisma.JsonNullableFilter<"HeaderLink">
+  builtIn?: Prisma.BoolFilter<"HeaderLink"> | boolean
   createdAt?: Prisma.DateTimeFilter<"HeaderLink"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"HeaderLink"> | Date | string
+  parent?: Prisma.XOR<Prisma.HeaderLinkNullableScalarRelationFilter, Prisma.HeaderLinkWhereInput> | null
+  children?: Prisma.HeaderLinkListRelationFilter
 }
 
 export type HeaderLinkOrderByWithRelationInput = {
@@ -276,8 +298,13 @@ export type HeaderLinkOrderByWithRelationInput = {
   newTab?: Prisma.SortOrder
   enabled?: Prisma.SortOrder
   position?: Prisma.SortOrder
+  parentId?: Prisma.SortOrderInput | Prisma.SortOrder
+  labels?: Prisma.SortOrderInput | Prisma.SortOrder
+  builtIn?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  parent?: Prisma.HeaderLinkOrderByWithRelationInput
+  children?: Prisma.HeaderLinkOrderByRelationAggregateInput
   _relevance?: Prisma.HeaderLinkOrderByRelevanceInput
 }
 
@@ -294,8 +321,13 @@ export type HeaderLinkWhereUniqueInput = Prisma.AtLeast<{
   newTab?: Prisma.BoolFilter<"HeaderLink"> | boolean
   enabled?: Prisma.BoolFilter<"HeaderLink"> | boolean
   position?: Prisma.IntFilter<"HeaderLink"> | number
+  parentId?: Prisma.StringNullableFilter<"HeaderLink"> | string | null
+  labels?: Prisma.JsonNullableFilter<"HeaderLink">
+  builtIn?: Prisma.BoolFilter<"HeaderLink"> | boolean
   createdAt?: Prisma.DateTimeFilter<"HeaderLink"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"HeaderLink"> | Date | string
+  parent?: Prisma.XOR<Prisma.HeaderLinkNullableScalarRelationFilter, Prisma.HeaderLinkWhereInput> | null
+  children?: Prisma.HeaderLinkListRelationFilter
 }, "id">
 
 export type HeaderLinkOrderByWithAggregationInput = {
@@ -308,6 +340,9 @@ export type HeaderLinkOrderByWithAggregationInput = {
   newTab?: Prisma.SortOrder
   enabled?: Prisma.SortOrder
   position?: Prisma.SortOrder
+  parentId?: Prisma.SortOrderInput | Prisma.SortOrder
+  labels?: Prisma.SortOrderInput | Prisma.SortOrder
+  builtIn?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.HeaderLinkCountOrderByAggregateInput
@@ -330,6 +365,9 @@ export type HeaderLinkScalarWhereWithAggregatesInput = {
   newTab?: Prisma.BoolWithAggregatesFilter<"HeaderLink"> | boolean
   enabled?: Prisma.BoolWithAggregatesFilter<"HeaderLink"> | boolean
   position?: Prisma.IntWithAggregatesFilter<"HeaderLink"> | number
+  parentId?: Prisma.StringNullableWithAggregatesFilter<"HeaderLink"> | string | null
+  labels?: Prisma.JsonNullableWithAggregatesFilter<"HeaderLink">
+  builtIn?: Prisma.BoolWithAggregatesFilter<"HeaderLink"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"HeaderLink"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"HeaderLink"> | Date | string
 }
@@ -344,8 +382,12 @@ export type HeaderLinkCreateInput = {
   newTab?: boolean
   enabled?: boolean
   position?: number
+  labels?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  builtIn?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  parent?: Prisma.HeaderLinkCreateNestedOneWithoutChildrenInput
+  children?: Prisma.HeaderLinkCreateNestedManyWithoutParentInput
 }
 
 export type HeaderLinkUncheckedCreateInput = {
@@ -358,8 +400,12 @@ export type HeaderLinkUncheckedCreateInput = {
   newTab?: boolean
   enabled?: boolean
   position?: number
+  parentId?: string | null
+  labels?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  builtIn?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  children?: Prisma.HeaderLinkUncheckedCreateNestedManyWithoutParentInput
 }
 
 export type HeaderLinkUpdateInput = {
@@ -372,8 +418,12 @@ export type HeaderLinkUpdateInput = {
   newTab?: Prisma.BoolFieldUpdateOperationsInput | boolean
   enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   position?: Prisma.IntFieldUpdateOperationsInput | number
+  labels?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  builtIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  parent?: Prisma.HeaderLinkUpdateOneWithoutChildrenNestedInput
+  children?: Prisma.HeaderLinkUpdateManyWithoutParentNestedInput
 }
 
 export type HeaderLinkUncheckedUpdateInput = {
@@ -386,8 +436,12 @@ export type HeaderLinkUncheckedUpdateInput = {
   newTab?: Prisma.BoolFieldUpdateOperationsInput | boolean
   enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   position?: Prisma.IntFieldUpdateOperationsInput | number
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  labels?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  builtIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  children?: Prisma.HeaderLinkUncheckedUpdateManyWithoutParentNestedInput
 }
 
 export type HeaderLinkCreateManyInput = {
@@ -400,6 +454,9 @@ export type HeaderLinkCreateManyInput = {
   newTab?: boolean
   enabled?: boolean
   position?: number
+  parentId?: string | null
+  labels?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  builtIn?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -414,6 +471,8 @@ export type HeaderLinkUpdateManyMutationInput = {
   newTab?: Prisma.BoolFieldUpdateOperationsInput | boolean
   enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   position?: Prisma.IntFieldUpdateOperationsInput | number
+  labels?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  builtIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -428,8 +487,26 @@ export type HeaderLinkUncheckedUpdateManyInput = {
   newTab?: Prisma.BoolFieldUpdateOperationsInput | boolean
   enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   position?: Prisma.IntFieldUpdateOperationsInput | number
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  labels?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  builtIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type HeaderLinkNullableScalarRelationFilter = {
+  is?: Prisma.HeaderLinkWhereInput | null
+  isNot?: Prisma.HeaderLinkWhereInput | null
+}
+
+export type HeaderLinkListRelationFilter = {
+  every?: Prisma.HeaderLinkWhereInput
+  some?: Prisma.HeaderLinkWhereInput
+  none?: Prisma.HeaderLinkWhereInput
+}
+
+export type HeaderLinkOrderByRelationAggregateInput = {
+  _count?: Prisma.SortOrder
 }
 
 export type HeaderLinkOrderByRelevanceInput = {
@@ -448,6 +525,9 @@ export type HeaderLinkCountOrderByAggregateInput = {
   newTab?: Prisma.SortOrder
   enabled?: Prisma.SortOrder
   position?: Prisma.SortOrder
+  parentId?: Prisma.SortOrder
+  labels?: Prisma.SortOrder
+  builtIn?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -466,6 +546,8 @@ export type HeaderLinkMaxOrderByAggregateInput = {
   newTab?: Prisma.SortOrder
   enabled?: Prisma.SortOrder
   position?: Prisma.SortOrder
+  parentId?: Prisma.SortOrder
+  builtIn?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -480,6 +562,8 @@ export type HeaderLinkMinOrderByAggregateInput = {
   newTab?: Prisma.SortOrder
   enabled?: Prisma.SortOrder
   position?: Prisma.SortOrder
+  parentId?: Prisma.SortOrder
+  builtIn?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -488,6 +572,323 @@ export type HeaderLinkSumOrderByAggregateInput = {
   position?: Prisma.SortOrder
 }
 
+export type HeaderLinkCreateNestedOneWithoutChildrenInput = {
+  create?: Prisma.XOR<Prisma.HeaderLinkCreateWithoutChildrenInput, Prisma.HeaderLinkUncheckedCreateWithoutChildrenInput>
+  connectOrCreate?: Prisma.HeaderLinkCreateOrConnectWithoutChildrenInput
+  connect?: Prisma.HeaderLinkWhereUniqueInput
+}
+
+export type HeaderLinkCreateNestedManyWithoutParentInput = {
+  create?: Prisma.XOR<Prisma.HeaderLinkCreateWithoutParentInput, Prisma.HeaderLinkUncheckedCreateWithoutParentInput> | Prisma.HeaderLinkCreateWithoutParentInput[] | Prisma.HeaderLinkUncheckedCreateWithoutParentInput[]
+  connectOrCreate?: Prisma.HeaderLinkCreateOrConnectWithoutParentInput | Prisma.HeaderLinkCreateOrConnectWithoutParentInput[]
+  createMany?: Prisma.HeaderLinkCreateManyParentInputEnvelope
+  connect?: Prisma.HeaderLinkWhereUniqueInput | Prisma.HeaderLinkWhereUniqueInput[]
+}
+
+export type HeaderLinkUncheckedCreateNestedManyWithoutParentInput = {
+  create?: Prisma.XOR<Prisma.HeaderLinkCreateWithoutParentInput, Prisma.HeaderLinkUncheckedCreateWithoutParentInput> | Prisma.HeaderLinkCreateWithoutParentInput[] | Prisma.HeaderLinkUncheckedCreateWithoutParentInput[]
+  connectOrCreate?: Prisma.HeaderLinkCreateOrConnectWithoutParentInput | Prisma.HeaderLinkCreateOrConnectWithoutParentInput[]
+  createMany?: Prisma.HeaderLinkCreateManyParentInputEnvelope
+  connect?: Prisma.HeaderLinkWhereUniqueInput | Prisma.HeaderLinkWhereUniqueInput[]
+}
+
+export type HeaderLinkUpdateOneWithoutChildrenNestedInput = {
+  create?: Prisma.XOR<Prisma.HeaderLinkCreateWithoutChildrenInput, Prisma.HeaderLinkUncheckedCreateWithoutChildrenInput>
+  connectOrCreate?: Prisma.HeaderLinkCreateOrConnectWithoutChildrenInput
+  upsert?: Prisma.HeaderLinkUpsertWithoutChildrenInput
+  disconnect?: Prisma.HeaderLinkWhereInput | boolean
+  delete?: Prisma.HeaderLinkWhereInput | boolean
+  connect?: Prisma.HeaderLinkWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.HeaderLinkUpdateToOneWithWhereWithoutChildrenInput, Prisma.HeaderLinkUpdateWithoutChildrenInput>, Prisma.HeaderLinkUncheckedUpdateWithoutChildrenInput>
+}
+
+export type HeaderLinkUpdateManyWithoutParentNestedInput = {
+  create?: Prisma.XOR<Prisma.HeaderLinkCreateWithoutParentInput, Prisma.HeaderLinkUncheckedCreateWithoutParentInput> | Prisma.HeaderLinkCreateWithoutParentInput[] | Prisma.HeaderLinkUncheckedCreateWithoutParentInput[]
+  connectOrCreate?: Prisma.HeaderLinkCreateOrConnectWithoutParentInput | Prisma.HeaderLinkCreateOrConnectWithoutParentInput[]
+  upsert?: Prisma.HeaderLinkUpsertWithWhereUniqueWithoutParentInput | Prisma.HeaderLinkUpsertWithWhereUniqueWithoutParentInput[]
+  createMany?: Prisma.HeaderLinkCreateManyParentInputEnvelope
+  set?: Prisma.HeaderLinkWhereUniqueInput | Prisma.HeaderLinkWhereUniqueInput[]
+  disconnect?: Prisma.HeaderLinkWhereUniqueInput | Prisma.HeaderLinkWhereUniqueInput[]
+  delete?: Prisma.HeaderLinkWhereUniqueInput | Prisma.HeaderLinkWhereUniqueInput[]
+  connect?: Prisma.HeaderLinkWhereUniqueInput | Prisma.HeaderLinkWhereUniqueInput[]
+  update?: Prisma.HeaderLinkUpdateWithWhereUniqueWithoutParentInput | Prisma.HeaderLinkUpdateWithWhereUniqueWithoutParentInput[]
+  updateMany?: Prisma.HeaderLinkUpdateManyWithWhereWithoutParentInput | Prisma.HeaderLinkUpdateManyWithWhereWithoutParentInput[]
+  deleteMany?: Prisma.HeaderLinkScalarWhereInput | Prisma.HeaderLinkScalarWhereInput[]
+}
+
+export type HeaderLinkUncheckedUpdateManyWithoutParentNestedInput = {
+  create?: Prisma.XOR<Prisma.HeaderLinkCreateWithoutParentInput, Prisma.HeaderLinkUncheckedCreateWithoutParentInput> | Prisma.HeaderLinkCreateWithoutParentInput[] | Prisma.HeaderLinkUncheckedCreateWithoutParentInput[]
+  connectOrCreate?: Prisma.HeaderLinkCreateOrConnectWithoutParentInput | Prisma.HeaderLinkCreateOrConnectWithoutParentInput[]
+  upsert?: Prisma.HeaderLinkUpsertWithWhereUniqueWithoutParentInput | Prisma.HeaderLinkUpsertWithWhereUniqueWithoutParentInput[]
+  createMany?: Prisma.HeaderLinkCreateManyParentInputEnvelope
+  set?: Prisma.HeaderLinkWhereUniqueInput | Prisma.HeaderLinkWhereUniqueInput[]
+  disconnect?: Prisma.HeaderLinkWhereUniqueInput | Prisma.HeaderLinkWhereUniqueInput[]
+  delete?: Prisma.HeaderLinkWhereUniqueInput | Prisma.HeaderLinkWhereUniqueInput[]
+  connect?: Prisma.HeaderLinkWhereUniqueInput | Prisma.HeaderLinkWhereUniqueInput[]
+  update?: Prisma.HeaderLinkUpdateWithWhereUniqueWithoutParentInput | Prisma.HeaderLinkUpdateWithWhereUniqueWithoutParentInput[]
+  updateMany?: Prisma.HeaderLinkUpdateManyWithWhereWithoutParentInput | Prisma.HeaderLinkUpdateManyWithWhereWithoutParentInput[]
+  deleteMany?: Prisma.HeaderLinkScalarWhereInput | Prisma.HeaderLinkScalarWhereInput[]
+}
+
+export type HeaderLinkCreateWithoutChildrenInput = {
+  id?: string
+  label: string
+  labelKey?: string | null
+  url: string
+  icon?: string
+  color?: string | null
+  newTab?: boolean
+  enabled?: boolean
+  position?: number
+  labels?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  builtIn?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  parent?: Prisma.HeaderLinkCreateNestedOneWithoutChildrenInput
+}
+
+export type HeaderLinkUncheckedCreateWithoutChildrenInput = {
+  id?: string
+  label: string
+  labelKey?: string | null
+  url: string
+  icon?: string
+  color?: string | null
+  newTab?: boolean
+  enabled?: boolean
+  position?: number
+  parentId?: string | null
+  labels?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  builtIn?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type HeaderLinkCreateOrConnectWithoutChildrenInput = {
+  where: Prisma.HeaderLinkWhereUniqueInput
+  create: Prisma.XOR<Prisma.HeaderLinkCreateWithoutChildrenInput, Prisma.HeaderLinkUncheckedCreateWithoutChildrenInput>
+}
+
+export type HeaderLinkCreateWithoutParentInput = {
+  id?: string
+  label: string
+  labelKey?: string | null
+  url: string
+  icon?: string
+  color?: string | null
+  newTab?: boolean
+  enabled?: boolean
+  position?: number
+  labels?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  builtIn?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  children?: Prisma.HeaderLinkCreateNestedManyWithoutParentInput
+}
+
+export type HeaderLinkUncheckedCreateWithoutParentInput = {
+  id?: string
+  label: string
+  labelKey?: string | null
+  url: string
+  icon?: string
+  color?: string | null
+  newTab?: boolean
+  enabled?: boolean
+  position?: number
+  labels?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  builtIn?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  children?: Prisma.HeaderLinkUncheckedCreateNestedManyWithoutParentInput
+}
+
+export type HeaderLinkCreateOrConnectWithoutParentInput = {
+  where: Prisma.HeaderLinkWhereUniqueInput
+  create: Prisma.XOR<Prisma.HeaderLinkCreateWithoutParentInput, Prisma.HeaderLinkUncheckedCreateWithoutParentInput>
+}
+
+export type HeaderLinkCreateManyParentInputEnvelope = {
+  data: Prisma.HeaderLinkCreateManyParentInput | Prisma.HeaderLinkCreateManyParentInput[]
+  skipDuplicates?: boolean
+}
+
+export type HeaderLinkUpsertWithoutChildrenInput = {
+  update: Prisma.XOR<Prisma.HeaderLinkUpdateWithoutChildrenInput, Prisma.HeaderLinkUncheckedUpdateWithoutChildrenInput>
+  create: Prisma.XOR<Prisma.HeaderLinkCreateWithoutChildrenInput, Prisma.HeaderLinkUncheckedCreateWithoutChildrenInput>
+  where?: Prisma.HeaderLinkWhereInput
+}
+
+export type HeaderLinkUpdateToOneWithWhereWithoutChildrenInput = {
+  where?: Prisma.HeaderLinkWhereInput
+  data: Prisma.XOR<Prisma.HeaderLinkUpdateWithoutChildrenInput, Prisma.HeaderLinkUncheckedUpdateWithoutChildrenInput>
+}
+
+export type HeaderLinkUpdateWithoutChildrenInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  label?: Prisma.StringFieldUpdateOperationsInput | string
+  labelKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  url?: Prisma.StringFieldUpdateOperationsInput | string
+  icon?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  newTab?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  position?: Prisma.IntFieldUpdateOperationsInput | number
+  labels?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  builtIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  parent?: Prisma.HeaderLinkUpdateOneWithoutChildrenNestedInput
+}
+
+export type HeaderLinkUncheckedUpdateWithoutChildrenInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  label?: Prisma.StringFieldUpdateOperationsInput | string
+  labelKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  url?: Prisma.StringFieldUpdateOperationsInput | string
+  icon?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  newTab?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  position?: Prisma.IntFieldUpdateOperationsInput | number
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  labels?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  builtIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type HeaderLinkUpsertWithWhereUniqueWithoutParentInput = {
+  where: Prisma.HeaderLinkWhereUniqueInput
+  update: Prisma.XOR<Prisma.HeaderLinkUpdateWithoutParentInput, Prisma.HeaderLinkUncheckedUpdateWithoutParentInput>
+  create: Prisma.XOR<Prisma.HeaderLinkCreateWithoutParentInput, Prisma.HeaderLinkUncheckedCreateWithoutParentInput>
+}
+
+export type HeaderLinkUpdateWithWhereUniqueWithoutParentInput = {
+  where: Prisma.HeaderLinkWhereUniqueInput
+  data: Prisma.XOR<Prisma.HeaderLinkUpdateWithoutParentInput, Prisma.HeaderLinkUncheckedUpdateWithoutParentInput>
+}
+
+export type HeaderLinkUpdateManyWithWhereWithoutParentInput = {
+  where: Prisma.HeaderLinkScalarWhereInput
+  data: Prisma.XOR<Prisma.HeaderLinkUpdateManyMutationInput, Prisma.HeaderLinkUncheckedUpdateManyWithoutParentInput>
+}
+
+export type HeaderLinkScalarWhereInput = {
+  AND?: Prisma.HeaderLinkScalarWhereInput | Prisma.HeaderLinkScalarWhereInput[]
+  OR?: Prisma.HeaderLinkScalarWhereInput[]
+  NOT?: Prisma.HeaderLinkScalarWhereInput | Prisma.HeaderLinkScalarWhereInput[]
+  id?: Prisma.StringFilter<"HeaderLink"> | string
+  label?: Prisma.StringFilter<"HeaderLink"> | string
+  labelKey?: Prisma.StringNullableFilter<"HeaderLink"> | string | null
+  url?: Prisma.StringFilter<"HeaderLink"> | string
+  icon?: Prisma.StringFilter<"HeaderLink"> | string
+  color?: Prisma.StringNullableFilter<"HeaderLink"> | string | null
+  newTab?: Prisma.BoolFilter<"HeaderLink"> | boolean
+  enabled?: Prisma.BoolFilter<"HeaderLink"> | boolean
+  position?: Prisma.IntFilter<"HeaderLink"> | number
+  parentId?: Prisma.StringNullableFilter<"HeaderLink"> | string | null
+  labels?: Prisma.JsonNullableFilter<"HeaderLink">
+  builtIn?: Prisma.BoolFilter<"HeaderLink"> | boolean
+  createdAt?: Prisma.DateTimeFilter<"HeaderLink"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"HeaderLink"> | Date | string
+}
+
+export type HeaderLinkCreateManyParentInput = {
+  id?: string
+  label: string
+  labelKey?: string | null
+  url: string
+  icon?: string
+  color?: string | null
+  newTab?: boolean
+  enabled?: boolean
+  position?: number
+  labels?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  builtIn?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type HeaderLinkUpdateWithoutParentInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  label?: Prisma.StringFieldUpdateOperationsInput | string
+  labelKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  url?: Prisma.StringFieldUpdateOperationsInput | string
+  icon?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  newTab?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  position?: Prisma.IntFieldUpdateOperationsInput | number
+  labels?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  builtIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  children?: Prisma.HeaderLinkUpdateManyWithoutParentNestedInput
+}
+
+export type HeaderLinkUncheckedUpdateWithoutParentInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  label?: Prisma.StringFieldUpdateOperationsInput | string
+  labelKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  url?: Prisma.StringFieldUpdateOperationsInput | string
+  icon?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  newTab?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  position?: Prisma.IntFieldUpdateOperationsInput | number
+  labels?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  builtIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  children?: Prisma.HeaderLinkUncheckedUpdateManyWithoutParentNestedInput
+}
+
+export type HeaderLinkUncheckedUpdateManyWithoutParentInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  label?: Prisma.StringFieldUpdateOperationsInput | string
+  labelKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  url?: Prisma.StringFieldUpdateOperationsInput | string
+  icon?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  newTab?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  position?: Prisma.IntFieldUpdateOperationsInput | number
+  labels?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  builtIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+
+/**
+ * Count Type HeaderLinkCountOutputType
+ */
+
+export type HeaderLinkCountOutputType = {
+  children: number
+}
+
+export type HeaderLinkCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  children?: boolean | HeaderLinkCountOutputTypeCountChildrenArgs
+}
+
+/**
+ * HeaderLinkCountOutputType without action
+ */
+export type HeaderLinkCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the HeaderLinkCountOutputType
+   */
+  select?: Prisma.HeaderLinkCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * HeaderLinkCountOutputType without action
+ */
+export type HeaderLinkCountOutputTypeCountChildrenArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.HeaderLinkWhereInput
+}
 
 
 export type HeaderLinkSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -500,8 +901,14 @@ export type HeaderLinkSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   newTab?: boolean
   enabled?: boolean
   position?: boolean
+  parentId?: boolean
+  labels?: boolean
+  builtIn?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  parent?: boolean | Prisma.HeaderLink$parentArgs<ExtArgs>
+  children?: boolean | Prisma.HeaderLink$childrenArgs<ExtArgs>
+  _count?: boolean | Prisma.HeaderLinkCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["headerLink"]>
 
 
@@ -516,15 +923,26 @@ export type HeaderLinkSelectScalar = {
   newTab?: boolean
   enabled?: boolean
   position?: boolean
+  parentId?: boolean
+  labels?: boolean
+  builtIn?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type HeaderLinkOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "label" | "labelKey" | "url" | "icon" | "color" | "newTab" | "enabled" | "position" | "createdAt" | "updatedAt", ExtArgs["result"]["headerLink"]>
+export type HeaderLinkOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "label" | "labelKey" | "url" | "icon" | "color" | "newTab" | "enabled" | "position" | "parentId" | "labels" | "builtIn" | "createdAt" | "updatedAt", ExtArgs["result"]["headerLink"]>
+export type HeaderLinkInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  parent?: boolean | Prisma.HeaderLink$parentArgs<ExtArgs>
+  children?: boolean | Prisma.HeaderLink$childrenArgs<ExtArgs>
+  _count?: boolean | Prisma.HeaderLinkCountOutputTypeDefaultArgs<ExtArgs>
+}
 
 export type $HeaderLinkPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "HeaderLink"
-  objects: {}
+  objects: {
+    parent: Prisma.$HeaderLinkPayload<ExtArgs> | null
+    children: Prisma.$HeaderLinkPayload<ExtArgs>[]
+  }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     label: string
@@ -535,6 +953,15 @@ export type $HeaderLinkPayload<ExtArgs extends runtime.Types.Extensions.Internal
     newTab: boolean
     enabled: boolean
     position: number
+    parentId: string | null
+    /**
+     * * Per-locale label overrides (`{ en, es, 'pt-br', ar }`) for this menu row.
+     */
+    labels: runtime.JsonValue | null
+    /**
+     * * Seeded menus keep their catalog key; the admin editor renders them read-only.
+     */
+    builtIn: boolean
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["headerLink"]>
@@ -877,6 +1304,8 @@ readonly fields: HeaderLinkFieldRefs;
  */
 export interface Prisma__HeaderLinkClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  parent<T extends Prisma.HeaderLink$parentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.HeaderLink$parentArgs<ExtArgs>>): Prisma.Prisma__HeaderLinkClient<runtime.Types.Result.GetResult<Prisma.$HeaderLinkPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  children<T extends Prisma.HeaderLink$childrenArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.HeaderLink$childrenArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$HeaderLinkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -915,6 +1344,9 @@ export interface HeaderLinkFieldRefs {
   readonly newTab: Prisma.FieldRef<"HeaderLink", 'Boolean'>
   readonly enabled: Prisma.FieldRef<"HeaderLink", 'Boolean'>
   readonly position: Prisma.FieldRef<"HeaderLink", 'Int'>
+  readonly parentId: Prisma.FieldRef<"HeaderLink", 'String'>
+  readonly labels: Prisma.FieldRef<"HeaderLink", 'Json'>
+  readonly builtIn: Prisma.FieldRef<"HeaderLink", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"HeaderLink", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"HeaderLink", 'DateTime'>
 }
@@ -934,6 +1366,10 @@ export type HeaderLinkFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.In
    */
   omit?: Prisma.HeaderLinkOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.HeaderLinkInclude<ExtArgs> | null
+  /**
    * Filter, which HeaderLink to fetch.
    */
   where: Prisma.HeaderLinkWhereUniqueInput
@@ -952,6 +1388,10 @@ export type HeaderLinkFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extens
    */
   omit?: Prisma.HeaderLinkOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.HeaderLinkInclude<ExtArgs> | null
+  /**
    * Filter, which HeaderLink to fetch.
    */
   where: Prisma.HeaderLinkWhereUniqueInput
@@ -969,6 +1409,10 @@ export type HeaderLinkFindFirstArgs<ExtArgs extends runtime.Types.Extensions.Int
    * Omit specific fields from the HeaderLink
    */
   omit?: Prisma.HeaderLinkOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.HeaderLinkInclude<ExtArgs> | null
   /**
    * Filter, which HeaderLink to fetch.
    */
@@ -1018,6 +1462,10 @@ export type HeaderLinkFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensi
    */
   omit?: Prisma.HeaderLinkOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.HeaderLinkInclude<ExtArgs> | null
+  /**
    * Filter, which HeaderLink to fetch.
    */
   where?: Prisma.HeaderLinkWhereInput
@@ -1065,6 +1513,10 @@ export type HeaderLinkFindManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * Omit specific fields from the HeaderLink
    */
   omit?: Prisma.HeaderLinkOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.HeaderLinkInclude<ExtArgs> | null
   /**
    * Filter, which HeaderLinks to fetch.
    */
@@ -1114,6 +1566,10 @@ export type HeaderLinkCreateArgs<ExtArgs extends runtime.Types.Extensions.Intern
    */
   omit?: Prisma.HeaderLinkOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.HeaderLinkInclude<ExtArgs> | null
+  /**
    * The data needed to create a HeaderLink.
    */
   data: Prisma.XOR<Prisma.HeaderLinkCreateInput, Prisma.HeaderLinkUncheckedCreateInput>
@@ -1142,6 +1598,10 @@ export type HeaderLinkUpdateArgs<ExtArgs extends runtime.Types.Extensions.Intern
    * Omit specific fields from the HeaderLink
    */
   omit?: Prisma.HeaderLinkOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.HeaderLinkInclude<ExtArgs> | null
   /**
    * The data needed to update a HeaderLink.
    */
@@ -1183,6 +1643,10 @@ export type HeaderLinkUpsertArgs<ExtArgs extends runtime.Types.Extensions.Intern
    */
   omit?: Prisma.HeaderLinkOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.HeaderLinkInclude<ExtArgs> | null
+  /**
    * The filter to search for the HeaderLink to update in case it exists.
    */
   where: Prisma.HeaderLinkWhereUniqueInput
@@ -1209,6 +1673,10 @@ export type HeaderLinkDeleteArgs<ExtArgs extends runtime.Types.Extensions.Intern
    */
   omit?: Prisma.HeaderLinkOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.HeaderLinkInclude<ExtArgs> | null
+  /**
    * Filter which HeaderLink to delete.
    */
   where: Prisma.HeaderLinkWhereUniqueInput
@@ -1229,6 +1697,49 @@ export type HeaderLinkDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.In
 }
 
 /**
+ * HeaderLink.parent
+ */
+export type HeaderLink$parentArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the HeaderLink
+   */
+  select?: Prisma.HeaderLinkSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the HeaderLink
+   */
+  omit?: Prisma.HeaderLinkOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.HeaderLinkInclude<ExtArgs> | null
+  where?: Prisma.HeaderLinkWhereInput
+}
+
+/**
+ * HeaderLink.children
+ */
+export type HeaderLink$childrenArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the HeaderLink
+   */
+  select?: Prisma.HeaderLinkSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the HeaderLink
+   */
+  omit?: Prisma.HeaderLinkOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.HeaderLinkInclude<ExtArgs> | null
+  where?: Prisma.HeaderLinkWhereInput
+  orderBy?: Prisma.HeaderLinkOrderByWithRelationInput | Prisma.HeaderLinkOrderByWithRelationInput[]
+  cursor?: Prisma.HeaderLinkWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.HeaderLinkScalarFieldEnum | Prisma.HeaderLinkScalarFieldEnum[]
+}
+
+/**
  * HeaderLink without action
  */
 export type HeaderLinkDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1240,4 +1751,8 @@ export type HeaderLinkDefaultArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * Omit specific fields from the HeaderLink
    */
   omit?: Prisma.HeaderLinkOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.HeaderLinkInclude<ExtArgs> | null
 }

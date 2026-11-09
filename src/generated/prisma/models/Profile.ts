@@ -31,6 +31,8 @@ export type ProfileMinAggregateOutputType = {
   displayName: string | null
   bio: string | null
   avatarUrl: string | null
+  theme: string | null
+  accent: string | null
   published: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -43,6 +45,8 @@ export type ProfileMaxAggregateOutputType = {
   displayName: string | null
   bio: string | null
   avatarUrl: string | null
+  theme: string | null
+  accent: string | null
   published: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -55,6 +59,8 @@ export type ProfileCountAggregateOutputType = {
   displayName: number
   bio: number
   avatarUrl: number
+  theme: number
+  accent: number
   published: number
   createdAt: number
   updatedAt: number
@@ -69,6 +75,8 @@ export type ProfileMinAggregateInputType = {
   displayName?: true
   bio?: true
   avatarUrl?: true
+  theme?: true
+  accent?: true
   published?: true
   createdAt?: true
   updatedAt?: true
@@ -81,6 +89,8 @@ export type ProfileMaxAggregateInputType = {
   displayName?: true
   bio?: true
   avatarUrl?: true
+  theme?: true
+  accent?: true
   published?: true
   createdAt?: true
   updatedAt?: true
@@ -93,6 +103,8 @@ export type ProfileCountAggregateInputType = {
   displayName?: true
   bio?: true
   avatarUrl?: true
+  theme?: true
+  accent?: true
   published?: true
   createdAt?: true
   updatedAt?: true
@@ -178,6 +190,8 @@ export type ProfileGroupByOutputType = {
   displayName: string | null
   bio: string | null
   avatarUrl: string | null
+  theme: string
+  accent: string | null
   published: boolean
   createdAt: Date
   updatedAt: Date
@@ -211,6 +225,8 @@ export type ProfileWhereInput = {
   displayName?: Prisma.StringNullableFilter<"Profile"> | string | null
   bio?: Prisma.StringNullableFilter<"Profile"> | string | null
   avatarUrl?: Prisma.StringNullableFilter<"Profile"> | string | null
+  theme?: Prisma.StringFilter<"Profile"> | string
+  accent?: Prisma.StringNullableFilter<"Profile"> | string | null
   published?: Prisma.BoolFilter<"Profile"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Profile"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Profile"> | Date | string
@@ -225,6 +241,8 @@ export type ProfileOrderByWithRelationInput = {
   displayName?: Prisma.SortOrderInput | Prisma.SortOrder
   bio?: Prisma.SortOrderInput | Prisma.SortOrder
   avatarUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  theme?: Prisma.SortOrder
+  accent?: Prisma.SortOrderInput | Prisma.SortOrder
   published?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -243,6 +261,8 @@ export type ProfileWhereUniqueInput = Prisma.AtLeast<{
   displayName?: Prisma.StringNullableFilter<"Profile"> | string | null
   bio?: Prisma.StringNullableFilter<"Profile"> | string | null
   avatarUrl?: Prisma.StringNullableFilter<"Profile"> | string | null
+  theme?: Prisma.StringFilter<"Profile"> | string
+  accent?: Prisma.StringNullableFilter<"Profile"> | string | null
   published?: Prisma.BoolFilter<"Profile"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Profile"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Profile"> | Date | string
@@ -257,6 +277,8 @@ export type ProfileOrderByWithAggregationInput = {
   displayName?: Prisma.SortOrderInput | Prisma.SortOrder
   bio?: Prisma.SortOrderInput | Prisma.SortOrder
   avatarUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  theme?: Prisma.SortOrder
+  accent?: Prisma.SortOrderInput | Prisma.SortOrder
   published?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -275,6 +297,8 @@ export type ProfileScalarWhereWithAggregatesInput = {
   displayName?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
   bio?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
   avatarUrl?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
+  theme?: Prisma.StringWithAggregatesFilter<"Profile"> | string
+  accent?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
   published?: Prisma.BoolWithAggregatesFilter<"Profile"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Profile"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Profile"> | Date | string
@@ -286,6 +310,8 @@ export type ProfileCreateInput = {
   displayName?: string | null
   bio?: string | null
   avatarUrl?: string | null
+  theme?: string
+  accent?: string | null
   published?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -300,6 +326,8 @@ export type ProfileUncheckedCreateInput = {
   displayName?: string | null
   bio?: string | null
   avatarUrl?: string | null
+  theme?: string
+  accent?: string | null
   published?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -312,6 +340,8 @@ export type ProfileUpdateInput = {
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  theme?: Prisma.StringFieldUpdateOperationsInput | string
+  accent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -326,6 +356,8 @@ export type ProfileUncheckedUpdateInput = {
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  theme?: Prisma.StringFieldUpdateOperationsInput | string
+  accent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -339,6 +371,8 @@ export type ProfileCreateManyInput = {
   displayName?: string | null
   bio?: string | null
   avatarUrl?: string | null
+  theme?: string
+  accent?: string | null
   published?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -350,6 +384,8 @@ export type ProfileUpdateManyMutationInput = {
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  theme?: Prisma.StringFieldUpdateOperationsInput | string
+  accent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -362,6 +398,8 @@ export type ProfileUncheckedUpdateManyInput = {
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  theme?: Prisma.StringFieldUpdateOperationsInput | string
+  accent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -385,6 +423,8 @@ export type ProfileCountOrderByAggregateInput = {
   displayName?: Prisma.SortOrder
   bio?: Prisma.SortOrder
   avatarUrl?: Prisma.SortOrder
+  theme?: Prisma.SortOrder
+  accent?: Prisma.SortOrder
   published?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -397,6 +437,8 @@ export type ProfileMaxOrderByAggregateInput = {
   displayName?: Prisma.SortOrder
   bio?: Prisma.SortOrder
   avatarUrl?: Prisma.SortOrder
+  theme?: Prisma.SortOrder
+  accent?: Prisma.SortOrder
   published?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -409,6 +451,8 @@ export type ProfileMinOrderByAggregateInput = {
   displayName?: Prisma.SortOrder
   bio?: Prisma.SortOrder
   avatarUrl?: Prisma.SortOrder
+  theme?: Prisma.SortOrder
+  accent?: Prisma.SortOrder
   published?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -471,6 +515,8 @@ export type ProfileCreateWithoutUserInput = {
   displayName?: string | null
   bio?: string | null
   avatarUrl?: string | null
+  theme?: string
+  accent?: string | null
   published?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -483,6 +529,8 @@ export type ProfileUncheckedCreateWithoutUserInput = {
   displayName?: string | null
   bio?: string | null
   avatarUrl?: string | null
+  theme?: string
+  accent?: string | null
   published?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -511,6 +559,8 @@ export type ProfileUpdateWithoutUserInput = {
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  theme?: Prisma.StringFieldUpdateOperationsInput | string
+  accent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -523,6 +573,8 @@ export type ProfileUncheckedUpdateWithoutUserInput = {
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  theme?: Prisma.StringFieldUpdateOperationsInput | string
+  accent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -535,6 +587,8 @@ export type ProfileCreateWithoutLinksInput = {
   displayName?: string | null
   bio?: string | null
   avatarUrl?: string | null
+  theme?: string
+  accent?: string | null
   published?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -548,6 +602,8 @@ export type ProfileUncheckedCreateWithoutLinksInput = {
   displayName?: string | null
   bio?: string | null
   avatarUrl?: string | null
+  theme?: string
+  accent?: string | null
   published?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -575,6 +631,8 @@ export type ProfileUpdateWithoutLinksInput = {
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  theme?: Prisma.StringFieldUpdateOperationsInput | string
+  accent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -588,6 +646,8 @@ export type ProfileUncheckedUpdateWithoutLinksInput = {
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  theme?: Prisma.StringFieldUpdateOperationsInput | string
+  accent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -631,6 +691,8 @@ export type ProfileSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   displayName?: boolean
   bio?: boolean
   avatarUrl?: boolean
+  theme?: boolean
+  accent?: boolean
   published?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -648,12 +710,14 @@ export type ProfileSelectScalar = {
   displayName?: boolean
   bio?: boolean
   avatarUrl?: boolean
+  theme?: boolean
+  accent?: boolean
   published?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "handle" | "displayName" | "bio" | "avatarUrl" | "published" | "createdAt" | "updatedAt", ExtArgs["result"]["profile"]>
+export type ProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "handle" | "displayName" | "bio" | "avatarUrl" | "theme" | "accent" | "published" | "createdAt" | "updatedAt", ExtArgs["result"]["profile"]>
 export type ProfileInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   links?: boolean | Prisma.Profile$linksArgs<ExtArgs>
@@ -673,6 +737,14 @@ export type $ProfilePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     displayName: string | null
     bio: string | null
     avatarUrl: string | null
+    /**
+     * * Link-in-bio palette preset; see src/lib/bio-themes.ts.
+     */
+    theme: string
+    /**
+     * * Optional #RRGGBB override for buttons and highlights.
+     */
+    accent: string | null
     published: boolean
     createdAt: Date
     updatedAt: Date
@@ -1053,6 +1125,8 @@ export interface ProfileFieldRefs {
   readonly displayName: Prisma.FieldRef<"Profile", 'String'>
   readonly bio: Prisma.FieldRef<"Profile", 'String'>
   readonly avatarUrl: Prisma.FieldRef<"Profile", 'String'>
+  readonly theme: Prisma.FieldRef<"Profile", 'String'>
+  readonly accent: Prisma.FieldRef<"Profile", 'String'>
   readonly published: Prisma.FieldRef<"Profile", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"Profile", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Profile", 'DateTime'>

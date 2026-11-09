@@ -1,6 +1,8 @@
 // Shared (client-safe) constants and types for the admin-managed ads and
 // user-page header links. Server data access lives in `ads-data.ts`.
 
+import type { Locale } from '@/i18n/config'
+
 /** Slots where ad units can be rendered across the site. */
 export const AD_PLACEMENTS = [
   'home-top',
@@ -39,17 +41,25 @@ export type AdUnitData = {
   position: number
 }
 
+/** Per-locale label text for a header link; missing locales fall back. */
+export type HeaderLinkLabels = Partial<Record<Locale, string>>
+
 /** Serializable header-link shape shared by admin UI and public renderers. */
 export type HeaderLinkData = {
   id: string
   label: string
   labelKey: string | null
+  labels: HeaderLinkLabels | null
   url: string
   icon: string
   color: string | null
   newTab: boolean
   enabled: boolean
   position: number
+  /** Top-level menu this row appears under; null means it is a top-level menu. */
+  parentId: string | null
+  /** Seeded menu whose label stays locked to the site translations. */
+  builtIn: boolean
 }
 
 export type AdUnitInput = {
@@ -71,6 +81,34 @@ export type HeaderLinkInput = {
   color?: string
   newTab: boolean
   enabled?: boolean
+  /** Pick a label from the site's nav catalogs instead of typed text. */
+  labelKey?: string
+  /** Admin-typed label per locale; empty locales fall back to English/catalog. */
+  labels?: HeaderLinkLabels | null
+  /** Parent menu id for a sub-link; null or omitted keeps it top-level. */
+  parentId?: string | null
+}
+
+/**
+ * Menu labels admins can reuse from the `nav` message catalogs. Keys are
+ * resolved per locale on the public header, so the same row reads correctly
+ * in every language. Anything outside this list is site chrome, not a menu.
+ */
+export const HEADER_MENU_KEYS = [
+  'howItWorks',
+  'features',
+  'faqShort',
+  'contact',
+  'privacy',
+  'terms',
+  'videoCompressor',
+  'videoDownloader',
+] as const
+
+export type HeaderMenuKey = (typeof HEADER_MENU_KEYS)[number]
+
+export function isHeaderMenuKey(value: string): value is HeaderMenuKey {
+  return (HEADER_MENU_KEYS as readonly string[]).includes(value)
 }
 
 /** Icon keys selectable in the admin; must match the site-nav icon map. */

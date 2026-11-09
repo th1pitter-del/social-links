@@ -1,0 +1,1 @@
+ALTER TABLE `HeaderLink` ADD COLUMN `labels` JSON NULL;

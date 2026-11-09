@@ -280,6 +280,55 @@ export async function adminDeleteShortLink(shortLinkId: string): Promise<AdminAc
   return { ok: true }
 }
 
+export async function adminSetBioPublished(
+  profileId: string,
+  published: boolean,
+): Promise<AdminActionResult> {
+  await requireAdmin()
+  const t = await getTranslations('errors')
+
+  const profile = await prisma.profile.findUnique({
+    where: { id: profileId },
+    select: { id: true, handle: true },
+  })
+  if (!profile) return { ok: false, error: t('bioNotFound') }
+
+  await prisma.profile.update({ where: { id: profileId }, data: { published } })
+  await writeAudit({
+    action: published ? 'profile.publish' : 'profile.unpublish',
+    targetType: 'profile',
+    targetId: profileId,
+    details: profile.handle,
+  })
+  revalidatePath('/admin/bio')
+  revalidatePath('/dashboard/profile')
+  revalidatePath(`/bio/${profile.handle}`)
+  return { ok: true }
+}
+
+export async function adminDeleteBio(profileId: string): Promise<AdminActionResult> {
+  await requireAdmin()
+  const t = await getTranslations('errors')
+
+  const profile = await prisma.profile.findUnique({
+    where: { id: profileId },
+    select: { id: true, handle: true },
+  })
+  if (!profile) return { ok: false, error: t('bioNotFound') }
+
+  await prisma.profile.delete({ where: { id: profileId } })
+  await writeAudit({
+    action: 'profile.delete',
+    targetType: 'profile',
+    targetId: profileId,
+    details: profile.handle,
+  })
+  revalidatePath('/admin/bio')
+  revalidatePath('/dashboard/profile')
+  revalidatePath(`/bio/${profile.handle}`)
+  return { ok: true }
+}
+
 export async function deleteMediaAsset(mediaId: string): Promise<AdminActionResult> {
   await requireAdmin()
   const t = await getTranslations('errors')

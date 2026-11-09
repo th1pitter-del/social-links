@@ -325,6 +325,9 @@ export const HeaderLinkScalarFieldEnum = {
   newTab: 'newTab',
   enabled: 'enabled',
   position: 'position',
+  parentId: 'parentId',
+  labels: 'labels',
+  builtIn: 'builtIn',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -420,6 +423,8 @@ export const ProfileScalarFieldEnum = {
   displayName: 'displayName',
   bio: 'bio',
   avatarUrl: 'avatarUrl',
+  theme: 'theme',
+  accent: 'accent',
   published: 'published',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -433,6 +438,7 @@ export const BioLinkScalarFieldEnum = {
   profileId: 'profileId',
   label: 'label',
   url: 'url',
+  platform: 'platform',
   position: 'position',
   createdAt: 'createdAt'
 } as const
@@ -477,6 +483,14 @@ export const SortOrder = {
 } as const
 
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+export const NullableJsonNullValueInput = {
+  DbNull: DbNull,
+  JsonNull: JsonNull
+} as const
+
+export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
 
 
 export const NullsOrder = {
@@ -656,13 +670,31 @@ export const AdUnitOrderByRelevanceFieldEnum = {
 export type AdUnitOrderByRelevanceFieldEnum = (typeof AdUnitOrderByRelevanceFieldEnum)[keyof typeof AdUnitOrderByRelevanceFieldEnum]
 
 
+export const JsonNullValueFilter = {
+  DbNull: DbNull,
+  JsonNull: JsonNull,
+  AnyNull: AnyNull
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
+
+
+export const QueryMode = {
+  default: 'default',
+  insensitive: 'insensitive'
+} as const
+
+export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
+
+
 export const HeaderLinkOrderByRelevanceFieldEnum = {
   id: 'id',
   label: 'label',
   labelKey: 'labelKey',
   url: 'url',
   icon: 'icon',
-  color: 'color'
+  color: 'color',
+  parentId: 'parentId'
 } as const
 
 export type HeaderLinkOrderByRelevanceFieldEnum = (typeof HeaderLinkOrderByRelevanceFieldEnum)[keyof typeof HeaderLinkOrderByRelevanceFieldEnum]
@@ -739,7 +771,9 @@ export const ProfileOrderByRelevanceFieldEnum = {
   handle: 'handle',
   displayName: 'displayName',
   bio: 'bio',
-  avatarUrl: 'avatarUrl'
+  avatarUrl: 'avatarUrl',
+  theme: 'theme',
+  accent: 'accent'
 } as const
 
 export type ProfileOrderByRelevanceFieldEnum = (typeof ProfileOrderByRelevanceFieldEnum)[keyof typeof ProfileOrderByRelevanceFieldEnum]
@@ -749,7 +783,8 @@ export const BioLinkOrderByRelevanceFieldEnum = {
   id: 'id',
   profileId: 'profileId',
   label: 'label',
-  url: 'url'
+  url: 'url',
+  platform: 'platform'
 } as const
 
 export type BioLinkOrderByRelevanceFieldEnum = (typeof BioLinkOrderByRelevanceFieldEnum)[keyof typeof BioLinkOrderByRelevanceFieldEnum]

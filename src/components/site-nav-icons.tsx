@@ -10,6 +10,7 @@ import {
   LayoutDashboard,
   Link2,
   ListChecks,
+  LogIn,
   LogOut,
   Minimize2,
   Music,
@@ -47,6 +48,7 @@ export const navIcons = {
   flame: Flame,
   layoutDashboard: LayoutDashboard,
   shieldCheck: ShieldCheck,
+  logIn: LogIn,
   logOut: LogOut,
 } satisfies Record<string, LucideIcon>
 

@@ -42,20 +42,32 @@ const TIMING = {
   notice: 2400,
   /** How long a finished row keeps its green wash before settling to neutral. */
   flash: 900,
-  /** Outlives the burst itself (1.6s + the widest stagger) so no piece is cut
+  /** Outlives the burst itself (1.7s + the widest stagger) so no piece is cut
       off mid-flight when the layer unmounts. */
-  celebration: 1900,
+  celebration: 2050,
+  /** How long the card carries its unlock glow before settling. */
+  cardPulse: 950,
   successHold: 2800,
   resetPause: 1000,
   /** Silence after a manual interaction before the timeline takes back over. */
   handback: 7000,
 }
 
-const CONFETTI_COLORS = ['bg-primary', 'bg-pulse-lime-soft', 'bg-success']
+const CONFETTI_COLORS = ['bg-primary', 'bg-pulse-lime-soft', 'bg-success', 'bg-foreground']
+const CONFETTI_SHAPES = ['square', 'ribbon', 'circle'] as const
 
 type PointerState = { x: number; y: number; click: boolean }
 type NoticeState = { id: number; text: string; kind: 'success' | 'info' }
-type ConfettiPart = { dx: number; dy: number; rot: number; delay: number; color: string }
+type ConfettiPart = {
+  dx: number
+  dy: number
+  rot: number
+  delay: number
+  color: string
+  shape: (typeof CONFETTI_SHAPES)[number]
+  /** Which of the two launch points fired this piece. */
+  origin: 0 | 1
+}
 type BurstState = { id: number; parts: ConfettiPart[] }
 
 /**
@@ -99,6 +111,7 @@ export function UnlockDemo({
   const [nudging, setNudging] = useState(false)
   const [notice, setNotice] = useState<NoticeState | null>(null)
   const [burst, setBurst] = useState<BurstState | null>(null)
+  const [celebrating, setCelebrating] = useState(false)
   const [pointer, setPointer] = useState<PointerState | null>(null)
   const [manual, setManual] = useState(false)
   const [playing, setPlaying] = useState(true)
@@ -160,15 +173,21 @@ export function UnlockDemo({
 
   const fireBurst = () => {
     if (reducedMotion) return
-    // Enough pieces, spread and stagger to read as a celebration at a glance,
-    // while the hero's own overflow keeps every one of them inside this card.
-    const parts: ConfettiPart[] = Array.from({ length: 28 }, (_, i) => ({
-      dx: Math.round((Math.random() - 0.5) * 380),
-      dy: Math.round(-40 - Math.random() * 210),
-      rot: Math.round((Math.random() - 0.5) * 520),
-      delay: Math.round(Math.random() * 260),
-      color: CONFETTI_COLORS[i % CONFETTI_COLORS.length],
-    }))
+    // Two launch points and mixed shapes give the burst volume without raising
+    // the particle count beyond what one short animation can carry; the hero's
+    // own overflow keeps every piece inside this card.
+    const parts: ConfettiPart[] = Array.from({ length: 46 }, (_, i) => {
+      const spread = 210 + Math.random() * 140
+      return {
+        dx: Math.round((Math.random() - 0.5) * 2 * spread),
+        dy: Math.round(-70 - Math.random() * 240),
+        rot: Math.round((Math.random() - 0.5) * 720),
+        delay: Math.round(Math.random() * 300),
+        color: CONFETTI_COLORS[i % CONFETTI_COLORS.length],
+        shape: CONFETTI_SHAPES[i % CONFETTI_SHAPES.length],
+        origin: (i % 2) as 0 | 1,
+      }
+    })
     setBurst({ id: ++burstSeq.current, parts })
     if (burstTimer.current !== null) window.clearTimeout(burstTimer.current)
     burstTimer.current = window.setTimeout(() => setBurst(null), TIMING.celebration)
@@ -232,7 +251,9 @@ export function UnlockDemo({
   const celebrate = () => {
     applyUnlocked(true)
     setPressed(true)
+    setCelebrating(true)
     later(() => setPressed(false), 300)
+    later(() => setCelebrating(false), TIMING.cardPulse)
     fireBurst()
     showNotice(tm('toastUnlocked'))
   }
@@ -253,6 +274,7 @@ export function UnlockDemo({
     if (handbackTimer.current !== null) window.clearTimeout(handbackTimer.current)
     hideNotice()
     clearBurst()
+    setCelebrating(false)
     setPointer(null)
     setActiveStep(null)
     applyAllDone(false)
@@ -432,25 +454,54 @@ export function UnlockDemo({
         // card's rounded frame but stays within the hero section's bounds, and
         // `pointer-events-none` means it never eats a click.
         <div key={burst.id} aria-hidden className="pointer-events-none absolute inset-0 z-20">
-          <span className="absolute left-[60%] top-[80%]">
-            {burst.parts.map((part, i) => (
-              <span
-                key={i}
-                className={cn(
-                  'absolute block size-2 rounded-[3px] motion-safe:animate-[demo-confetti_1.6s_ease-out_forwards]',
-                  part.color,
-                )}
-                style={
-                  {
-                    '--demo-x': `${part.dx}px`,
-                    '--demo-y': `${part.dy}px`,
-                    '--demo-r': `${part.rot}deg`,
-                    animationDelay: `${part.delay}ms`,
-                  } as React.CSSProperties
-                }
-              />
-            ))}
-          </span>
+          {/* Two rings open from the button before the confetti settles over
+              them. Both stay opacity-0 when motion is reduced: no animation
+              class is emitted, so nothing sits at full size waiting to start. */}
+          {[0, 150].map((delay) => (
+            <span
+              key={delay}
+              className={cn(
+                'absolute left-1/2 top-[82%] -mt-12 -ml-12 block size-24 rounded-full border-2 border-primary/45 opacity-0',
+                'motion-safe:animate-[demo-shockwave_0.95s_ease-out_forwards]',
+              )}
+              style={{ animationDelay: `${delay}ms` }}
+            />
+          ))}
+          {[38, 62].map((left, origin) => (
+            <span
+              key={left}
+              className="absolute block"
+              style={{
+                left: `${left}%`,
+                top: origin === 0 ? '78%' : '82%',
+              }}
+            >
+              {burst.parts
+                .filter((part) => part.origin === origin)
+                .map((part, i) => (
+                  <span
+                    key={i}
+                    className={cn(
+                      'absolute block motion-safe:animate-[demo-confetti_1.7s_ease-out_forwards]',
+                      part.color,
+                      part.shape === 'ribbon'
+                        ? 'h-3.5 w-1 rounded-full'
+                        : part.shape === 'circle'
+                          ? 'size-1.5 rounded-full'
+                          : 'size-2 rounded-[2px]',
+                    )}
+                    style={
+                      {
+                        '--demo-x': `${part.dx}px`,
+                        '--demo-y': `${part.dy}px`,
+                        '--demo-r': `${part.rot}deg`,
+                        animationDelay: `${part.delay}ms`,
+                      } as React.CSSProperties
+                    }
+                  />
+                ))}
+            </span>
+          ))}
         </div>
       ) : null}
 
@@ -461,6 +512,9 @@ export function UnlockDemo({
         className={cn(
           'transition-[box-shadow,border-color] duration-500 motion-reduce:transition-none',
           unlocked && 'border-primary/50 shadow-primary/15',
+          // One glow breath across the frame when the card unlocks; the class
+          // drops off when the pulse finishes, leaving the settled state.
+          celebrating && 'motion-safe:animate-[demo-card-celebrate_0.95s_ease-out]',
         )}
       >
         {/* The extra bottom padding is the notice's lane: it rides the bottom
@@ -491,14 +545,14 @@ export function UnlockDemo({
               key={notice.id}
               role="status"
               className={cn(
-                'pointer-events-none absolute inset-x-0 bottom-1.5 z-30 mx-auto flex w-fit max-w-[85%] items-center gap-1.5 rounded-full border bg-popover/95 px-3 py-1.5 text-xs font-medium shadow-lg backdrop-blur-sm motion-safe:animate-[demo-fade_0.25s_ease-out]',
+                'pointer-events-none absolute inset-x-0 bottom-1.5 z-30 mx-auto flex w-fit max-w-[85%] items-center gap-1.5 rounded-full border bg-popover/95 px-3 py-1.5 text-xs font-medium shadow-lg backdrop-blur-sm motion-safe:animate-[demo-notice-pop_0.32s_cubic-bezier(0.34,1.56,0.64,1)]',
                 notice.kind === 'success'
                   ? 'border-success/30 text-emerald-700 dark:text-success'
                   : 'border-border text-muted-foreground',
               )}
             >
               {notice.kind === 'success' ? (
-                <CheckCircle2 className="size-3.5 shrink-0" />
+                <CheckCircle2 className="size-3.5 shrink-0 motion-safe:animate-[demo-check_0.32s_ease-out]" />
               ) : (
                 <Info className="size-3.5 shrink-0" />
               )}
@@ -735,8 +789,10 @@ export function UnlockDemo({
                 tabIndex={unlocked ? 0 : -1}
                 className={cn(
                   'absolute inset-0 h-full rounded-xl text-sm [&_svg]:size-4',
-                  'transition-opacity duration-300',
-                  unlocked ? 'opacity-100' : 'pointer-events-none opacity-0',
+                  'transition-[opacity,transform] duration-300',
+                  unlocked
+                    ? 'scale-100 opacity-100'
+                    : 'pointer-events-none scale-90 opacity-0',
                 )}
               >
                 <ExternalLink />

@@ -9,7 +9,7 @@ import { isReservedSlug } from '@/lib/slug'
 import { makeProfileInputSchema } from '@/lib/validation'
 
 export type ProfileResult =
-  | { ok: true; handle: string }
+  | { ok: true; handle: string; published: boolean }
   | { ok: false; error: string; fieldErrors?: Record<string, string[]> }
 
 export async function saveProfile(raw: unknown): Promise<ProfileResult> {
@@ -51,6 +51,7 @@ export async function saveProfile(raw: unknown): Promise<ProfileResult> {
   }
 
   try {
+    let savedPublished = false
     await prisma.$transaction(async (tx) => {
       const profile = await tx.profile.upsert({
         where: { userId },
@@ -60,15 +61,23 @@ export async function saveProfile(raw: unknown): Promise<ProfileResult> {
           displayName: input.displayName || null,
           bio: input.bio || null,
           avatarUrl: input.avatarUrl || null,
+          theme: input.theme,
+          accent: input.accent ? input.accent.toLowerCase() : null,
+          // A new bio is live straight away; unpublishing stays a deliberate
+          // action from the editor.
+          published: true,
         },
         update: {
           handle,
           displayName: input.displayName || null,
           bio: input.bio || null,
           avatarUrl: input.avatarUrl || null,
+          theme: input.theme,
+          accent: input.accent ? input.accent.toLowerCase() : null,
         },
-        select: { id: true },
+        select: { id: true, published: true },
       })
+      savedPublished = profile.published
 
       await tx.bioLink.deleteMany({ where: { profileId: profile.id } })
       if (input.links.length > 0) {
@@ -77,6 +86,7 @@ export async function saveProfile(raw: unknown): Promise<ProfileResult> {
             profileId: profile.id,
             label: link.label,
             url: link.url,
+            platform: link.platform || null,
             position: index,
           })),
         })
@@ -85,7 +95,7 @@ export async function saveProfile(raw: unknown): Promise<ProfileResult> {
 
     revalidatePath('/dashboard/profile')
     revalidatePath(`/bio/${handle}`)
-    return { ok: true, handle }
+    return { ok: true, handle, published: savedPublished }
   } catch (error) {
     console.error('[profile] save failed', error)
     return { ok: false, error: t('saveProfileFailed') }

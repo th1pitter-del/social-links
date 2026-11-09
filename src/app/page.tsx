@@ -77,12 +77,13 @@ export default async function HomePage() {
     offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
   }
 
-  // The hero walks the actions the product actually offers, and every one of
-  // them is checked by the server before the card unlocks.
+  // The hero walks four actions, each from a different platform, so the card
+  // shows the breadth of the catalog at a glance.
   const steps: DemoStep[] = [
     { label: actionCopy('YOUTUBE_COMMENT'), platform: 'youtube', icon: 'message' },
     { label: actionCopy('DISCORD_JOIN'), platform: 'discord', icon: 'users' },
-    { label: actionCopy('DISCORD_BOOST'), platform: 'discord', icon: 'rocket' },
+    { label: actionCopy('INSTAGRAM_FOLLOW'), platform: 'instagram', icon: 'user_plus' },
+    { label: actionCopy('SPOTIFY_TRACK'), platform: 'spotify', icon: 'music' },
   ]
 
   const platforms: DemoPlatform[] = platformRows.map((platform) => ({
