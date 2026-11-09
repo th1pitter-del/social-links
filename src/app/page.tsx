@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import type { Metadata } from 'next'
 import {
   ArrowRight,
   BadgeCheck,
@@ -12,6 +13,7 @@ import { AdSlot } from '@/components/ads/ad-slot'
 import { ActionMixer, type DemoPlatform } from '@/components/home/action-mixer'
 import { FeatureBento } from '@/components/home/feature-bento'
 import { FlowDiagram } from '@/components/home/flow-diagram'
+import { JsonLd } from '@/components/json-ld'
 import { StepRail } from '@/components/home/step-rail'
 import { UnlockDemo, type DemoStep } from '@/components/home/unlock-demo'
 import { Reveal } from '@/components/motion/reveal'
@@ -19,12 +21,15 @@ import { getSession } from '@/lib/session'
 import { getEnabledPlatforms } from '@/lib/action-catalog'
 import { actionLabel, platformLabel } from '@/lib/action-label'
 import { formatNumber } from '@/lib/format'
+import { SITE_URL } from '@/lib/seo'
+import { getSiteSettings } from '@/lib/settings'
 
 export const dynamic = 'force-dynamic'
+export const metadata: Metadata = { alternates: { canonical: '/' } }
 
 /**
  * The homepage demonstrates the product instead of only describing it: the hero
- * runs the real unlock card through its phases, the steps and the verification
+ * runs the real unlock card through its phases, the steps and the one-click
  * flow are explorable with a pointer, and the features are composed per claim
  * rather than repeated as matching cards. Identity, palette and components are
  * the ones already in docs/design-spec.md - the motion is additive, gated on
@@ -39,6 +44,8 @@ export default async function HomePage() {
     motionCopy,
     actionCopy,
     platformCopy,
+    meta,
+    site,
     session,
     platformRows,
     locale,
@@ -50,11 +57,25 @@ export default async function HomePage() {
       getTranslations('motion'),
       getTranslations('actions'),
       getTranslations('platforms'),
+      getTranslations('meta'),
+      getSiteSettings(),
       getSession(),
       getEnabledPlatforms(),
       getLocale(),
     ])
   const signedIn = Boolean(session)
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: site.name,
+    url: SITE_URL,
+    description: site.hasCustomTagline ? site.tagline : meta('description'),
+    applicationCategory: 'BusinessApplication',
+    operatingSystem: 'Any',
+    inLanguage: new Intl.Locale(locale).toString(),
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  }
 
   // The hero walks the actions the product actually offers, and every one of
   // them is checked by the server before the card unlocks.
@@ -92,6 +113,7 @@ export default async function HomePage() {
 
   return (
     <>
+      <JsonLd data={jsonLd} />
       <SiteHeader />
 
       <main className="flex-1">

@@ -1,9 +1,12 @@
+import type { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
 
 import { AdSlot } from '@/components/ads/ad-slot'
 import { DashboardShell } from '@/components/dashboard/dashboard-shell'
 import { requireUser } from '@/lib/session'
 import { getSiteSettings } from '@/lib/settings'
+
+export const metadata: Metadata = { robots: { index: false, follow: false } }
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const session = await requireUser()

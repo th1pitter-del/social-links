@@ -12,8 +12,6 @@ const BUILT_IN_ACTION_KEYS = new Set(ACTION_OPTION_DEFAULTS.map((option) => opti
  * An action is offered when its platform is one the product supports and it is
  * either a built-in we ship for that platform or an option an administrator
  * created. Retired built-ins stay in the database but never reach the editor.
- * Whether the step can be proven is a separate question, answered at release
- * time by the verifier registry.
  */
 function isOfferable(platform: string | null, key: string, system: boolean): boolean {
   if (!platform || !SUPPORTED_PLATFORMS.has(platform)) return false

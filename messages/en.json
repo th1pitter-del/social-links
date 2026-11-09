@@ -24,6 +24,7 @@
       "dashboard": "Dashboard",
       "abuseReports": "Abuse reports",
       "links": "Links",
+      "shortLinks": "Short links",
       "users": "Users",
       "siteContent": "Site content",
       "platforms": "Platforms",
@@ -58,6 +59,7 @@
     "nav": {
       "overview": "Overview",
       "myLinks": "My links",
+      "shortLinks": "Short links",
       "emailLists": "Email lists",
       "analytics": "Analytics",
       "files": "Files",
@@ -72,6 +74,7 @@
     "meta": {
       "overview": "Overview",
       "myLinks": "My links",
+      "shortLinks": "Short links",
       "newLink": "Create link",
       "editLink": "Edit link",
       "analytics": "Analytics",
@@ -135,6 +138,27 @@
       "colEvents": "Events",
       "colActions": "Actions"
     },
+    "shortLinks": {
+      "title": "Short links",
+      "description": "Create short addresses that redirect straight to any page.",
+      "createTitle": "Create a short link",
+      "createDescription": "Paste a destination and pick your own code, or leave it empty.",
+      "destinationLabel": "Destination URL",
+      "destinationPlaceholder": "https://example.com/very/long/page",
+      "codeLabel": "Custom code (optional)",
+      "codePlaceholder": "auto-generated",
+      "codeHint": "Leave the code empty to generate one automatically.",
+      "preview": "Your link will be live at /s/{code}",
+      "createdLabel": "Short link created",
+      "submit": "Create short link",
+      "emptyTitle": "No short links yet",
+      "emptyDescription": "Create one above and share the short address anywhere.",
+      "colLink": "Short link",
+      "colClicks": "Clicks",
+      "colStatus": "Status",
+      "colCreated": "Created",
+      "colActions": "Actions"
+    },
     "newLink": {
       "title": "Create link",
       "description": "Set up the destination, choose your actions, then activate the link when you are ready."
@@ -157,12 +181,6 @@
       "noLeads": "No addresses collected yet.",
       "colEmail": "Email",
       "colConsent": "Consent given",
-      "verifiedTitle": "Confirmed follows",
-      "verifiedDescription": "Steps read from the platform's own public record instead of a visitor's click. Only the handle we checked and the date are kept.",
-      "noVerified": "No confirmed steps yet.",
-      "colVerifiedAction": "Platform",
-      "colEvidence": "What we saw",
-      "colVerifiedAt": "When",
       "hiddenAction": "{label} (hidden)",
       "activityTitle": "Views and completed unlocks",
       "lastDays": "Last {days} days"
@@ -231,6 +249,19 @@
       "disabledToast": "Link disabled.",
       "deletedToast": "Link deleted."
     },
+    "shortLinkActions": {
+      "copyLink": "Copy short link",
+      "copied": "Copied",
+      "openLink": "Open link",
+      "disableLink": "Disable link",
+      "activateLink": "Activate link",
+      "moreActions": "More actions",
+      "deleteLink": "Delete link",
+      "deleteConfirm": "Delete this short link? Anyone using it will get a not-found page. This cannot be undone.",
+      "activatedToast": "Short link activated.",
+      "disabledToast": "Short link disabled.",
+      "deletedToast": "Short link deleted."
+    },
     "fileActions": {
       "deleteAria": "Delete file",
       "deleteFailed": "Delete failed",
@@ -293,17 +324,18 @@
     "actionUnavailable": "This action is no longer available",
     "actionUrlRequired": "A valid http(s) URL is required for this action",
     "platformNotAllowed": "This platform is not allowed by site rules",
-    "verifierTargetInvalid": "This step has no usable profile link for the creator, so it cannot be verified.",
-    "verifyUnavailable": "That platform is not responding right now. Please try again in a moment.",
-    "telegramNotConfigured": "Telegram check-ins are not set up for this link, so this step cannot be confirmed.",
-    "telegramWaiting": "Your check-in has not reached us yet. Press Start in Telegram, then check again here.",
-    "telegramNotMember": "Telegram shows that account is not in the channel. Join it, then check again.",
-    "telegramCheckinStale": "That check-in expired. Open the bot again, then check once more.",
     "fixHighlightedFields": "Please fix the highlighted fields.",
     "slugReserved": "That slug is reserved.",
     "slugTaken": "That slug is already taken.",
     "fieldSlugReserved": "Reserved slug",
     "fieldSlugInUse": "Slug in use",
+    "invalidShortCode": "Use 3-48 lowercase letters, numbers or hyphens.",
+    "shortCodeTaken": "That code is already in use.",
+    "fieldShortCodeInUse": "Code in use",
+    "shortLinkSelfTarget": "Point the link somewhere other than another short link on this site.",
+    "shortLinkNotFound": "Short link not found.",
+    "shortLinkCreateFailed": "Could not create the short link. Please try again.",
+    "shortLinkRateLimited": "You are creating short links too quickly. Please try again later.",
     "createLinkFailed": "Could not create the link. Please try again.",
     "saveLinkFailed": "Could not save the link. Please try again.",
     "linkNotFound": "Link not found.",
@@ -328,9 +360,7 @@
     "sessionExpiredReloadLong": "This unlock session has expired. Please reload the page.",
     "unknownAction": "Unknown action.",
     "emailConsentRequired": "Enter a valid email and accept the consent notice.",
-    "openStepFirst": "Open this step first, then mark it done after the wait.",
-    "waitBeforeComplete": "Wait {seconds} more seconds before marking this step done.",
-    "invalidWait": "Wait time must be between 0 and {max} seconds.",
+    "openStepFirst": "Open this step first, then mark it done.",
     "updateSessionFailed": "Could not update the session.",
     "sessionExpired": "Your unlock session has expired.",
     "sessionExpiredLong": "This unlock session has expired.",
@@ -375,9 +405,6 @@
     "invalidHeaderIcon": "Please choose a valid icon.",
     "invalidHeaderColor": "Please use a hex color like #5182EF or leave it empty.",
     "invalidWebhookUrl": "The URL must start with http:// or https://",
-    "confirmHandleRequired": "Enter your profile handle to continue.",
-    "confirmNotFollowing": "We checked {handle} and could not confirm {steps}. Complete the step, then confirm again.",
-    "confirmProfileRequired": "Confirm your profile to reveal the link.",
     "tooLong": "Must be {max} characters or fewer.",
     "tooManyItems": "Too many items. The maximum is {max}.",
     "userAlreadyExists": "An account with this email already exists.",
@@ -445,8 +472,8 @@
     },
     "flow": {
       "title": "A clear, server-gated unlocking flow",
-      "body": "Visitors always know exactly what is left to do. Every step is tracked on our servers, and a step counts only after the visitor opens it and the wait the creator set has passed.",
-      "serverBullet": "Server-side tracking with a server-enforced wait on every step",
+      "body": "Visitors always know exactly what is left to do. Every step is tracked on our servers, and a step counts the moment the visitor opens it.",
+      "serverBullet": "Server-side tracking of every completed step",
       "signedBullet": "Signed, expiring access to protected content",
       "progressBullet": "Progress that survives an accidental refresh",
       "progressTitle": "Unlock progress",
@@ -454,15 +481,15 @@
       "stepDone": "Commented on YouTube",
       "completed": "Completed",
       "stepNext": "Final required action",
-      "required": "Required · wait enforced",
+      "required": "Required",
       "diagramTitle": "What happens between the click and the content",
       "nodes": {
         "visitor": "Visitor opens",
         "visitorDetail": "One short URL — no app and no account needed to start.",
         "action": "Action taken",
         "actionDetail": "They follow, subscribe, watch or listen wherever the action points.",
-        "verify": "Wait complete",
-        "verifyDetail": "A step counts once the visitor has opened it and the configured wait has passed.",
+        "verify": "Step complete",
+        "verifyDetail": "A step counts the moment the visitor opens it.",
         "deliver": "Content delivered",
         "deliverDetail": "A signed link with an expiry hands over the destination."
       }
@@ -588,7 +615,7 @@
     "title": "Create a free link",
     "subtitle": "Set up your destination and actions. Your first link goes live immediately. To create more than one link — or to edit and delete them later — create a free account.",
     "bulletHidden": "Content stays hidden until every step is done.",
-    "bulletServer": "Each step counts only after the visitor opens it and the server-side wait has passed."
+    "bulletServer": "Each step counts the moment the visitor opens it."
   },
   "linkForm": {
     "uploadFailed": "Upload failed.",
@@ -599,6 +626,12 @@
     "linkSaved": "Link saved.",
     "successTitle": "Your link is live",
     "successBody": "It is already published — share this URL with your audience.",
+    "shareLink": "Share link",
+    "shareCopied": "Link copied. Paste it where your audience is.",
+    "shareBody": "Your link is ready. Paste it where your audience is.",
+    "shareTo": "Share to",
+    "openLink": "Open your link",
+    "done": "Done",
     "upsellTitle": "Want to edit it or create more links?",
     "upsellBody": "Guest links are published instantly but cannot be edited later. Create a free account to manage this link and create unlimited links.",
     "createFreeAccount": "Create a free account",
@@ -629,10 +662,6 @@
     "step": "Step {number}",
     "removeAction": "Remove action",
     "actionTargetAria": "Action target URL",
-    "waitLabel": "Wait time",
-    "waitAria": "Seconds to wait after opening this step",
-    "waitUnit": "seconds",
-    "waitHint": "After opening the step, the visitor waits this long before they can mark it done. Use 0 for an instant step.",
     "emailNote": "Collects an email address — stored securely and only visible to you.",
     "customLabelPlaceholder": "Custom button label (optional)",
     "customLabelAria": "Custom action label",
@@ -669,7 +698,6 @@
     "stepsCount": "0 of {total} steps",
     "collectsEmailLong": "Collects an email address",
     "opensNewTab": "Opens in a new tab",
-    "opensWithWait": "Opens in a new tab, then waits {seconds}s",
     "startUnlocking": "Start unlocking",
     "previewAfterUnlock": "After the last step",
     "previewOpen": "Open",
@@ -681,7 +709,7 @@
     "readyTitle": "A title",
     "readyDestination": "A destination",
     "readySteps": "At least one step",
-    "willBeLiveAt": "Your link will be live at /u/{slug}",
+    "willBeLiveAt": "Your link will be live at /link/{slug}",
     "previewNote": "This is how visitors will see your link."
   },
   "profileForm": {
@@ -731,10 +759,6 @@
     "emailPlaceholder": "you@example.com",
     "consent": "I agree to receive updates from this creator. My address is only shared with them.",
     "submitEmail": "Submit email",
-    "waiting": "Waiting {seconds}s",
-    "markDone": "Mark as done",
-    "handlePlaceholder": "Your profile handle",
-    "handlePlaceholderWithExample": "Your handle, like {example}",
     "start": "Start unlocking",
     "unlockButton": "Unlock content",
     "expired": "This session has expired. Reload the page to start again.",
@@ -756,9 +780,7 @@
     "expiredTitle": "This link has expired",
     "expiredMessage": "The unlock window for this link has closed.",
     "goHome": "Go to homepage",
-    "confirmButton": "Reveal link",
-    "verifyNotDone": "We could not confirm that yet. Complete the step, then connect again.",
-    "verifyUnavailable": "We could not check that right now. Try again in a moment.",
+    "visitUnavailable": "This visit link expired. Reload the page and try again.",
     "stepsFirst": "Complete all steps above first",
     "guestOwner": "Guest"
   },
@@ -807,7 +829,7 @@
       "helpTitle": "Still have a question?",
       "helpBody": "Send us the short link or the step you are stuck on and we will take a look.",
       "helpCta": "Contact us",
-      "content": "### What is Link Unlocker?\nLink Unlocker turns any link or file into a short unlock page. You choose the steps a visitor must complete — following a channel, liking a video, joining a Discord server, leaving a comment or simply visiting a page — and the content is revealed only after those steps are done. You keep one short link to share instead of a giveaway spreadsheet, a pile of screenshots or a manual check of every entry.\n\n### Is Link Unlocker really free?\nYes. Creating links, protecting files, collecting email addresses, the bio page and the analytics dashboard are all included. There are no premium tiers, credits, trials or per-unlock fees. We do not charge visitors either.\n\n### How does a visitor unlock my content?\nThe flow is the same for every link:\n- The visitor opens your short link and sees the actions you configured.\n- We create a private session that lasts two hours.\n- The visitor completes each action in order and returns to the card.\n- When every required step is complete, the content opens: a destination URL, a file download, or a message shown on the page.\nThe visitor never needs a Link Unlocker account unless the link asks for one.\n\n### Which platforms and actions can I use?\nThe built-in catalog covers YouTube, Instagram, Facebook, TikTok, Discord, Spotify and any other website. It includes 17 actions, such as subscribe, like, comment, watch, follow, join a server, boost a server, listen to a track and visit a page. You can combine several actions on one link and ask for an email address as an extra step.\n\n### Are the actions verified?\nNo. Every step is completed by the visitor: they open the link, wait the time the creator set, and mark the step as done. We do not check whether a subscription, like, comment, share or view actually happened on YouTube or anywhere else, and we never ask a visitor to sign in to Google or connect an account. The card records a step as completed, not verified.\n\n### What does the visitor have to share?\nNothing beyond what a step asks for — an email address, only if the creator added the optional email step. There is no Google sign-in, no account connection and no password.\n\n### What happens if a link expires or is paused?\nYou can set an expiry date on any link. Once a link expires, or while it is paused, the unlock page stops immediately and tells the visitor that the link is no longer available. You can re-enable a paused link from your dashboard at any time. An expired session cannot be extended from the browser; the visitor starts again with a fresh session.\n\n### Who can see the content I protect?\nOnly a visitor whose session completed every required step. The server checks the session on every request and refuses incomplete sessions, so a copied unlock URL on its own does not reveal anything. Downloads are issued per session. A destination URL is visible to the visitor once it is unlocked, so treat it as shareable and do not put secrets in a URL you hand out.\n\n### Can I collect email addresses?\nYes, as an optional action. Visitors see why the address is requested and must actively consent before it is stored. Addresses are kept per link, visible only to you, and can be exported as a CSV file or deleted from the dashboard. We never sell them or share them with other creators.\n\n### Do I need an account to use Link Unlocker?\nYou can publish one link as a guest; the browser keeps a signed cookie so you can still manage that link. A free account is required for additional links, file uploads, email lists, analytics, milestones and the bio page.\n\n### Can I protect a file instead of a website link?\nYes. Upload a file from the dashboard, choose the file-download mode when you create the link, and the file is streamed only after the visitor completes the steps. Files are private by default and must match the type and size limits set by the operator of this installation.\n\n### What analytics will I see?\nYou get counts of views, unlock starts, completed actions and completed unlocks for each link, a 14-day chart and a per-link conversion table. These are aggregate counts attached to the link, not profiles of individual visitors. We do not sell analytics or pass them to advertisers.\n\n### How long does a link last?\nA link stays available until you delete it, unless you set an expiry date. Each unlock session lasts two hours, which is usually enough to complete the steps without keeping a session open indefinitely.\n\n### What is not allowed?\nNo malware, phishing, pirated content, harassment, impersonation, scams, or anything that breaks the rules of the platform you are using. Do not ask visitors for passwords, payment details or identity documents. Do not use the service to collect email addresses for spam. We can disable links and accounts that generate credible abuse reports.\n\n### How do I report a link?\nUse the report link shown on the unlock page, or send us the short link through the contact page. Reports are reviewed first and are not shown to the link owner. If you include an email address we can reply when the report is resolved.\n\n### Can I delete my data?\nDeleting a link also deletes its unlock sessions, analytics and collected email addresses. You can delete individual addresses from your email list at any time. To close your account and remove your profile data, contact us — there is no self-service delete button yet, so we handle it manually.\n\n### What if a platform changes its API?\nOur steps do not depend on a platform API: the visitor opens the link, waits and marks the step done. If a target page stops working, the creator can update it. No step claims to be verified, so a platform change cannot invalidate a completed step.\n\n### How do I get help?\nEmail [support@linkunlock.app](mailto:support@linkunlock.app) for product questions or account help, and use the report link on an unlock page for abuse. Including the short link and the step you are stuck on helps us answer faster."
+      "content": "### What is Link Unlocker?\nLink Unlocker turns any link or file into a short unlock page. You choose the steps a visitor must complete — following a channel, liking a video, joining a Discord server, leaving a comment or simply visiting a page — and the content is revealed only after those steps are done. You keep one short link to share instead of a giveaway spreadsheet, a pile of screenshots or a manual check of every entry.\n\n### Is Link Unlocker really free?\nYes. Creating links, protecting files, collecting email addresses, the bio page and the analytics dashboard are all included. There are no premium tiers, credits, trials or per-unlock fees. We do not charge visitors either.\n\n### How does a visitor unlock my content?\nThe flow is the same for every link:\n- The visitor opens your short link and sees the actions you configured.\n- We create a private session that lasts two hours.\n- The visitor completes each action in order and returns to the card.\n- When every required step is complete, the content opens: a destination URL, a file download, or a message shown on the page.\nThe visitor never needs a Link Unlocker account unless the link asks for one.\n\n### Which platforms and actions can I use?\nThe built-in catalog covers YouTube, Instagram, Facebook, TikTok, Discord, Spotify and any other website. It includes 18 actions, such as subscribe, like, comment, watch, follow, join a server, boost a server, listen to a track and visit a page. You can combine several actions on one link and ask for an email address as an extra step.\n\n### Are the actions verified?\nA step is recorded as done the moment the visitor opens it. We do not connect to anyone's account on a social platform, and the card never claims a step was checked.\n\n### What does the visitor have to share?\nOnly what a step needs: an email address when the creator added the optional email step, stored only after the visitor consents. Most steps ask for nothing, and no sign-in or account connection is ever requested.\n\n### What happens if a link expires or is paused?\nYou can set an expiry date on any link. Once a link expires, or while it is paused, the unlock page stops immediately and tells the visitor that the link is no longer available. You can re-enable a paused link from your dashboard at any time. An expired session cannot be extended from the browser; the visitor starts again with a fresh session.\n\n### Who can see the content I protect?\nOnly a visitor whose session completed every required step. The server checks the session on every request and refuses incomplete sessions, so a copied unlock URL on its own does not reveal anything. Downloads are issued per session. A destination URL is visible to the visitor once it is unlocked, so treat it as shareable and do not put secrets in a URL you hand out.\n\n### Can I collect email addresses?\nYes, as an optional action. Visitors see why the address is requested and must actively consent before it is stored. Addresses are kept per link, visible only to you, and can be exported as a CSV file or deleted from the dashboard. We never sell them or share them with other creators.\n\n### Do I need an account to use Link Unlocker?\nYou can publish one link as a guest; the browser keeps a signed cookie so you can still manage that link. A free account is required for additional links, file uploads, email lists, analytics, milestones and the bio page.\n\n### Can I protect a file instead of a website link?\nYes. Upload a file from the dashboard, choose the file-download mode when you create the link, and the file is streamed only after the visitor completes the steps. Files are private by default and must match the type and size limits set by the operator of this installation.\n\n### What analytics will I see?\nYou get counts of views, unlock starts, completed actions and completed unlocks for each link, a 14-day chart and a per-link conversion table. These are aggregate counts attached to the link, not profiles of individual visitors. We do not sell analytics or pass them to advertisers.\n\n### How long does a link last?\nA link stays available until you delete it, unless you set an expiry date. Each unlock session lasts two hours, which is usually enough to complete the steps without keeping a session open indefinitely.\n\n### What is not allowed?\nNo malware, phishing, pirated content, harassment, impersonation, scams, or anything that breaks the rules of the platform you are using. Do not ask visitors for passwords, payment details or identity documents. Do not use the service to collect email addresses for spam. We can disable links and accounts that generate credible abuse reports.\n\n### How do I report a link?\nUse the report link shown on the unlock page, or send us the short link through the contact page. Reports are reviewed first and are not shown to the link owner. If you include an email address we can reply when the report is resolved.\n\n### Can I delete my data?\nDeleting a link also deletes its unlock sessions, analytics and collected email addresses. You can delete individual addresses from your email list at any time. To close your account and remove your profile data, contact us — there is no self-service delete button yet, so we handle it manually.\n\n### What if a platform changes its API?\nWe do not call platform APIs to check steps: a step counts when the visitor opens it, so platform changes do not affect unlocking. If a destination link changes, the creator can update it from the dashboard at any time.\n\n### How do I get help?\nEmail [support@linkunlock.app](mailto:support@linkunlock.app) for product questions or account help, and use the report link on an unlock page for abuse. Including the short link and the step you are stuck on helps us answer faster."
     },
     "privacy": {
       "metaTitle": "Privacy policy",
@@ -820,7 +842,7 @@
       "helpTitle": "Questions about your data?",
       "helpBody": "Ask for a copy, a correction or a deletion, and we will help.",
       "helpCta": "Contact us",
-      "content": "## Who this policy covers\nLink Unlocker is operated by the team behind this website (\"we\", \"us\"). This policy explains what happens to personal data when you browse the public site, unlock a link, create links as a creator or contact us. It applies to this installation of the service, not to the social platforms you interact with — those platforms have their own policies, and completing an action there is also governed by their rules.\n\n## Data we collect\n- **Account data:** your name, email address and a hashed password when you register, plus profile details such as an avatar if you add them.\n- **Link and file data:** the links you create, their configuration, the destination URLs you paste, uploaded cover images and any files you protect.\n- **Email leads:** addresses visitors submit to you through the optional email action, together with the time they consented.\n- **Unlock and analytics data:** views, unlock starts, completed actions, completed unlocks, and technical data such as a hashed IP address, browser user-agent and referring page.\n- **Abuse reports:** the link you report, the reason and details you provide, an optional email address, and a hashed IP address.\n- **Support messages:** whatever you send us when you ask for help.\nWe do not ask for payment details because the service has no paid plans.\n\n## How we use the data\nWe use account and link data to run, secure and support the service; analytics data to show creators how their links perform; email leads to deliver the addresses a visitor chose to share with that creator; and abuse reports to investigate misuse. Technical data is used for rate limiting, fraud prevention and keeping sessions working. We do not use your data to build advertising profiles about you.\n\n## Legal bases\nWhere data protection law requires a legal basis, we rely on:\n- **Contract:** to provide the service you asked for.\n- **Legitimate interests:** to secure the service, prevent abuse and understand aggregate performance.\n- **Consent:** for optional email collection and for any non-essential cookie that asks for one. A visitor gives this consent directly to the creator.\n- **Legal obligation:** to respond to valid legal requests or to defend legal claims.\n\n## Cookies and local storage\n- **Session cookie:** keeps a signed-in creator signed in. It is HTTP-only and same-site.\n- **Guest cookie:** remembers the one free link created by a guest so the same browser can still manage it.\n- **Locale cookie:** remembers the language you chose.\n- **Theme preference:** may be stored in your browser so light or dark mode survives a reload.\nThese are used to make the service work. If the operator enables an advertising unit, that ad may load resources from its own provider and may set its own cookies; we do not pass your account details or collected email addresses to advertisers.\n\n## Unlock sessions and visitor data\nWhen a visitor opens a link, we create a short-lived session that expires after two hours. For unlock analytics and rate limiting we store the visitor's IP address only as a salted hash, together with the browser user-agent and referring page. Sign-in sessions may also record an IP address and browser so an account holder can review access. We use this data to keep the service available and to investigate abuse, not to follow visitors around the web.\n\n## Email addresses collected by creators\nThe email action is optional and only appears when a creator adds it to a link. The address is stored with the time of consent, only the owner of that link can see or export it, and it is deleted when the link is deleted or when the owner removes it. Creators are responsible for using those addresses lawfully and for honouring any withdrawal of consent they receive.\n\n## Completed steps, not account checks\nSome steps point at a social platform, but we do not connect to the visitor's account there. A step is recorded as completed when the visitor opens it, waits the time the creator configured and marks it done. We store the completion time per step and session. We do not verify that a subscription, like, comment, share or view actually happened, and we do not ask for a Google sign-in.\n\n## Files and uploads\nFiles and images you upload are stored by the service and delivered only to sessions that completed the link's steps. File names, sizes and MIME types are stored so the file can be streamed and shown in the dashboard. Deleting a file disables the links that referenced it.\n\n## Sharing and processors\nWe do not sell personal data. We share the minimum necessary with:\n- Hosting and database providers that run the service.\n- Email delivery providers, when a password-reset or contact email has to be sent.\n- Platform APIs used for optional checks the operator has enabled.\n- Authorities or other parties when the law requires it, or when it is necessary to investigate credible abuse.\nThese providers process data on our instructions or under their own terms, and may operate in countries other than yours. Where required, we rely on appropriate safeguards for those transfers.\n\n## Retention\nUnlock sessions expire after two hours. Analytics events are kept while the link exists so a creator can see historical totals. Email leads are kept until the link or the individual address is deleted. Abuse reports are kept as long as needed to resolve the report and prevent repeat abuse. Rate-limit records are short-lived. Deleting a link removes its sessions, events and leads with it. Backup copies may remain for a short period before they are overwritten.\n\n## Security\nPasswords are hashed, traffic is served over HTTPS, session cookies are HTTP-only, and access to another creator's links is checked on the server. We apply rate limits to sensitive actions. No service can promise perfect security, but we keep the surface small: we do not store payment details, and verification reads are limited to the single fact an action needs.\n\n## Your rights\nDepending on where you live, you may have the right to access, correct, export, restrict or delete your personal data, to object to some processing, and to withdraw consent. You can exercise most of these from the dashboard. For anything else, contact us and we will respond within the time required by law. You also have the right to complain to your local data-protection authority.\n\n## Children\nThe service is not intended for children below the age at which they can consent to data processing in their country. We do not knowingly collect data from children. If you believe a child has created an account, contact us and we will remove it.\n\n## Changes to this policy\nWe update this page when the way we handle data changes. The date at the top shows when it was last reviewed. If a change is material, we will announce it on the site or by email to account holders.\n\n## Contact\nQuestions, requests or complaints: [support@linkunlock.app](mailto:support@linkunlock.app). We answer privacy requests first."
+      "content": "## Who this policy covers\nLink Unlocker is operated by the team behind this website (\"we\", \"us\"). This policy explains what happens to personal data when you browse the public site, unlock a link, create links as a creator or contact us. It applies to this installation of the service, not to the social platforms you interact with — those platforms have their own policies, and completing an action there is also governed by their rules.\n\n## Data we collect\n- **Account data:** your name, email address and a hashed password when you register, plus profile details such as an avatar if you add them.\n- **Link and file data:** the links you create, their configuration, the destination URLs you paste, uploaded cover images and any files you protect.\n- **Email leads:** addresses visitors submit to you through the optional email action, together with the time they consented.\n- **Unlock and analytics data:** views, unlock starts, completed actions, completed unlocks, and technical data such as a hashed IP address, browser user-agent and referring page.\n- **Abuse reports:** the link you report, the reason and details you provide, an optional email address, and a hashed IP address.\n- **Support messages:** whatever you send us when you ask for help.\nWe do not ask for payment details because the service has no paid plans.\n\n## How we use the data\nWe use account and link data to run, secure and support the service; analytics data to show creators how their links perform; email leads to deliver the addresses a visitor chose to share with that creator; and abuse reports to investigate misuse. Technical data is used for rate limiting, fraud prevention and keeping sessions working. We do not use your data to build advertising profiles about you.\n\n## Legal bases\nWhere data protection law requires a legal basis, we rely on:\n- **Contract:** to provide the service you asked for.\n- **Legitimate interests:** to secure the service, prevent abuse and understand aggregate performance.\n- **Consent:** for optional email collection and for any non-essential cookie that asks for one. A visitor gives this consent directly to the creator.\n- **Legal obligation:** to respond to valid legal requests or to defend legal claims.\n\n## Cookies and local storage\n- **Session cookie:** keeps a signed-in creator signed in. It is HTTP-only and same-site.\n- **Guest cookie:** remembers the one free link created by a guest so the same browser can still manage it.\n- **Locale cookie:** remembers the language you chose.\n- **Theme preference:** may be stored in your browser so light or dark mode survives a reload.\nThese are used to make the service work. If the operator enables an advertising unit, that ad may load resources from its own provider and may set its own cookies; we do not pass your account details or collected email addresses to advertisers.\n\n## Unlock sessions and visitor data\nWhen a visitor opens a link, we create a short-lived session that expires after two hours. For unlock analytics and rate limiting we store the visitor's IP address only as a salted hash, together with the browser user-agent and referring page. Sign-in sessions may also record an IP address and browser so an account holder can review access. We use this data to keep the service available and to investigate abuse, not to follow visitors around the web.\n\n## Email addresses collected by creators\nThe email action is optional and only appears when a creator adds it to a link. The address is stored with the time of consent, only the owner of that link can see or export it, and it is deleted when the link is deleted or when the owner removes it. Creators are responsible for using those addresses lawfully and for honouring any withdrawal of consent they receive.\n\n## Completed steps, not account checks\nA step is recorded as completed the moment the visitor opens it. We store the completion time per step and session. We do not connect to the visitor's account on any platform, we do not read activity there, and we do not ask for a Google or Spotify sign-in.\n\n## Files and uploads\nFiles and images you upload are stored by the service and delivered only to sessions that completed the link's steps. File names, sizes and MIME types are stored so the file can be streamed and shown in the dashboard. Deleting a file disables the links that referenced it.\n\n## Sharing and processors\nWe do not sell personal data. We share the minimum necessary with:\n- Hosting and database providers that run the service.\n- Email delivery providers, when a password-reset or contact email has to be sent.\n- Authorities or other parties when the law requires it, or when it is necessary to investigate credible abuse.\nThese providers process data on our instructions or under their own terms, and may operate in countries other than yours. Where required, we rely on appropriate safeguards for those transfers.\n\n## Retention\nUnlock sessions expire after two hours. Analytics events are kept while the link exists so a creator can see historical totals. Email leads are kept until the link or the individual address is deleted. Abuse reports are kept as long as needed to resolve the report and prevent repeat abuse. Rate-limit records are short-lived. Deleting a link removes its sessions, events and leads with it. Backup copies may remain for a short period before they are overwritten.\n\n## Security\nPasswords are hashed, traffic is served over HTTPS, session cookies are HTTP-only, and access to another creator's links is checked on the server. We apply rate limits to sensitive actions. No service can promise perfect security, but we keep the surface small: we do not store payment details.\n\n## Your rights\nDepending on where you live, you may have the right to access, correct, export, restrict or delete your personal data, to object to some processing, and to withdraw consent. You can exercise most of these from the dashboard. For anything else, contact us and we will respond within the time required by law. You also have the right to complain to your local data-protection authority.\n\n## Children\nThe service is not intended for children below the age at which they can consent to data processing in their country. We do not knowingly collect data from children. If you believe a child has created an account, contact us and we will remove it.\n\n## Changes to this policy\nWe update this page when the way we handle data changes. The date at the top shows when it was last reviewed. If a change is material, we will announce it on the site or by email to account holders.\n\n## Contact\nQuestions, requests or complaints: [support@linkunlock.app](mailto:support@linkunlock.app). We answer privacy requests first."
     },
     "terms": {
       "metaTitle": "Terms of service",
@@ -833,7 +855,7 @@
       "helpTitle": "Need something clarified?",
       "helpBody": "Ask before you rely on a clause — we would rather explain than surprise you.",
       "helpCta": "Contact us",
-      "content": "## Agreement to these terms\nBy using Link Unlocker — as a creator, a visitor or a reporter — you agree to these terms. If you do not agree, do not use the service. If you use the service for an organisation, you confirm that you are allowed to accept these terms for it.\n\n## What the service does\nLink Unlocker lets a creator publish a short link whose content is revealed after a visitor completes configured actions, such as following a channel or joining a server. The service is free and has no paid plans. We do not charge visitors and do not pay creators; there is no reward, sweepstake or prize connected to the service.\n\n## Accounts and guest links\nYou can create one link as a guest. Additional links and features such as files, email lists, analytics and the bio page require a free account. Keep your credentials secure and tell us promptly if you believe someone else has access to your account. You are responsible for activity under your account.\n\n## Your responsibilities as a creator\nYou must:\n- own or have permission to share the content you protect;\n- describe the protected content honestly and deliver what the page promises;\n- ask only for actions you are entitled to request, and respect each platform's rules;\n- collect email addresses only with clear consent and use them lawfully;\n- keep your links and their destinations up to date, and remove content you no longer have the right to share.\nYou are the controller of the email addresses you collect through your links. Link Unlocker stores and displays them to you but does not use them for its own marketing.\n\n## Prohibited uses\nDo not use Link Unlocker to:\n- distribute malware, phishing pages, pirated material or content that infringes someone else's rights;\n- harass, threaten, impersonate or deceive people;\n- run scams, fake giveaways or engagement schemes that break a platform's rules;\n- ask visitors for passwords, payment card details, government identifiers or other sensitive credentials;\n- collect email addresses for spam, resale or unrelated marketing;\n- probe, overload or attempt to bypass the service's security or rate limits.\nWe may remove content or disable links and accounts that breach these rules.\n\n## Third-party platforms\nThe actions in a link happen on third-party platforms. We do not control those platforms, their availability, their rules or their data practices. Completing an action does not create any relationship between you and us beyond these terms, and a platform may change its API, permissions or limits at any time. Steps are self-reported: a step counts once the visitor opens it and the configured wait has passed. We do not confirm that a subscription, like, comment, share or view actually happened, and we do not ask visitors to connect a Google account.\n\n## Content and ownership\nYou keep the rights you already hold in the content you upload or link to. You give us a limited licence to store, display and deliver that content for the purpose of running your links and showing them in your dashboard. You confirm that you have the rights needed to grant that licence. We own the service, its software and its branding; these terms do not transfer any of that ownership to you.\n\n## Visitors and consent\nVisitors must complete the steps themselves. Creators must not complete actions on a visitor's behalf, automate them, or misrepresent what will be unlocked. Email collection requires an affirmative consent from the visitor; pre-ticked boxes, bundled consent or a requirement hidden in unrelated copy do not count. Creators must honour withdrawal of consent and applicable marketing law in the visitor's country.\n\n## Files and limits\nUploaded files must match the allowed types and size limits shown in the dashboard, which the operator can change. Do not use file delivery to distribute material you do not have the right to share. We may disable a file and any links that depend on it if it breaches these terms or generates an abuse report.\n\n## Availability and changes\nThe service is provided on an as-is and as-available basis. We may add, change or discontinue features, set usage limits, or suspend the service for maintenance. Where a change materially affects your links, we will try to give reasonable notice on the site or by email. We do not guarantee that a link will stay online forever.\n\n## Suspension and termination\nYou can stop using the service at any time and delete your links. We may suspend or terminate access if you breach these terms, if your links generate credible abuse reports, or if the law requires it. Where practical, we will explain the reason. Content that is illegal, harmful or the subject of a valid complaint may be removed immediately.\n\n## Disclaimers\nWe do not promise a particular number of followers, views, clicks, unlocks or revenue, and we do not guarantee that a platform will recognise or verify an action. The service is provided without warranties to the extent permitted by law. Nothing in these terms excludes rights that consumers have under mandatory local law.\n\n## Limitation of liability\nTo the extent permitted by law, we are not liable for indirect or consequential loss, loss of profit, loss of data, or loss caused by a third-party platform, a visitor's conduct or content you chose to protect. Where liability cannot be excluded, it is limited to the amount you paid us in the twelve months before the claim — which, because the service is free, is zero. This does not limit liability for fraud, wilful misconduct or anything else that cannot be limited by law.\n\n## Indemnity\nYou agree to indemnify us against claims and costs arising from content you protected, actions you asked visitors to complete, or your breach of these terms or of a third party's rights, to the extent permitted by law. We will tell you about a claim and let you take part in the defence.\n\n## Governing law and disputes\nThese terms are governed by the laws that apply to the operator of this site, without regard to conflict-of-law rules. If you are a consumer, you keep the protection of the mandatory laws of your country of residence and may bring a claim there. Before starting a formal dispute, contact us so we can try to resolve it.\n\n## Changes to these terms\nWe may update these terms as the service evolves. The date at the top shows the current version. If a change is material, we will announce it on the site or by email to account holders. Continuing to use the service after the change means you accept the updated terms.\n\n## Contact\nQuestions about these terms: [support@linkunlock.app](mailto:support@linkunlock.app). For a link that breaks these rules, use the report link on its unlock page."
+      "content": "## Agreement to these terms\nBy using Link Unlocker — as a creator, a visitor or a reporter — you agree to these terms. If you do not agree, do not use the service. If you use the service for an organisation, you confirm that you are allowed to accept these terms for it.\n\n## What the service does\nLink Unlocker lets a creator publish a short link whose content is revealed after a visitor completes configured actions, such as following a channel or joining a server. The service is free and has no paid plans. We do not charge visitors and do not pay creators; there is no reward, sweepstake or prize connected to the service.\n\n## Accounts and guest links\nYou can create one link as a guest. Additional links and features such as files, email lists, analytics and the bio page require a free account. Keep your credentials secure and tell us promptly if you believe someone else has access to your account. You are responsible for activity under your account.\n\n## Your responsibilities as a creator\nYou must:\n- own or have permission to share the content you protect;\n- describe the protected content honestly and deliver what the page promises;\n- ask only for actions you are entitled to request, and respect each platform's rules;\n- collect email addresses only with clear consent and use them lawfully;\n- keep your links and their destinations up to date, and remove content you no longer have the right to share.\nYou are the controller of the email addresses you collect through your links. Link Unlocker stores and displays them to you but does not use them for its own marketing.\n\n## Prohibited uses\nDo not use Link Unlocker to:\n- distribute malware, phishing pages, pirated material or content that infringes someone else's rights;\n- harass, threaten, impersonate or deceive people;\n- run scams, fake giveaways or engagement schemes that break a platform's rules;\n- ask visitors for passwords, payment card details, government identifiers or other sensitive credentials;\n- collect email addresses for spam, resale or unrelated marketing;\n- probe, overload or attempt to bypass the service's security or rate limits.\nWe may remove content or disable links and accounts that breach these rules.\n\n## Third-party platforms\nThe actions in a link happen on third-party platforms. We do not control those platforms, their availability, their rules or their data practices. Completing an action does not create any relationship between you and us beyond these terms, and a platform may change its API, permissions or limits at any time. Steps count the moment the visitor opens them; we do not read or confirm activity on the platform and we never ask visitors to connect an account. A step that cannot be opened, for example because a target was removed, can be updated by the creator.\n\n## Content and ownership\nYou keep the rights you already hold in the content you upload or link to. You give us a limited licence to store, display and deliver that content for the purpose of running your links and showing them in your dashboard. You confirm that you have the rights needed to grant that licence. We own the service, its software and its branding; these terms do not transfer any of that ownership to you.\n\n## Visitors and consent\nVisitors must complete the steps themselves. Creators must not complete actions on a visitor's behalf, automate them, or misrepresent what will be unlocked. Email collection requires an affirmative consent from the visitor; pre-ticked boxes, bundled consent or a requirement hidden in unrelated copy do not count. Creators must honour withdrawal of consent and applicable marketing law in the visitor's country.\n\n## Files and limits\nUploaded files must match the allowed types and size limits shown in the dashboard, which the operator can change. Do not use file delivery to distribute material you do not have the right to share. We may disable a file and any links that depend on it if it breaches these terms or generates an abuse report.\n\n## Availability and changes\nThe service is provided on an as-is and as-available basis. We may add, change or discontinue features, set usage limits, or suspend the service for maintenance. Where a change materially affects your links, we will try to give reasonable notice on the site or by email. We do not guarantee that a link will stay online forever.\n\n## Suspension and termination\nYou can stop using the service at any time and delete your links. We may suspend or terminate access if you breach these terms, if your links generate credible abuse reports, or if the law requires it. Where practical, we will explain the reason. Content that is illegal, harmful or the subject of a valid complaint may be removed immediately.\n\n## Disclaimers\nWe do not promise a particular number of followers, views, clicks, unlocks or revenue, and we do not guarantee that a platform will recognise or verify an action. The service is provided without warranties to the extent permitted by law. Nothing in these terms excludes rights that consumers have under mandatory local law.\n\n## Limitation of liability\nTo the extent permitted by law, we are not liable for indirect or consequential loss, loss of profit, loss of data, or loss caused by a third-party platform, a visitor's conduct or content you chose to protect. Where liability cannot be excluded, it is limited to the amount you paid us in the twelve months before the claim — which, because the service is free, is zero. This does not limit liability for fraud, wilful misconduct or anything else that cannot be limited by law.\n\n## Indemnity\nYou agree to indemnify us against claims and costs arising from content you protected, actions you asked visitors to complete, or your breach of these terms or of a third party's rights, to the extent permitted by law. We will tell you about a claim and let you take part in the defence.\n\n## Governing law and disputes\nThese terms are governed by the laws that apply to the operator of this site, without regard to conflict-of-law rules. If you are a consumer, you keep the protection of the mandatory laws of your country of residence and may bring a claim there. Before starting a formal dispute, contact us so we can try to resolve it.\n\n## Changes to these terms\nWe may update these terms as the service evolves. The date at the top shows the current version. If a change is material, we will announce it on the site or by email to account holders. Continuing to use the service after the change means you accept the updated terms.\n\n## Contact\nQuestions about these terms: [support@linkunlock.app](mailto:support@linkunlock.app). For a link that breaks these rules, use the report link on its unlock page."
     },
     "contact": {
       "metaTitle": "Contact",
@@ -856,6 +878,7 @@
       "siteContent": "Site content",
       "lockedFiles": "Locked files",
       "links": "Links",
+      "shortLinks": "Short links",
       "link": "Link",
       "media": "Media",
       "platforms": "Platforms & Action Types",
@@ -879,9 +902,6 @@
       "verified": "verified",
       "pending": "pending",
       "expired": "expired",
-      "autoprompt": "auto prompt",
-      "userconfirmed": "user confirmed",
-      "emailsubmitted": "email submitted",
       "emailVerified": "email verified",
       "emailUnverified": "email unverified"
     },
@@ -954,7 +974,12 @@
       "actionDistributionDescription": "Completed action steps by platform",
       "heatmapSummary": "{count} events over {days} days",
       "actionMixEmpty": "No visitor has completed an action step yet.",
-      "completedSteps": "{count} completed steps"
+      "completedSteps": "{count} completed steps",
+      "shortLinksTitle": "Short links",
+      "shortLinksDescription": "{count, plural, one {# short link} other {# short links}} · {clicks, plural, one {# click} other {# clicks}} recorded",
+      "noShortLinks": "No short links yet.",
+      "colShortLink": "Short link",
+      "colClicks": "Clicks"
     },
     "audit": {
       "title": "Audit log",
@@ -1020,11 +1045,16 @@
           "dismissed": "Dismissed report",
           "resolve_disable": "Resolved report and disabled link"
         },
-        "unknown": "Unknown action"
+        "unknown": "Unknown action",
+        "shortLink": {
+          "status": "Changed short-link status",
+          "delete": "Deleted short link"
+        }
       },
       "targetLabels": {
         "user": "User",
         "link": "Link",
+        "shortLink": "Short link",
         "platform": "Platform",
         "actionOption": "Action",
         "media": "Media",
@@ -1109,6 +1139,30 @@
       "bulkDisabledToast": "{count} link(s) disabled.",
       "emptyList": "No links yet."
     },
+    "shortLinks": {
+      "title": "Short links",
+      "description": "Platform-wide view of every short link. Disabling one stops its redirect immediately.",
+      "filterAll": "All",
+      "filterActive": "Active",
+      "filterDisabled": "Disabled",
+      "searchPlaceholder": "Search by code, destination or owner email",
+      "noLinks": "No short links match this view.",
+      "emptyList": "No short links yet.",
+      "colLink": "Short link",
+      "colDestination": "Destination",
+      "colOwner": "Owner",
+      "colClicks": "Clicks",
+      "colStatus": "Status",
+      "colCreated": "Created",
+      "colActions": "Actions"
+    },
+    "shortLinkActions": {
+      "enabledToast": "Short link enabled.",
+      "disabledToast": "Short link disabled.",
+      "deletedToast": "Short link deleted.",
+      "deleteConfirm": "Delete this short link? Anyone using it will get a not-found page. This cannot be undone.",
+      "delete": "Delete"
+    },
     "linkDetail": {
       "backToLinks": "← All links",
       "openReports": "{count} open report(s)",
@@ -1127,7 +1181,6 @@
       "colType": "Type",
       "colLabel": "Label",
       "colTarget": "Target",
-      "colVerification": "Verification",
       "unlocksTitle": "Recent unlock sessions",
       "noUnlocks": "No unlock sessions yet.",
       "colCreated": "Created",
@@ -1308,7 +1361,7 @@
       "labelPlaceholder": "e.g. Claim your reward",
       "labelHint": "Shown as the button text (link) or the image alt text (banner).",
       "htmlLabel": "Ad code",
-      "htmlPlaceholder": "<!-- Paste the ad network snippet here -->",
+      "htmlPlaceholder": "'<'!-- Paste the ad network snippet here --'>'",
       "htmlHint": "Paste the snippet from your ad network. Scripts run when the page loads.",
       "newTabLabel": "Open in a new tab",
       "createAd": "Create ad",
@@ -1394,10 +1447,6 @@
           "title": "Demo access",
           "description": "Optional one-click demo credentials shown on the sign-in page."
         },
-        "step-verification": {
-          "title": "Step verification",
-          "description": "Credentials that let the site confirm a visitor really followed someone instead of only clicking."
-        },
         "email-delivery": {
           "title": "Email delivery",
           "description": "Password reset mail is POSTed as JSON to your own relay or automation endpoint."
@@ -1442,6 +1491,10 @@
           "label": "Link creations per hour (per user)",
           "placeholder": "20"
         },
+        "limits_shortLinkCreatePerHour": {
+          "label": "Short link creations per hour (per user)",
+          "placeholder": "60"
+        },
         "limits_guestLinkCreatePerHour": {
           "label": "Guest link creations per hour (per IP)",
           "hint": "Anti-abuse cap only — guests are still limited to one free link via a signed cookie.",
@@ -1450,11 +1503,6 @@
         "limits_unlockStartPerMinute": {
           "label": "Unlock starts per minute (per session)",
           "placeholder": "30"
-        },
-        "limits_verifyPerMinute": {
-          "label": "Verification checks per minute (per session)",
-          "hint": "Each check reads a public follow list. Lower it if the platform starts refusing lookups.",
-          "placeholder": "8"
         },
         "limits_reportPerHour": {
           "label": "Abuse reports per hour (per IP)",
@@ -1507,15 +1555,6 @@
           "label": "Demo password",
           "hint": "Stored in plain text. Use a throwaway account."
         },
-        "verification_discordBotToken": {
-          "label": "Discord bot token",
-          "hint": "Free at discord.com/developers: create an application, add a bot, copy its token and invite that bot to your server. Reading members needs no privileged intent. A username the bot cannot resolve is reported as unchecked, never as a refusal."
-        },
-        "verification_discordGuildId": {
-          "label": "Discord server id",
-          "hint": "Optional. Left empty, the server comes from the invite link pasted on the unlock step. Set it to check every Discord step against one server.",
-          "placeholder": "1234567890123456789"
-        },
         "email_webhookUrl": {
           "label": "Webhook URL",
           "hint": "Empty means reset links are only logged. Must start with http:// or https://.",
@@ -1528,7 +1567,7 @@
         "email_from": {
           "label": "Sender address",
           "hint": "Used as the from field unless your relay sets its own.",
-          "placeholder": "Link Unlocker <no-reply@example.com>"
+          "placeholder": "Link Unlocker '<'no-reply@example.com'>'"
         },
         "retention_analyticsDays": {
           "label": "Analytics retention days",
@@ -1551,7 +1590,6 @@
     "play": "Play",
     "replay": "Replay",
     "next": "Next",
-    "waiting": "Waiting",
     "tapHint": "Tap the dots to step through it.",
     "stepOf": "Step {current} of {total}",
     "nodeOf": "Stage {current} of {total}",

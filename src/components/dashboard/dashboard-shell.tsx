@@ -17,6 +17,7 @@ import {
   Mail,
   Menu,
   Plus,
+  Scissors,
   Shield,
   Sparkles,
   User,
@@ -116,6 +117,7 @@ export function DashboardShell({
       items: [
         { href: '/dashboard', label: t('nav.overview'), icon: LayoutDashboard },
         { href: '/dashboard/links', label: t('nav.myLinks'), icon: Link2 },
+        { href: '/dashboard/short-links', label: t('nav.shortLinks'), icon: Scissors },
         { href: '/dashboard/leads', label: t('nav.emailLists'), icon: Mail },
         { href: '/dashboard/analytics', label: t('nav.analytics'), icon: BarChart3 },
       ],

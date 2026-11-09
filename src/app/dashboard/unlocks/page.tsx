@@ -53,21 +53,21 @@ export default async function MyUnlocksPage() {
         ) : (
           <ul className="divide-y">
             {unlocks.map((u) => {
-              const publicUrl = `${appUrl}/u/${u.link.slug}`
+              const publicUrl = `${appUrl}/link/${u.link.slug}`
               return (
                 <li key={u.id} className="flex flex-wrap items-center justify-between gap-4 px-5 py-4">
                   <div className="min-w-0">
-                    <Link href={`/u/${u.link.slug}`} target="_blank" className="truncate font-medium hover:underline">
+                    <Link href={`/link/${u.link.slug}`} target="_blank" className="truncate font-medium hover:underline">
                       {u.link.title}
                     </Link>
                     <p className="truncate text-xs text-muted-foreground">
-                      /u/{u.link.slug} ·{' '}
+                      /link/{u.link.slug} ·{' '}
                       {t('unlockedOn', { date: dateFormatter.format(u.unlockedAt) })}
                     </p>
                   </div>
                   <div className="flex items-center gap-2">
                     <CopyButton value={publicUrl} />
-                    <Link href={`/u/${u.link.slug}`} target="_blank" aria-label={t('open')}>
+                    <Link href={`/link/${u.link.slug}`} target="_blank" aria-label={t('open')}>
                       <ExternalLink />
                     </Link>
                   </div>

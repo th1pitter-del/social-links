@@ -108,7 +108,7 @@ export default async function BioPage({ params }: PageProps) {
                 className="group w-full justify-between"
                 variant="secondary"
               >
-                <Link href={`/u/${link.slug}`}>
+                <Link href={`/link/${link.slug}`}>
                   {link.title}
                   <ArrowUpRight className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                 </Link>

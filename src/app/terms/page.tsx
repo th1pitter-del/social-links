@@ -8,7 +8,7 @@ import { getPageContent } from '@/lib/settings'
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('pages.terms')
-  return { title: t('metaTitle'), description: t('intro') }
+  return { title: t('metaTitle'), description: t('intro'), alternates: { canonical: '/terms' } }
 }
 
 export default async function TermsPage() {

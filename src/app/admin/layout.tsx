@@ -7,7 +7,7 @@ import { getSiteSettings } from '@/lib/settings'
 
 export async function generateMetadata() {
   const t = await getTranslations('admin.meta')
-  return { title: t('settings') }
+  return { title: t('settings'), robots: { index: false, follow: false } }
 }
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {

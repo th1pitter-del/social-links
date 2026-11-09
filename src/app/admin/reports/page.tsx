@@ -127,11 +127,11 @@ export default async function AdminReportsPage({
                       <div className="flex flex-wrap items-center gap-2">
                         <Badge variant="destructive">{tr(`reasons.${report.reason}`)}</Badge>
                         <Link
-                          href={`/u/${report.slug}`}
+                          href={`/link/${report.slug}`}
                           target="_blank"
                           className="font-mono text-sm font-medium hover:underline"
                         >
-                          /u/{report.slug}
+                          /link/{report.slug}
                         </Link>
                       </div>
                       <p className="mt-2 max-w-2xl text-sm whitespace-pre-line">{report.details}</p>
@@ -171,7 +171,7 @@ export default async function AdminReportsPage({
                 <tbody className="divide-y divide-border">
                   {closedReports.map((report) => (
                     <tr key={report.id} className="hover:bg-muted/40">
-                      <td className="px-5 py-3 font-mono text-xs">/u/{report.slug}</td>
+                      <td className="px-5 py-3 font-mono text-xs">/link/{report.slug}</td>
                       <td className="hidden px-5 py-3 text-muted-foreground sm:table-cell">
                         {tr(`reasons.${report.reason}`)}
                       </td>

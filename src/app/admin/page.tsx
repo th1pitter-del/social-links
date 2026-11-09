@@ -56,6 +56,9 @@ export default async function AdminOverviewPage() {
     recentReports,
     topViewGroups,
     recentActivity,
+    shortLinkCount,
+    shortLinkClicks,
+    topShortLinks,
   ] = await Promise.all([
     prisma.user.count(),
     prisma.link.count(),
@@ -99,6 +102,20 @@ export default async function AdminOverviewPage() {
     prisma.analyticsEvent.findMany({
       where: { createdAt: { gte: windowStart(HEAT_DAYS) } },
       select: { createdAt: true },
+    }),
+    prisma.shortLink.count(),
+    prisma.shortLink.aggregate({ _sum: { clicks: true } }),
+    prisma.shortLink.findMany({
+      orderBy: { clicks: 'desc' },
+      take: 5,
+      select: {
+        id: true,
+        code: true,
+        targetUrl: true,
+        status: true,
+        clicks: true,
+        owner: { select: { email: true } },
+      },
     }),
   ])
 
@@ -240,11 +257,11 @@ export default async function AdminOverviewPage() {
                     <div className="flex items-center gap-2">
                       <Badge variant="destructive">{tr(`reasons.${report.reason}`)}</Badge>
                       <Link
-                        href={`/u/${report.slug}`}
+                        href={`/link/${report.slug}`}
                         target="_blank"
                         className="truncate font-mono text-xs hover:underline"
                       >
-                        /u/{report.slug}
+                        /link/{report.slug}
                       </Link>
                     </div>
                     <p className="mt-1 text-xs text-muted-foreground">
@@ -333,7 +350,7 @@ export default async function AdminOverviewPage() {
                           >
                             {link.title}
                           </Link>
-                          <p className="font-mono text-xs text-muted-foreground">/u/{link.slug}</p>
+                          <p className="font-mono text-xs text-muted-foreground">/link/{link.slug}</p>
                         </td>
                         <td className="hidden px-5 py-3 text-muted-foreground sm:table-cell">
                           {link.owner?.email ?? t('common.guest')}
@@ -373,6 +390,77 @@ export default async function AdminOverviewPage() {
           </PanelContent>
         </Panel>
       </div>
+
+      <Panel>
+        <PanelHeader
+          title={t('overview.shortLinksTitle')}
+          description={t('overview.shortLinksDescription', {
+            count: shortLinkCount,
+            clicks: shortLinkClicks._sum.clicks ?? 0,
+          })}
+          actions={
+            <Button variant="ghost" size="sm" asChild>
+              <Link href="/admin/short-links">{t('common.viewAll')}</Link>
+            </Button>
+          }
+        />
+        {topShortLinks.length === 0 ? (
+          <PanelContent>
+            <p className="text-sm text-muted-foreground">{t('overview.noShortLinks')}</p>
+          </PanelContent>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="border-b border-border text-start text-xs text-muted-foreground">
+                <tr>
+                  <th className="px-5 py-3 font-medium">{t('overview.colShortLink')}</th>
+                  <th className="hidden px-5 py-3 font-medium sm:table-cell">
+                    {t('overview.colOwner')}
+                  </th>
+                  <th className="hidden px-5 py-3 font-medium md:table-cell">
+                    {t('overview.colStatus')}
+                  </th>
+                  <th className="px-5 py-3 text-end font-medium">{t('overview.colClicks')}</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border">
+                {topShortLinks.map((link) => (
+                  <tr key={link.id} className="hover:bg-muted/40">
+                    <td className="px-5 py-3">
+                      <a
+                        href={`/s/${link.code}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="font-mono text-xs font-medium hover:underline"
+                      >
+                        /s/{link.code}
+                      </a>
+                      <p
+                        className="mt-0.5 max-w-64 truncate text-xs text-muted-foreground"
+                        title={link.targetUrl}
+                      >
+                        {link.targetUrl}
+                      </p>
+                    </td>
+                    <td className="hidden px-5 py-3 text-muted-foreground sm:table-cell">
+                      {link.owner.email}
+                    </td>
+                    <td className="hidden px-5 py-3 md:table-cell">
+                      <StatusPill
+                        status={link.status}
+                        label={t(`status.${link.status.toLowerCase()}`)}
+                      />
+                    </td>
+                    <td className="px-5 py-3 text-end font-medium tabular-nums">
+                      {formatNumber(locale, link.clicks)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </Panel>
     </div>
   )
 }

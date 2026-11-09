@@ -7,6 +7,7 @@ Audit of the requested feature set against the current codebase. Legend:
 | Feature | Status | Can the user manage it? |
 | --- | --- | --- |
 | Links | Done | Yes — create, preview, edit, activate/disable, delete, share, per-link stats |
+| Short links | Done | Yes — create short redirects, copy, activate/disable, delete, click count, admin moderation |
 | Link-in-bio | Done | Yes — publish a public `/bio/<handle>` page with profile + link list |
 | Email lists | Done | Yes — aggregated across links, view, delete, CSV export |
 | Files (lock files like links) | Done | Yes — upload private files, attach to a `FILE` link, delete |
@@ -29,7 +30,7 @@ Fully implemented for both guest and registered creators.
   `src/components/link-row-actions.tsx` (`setLinkStatus`, `deleteLink`).
 - Edit: `src/app/dashboard/links/[id]/page.tsx`, form in `src/components/link-form.tsx`
   (`updateLink`).
-- Public unlock page: `src/app/u/[slug]/page.tsx` + `src/components/unlock/unlock-experience.tsx`.
+- Public unlock page: `src/app/link/[slug]/page.tsx` + `src/components/unlock/unlock-experience.tsx`.
 - Per-link stats shown on the edit page (views, unlock starts, completed unlocks) from
   `AnalyticsEvent`.
 - Custom slug + expiry supported.
@@ -37,6 +38,24 @@ Fully implemented for both guest and registered creators.
   the creator form offers "Website URL" or "File download". Legacy `TEXT` links still work.
 
 **User can manage:** yes, every link they own (ownership enforced server-side via `ownerId`).
+
+## 1a. Short links — Done
+
+A plain URL shortener, independent of unlock links: no steps, sessions or analytics.
+
+- Manage: `src/app/dashboard/short-links/page.tsx`, form in
+  `src/components/short-link-form.tsx`, row actions in
+  `src/components/short-link-row-actions.tsx`, server actions in
+  `src/lib/actions/short-links.ts`.
+- Public redirect: `src/app/s/[code]/route.ts` — `302` with `Cache-Control: no-store`,
+  counting one click per request.
+- Custom code optional; otherwise a 6-character code is generated. Owner-only — guest
+  creation is not offered.
+- Rate limit: `limits.shortLinkCreatePerHour` (default 60/hour), editable in
+  `/admin/settings`.
+- Admin: `/admin/short-links` lists every short link with owner, clicks and status
+  (search + status filters, enable/disable, delete); the admin overview shows the
+  short-link total, recorded clicks and the five most-clicked links.
 
 ## 2. Link-in-bio — Done
 
@@ -122,7 +141,7 @@ Fully implemented for both guest and registered creators.
 - **Milestones** are derived and stateless — nothing is persisted or notified when a
   milestone is reached.
 - **My unlocks** records history but does not re-issue protected content without repeating
-  the link's unlock steps; it links back to `/u/<slug>`.
+  the link's unlock steps; it links back to `/link/<slug>`.
 - **Files:** admins have a locked-file browser at `/admin/files` (list, storage totals, the
   links that deliver each file, and delete — which disables those links). No per-owner storage
   quota yet.

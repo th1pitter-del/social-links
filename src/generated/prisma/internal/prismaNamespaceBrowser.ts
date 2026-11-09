@@ -75,7 +75,8 @@ export const ModelName = {
   UserUnlock: 'UserUnlock',
   Profile: 'Profile',
   BioLink: 'BioLink',
-  TelegramCheckin: 'TelegramCheckin'
+  TelegramCheckin: 'TelegramCheckin',
+  ShortLink: 'ShortLink'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -455,6 +456,21 @@ export const TelegramCheckinScalarFieldEnum = {
 export type TelegramCheckinScalarFieldEnum = (typeof TelegramCheckinScalarFieldEnum)[keyof typeof TelegramCheckinScalarFieldEnum]
 
 
+export const ShortLinkScalarFieldEnum = {
+  id: 'id',
+  ownerId: 'ownerId',
+  code: 'code',
+  targetUrl: 'targetUrl',
+  status: 'status',
+  clicks: 'clicks',
+  lastClickAt: 'lastClickAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ShortLinkScalarFieldEnum = (typeof ShortLinkScalarFieldEnum)[keyof typeof ShortLinkScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -750,4 +766,14 @@ export const TelegramCheckinOrderByRelevanceFieldEnum = {
 } as const
 
 export type TelegramCheckinOrderByRelevanceFieldEnum = (typeof TelegramCheckinOrderByRelevanceFieldEnum)[keyof typeof TelegramCheckinOrderByRelevanceFieldEnum]
+
+
+export const ShortLinkOrderByRelevanceFieldEnum = {
+  id: 'id',
+  ownerId: 'ownerId',
+  code: 'code',
+  targetUrl: 'targetUrl'
+} as const
+
+export type ShortLinkOrderByRelevanceFieldEnum = (typeof ShortLinkOrderByRelevanceFieldEnum)[keyof typeof ShortLinkOrderByRelevanceFieldEnum]
 

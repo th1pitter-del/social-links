@@ -20,12 +20,25 @@ Business logic lives in `src/lib` (`unlock.ts`, `rate-limit.ts`, `slug.ts`,
 
 Owner tooling worth noting:
 
-- Unpublished links can be walked through by their owner via `/u/<slug>?preview=1`. The
+- Unpublished links can be walked through by their owner via `/link/<slug>?preview=1`. The
   preview is authorized server-side against the link owner, is refused for disabled links
   and does not write analytics events, so it cannot inflate statistics.
 - Email addresses collected through a link are listed on that link's dashboard page and
   exportable as CSV from `/dashboard/links/<id>/leads`, which re-checks ownership and
   returns `404` for anyone else.
+
+## Short links
+
+- A separate `ShortLink` model and `/s/<code>` route; nothing in the unlock flow reads or
+  depends on it.
+- Redirects are `302` with `Cache-Control: no-store`, so disabling or deleting a link takes
+  effect immediately. The click counter increments before the redirect is returned.
+- Targets must be absolute http(s) URLs. A link may not point at another `/s/` address on
+  the same host, which prevents redirect loops.
+- Owner-only via the dashboard (no guest short links), rate limited through
+  `limits.shortLinkCreatePerHour`. Admins moderate all short links at `/admin/short-links`
+  (enable/disable/delete, audited) and see totals plus the most-clicked links on the
+  admin overview.
 
 ## Abuse reporting
 

@@ -172,3 +172,10 @@ export type BioLink = Prisma.BioLinkModel
  *  * visitor, and the membership read happens against Telegram's own record.
  */
 export type TelegramCheckin = Prisma.TelegramCheckinModel
+/**
+ * Model ShortLink
+ * *
+ *  * A plain redirect short link, independent of the unlock product: no steps, no
+ *  * sessions and no analytics beyond a click counter.
+ */
+export type ShortLink = Prisma.ShortLinkModel

@@ -34,7 +34,7 @@ export type AdminAdsActionResult = { ok: true } | { ok: false; error: string }
 function revalidateAdSurfaces() {
   revalidatePath('/admin/ads')
   revalidatePath('/admin/header-links')
-  // Broad revalidation so every public surface (home, /u/*, /bio/*, dashboard)
+  // Broad revalidation so every public surface (home, /link/*, /bio/*, dashboard)
   // picks up new ads and header links immediately.
   revalidatePath('/', 'layout')
 }

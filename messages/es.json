@@ -24,6 +24,7 @@
       "dashboard": "Panel",
       "abuseReports": "Reportes de abuso",
       "links": "Enlaces",
+      "shortLinks": "Enlaces cortos",
       "users": "Usuarios",
       "siteContent": "Contenido del sitio",
       "platforms": "Plataformas",
@@ -58,6 +59,7 @@
     "nav": {
       "overview": "Resumen",
       "myLinks": "Mis enlaces",
+      "shortLinks": "Enlaces cortos",
       "emailLists": "Listas de correo",
       "analytics": "Analíticas",
       "files": "Archivos",
@@ -130,8 +132,8 @@
     },
     "flow": {
       "title": "Un flujo de desbloqueo claro y controlado por el servidor",
-      "body": "Los visitantes siempre saben exactamente qué les queda por hacer. Cada paso se registra en nuestros servidores y solo cuenta cuando el visitante lo abre y ha transcurrido la espera que fijó el creador.",
-      "serverBullet": "Seguimiento en el servidor con una espera obligatoria en cada paso",
+      "body": "Los visitantes siempre saben exactamente qué les queda por hacer. Cada paso se registra en nuestros servidores y cuenta en el momento en que el visitante lo abre.",
+      "serverBullet": "Seguimiento en el servidor de cada paso completado",
       "signedBullet": "Acceso firmado y con caducidad al contenido protegido",
       "progressBullet": "Progreso que sobrevive a una recarga accidental",
       "progressTitle": "Progreso del desbloqueo",
@@ -139,15 +141,15 @@
       "stepDone": "Comentó en YouTube",
       "completed": "Completado",
       "stepNext": "Acción final requerida",
-      "required": "Obligatorio · espera aplicada",
+      "required": "Obligatorio",
       "diagramTitle": "Qué ocurre entre el clic y el contenido",
       "nodes": {
         "visitor": "Abre el enlace",
         "visitorDetail": "Una URL corta: sin app y sin cuenta para empezar.",
         "action": "Acción cumplida",
         "actionDetail": "Siguen, se suscriben, miran o escuchan adonde lleva la acción.",
-        "verify": "Espera completada",
-        "verifyDetail": "Un paso cuenta cuando el visitante lo ha abierto y ha pasado la espera configurada.",
+        "verify": "Paso completado",
+        "verifyDetail": "Un paso cuenta en el momento en que el visitante lo abre.",
         "deliver": "Contenido entregado",
         "deliverDetail": "Un enlace firmado y con caducidad entrega el destino."
       }
@@ -273,7 +275,7 @@
     "title": "Crea un enlace gratis",
     "subtitle": "Configura tu destino y acciones. Tu primer enlace se publica de inmediato. Para crear más de un enlace — o editarlos y eliminarlos después — crea una cuenta gratuita.",
     "bulletHidden": "El contenido permanece oculto hasta completar cada paso.",
-    "bulletServer": "Cada paso cuenta solo cuando el visitante lo abre y ha pasado la espera del servidor."
+    "bulletServer": "Cada paso cuenta en el momento en que el visitante lo abre."
   },
   "unlock": {
     "previewBanner": "Modo de vista previa. Este enlace no está publicado, así que los visitantes aún no pueden abrir esta página y esta ejecución no se cuenta en tus analíticas.",
@@ -288,8 +290,6 @@
     "emailPlaceholder": "tu@ejemplo.com",
     "consent": "Acepto recibir novedades de este creador. Mi dirección solo se comparte con él.",
     "submitEmail": "Enviar correo",
-    "handlePlaceholder": "Tu usuario público",
-    "handlePlaceholderWithExample": "Tu usuario, como {example}",
     "start": "Empezar a desbloquear",
     "unlockButton": "Desbloquear contenido",
     "expired": "Esta sesión ha caducado. Recarga la página para empezar de nuevo.",
@@ -311,13 +311,9 @@
     "expiredMessage": "La ventana de desbloqueo de este enlace se ha cerrado.",
     "goHome": "Ir a la página principal",
     "metaTitleSuffix": "Link Unlocker",
-    "confirmButton": "Mostrar enlace",
-    "verifyNotDone": "Aún no pudimos confirmarlo. Completa el paso y vuelve a conectar.",
-    "verifyUnavailable": "No pudimos comprobarlo ahora mismo. Inténtalo de nuevo en un momento.",
+    "visitUnavailable": "Este enlace de visita caducó. Recarga la página e inténtalo de nuevo.",
     "stepsFirst": "Completa primero todos los pasos de arriba",
-    "guestOwner": "Invitado",
-    "waiting": "Esperando {seconds}s",
-    "markDone": "Marcar como hecho"
+    "guestOwner": "Invitado"
   },
   "report": {
     "title": "Reportar un enlace",
@@ -360,7 +356,7 @@
       "helpTitle": "¿Te queda alguna duda?",
       "helpBody": "Envíanos el enlace corto o el paso en el que te atascas y lo revisamos.",
       "helpCta": "Contáctanos",
-      "content": "### ¿Qué es Link Unlocker?\nLink Unlocker convierte cualquier enlace o archivo en una breve página de desbloqueo. Tú eliges los pasos que debe completar el visitante —seguir un canal, dar me gusta a un vídeo, unirse a un servidor de Discord, dejar un comentario o simplemente visitar una página— y el contenido se revela solo cuando esos pasos están hechos. Conservas un enlace corto para compartir en lugar de una hoja de cálculo de sorteos, una pila de capturas o una revisión manual de cada participación.\n\n### ¿Link Unlocker es realmente gratis?\nSí. Crear enlaces, proteger archivos, recopilar direcciones de correo, la página de bio y el panel de analíticas están incluidos. No hay niveles premium, créditos, pruebas ni tarifas por desbloqueo. Tampoco cobramos a los visitantes.\n\n### ¿Cómo desbloquea el contenido un visitante?\nEl flujo es el mismo en todos los enlaces:\n- El visitante abre tu enlace corto y ve las acciones que configuraste.\n- Creamos una sesión privada que dura dos horas.\n- El visitante completa cada acción en orden y vuelve a la tarjeta.\n- Cuando todos los pasos obligatorios están completos, el contenido se abre: una URL de destino, una descarga o un mensaje en la página.\nEl visitante no necesita una cuenta de Link Unlocker salvo que el enlace la pida.\n\n### ¿Qué plataformas y acciones puedo usar?\nEl catálogo integrado cubre YouTube, Instagram, Facebook, TikTok, Discord, Spotify y cualquier otro sitio web. Incluye 17 acciones, como suscribirse, dar me gusta, comentar, ver un vídeo, seguir, unirse a un servidor, impulsarlo, escuchar una canción y visitar una página. Puedes combinar varias acciones en un enlace y pedir una dirección de correo como paso adicional.\n\n### ¿Se verifican las acciones?\nNo. Cada paso lo completa el visitante: abre el enlace, espera el tiempo que fijó el creador y marca el paso como hecho. No comprobamos si una suscripción, un me gusta, un comentario, un uso compartido o una visualización ocurrieron realmente en YouTube ni en ninguna otra plataforma, y nunca pedimos al visitante que inicie sesión en Google ni que conecte una cuenta. La tarjeta registra el paso como completado, no como verificado.\n\n### ¿Qué tiene que compartir el visitante?\nNada más de lo que pida un paso: una dirección de correo, solo si el creador añadió el paso opcional de correo. No hay inicio de sesión con Google, ni conexión de cuentas, ni contraseña.\n\n### ¿Qué pasa si un enlace caduca o se pausa?\nPuedes fijar una fecha de caducidad en cualquier enlace. Cuando caduca, o mientras está pausado, la página de desbloqueo se detiene de inmediato e informa al visitante de que el enlace ya no está disponible. Puedes reactivar un enlace pausado desde el panel cuando quieras. Una sesión caducada no se puede ampliar desde el navegador; el visitante empieza de nuevo con una sesión nueva.\n\n### ¿Quién puede ver el contenido que protejo?\nSolo el visitante cuya sesión completó todos los pasos obligatorios. El servidor comprueba la sesión en cada solicitud y rechaza las sesiones incompletas, así que una URL de desbloqueo copiada por sí sola no revela nada. Las descargas se emiten por sesión. Una URL de destino sí es visible para el visitante una vez desbloqueada, así que trátala como compartible y no pongas secretos en una URL que entregas.\n\n### ¿Puedo recopilar direcciones de correo?\nSí, como acción opcional. El visitante ve por qué se solicita la dirección y debe dar su consentimiento activo antes de guardarla. Las direcciones se guardan por enlace, solo tú puedes verlas y puedes exportarlas como CSV o eliminarlas desde el panel. Nunca las vendemos ni las compartimos con otros creadores.\n\n### ¿Necesito una cuenta para usar Link Unlocker?\nPuedes publicar un enlace como invitado; el navegador guarda una cookie firmada para que sigas pudiendo gestionar ese enlace. Para más enlaces, subir archivos, listas de correo, analíticas, hitos y la página de bio necesitas una cuenta gratuita.\n\n### ¿Puedo proteger un archivo en lugar de un enlace web?\nSí. Sube un archivo desde el panel, elige el modo de descarga al crear el enlace y el archivo solo se transmite cuando el visitante completa los pasos. Los archivos son privados por defecto y deben respetar los límites de tipo y tamaño que fija el operador de esta instalación.\n\n### ¿Qué analíticas veré?\nVerás recuentos de visitas, inicios de desbloqueo, acciones completadas y desbloqueos completados por enlace, un gráfico de 14 días y una tabla de conversión por enlace. Son recuentos agregados asociados al enlace, no perfiles de visitantes individuales. No vendemos las analíticas ni las cedemos a anunciantes.\n\n### ¿Cuánto dura un enlace?\nUn enlace sigue disponible hasta que lo eliminas, salvo que fijes una fecha de caducidad. Cada sesión de desbloqueo dura dos horas, normalmente suficiente para completar los pasos sin mantener una sesión abierta indefinidamente.\n\n### ¿Qué no está permitido?\nNada de malware, phishing, contenido pirateado, acoso, suplantación de identidad, estafas ni nada que incumpla las normas de la plataforma que utilices. No pidas a los visitantes contraseñas, datos de pago ni documentos de identidad. No uses el servicio para recopilar correos para spam. Podemos desactivar enlaces y cuentas que generen denuncias de abuso creíbles.\n\n### ¿Cómo denuncio un enlace?\nUsa el enlace de denuncia que aparece en la página de desbloqueo o envíanos el enlace corto desde la página de contacto. Las denuncias se revisan primero y no se muestran al propietario del enlace. Si incluyes un correo, podemos responderte cuando se resuelva.\n\n### ¿Puedo borrar mis datos?\nAl eliminar un enlace también se eliminan sus sesiones, analíticas y direcciones recopiladas. Puedes borrar direcciones individuales de tu lista en cualquier momento. Para cerrar tu cuenta y eliminar los datos de tu perfil, contáctanos: aún no hay un botón de borrado automático, así que lo hacemos manualmente.\n\n### ¿Y si una plataforma cambia su API?\nNuestros pasos no dependen de la API de una plataforma: el visitante abre el enlace, espera y marca el paso como hecho. Si una página de destino deja de funcionar, el creador puede actualizarla. Ningún paso afirma estar verificado, así que un cambio de plataforma no invalida un paso completado.\n\n### ¿Cómo obtengo ayuda?\nEscribe a [support@linkunlock.app](mailto:support@linkunlock.app) para preguntas sobre el producto o tu cuenta, y usa el enlace de denuncia de una página de desbloqueo para abusos. Incluir el enlace corto y el paso que se atasca nos ayuda a responder más rápido."
+      "content": "### ¿Qué es Link Unlocker?\nLink Unlocker convierte cualquier enlace o archivo en una breve página de desbloqueo. Tú eliges los pasos que debe completar el visitante —seguir un canal, dar me gusta a un vídeo, unirse a un servidor de Discord, dejar un comentario o simplemente visitar una página— y el contenido se revela solo cuando esos pasos están hechos. Conservas un enlace corto para compartir en lugar de una hoja de cálculo de sorteos, una pila de capturas o una revisión manual de cada participación.\n\n### ¿Link Unlocker es realmente gratis?\nSí. Crear enlaces, proteger archivos, recopilar direcciones de correo, la página de bio y el panel de analíticas están incluidos. No hay niveles premium, créditos, pruebas ni tarifas por desbloqueo. Tampoco cobramos a los visitantes.\n\n### ¿Cómo desbloquea el contenido un visitante?\nEl flujo es el mismo en todos los enlaces:\n- El visitante abre tu enlace corto y ve las acciones que configuraste.\n- Creamos una sesión privada que dura dos horas.\n- El visitante completa cada acción en orden y vuelve a la tarjeta.\n- Cuando todos los pasos obligatorios están completos, el contenido se abre: una URL de destino, una descarga o un mensaje en la página.\nEl visitante no necesita una cuenta de Link Unlocker salvo que el enlace la pida.\n\n### ¿Qué plataformas y acciones puedo usar?\nEl catálogo integrado cubre YouTube, Instagram, Facebook, TikTok, Discord, Spotify y cualquier otro sitio web. Incluye 18 acciones, como suscribirse, dar me gusta, comentar, ver un vídeo, seguir, unirse a un servidor, impulsarlo, escuchar una canción y visitar una página. Puedes combinar varias acciones en un enlace y pedir una dirección de correo como paso adicional.\n\n### ¿Se verifican las acciones?\nUn paso se registra como hecho en el momento en que el visitante lo abre. No nos conectamos a la cuenta de nadie en una plataforma social y la tarjeta nunca afirma que un paso se haya comprobado.\n\n### ¿Qué tiene que compartir el visitante?\nSolo lo que pida el paso: una dirección de correo cuando el creador añadió el paso opcional de correo, guardada solo tras el consentimiento del visitante. La mayoría de los pasos no piden nada y nunca se solicita un inicio de sesión ni una conexión de cuenta.\n\n### ¿Qué pasa si un enlace caduca o se pausa?\nPuedes fijar una fecha de caducidad en cualquier enlace. Cuando caduca, o mientras está pausado, la página de desbloqueo se detiene de inmediato e informa al visitante de que el enlace ya no está disponible. Puedes reactivar un enlace pausado desde el panel cuando quieras. Una sesión caducada no se puede ampliar desde el navegador; el visitante empieza de nuevo con una sesión nueva.\n\n### ¿Quién puede ver el contenido que protejo?\nSolo el visitante cuya sesión completó todos los pasos obligatorios. El servidor comprueba la sesión en cada solicitud y rechaza las sesiones incompletas, así que una URL de desbloqueo copiada por sí sola no revela nada. Las descargas se emiten por sesión. Una URL de destino sí es visible para el visitante una vez desbloqueada, así que trátala como compartible y no pongas secretos en una URL que entregas.\n\n### ¿Puedo recopilar direcciones de correo?\nSí, como acción opcional. El visitante ve por qué se solicita la dirección y debe dar su consentimiento activo antes de guardarla. Las direcciones se guardan por enlace, solo tú puedes verlas y puedes exportarlas como CSV o eliminarlas desde el panel. Nunca las vendemos ni las compartimos con otros creadores.\n\n### ¿Necesito una cuenta para usar Link Unlocker?\nPuedes publicar un enlace como invitado; el navegador guarda una cookie firmada para que sigas pudiendo gestionar ese enlace. Para más enlaces, subir archivos, listas de correo, analíticas, hitos y la página de bio necesitas una cuenta gratuita.\n\n### ¿Puedo proteger un archivo en lugar de un enlace web?\nSí. Sube un archivo desde el panel, elige el modo de descarga al crear el enlace y el archivo solo se transmite cuando el visitante completa los pasos. Los archivos son privados por defecto y deben respetar los límites de tipo y tamaño que fija el operador de esta instalación.\n\n### ¿Qué analíticas veré?\nVerás recuentos de visitas, inicios de desbloqueo, acciones completadas y desbloqueos completados por enlace, un gráfico de 14 días y una tabla de conversión por enlace. Son recuentos agregados asociados al enlace, no perfiles de visitantes individuales. No vendemos las analíticas ni las cedemos a anunciantes.\n\n### ¿Cuánto dura un enlace?\nUn enlace sigue disponible hasta que lo eliminas, salvo que fijes una fecha de caducidad. Cada sesión de desbloqueo dura dos horas, normalmente suficiente para completar los pasos sin mantener una sesión abierta indefinidamente.\n\n### ¿Qué no está permitido?\nNada de malware, phishing, contenido pirateado, acoso, suplantación de identidad, estafas ni nada que incumpla las normas de la plataforma que utilices. No pidas a los visitantes contraseñas, datos de pago ni documentos de identidad. No uses el servicio para recopilar correos para spam. Podemos desactivar enlaces y cuentas que generen denuncias de abuso creíbles.\n\n### ¿Cómo denuncio un enlace?\nUsa el enlace de denuncia que aparece en la página de desbloqueo o envíanos el enlace corto desde la página de contacto. Las denuncias se revisan primero y no se muestran al propietario del enlace. Si incluyes un correo, podemos responderte cuando se resuelva.\n\n### ¿Puedo borrar mis datos?\nAl eliminar un enlace también se eliminan sus sesiones, analíticas y direcciones recopiladas. Puedes borrar direcciones individuales de tu lista en cualquier momento. Para cerrar tu cuenta y eliminar los datos de tu perfil, contáctanos: aún no hay un botón de borrado automático, así que lo hacemos manualmente.\n\n### ¿Y si una plataforma cambia su API?\nNo llamamos a las API de las plataformas para comprobar pasos: un paso cuenta cuando el visitante lo abre, así que los cambios de plataforma no afectan al desbloqueo. Si cambia un enlace de destino, el creador puede actualizarlo desde el panel en cualquier momento.\n\n### ¿Cómo obtengo ayuda?\nEscribe a [support@linkunlock.app](mailto:support@linkunlock.app) para preguntas sobre el producto o tu cuenta, y usa el enlace de denuncia de una página de desbloqueo para abusos. Incluir el enlace corto y el paso que se atasca nos ayuda a responder más rápido."
     },
     "privacy": {
       "metaTitle": "Política de privacidad",
@@ -373,7 +369,7 @@
       "helpTitle": "¿Preguntas sobre tus datos?",
       "helpBody": "Pide una copia, una corrección o una eliminación y te ayudaremos.",
       "helpCta": "Contáctanos",
-      "content": "## A quién cubre esta política\nLink Unlocker lo opera el equipo detrás de este sitio web (\"nosotros\"). Esta política explica qué ocurre con los datos personales cuando visitas el sitio público, desbloqueas un enlace, creas enlaces como creador o nos contactas. Se aplica a esta instalación del servicio, no a las plataformas sociales con las que interactúas: esas plataformas tienen sus propias políticas y completar una acción allí también se rige por sus normas.\n\n## Datos que recogemos\n- **Datos de cuenta:** tu nombre, dirección de correo y una contraseña con hash al registrarte, además de datos de perfil como un avatar si los añades.\n- **Datos de enlaces y archivos:** los enlaces que creas, su configuración, las URL de destino que pegas, las imágenes de portada que subes y los archivos que proteges.\n- **Contactos de correo:** direcciones que los visitantes te envían con la acción de correo opcional, junto con la fecha de su consentimiento.\n- **Datos de desbloqueo y analíticas:** visitas, inicios de desbloqueo, acciones completadas, desbloqueos completados y datos técnicos como una dirección IP con hash, el agente de usuario y la página de referencia.\n- **Denuncias de abuso:** el enlace denunciado, el motivo y los detalles que aportas, un correo opcional y una dirección IP con hash.\n- **Mensajes de soporte:** lo que nos envías cuando pides ayuda.\nNo pedimos datos de pago porque el servicio no tiene planes de pago.\n\n## Cómo usamos los datos\nUsamos los datos de cuenta y enlaces para operar, proteger y dar soporte al servicio; las analíticas para mostrar a los creadores cómo rinden sus enlaces; los contactos de correo para entregar las direcciones que el visitante eligió compartir con ese creador; y las denuncias para investigar el mal uso. Los datos técnicos sirven para limitar la tasa de solicitudes, prevenir fraudes y mantener las sesiones. No usamos tus datos para crear perfiles publicitarios sobre ti.\n\n## Bases legales\nCuando la ley de protección de datos exige una base legal, nos apoyamos en:\n- **Contrato:** para prestar el servicio que solicitas.\n- **Intereses legítimos:** para proteger el servicio, prevenir abusos y entender el rendimiento agregado.\n- **Consentimiento:** para la recogida opcional de correo y para cualquier cookie no esencial que lo solicite. El visitante da este consentimiento directamente al creador.\n- **Obligación legal:** para responder a solicitudes legales válidas o defender reclamaciones.\n\n## Cookies y almacenamiento local\n- **Cookie de sesión:** mantiene la sesión de un creador conectado. Es HTTP-only y same-site.\n- **Cookie de invitado:** recuerda el enlace gratuito creado por un invitado para que el mismo navegador pueda gestionarlo.\n- **Cookie de idioma:** recuerda el idioma que elegiste.\n- **Preferencia de tema:** puede guardarse en tu navegador para conservar el modo claro u oscuro tras recargar.\nSe usan para que el servicio funcione. Si el operador activa una unidad publicitaria, ese anuncio puede cargar recursos de su propio proveedor y establecer sus propias cookies; no cedemos a los anunciantes tus datos de cuenta ni los correos recopilados.\n\n## Sesiones de desbloqueo y datos de visitantes\nCuando un visitante abre un enlace, creamos una sesión temporal que caduca a las dos horas. Para las analíticas de desbloqueo y la limitación de solicitudes guardamos la IP del visitante solo como hash con sal, junto con el agente de usuario y la página de referencia. Las sesiones de inicio de sesión también pueden registrar la IP y el navegador para que la persona titular pueda revisar sus accesos. Usamos estos datos para mantener el servicio disponible e investigar abusos, no para seguir a los visitantes por la web.\n\n## Direcciones de correo recopiladas por creadores\nLa acción de correo es opcional y solo aparece cuando un creador la añade a un enlace. La dirección se guarda con la fecha de consentimiento, solo el propietario de ese enlace puede verla o exportarla, y se elimina cuando se elimina el enlace o cuando el propietario la borra. Los creadores son responsables de usar esas direcciones lícitamente y de atender cualquier retirada de consentimiento que reciban.\n\n## Pasos completados, no comprobaciones de cuenta\nAlgunos pasos apuntan a una plataforma social, pero no nos conectamos a la cuenta del visitante. Un paso se registra como completado cuando el visitante lo abre, espera el tiempo que configuró el creador y lo marca como hecho. Guardamos la hora de finalización por paso y sesión. No verificamos que una suscripción, un me gusta, un comentario, un uso compartido o una visualización hayan ocurrido realmente, y no pedimos iniciar sesión con Google.\n\n## Archivos y subidas\nLos archivos e imágenes que subes los almacena el servicio y solo se entregan a las sesiones que completaron los pasos del enlace. Se guardan el nombre, el tamaño y el tipo MIME para poder transmitir el archivo y mostrarlo en el panel. Eliminar un archivo desactiva los enlaces que lo usaban.\n\n## Compartición y encargados\nNo vendemos datos personales. Compartimos lo mínimo necesario con:\n- Proveedores de alojamiento y base de datos que ejecutan el servicio.\n- Proveedores de envío de correo, cuando hay que enviar un restablecimiento de contraseña o un mensaje de contacto.\n- API de plataformas usadas para comprobaciones opcionales que el operador haya activado.\n- Autoridades u otras partes cuando la ley lo exige o cuando es necesario investigar un abuso creíble.\nEstos proveedores tratan los datos siguiendo nuestras instrucciones o sus propios términos, y pueden operar en países distintos al tuyo. Cuando corresponde, aplicamos garantías adecuadas para esas transferencias.\n\n## Conservación\nLas sesiones de desbloqueo caducan a las dos horas. Los eventos de analítica se conservan mientras exista el enlace para que el creador vea totales históricos. Los contactos de correo se conservan hasta que se elimine el enlace o la dirección concreta. Las denuncias se conservan el tiempo necesario para resolverlas y evitar abusos repetidos. Los registros de limitación son de corta duración. Eliminar un enlace borra con él sus sesiones, eventos y contactos. Pueden quedar copias de seguridad durante un breve periodo antes de sobrescribirse.\n\n## Seguridad\nLas contraseñas se guardan con hash, el tráfico va por HTTPS, las cookies de sesión son HTTP-only y el acceso a los enlaces de otro creador se comprueba en el servidor. Aplicamos límites a las acciones sensibles. Ningún servicio puede prometer seguridad perfecta, pero mantenemos una superficie pequeña: no guardamos datos de pago y las lecturas de verificación se limitan al dato concreto que necesita una acción.\n\n## Tus derechos\nSegún dónde vivas, puedes tener derecho a acceder, corregir, exportar, restringir o eliminar tus datos personales, a oponerte a ciertos tratamientos y a retirar tu consentimiento. Puedes ejercer la mayoría desde el panel. Para lo demás, contáctanos y responderemos en el plazo que exige la ley. También tienes derecho a reclamar ante tu autoridad local de protección de datos.\n\n## Menores\nEl servicio no está destinado a menores por debajo de la edad con la que pueden consentir el tratamiento de datos en su país. No recopilamos datos de menores a sabiendas. Si crees que un menor ha creado una cuenta, contáctanos y la eliminaremos.\n\n## Cambios en esta política\nActualizamos esta página cuando cambia nuestra forma de tratar los datos. La fecha de arriba indica la última revisión. Si un cambio es importante, lo anunciaremos en el sitio o por correo a las personas titulares de cuentas.\n\n## Contacto\nPreguntas, solicitudes o reclamaciones: [support@linkunlock.app](mailto:support@linkunlock.app). Atendemos primero las solicitudes de privacidad."
+      "content": "## A quién cubre esta política\nLink Unlocker lo opera el equipo detrás de este sitio web (\"nosotros\"). Esta política explica qué ocurre con los datos personales cuando visitas el sitio público, desbloqueas un enlace, creas enlaces como creador o nos contactas. Se aplica a esta instalación del servicio, no a las plataformas sociales con las que interactúas: esas plataformas tienen sus propias políticas y completar una acción allí también se rige por sus normas.\n\n## Datos que recogemos\n- **Datos de cuenta:** tu nombre, dirección de correo y una contraseña con hash al registrarte, además de datos de perfil como un avatar si los añades.\n- **Datos de enlaces y archivos:** los enlaces que creas, su configuración, las URL de destino que pegas, las imágenes de portada que subes y los archivos que proteges.\n- **Contactos de correo:** direcciones que los visitantes te envían con la acción de correo opcional, junto con la fecha de su consentimiento.\n- **Datos de desbloqueo y analíticas:** visitas, inicios de desbloqueo, acciones completadas, desbloqueos completados y datos técnicos como una dirección IP con hash, el agente de usuario y la página de referencia.\n- **Denuncias de abuso:** el enlace denunciado, el motivo y los detalles que aportas, un correo opcional y una dirección IP con hash.\n- **Mensajes de soporte:** lo que nos envías cuando pides ayuda.\nNo pedimos datos de pago porque el servicio no tiene planes de pago.\n\n## Cómo usamos los datos\nUsamos los datos de cuenta y enlaces para operar, proteger y dar soporte al servicio; las analíticas para mostrar a los creadores cómo rinden sus enlaces; los contactos de correo para entregar las direcciones que el visitante eligió compartir con ese creador; y las denuncias para investigar el mal uso. Los datos técnicos sirven para limitar la tasa de solicitudes, prevenir fraudes y mantener las sesiones. No usamos tus datos para crear perfiles publicitarios sobre ti.\n\n## Bases legales\nCuando la ley de protección de datos exige una base legal, nos apoyamos en:\n- **Contrato:** para prestar el servicio que solicitas.\n- **Intereses legítimos:** para proteger el servicio, prevenir abusos y entender el rendimiento agregado.\n- **Consentimiento:** para la recogida opcional de correo y para cualquier cookie no esencial que lo solicite. El visitante da este consentimiento directamente al creador.\n- **Obligación legal:** para responder a solicitudes legales válidas o defender reclamaciones.\n\n## Cookies y almacenamiento local\n- **Cookie de sesión:** mantiene la sesión de un creador conectado. Es HTTP-only y same-site.\n- **Cookie de invitado:** recuerda el enlace gratuito creado por un invitado para que el mismo navegador pueda gestionarlo.\n- **Cookie de idioma:** recuerda el idioma que elegiste.\n- **Preferencia de tema:** puede guardarse en tu navegador para conservar el modo claro u oscuro tras recargar.\nSe usan para que el servicio funcione. Si el operador activa una unidad publicitaria, ese anuncio puede cargar recursos de su propio proveedor y establecer sus propias cookies; no cedemos a los anunciantes tus datos de cuenta ni los correos recopilados.\n\n## Sesiones de desbloqueo y datos de visitantes\nCuando un visitante abre un enlace, creamos una sesión temporal que caduca a las dos horas. Para las analíticas de desbloqueo y la limitación de solicitudes guardamos la IP del visitante solo como hash con sal, junto con el agente de usuario y la página de referencia. Las sesiones de inicio de sesión también pueden registrar la IP y el navegador para que la persona titular pueda revisar sus accesos. Usamos estos datos para mantener el servicio disponible e investigar abusos, no para seguir a los visitantes por la web.\n\n## Direcciones de correo recopiladas por creadores\nLa acción de correo es opcional y solo aparece cuando un creador la añade a un enlace. La dirección se guarda con la fecha de consentimiento, solo el propietario de ese enlace puede verla o exportarla, y se elimina cuando se elimina el enlace o cuando el propietario la borra. Los creadores son responsables de usar esas direcciones lícitamente y de atender cualquier retirada de consentimiento que reciban.\n\n## Pasos completados, no comprobaciones de cuenta\nUn paso se registra como completado en el momento en que el visitante lo abre. Guardamos la hora de finalización por paso y sesión. No nos conectamos a la cuenta del visitante en ninguna plataforma, no leemos su actividad allí y no pedimos un inicio de sesión de Google ni de Spotify.\n\n## Archivos y subidas\nLos archivos e imágenes que subes los almacena el servicio y solo se entregan a las sesiones que completaron los pasos del enlace. Se guardan el nombre, el tamaño y el tipo MIME para poder transmitir el archivo y mostrarlo en el panel. Eliminar un archivo desactiva los enlaces que lo usaban.\n\n## Compartición y encargados\nNo vendemos datos personales. Compartimos lo mínimo necesario con:\n- Proveedores de alojamiento y base de datos que ejecutan el servicio.\n- Proveedores de envío de correo, cuando hay que enviar un restablecimiento de contraseña o un mensaje de contacto.\n- Autoridades u otras partes cuando la ley lo exige o cuando es necesario investigar un abuso creíble.\nEstos proveedores tratan los datos siguiendo nuestras instrucciones o sus propios términos, y pueden operar en países distintos al tuyo. Cuando corresponde, aplicamos garantías adecuadas para esas transferencias.\n\n## Conservación\nLas sesiones de desbloqueo caducan a las dos horas. Los eventos de analítica se conservan mientras exista el enlace para que el creador vea totales históricos. Los contactos de correo se conservan hasta que se elimine el enlace o la dirección concreta. Las denuncias se conservan el tiempo necesario para resolverlas y evitar abusos repetidos. Los registros de limitación son de corta duración. Eliminar un enlace borra con él sus sesiones, eventos y contactos. Pueden quedar copias de seguridad durante un breve periodo antes de sobrescribirse.\n\n## Seguridad\nLas contraseñas se guardan con hash, el tráfico va por HTTPS, las cookies de sesión son HTTP-only y el acceso a los enlaces de otro creador se comprueba en el servidor. Aplicamos límites a las acciones sensibles. Ningún servicio puede prometer seguridad perfecta, pero mantenemos una superficie pequeña: no guardamos datos de pago.\n\n## Tus derechos\nSegún dónde vivas, puedes tener derecho a acceder, corregir, exportar, restringir o eliminar tus datos personales, a oponerte a ciertos tratamientos y a retirar tu consentimiento. Puedes ejercer la mayoría desde el panel. Para lo demás, contáctanos y responderemos en el plazo que exige la ley. También tienes derecho a reclamar ante tu autoridad local de protección de datos.\n\n## Menores\nEl servicio no está destinado a menores por debajo de la edad con la que pueden consentir el tratamiento de datos en su país. No recopilamos datos de menores a sabiendas. Si crees que un menor ha creado una cuenta, contáctanos y la eliminaremos.\n\n## Cambios en esta política\nActualizamos esta página cuando cambia nuestra forma de tratar los datos. La fecha de arriba indica la última revisión. Si un cambio es importante, lo anunciaremos en el sitio o por correo a las personas titulares de cuentas.\n\n## Contacto\nPreguntas, solicitudes o reclamaciones: [support@linkunlock.app](mailto:support@linkunlock.app). Atendemos primero las solicitudes de privacidad."
     },
     "terms": {
       "metaTitle": "Términos del servicio",
@@ -386,7 +382,7 @@
       "helpTitle": "¿Necesitas aclarar algo?",
       "helpBody": "Pregunta antes de apoyarte en una cláusula: preferimos explicar que sorprender.",
       "helpCta": "Contáctanos",
-      "content": "## Acuerdo con estos términos\nAl usar Link Unlocker —como creador, visitante o denunciante— aceptas estos términos. Si no estás de acuerdo, no uses el servicio. Si lo usas en nombre de una organización, confirmas que puedes aceptar estos términos por ella.\n\n## Qué hace el servicio\nLink Unlocker permite a un creador publicar un enlace corto cuyo contenido se revela después de que el visitante complete acciones configuradas, como seguir un canal o unirse a un servidor. El servicio es gratuito y no tiene planes de pago. No cobramos a los visitantes ni pagamos a los creadores; no hay recompensas, sorteos ni premios asociados al servicio.\n\n## Cuentas y enlaces de invitado\nPuedes crear un enlace como invitado. Los enlaces adicionales y funciones como archivos, listas de correo, analíticas y la página de bio requieren una cuenta gratuita. Protege tus credenciales y avísanos cuanto antes si crees que otra persona tiene acceso a tu cuenta. Eres responsable de la actividad de tu cuenta.\n\n## Tus responsabilidades como creador\nDebes:\n- ser titular del contenido que proteges o tener permiso para compartirlo;\n- describir el contenido protegido con honestidad y entregar lo que promete la página;\n- pedir solo acciones que puedas solicitar y respetar las normas de cada plataforma;\n- recopilar correos solo con consentimiento claro y usarlos lícitamente;\n- mantener actualizados tus enlaces y destinos, y retirar el contenido que ya no tengas derecho a compartir.\nEres el responsable de los correos que recopilas con tus enlaces. Link Unlocker los almacena y te los muestra, pero no los usa para su propio marketing.\n\n## Usos prohibidos\nNo uses Link Unlocker para:\n- distribuir malware, páginas de phishing, material pirateado o contenido que infrinja derechos de terceros;\n- acosar, amenazar, suplantar o engañar a personas;\n- ejecutar estafas, sorteos falsos o esquemas de interacción que incumplan las normas de una plataforma;\n- pedir a los visitantes contraseñas, datos de tarjetas, identificadores oficiales u otras credenciales sensibles;\n- recopilar correos para spam, reventa o marketing no relacionado;\n- sondear, sobrecargar o intentar eludir la seguridad o los límites del servicio.\nPodemos retirar contenido o desactivar enlaces y cuentas que incumplan estas normas.\n\n## Plataformas de terceros\nLas acciones de un enlace ocurren en plataformas de terceros. No controlamos esas plataformas, su disponibilidad, sus normas ni sus prácticas de datos. Completar una acción no crea ninguna relación entre tú y nosotros más allá de estos términos, y una plataforma puede cambiar su API, permisos o límites en cualquier momento. Los pasos son autodeclarados: un paso cuenta cuando el visitante lo abre y ha transcurrido la espera configurada. No confirmamos que una suscripción, un me gusta, un comentario, un uso compartido o una visualización hayan ocurrido realmente, y no pedimos a los visitantes que conecten una cuenta de Google.\n\n## Contenido y propiedad\nConservas los derechos que ya tienes sobre el contenido que subes o enlazas. Nos concedes una licencia limitada para almacenar, mostrar y entregar ese contenido con el fin de operar tus enlaces y mostrarlos en tu panel. Confirmas que tienes los derechos necesarios para conceder esa licencia. Nosotros somos titulares del servicio, su software y su marca; estos términos no te transfieren esa propiedad.\n\n## Visitantes y consentimiento\nLos visitantes deben completar los pasos por sí mismos. Los creadores no deben completar acciones en nombre de un visitante, automatizarlas ni falsear qué se desbloqueará. La recogida de correo exige un consentimiento afirmativo del visitante; las casillas premarcadas, el consentimiento agrupado o los requisitos escondidos en textos no relacionados no cuentan. Los creadores deben respetar la retirada del consentimiento y la legislación de marketing aplicable en el país del visitante.\n\n## Archivos y límites\nLos archivos subidos deben cumplir los tipos permitidos y los límites de tamaño que muestra el panel, que el operador puede cambiar. No uses la entrega de archivos para distribuir material que no tengas derecho a compartir. Podemos desactivar un archivo y los enlaces que dependan de él si incumple estos términos o genera una denuncia de abuso.\n\n## Disponibilidad y cambios\nEl servicio se presta tal cual y según disponibilidad. Podemos añadir, cambiar o retirar funciones, fijar límites de uso o suspender el servicio por mantenimiento. Cuando un cambio afecte de forma importante a tus enlaces, intentaremos avisar con antelación razonable en el sitio o por correo. No garantizamos que un enlace esté disponible para siempre.\n\n## Suspensión y terminación\nPuedes dejar de usar el servicio en cualquier momento y eliminar tus enlaces. Podemos suspender o terminar el acceso si incumples estos términos, si tus enlaces generan denuncias de abuso creíbles o si la ley lo exige. Cuando sea posible, explicaremos el motivo. El contenido ilegal, dañino o objeto de una reclamación válida puede retirarse de inmediato.\n\n## Exenciones de responsabilidad\nNo prometemos un número concreto de seguidores, visitas, clics, desbloqueos ni ingresos, y no garantizamos que una plataforma reconozca o verifique una acción. El servicio se presta sin garantías en la medida permitida por la ley. Nada en estos términos excluye los derechos que los consumidores tienen por normas locales obligatorias.\n\n## Limitación de responsabilidad\nEn la medida permitida por la ley, no respondemos de pérdidas indirectas o consecuentes, lucro cesante, pérdida de datos ni daños causados por una plataforma de terceros, la conducta de un visitante o el contenido que decidiste proteger. Cuando la responsabilidad no pueda excluirse, se limita al importe que nos pagaste en los doce meses anteriores a la reclamación, que, al ser el servicio gratuito, es cero. Esto no limita la responsabilidad por fraude, dolo o cualquier otro supuesto que la ley no permita limitar.\n\n## Indemnización\nAceptas indemnizarnos frente a reclamaciones y costes derivados del contenido que protegiste, las acciones que pediste a los visitantes o tu incumplimiento de estos términos o de derechos de terceros, en la medida permitida por la ley. Te informaremos de una reclamación y te permitiremos participar en la defensa.\n\n## Ley aplicable y disputas\nEstos términos se rigen por las leyes que se aplican al operador de este sitio, sin atender a las normas de conflicto de leyes. Si eres consumidor, conservas la protección de las leyes obligatorias de tu país de residencia y puedes reclamar allí. Antes de iniciar una disputa formal, contáctanos para intentar resolverla.\n\n## Cambios en estos términos\nPodemos actualizar estos términos a medida que evoluciona el servicio. La fecha de arriba muestra la versión actual. Si un cambio es importante, lo anunciaremos en el sitio o por correo a las personas titulares de cuentas. Seguir usando el servicio después del cambio significa que aceptas los términos actualizados.\n\n## Contacto\nPreguntas sobre estos términos: [support@linkunlock.app](mailto:support@linkunlock.app). Para un enlace que incumpla estas normas, usa el enlace de denuncia de su página de desbloqueo."
+      "content": "## Acuerdo con estos términos\nAl usar Link Unlocker —como creador, visitante o denunciante— aceptas estos términos. Si no estás de acuerdo, no uses el servicio. Si lo usas en nombre de una organización, confirmas que puedes aceptar estos términos por ella.\n\n## Qué hace el servicio\nLink Unlocker permite a un creador publicar un enlace corto cuyo contenido se revela después de que el visitante complete acciones configuradas, como seguir un canal o unirse a un servidor. El servicio es gratuito y no tiene planes de pago. No cobramos a los visitantes ni pagamos a los creadores; no hay recompensas, sorteos ni premios asociados al servicio.\n\n## Cuentas y enlaces de invitado\nPuedes crear un enlace como invitado. Los enlaces adicionales y funciones como archivos, listas de correo, analíticas y la página de bio requieren una cuenta gratuita. Protege tus credenciales y avísanos cuanto antes si crees que otra persona tiene acceso a tu cuenta. Eres responsable de la actividad de tu cuenta.\n\n## Tus responsabilidades como creador\nDebes:\n- ser titular del contenido que proteges o tener permiso para compartirlo;\n- describir el contenido protegido con honestidad y entregar lo que promete la página;\n- pedir solo acciones que puedas solicitar y respetar las normas de cada plataforma;\n- recopilar correos solo con consentimiento claro y usarlos lícitamente;\n- mantener actualizados tus enlaces y destinos, y retirar el contenido que ya no tengas derecho a compartir.\nEres el responsable de los correos que recopilas con tus enlaces. Link Unlocker los almacena y te los muestra, pero no los usa para su propio marketing.\n\n## Usos prohibidos\nNo uses Link Unlocker para:\n- distribuir malware, páginas de phishing, material pirateado o contenido que infrinja derechos de terceros;\n- acosar, amenazar, suplantar o engañar a personas;\n- ejecutar estafas, sorteos falsos o esquemas de interacción que incumplan las normas de una plataforma;\n- pedir a los visitantes contraseñas, datos de tarjetas, identificadores oficiales u otras credenciales sensibles;\n- recopilar correos para spam, reventa o marketing no relacionado;\n- sondear, sobrecargar o intentar eludir la seguridad o los límites del servicio.\nPodemos retirar contenido o desactivar enlaces y cuentas que incumplan estas normas.\n\n## Plataformas de terceros\nLas acciones de un enlace ocurren en plataformas de terceros. No controlamos esas plataformas, su disponibilidad, sus normas ni sus prácticas de datos. Completar una acción no crea ninguna relación entre tú y nosotros más allá de estos términos, y una plataforma puede cambiar su API, permisos o límites en cualquier momento. Los pasos cuentan en el momento en que el visitante los abre; no leemos ni confirmamos actividad en la plataforma y nunca pedimos a los visitantes que conecten una cuenta. Si un paso no se puede abrir, por ejemplo porque se retiró un destino, el creador puede actualizarlo.\n\n## Contenido y propiedad\nConservas los derechos que ya tienes sobre el contenido que subes o enlazas. Nos concedes una licencia limitada para almacenar, mostrar y entregar ese contenido con el fin de operar tus enlaces y mostrarlos en tu panel. Confirmas que tienes los derechos necesarios para conceder esa licencia. Nosotros somos titulares del servicio, su software y su marca; estos términos no te transfieren esa propiedad.\n\n## Visitantes y consentimiento\nLos visitantes deben completar los pasos por sí mismos. Los creadores no deben completar acciones en nombre de un visitante, automatizarlas ni falsear qué se desbloqueará. La recogida de correo exige un consentimiento afirmativo del visitante; las casillas premarcadas, el consentimiento agrupado o los requisitos escondidos en textos no relacionados no cuentan. Los creadores deben respetar la retirada del consentimiento y la legislación de marketing aplicable en el país del visitante.\n\n## Archivos y límites\nLos archivos subidos deben cumplir los tipos permitidos y los límites de tamaño que muestra el panel, que el operador puede cambiar. No uses la entrega de archivos para distribuir material que no tengas derecho a compartir. Podemos desactivar un archivo y los enlaces que dependan de él si incumple estos términos o genera una denuncia de abuso.\n\n## Disponibilidad y cambios\nEl servicio se presta tal cual y según disponibilidad. Podemos añadir, cambiar o retirar funciones, fijar límites de uso o suspender el servicio por mantenimiento. Cuando un cambio afecte de forma importante a tus enlaces, intentaremos avisar con antelación razonable en el sitio o por correo. No garantizamos que un enlace esté disponible para siempre.\n\n## Suspensión y terminación\nPuedes dejar de usar el servicio en cualquier momento y eliminar tus enlaces. Podemos suspender o terminar el acceso si incumples estos términos, si tus enlaces generan denuncias de abuso creíbles o si la ley lo exige. Cuando sea posible, explicaremos el motivo. El contenido ilegal, dañino o objeto de una reclamación válida puede retirarse de inmediato.\n\n## Exenciones de responsabilidad\nNo prometemos un número concreto de seguidores, visitas, clics, desbloqueos ni ingresos, y no garantizamos que una plataforma reconozca o verifique una acción. El servicio se presta sin garantías en la medida permitida por la ley. Nada en estos términos excluye los derechos que los consumidores tienen por normas locales obligatorias.\n\n## Limitación de responsabilidad\nEn la medida permitida por la ley, no respondemos de pérdidas indirectas o consecuentes, lucro cesante, pérdida de datos ni daños causados por una plataforma de terceros, la conducta de un visitante o el contenido que decidiste proteger. Cuando la responsabilidad no pueda excluirse, se limita al importe que nos pagaste en los doce meses anteriores a la reclamación, que, al ser el servicio gratuito, es cero. Esto no limita la responsabilidad por fraude, dolo o cualquier otro supuesto que la ley no permita limitar.\n\n## Indemnización\nAceptas indemnizarnos frente a reclamaciones y costes derivados del contenido que protegiste, las acciones que pediste a los visitantes o tu incumplimiento de estos términos o de derechos de terceros, en la medida permitida por la ley. Te informaremos de una reclamación y te permitiremos participar en la defensa.\n\n## Ley aplicable y disputas\nEstos términos se rigen por las leyes que se aplican al operador de este sitio, sin atender a las normas de conflicto de leyes. Si eres consumidor, conservas la protección de las leyes obligatorias de tu país de residencia y puedes reclamar allí. Antes de iniciar una disputa formal, contáctanos para intentar resolverla.\n\n## Cambios en estos términos\nPodemos actualizar estos términos a medida que evoluciona el servicio. La fecha de arriba muestra la versión actual. Si un cambio es importante, lo anunciaremos en el sitio o por correo a las personas titulares de cuentas. Seguir usando el servicio después del cambio significa que aceptas los términos actualizados.\n\n## Contacto\nPreguntas sobre estos términos: [support@linkunlock.app](mailto:support@linkunlock.app). Para un enlace que incumpla estas normas, usa el enlace de denuncia de su página de desbloqueo."
     },
     "contact": {
       "metaTitle": "Contacto",
@@ -409,6 +405,7 @@
       "siteContent": "Contenido del sitio",
       "lockedFiles": "Archivos bloqueados",
       "links": "Enlaces",
+      "shortLinks": "Enlaces cortos",
       "link": "Enlace",
       "media": "Multimedia",
       "platforms": "Plataformas y tipos de acción",
@@ -432,9 +429,6 @@
       "verified": "verificado",
       "pending": "pendiente",
       "expired": "caducado",
-      "autoprompt": "recordatorio automático",
-      "userconfirmed": "confirmado por el usuario",
-      "emailsubmitted": "correo enviado",
       "emailVerified": "correo verificado",
       "emailUnverified": "correo sin verificar"
     },
@@ -507,7 +501,12 @@
       "actionDistributionDescription": "Pasos de acción completados, por plataforma",
       "heatmapSummary": "{count} eventos en {days} días",
       "actionMixEmpty": "Ningún visitante ha completado un paso de acción todavía.",
-      "completedSteps": "{count} pasos completados"
+      "completedSteps": "{count} pasos completados",
+      "shortLinksTitle": "Enlaces cortos",
+      "shortLinksDescription": "{count, plural, one {# enlace corto} other {# enlaces cortos}} · {clicks, plural, one {# clic registrado} other {# clics registrados}}",
+      "noShortLinks": "Aún no hay enlaces cortos.",
+      "colShortLink": "Enlace corto",
+      "colClicks": "Clics"
     },
     "audit": {
       "title": "Registro de auditoría",
@@ -573,11 +572,16 @@
           "dismissed": "Descartó el reporte",
           "resolve_disable": "Resolvió el reporte y desactivó el enlace"
         },
-        "unknown": "Acción desconocida"
+        "unknown": "Acción desconocida",
+        "shortLink": {
+          "status": "Cambió el estado del enlace corto",
+          "delete": "Eliminó el enlace corto"
+        }
       },
       "targetLabels": {
         "user": "Usuario",
         "link": "Enlace",
+        "shortLink": "Enlace corto",
         "platform": "Plataforma",
         "actionOption": "Acción",
         "media": "Medio",
@@ -662,6 +666,30 @@
       "selectLink": "Seleccionar {title}",
       "emptyList": "Aún no hay enlaces."
     },
+    "shortLinks": {
+      "title": "Enlaces cortos",
+      "description": "Vista de todos los enlaces cortos de la plataforma. Desactivar uno detiene su redirección al instante.",
+      "filterAll": "Todos",
+      "filterActive": "Activos",
+      "filterDisabled": "Desactivados",
+      "searchPlaceholder": "Buscar por código, destino o correo del propietario",
+      "noLinks": "Ningún enlace corto coincide con esta vista.",
+      "emptyList": "Aún no hay enlaces cortos.",
+      "colLink": "Enlace corto",
+      "colDestination": "Destino",
+      "colOwner": "Propietario",
+      "colClicks": "Clics",
+      "colStatus": "Estado",
+      "colCreated": "Creado",
+      "colActions": "Acciones"
+    },
+    "shortLinkActions": {
+      "enabledToast": "Enlace corto activado.",
+      "disabledToast": "Enlace corto desactivado.",
+      "deletedToast": "Enlace corto eliminado.",
+      "deleteConfirm": "¿Eliminar este enlace corto? Quien lo use verá una página no encontrada. No se puede deshacer.",
+      "delete": "Eliminar"
+    },
     "linkDetail": {
       "backToLinks": "← Todos los enlaces",
       "openReports": "{count} reporte(s) abierto(s)",
@@ -680,7 +708,6 @@
       "colType": "Tipo",
       "colLabel": "Etiqueta",
       "colTarget": "Destino",
-      "colVerification": "Verificación",
       "unlocksTitle": "Sesiones de desbloqueo recientes",
       "noUnlocks": "Aún no hay sesiones de desbloqueo.",
       "colCreated": "Creado",
@@ -861,7 +888,7 @@
       "labelPlaceholder": "p. ej. Reclama tu recompensa",
       "labelHint": "Se muestra como texto del botón (enlace) o texto alternativo de la imagen (banner).",
       "htmlLabel": "Código del anuncio",
-      "htmlPlaceholder": "<!-- Pega aquí el fragmento de tu red de anuncios -->",
+      "htmlPlaceholder": "'<'!-- Pega aquí el fragmento de tu red de anuncios --'>'",
       "htmlHint": "Pega el fragmento de tu red de anuncios. Los scripts se ejecutan al cargar la página.",
       "newTabLabel": "Abrir en una pestaña nueva",
       "createAd": "Crear anuncio",
@@ -947,10 +974,6 @@
           "title": "Acceso de demostración",
           "description": "Credenciales de demostración opcionales de un clic mostradas en la página de inicio de sesión."
         },
-        "step-verification": {
-          "title": "Verificación de pasos",
-          "description": "Credenciales que permiten al sitio confirmar que un visitante siguió de verdad a alguien, no solo que hizo clic."
-        },
         "email-delivery": {
           "title": "Envío de correos",
           "description": "Los correos de restablecimiento se envían como JSON a tu propio relay o endpoint de automatización."
@@ -995,6 +1018,10 @@
           "label": "Creaciones de enlaces por hora (por usuario)",
           "placeholder": "20"
         },
+        "limits_shortLinkCreatePerHour": {
+          "label": "Creaciones de enlaces cortos por hora (por usuario)",
+          "placeholder": "60"
+        },
         "limits_guestLinkCreatePerHour": {
           "label": "Creaciones de enlaces de invitado por hora (por IP)",
           "hint": "Solo un tope antiabuso: los invitados siguen limitados a un enlace gratuito mediante una cookie firmada.",
@@ -1003,11 +1030,6 @@
         "limits_unlockStartPerMinute": {
           "label": "Inicios de desbloqueo por minuto (por sesión)",
           "placeholder": "30"
-        },
-        "limits_verifyPerMinute": {
-          "label": "Comprobaciones de verificación por minuto (por sesión)",
-          "hint": "Cada comprobación lee una lista pública de seguimientos. Bájala si la plataforma empieza a rechazar las consultas.",
-          "placeholder": "8"
         },
         "limits_reportPerHour": {
           "label": "Reportes de abuso por hora (por IP)",
@@ -1060,15 +1082,6 @@
           "label": "Contraseña de demostración",
           "hint": "Se guarda en texto plano. Usa una cuenta desechable."
         },
-        "verification_discordBotToken": {
-          "label": "Token del bot de Discord",
-          "hint": "Gratis en discord.com/developers: crea una aplicación, añade un bot, copia su token e invítalo a tu servidor. Leer miembros no requiere intents privilegiados. Un nombre de usuario que el bot no pueda resolver se reporta como sin verificar, nunca como rechazo."
-        },
-        "verification_discordGuildId": {
-          "label": "Id del servidor de Discord",
-          "hint": "Opcional. Si lo dejas vacío, el servidor se toma del enlace de invitación pegado en el paso de desbloqueo. Ponlo para comprobar todos los pasos de Discord contra un mismo servidor.",
-          "placeholder": "1234567890123456789"
-        },
         "email_webhookUrl": {
           "label": "URL del webhook",
           "hint": "Vacío significa que los enlaces de restablecimiento solo se registran. Debe empezar por http:// o https://.",
@@ -1081,7 +1094,7 @@
         "email_from": {
           "label": "Remitente",
           "hint": "Se usa como campo from salvo que tu relay defina el suyo.",
-          "placeholder": "Link Unlocker <no-reply@example.com>"
+          "placeholder": "Link Unlocker '<'no-reply@example.com'>'"
         },
         "retention_analyticsDays": {
           "label": "Días de retención de analítica",
@@ -1102,6 +1115,7 @@
     "meta": {
       "overview": "Resumen",
       "myLinks": "Mis enlaces",
+      "shortLinks": "Enlaces cortos",
       "newLink": "Crear enlace",
       "editLink": "Editar enlace",
       "analytics": "Analíticas",
@@ -1165,6 +1179,27 @@
       "colEvents": "Eventos",
       "colActions": "Acciones"
     },
+    "shortLinks": {
+      "title": "Enlaces cortos",
+      "description": "Crea direcciones cortas que redirigen directamente a cualquier página.",
+      "createTitle": "Crear un enlace corto",
+      "createDescription": "Pega un destino y elige tu propio código, o déjalo vacío.",
+      "destinationLabel": "URL de destino",
+      "destinationPlaceholder": "https://ejemplo.com/pagina/muy/larga",
+      "codeLabel": "Código personalizado (opcional)",
+      "codePlaceholder": "generado automáticamente",
+      "codeHint": "Deja el código vacío para generarlo automáticamente.",
+      "preview": "Tu enlace estará disponible en /s/{code}",
+      "createdLabel": "Enlace corto creado",
+      "submit": "Crear enlace corto",
+      "emptyTitle": "Aún no hay enlaces cortos",
+      "emptyDescription": "Crea uno arriba y comparte la dirección corta donde quieras.",
+      "colLink": "Enlace corto",
+      "colClicks": "Clics",
+      "colStatus": "Estado",
+      "colCreated": "Creado",
+      "colActions": "Acciones"
+    },
     "newLink": {
       "title": "Crear enlace",
       "description": "Define el destino, elige tus acciones y activa el enlace cuando estés listo."
@@ -1187,12 +1222,6 @@
       "noLeads": "Aún no se ha recogido ninguna dirección.",
       "colEmail": "Correo",
       "colConsent": "Consentimiento otorgado",
-      "verifiedTitle": "Seguimientos confirmados",
-      "verifiedDescription": "Pasos leídos del registro público de la plataforma, no de un clic del visitante. Solo guardamos el usuario consultado y la fecha.",
-      "noVerified": "Todavía no hay pasos confirmados.",
-      "colVerifiedAction": "Plataforma",
-      "colEvidence": "Lo que vimos",
-      "colVerifiedAt": "Cuándo",
       "hiddenAction": "{label} (oculta)",
       "activityTitle": "Visitas y desbloqueos completados",
       "lastDays": "Últimos {days} días"
@@ -1261,6 +1290,19 @@
       "disabledToast": "Enlace desactivado.",
       "deletedToast": "Enlace eliminado."
     },
+    "shortLinkActions": {
+      "copyLink": "Copiar enlace corto",
+      "copied": "Copiado",
+      "openLink": "Abrir enlace",
+      "disableLink": "Desactivar enlace",
+      "activateLink": "Activar enlace",
+      "moreActions": "Más acciones",
+      "deleteLink": "Eliminar enlace",
+      "deleteConfirm": "¿Eliminar este enlace corto? Quien lo use verá una página de no encontrado. Esta acción no se puede deshacer.",
+      "activatedToast": "Enlace corto activado.",
+      "disabledToast": "Enlace corto desactivado.",
+      "deletedToast": "Enlace corto eliminado."
+    },
     "fileActions": {
       "deleteAria": "Eliminar archivo",
       "deleteFailed": "No se pudo eliminar",
@@ -1323,17 +1365,18 @@
     "actionUnavailable": "Esta acción ya no está disponible",
     "actionUrlRequired": "Se requiere una URL http(s) válida para esta acción",
     "platformNotAllowed": "Las reglas del sitio no permiten esta plataforma",
-    "verifierTargetInvalid": "Este paso no tiene un enlace de perfil válido del creador, así que no se puede verificar.",
-    "verifyUnavailable": "Esa plataforma no responde ahora mismo. Vuelve a intentarlo en un momento.",
-    "telegramNotConfigured": "Las confirmaciones de Telegram no están activadas en este enlace, así que no se puede verificar este paso.",
-    "telegramWaiting": "Tu confirmación aún no nos ha llegado. Pulsa Start en Telegram y comprueba de nuevo aquí.",
-    "telegramNotMember": "Telegram muestra que esa cuenta no está en el canal. Únete y comprueba de nuevo.",
-    "telegramCheckinStale": "Esa confirmación caducó. Vuelve a abrir el bot y comprueba otra vez.",
     "fixHighlightedFields": "Corrige los campos resaltados.",
     "slugReserved": "Ese slug está reservado.",
     "slugTaken": "Ese slug ya está en uso.",
     "fieldSlugReserved": "Slug reservado",
     "fieldSlugInUse": "Slug en uso",
+    "invalidShortCode": "Usa entre 3 y 48 letras minúsculas, números o guiones.",
+    "shortCodeTaken": "Ese código ya está en uso.",
+    "fieldShortCodeInUse": "Código en uso",
+    "shortLinkSelfTarget": "Apunta el enlace a otra dirección que no sea otro enlace corto de este sitio.",
+    "shortLinkNotFound": "Enlace corto no encontrado.",
+    "shortLinkCreateFailed": "No se pudo crear el enlace corto. Inténtalo de nuevo.",
+    "shortLinkRateLimited": "Estás creando enlaces cortos demasiado rápido. Inténtalo más tarde.",
     "createLinkFailed": "No se pudo crear el enlace. Inténtalo de nuevo.",
     "saveLinkFailed": "No se pudo guardar el enlace. Inténtalo de nuevo.",
     "linkNotFound": "Enlace no encontrado.",
@@ -1402,16 +1445,11 @@
     "invalidHeaderIcon": "Elige un icono válido.",
     "invalidHeaderColor": "Usa un color hexadecimal como #5182EF o déjalo vacío.",
     "invalidWebhookUrl": "La URL debe empezar por http:// o https://",
-    "confirmHandleRequired": "Escribe tu usuario de perfil para continuar.",
-    "confirmNotFollowing": "Revisamos {handle} y no pudimos confirmar {steps}. Completa el paso y confirma de nuevo.",
-    "confirmProfileRequired": "Confirma tu perfil para mostrar el enlace.",
     "tooLong": "Debe tener {max} caracteres o menos.",
     "tooManyItems": "Demasiados elementos. El máximo es {max}.",
     "userAlreadyExists": "Ya existe una cuenta con este correo.",
     "labelEmpty": "Añade una etiqueta",
-    "openStepFirst": "Abre este paso primero y márcalo como hecho cuando termine la espera.",
-    "waitBeforeComplete": "Espera {seconds} segundos más antes de marcar este paso como hecho.",
-    "invalidWait": "El tiempo de espera debe estar entre 0 y {max} segundos."
+    "openStepFirst": "Abre este paso primero y márcalo como hecho."
   },
   "linkForm": {
     "uploadFailed": "Error al subir.",
@@ -1422,6 +1460,12 @@
     "linkSaved": "Enlace guardado.",
     "successTitle": "Tu enlace ya está activo",
     "successBody": "Ya está publicado: comparte esta URL con tu audiencia.",
+    "shareLink": "Compartir enlace",
+    "shareCopied": "Enlace copiado. Pégalo donde esté tu audiencia.",
+    "shareBody": "Tu enlace está listo. Pégalo donde esté tu audiencia.",
+    "shareTo": "Compartir en",
+    "openLink": "Abrir tu enlace",
+    "done": "Hecho",
     "upsellTitle": "¿Quieres editarlo o crear más enlaces?",
     "upsellBody": "Los enlaces de invitado se publican al instante, pero no se pueden editar después. Crea una cuenta gratis para gestionar este enlace y crear enlaces ilimitados.",
     "createFreeAccount": "Crear una cuenta gratis",
@@ -1499,13 +1543,8 @@
     "readyTitle": "Un título",
     "readyDestination": "Un destino",
     "readySteps": "Al menos un paso",
-    "willBeLiveAt": "Tu enlace estará activo en /u/{slug}",
-    "previewNote": "Así es como los visitantes verán tu enlace.",
-    "waitLabel": "Tiempo de espera",
-    "waitAria": "Segundos de espera tras abrir este paso",
-    "waitUnit": "segundos",
-    "waitHint": "Tras abrir el paso, el visitante espera este tiempo antes de poder marcarlo como hecho. Usa 0 para un paso instantáneo.",
-    "opensWithWait": "Se abre en una pestaña nueva y espera {seconds}s"
+    "willBeLiveAt": "Tu enlace estará activo en /link/{slug}",
+    "previewNote": "Así es como los visitantes verán tu enlace."
   },
   "profileForm": {
     "uploadFailed": "Error al subir.",
@@ -1551,7 +1590,6 @@
     "play": "Reproducir",
     "replay": "Repetir",
     "next": "Siguiente",
-    "waiting": "En espera",
     "tapHint": "Toca los puntos para recorrerla.",
     "stepOf": "Paso {current} de {total}",
     "nodeOf": "Etapa {current} de {total}",

@@ -62,7 +62,7 @@ export function LinkRowActions({
   return (
     <div className="flex items-center justify-end gap-1">
       <Button variant="ghost" size="icon-sm" asChild>
-        <a href={`/u/${slug}`} target="_blank" rel="noopener noreferrer" aria-label={t('openPublicPage')}>
+        <a href={`/link/${slug}`} target="_blank" rel="noopener noreferrer" aria-label={t('openPublicPage')}>
           <ExternalLink />
         </a>
       </Button>

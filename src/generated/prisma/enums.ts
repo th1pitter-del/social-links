@@ -90,3 +90,11 @@ export const ActionBehavior = {
 } as const
 
 export type ActionBehavior = (typeof ActionBehavior)[keyof typeof ActionBehavior]
+
+
+export const ShortLinkStatus = {
+  ACTIVE: 'ACTIVE',
+  DISABLED: 'DISABLED'
+} as const
+
+export type ShortLinkStatus = (typeof ShortLinkStatus)[keyof typeof ShortLinkStatus]

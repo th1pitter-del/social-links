@@ -16,10 +16,10 @@ The flow is the same for every link:
 The visitor never needs a Link Unlocker account unless the link asks for one.
 
 ### Which platforms and actions can I use?
-The built-in catalog covers YouTube, Instagram, Facebook, TikTok, Discord, Spotify and any other website. It includes 17 actions, such as subscribe, like, comment, watch, follow, join a server, boost a server, listen to a track and visit a page. You can combine several actions on one link and ask for an email address as an extra step.
+The built-in catalog covers YouTube, Instagram, Facebook, TikTok, Discord, Spotify and any other website. It includes 18 actions, such as subscribe, like, comment, watch, follow, join a server, boost a server, listen to a track and visit a page. You can combine several actions on one link and ask for an email address as an extra step.
 
 ### Are the actions verified?
-No. Every step is completed by the visitor: they open the link, wait the time the creator set, and mark the step as done. We do not check whether a subscription, like, comment, share or view actually happened on YouTube or anywhere else, and we never ask a visitor to sign in to Google or connect an account. The card records a step as completed, not verified.
+A step is recorded as done the moment the visitor opens it. We do not connect to anyone's account on a social platform, and the card never claims a step was checked.
 
 ### What does the visitor have to share?
 Nothing beyond what a step asks for — an email address, only if the creator added the optional email step. There is no Google sign-in, no account connection and no password.
@@ -55,7 +55,7 @@ Use the report link shown on the unlock page, or send us the short link through 
 Deleting a link also deletes its unlock sessions, analytics and collected email addresses. You can delete individual addresses from your email list at any time. To close your account and remove your profile data, contact us — there is no self-service delete button yet, so we handle it manually.
 
 ### What if a platform changes its API?
-Our steps do not depend on a platform API: the visitor opens the link, waits and marks the step done. If a target page stops working, the creator can update it. No step claims to be verified, so a platform change cannot invalidate a completed step.
+Our steps do not depend on a platform API: the visitor opens the link and the step is recorded as done. If a target page stops working, the creator can update it.
 
 ### How do I get help?
 Email [support@linkunlock.app](mailto:support@linkunlock.app) for product questions or account help, and use the report link on an unlock page for abuse. Including the short link and the step you are stuck on helps us answer faster.`,
@@ -95,7 +95,7 @@ When a visitor opens a link, we create a short-lived session that expires after 
 The email action is optional and only appears when a creator adds it to a link. The address is stored with the time of consent, only the owner of that link can see or export it, and it is deleted when the link is deleted or when the owner removes it. Creators are responsible for using those addresses lawfully and for honouring any withdrawal of consent they receive.
 
 ## Completed steps, not account checks
-Some steps point at a social platform, but we do not connect to the visitor's account there. A step is recorded as completed when the visitor opens it, waits the time the creator configured and marks it done. We store the completion time per step and session. We do not verify that a subscription, like, comment, share or view actually happened, and we do not ask for a Google sign-in.
+Some steps point at a social platform, but we do not connect to the visitor's account there. A step is recorded as completed the moment the visitor opens it. We store the completion time per step and session. We do not ask for a Google sign-in.
 
 ## Files and uploads
 Files and images you upload are stored by the service and delivered only to sessions that completed the link's steps. File names, sizes and MIME types are stored so the file can be streamed and shown in the dashboard. Deleting a file disables the links that referenced it.
@@ -104,7 +104,6 @@ Files and images you upload are stored by the service and delivered only to sess
 We do not sell personal data. We share the minimum necessary with:
 - Hosting and database providers that run the service.
 - Email delivery providers, when a password-reset or contact email has to be sent.
-- Platform APIs used for optional checks the operator has enabled.
 - Authorities or other parties when the law requires it, or when it is necessary to investigate credible abuse.
 These providers process data on our instructions or under their own terms, and may operate in countries other than yours. Where required, we rely on appropriate safeguards for those transfers.
 
@@ -112,7 +111,7 @@ These providers process data on our instructions or under their own terms, and m
 Unlock sessions expire after two hours. Analytics events are kept while the link exists so a creator can see historical totals. Email leads are kept until the link or the individual address is deleted. Abuse reports are kept as long as needed to resolve the report and prevent repeat abuse. Rate-limit records are short-lived. Deleting a link removes its sessions, events and leads with it. Backup copies may remain for a short period before they are overwritten.
 
 ## Security
-Passwords are hashed, traffic is served over HTTPS, session cookies are HTTP-only, and access to another creator's links is checked on the server. We apply rate limits to sensitive actions. No service can promise perfect security, but we keep the surface small: we do not store payment details, and verification reads are limited to the single fact an action needs.
+Passwords are hashed, traffic is served over HTTPS, session cookies are HTTP-only, and access to another creator's links is checked on the server. We apply rate limits to sensitive actions. No service can promise perfect security, but we keep the surface small: we do not store payment details.
 
 ## Your rights
 Depending on where you live, you may have the right to access, correct, export, restrict or delete your personal data, to object to some processing, and to withdraw consent. You can exercise most of these from the dashboard. For anything else, contact us and we will respond within the time required by law. You also have the right to complain to your local data-protection authority.
@@ -154,7 +153,7 @@ Do not use Link Unlocker to:
 We may remove content or disable links and accounts that breach these rules.
 
 ## Third-party platforms
-The actions in a link happen on third-party platforms. We do not control those platforms, their availability, their rules or their data practices. Completing an action does not create any relationship between you and us beyond these terms, and a platform may change its API, permissions or limits at any time. Steps are self-reported: a step counts once the visitor opens it and the configured wait has passed. We do not confirm that a subscription, like, comment, share or view actually happened, and we do not ask visitors to connect a Google account.
+The actions in a link happen on third-party platforms. We do not control those platforms, their availability, their rules or their data practices. Completing an action does not create any relationship between you and us beyond these terms, and a platform may change its API, permissions or limits at any time. Steps are self-reported: a step counts the moment the visitor opens it. We do not confirm that a subscription, like, comment, share or view actually happened, and we do not ask visitors to connect a Google account.
 
 ## Content and ownership
 You keep the rights you already hold in the content you upload or link to. You give us a limited licence to store, display and deliver that content for the purpose of running your links and showing them in your dashboard. You confirm that you have the rights needed to grant that licence. We own the service, its software and its branding; these terms do not transfer any of that ownership to you.

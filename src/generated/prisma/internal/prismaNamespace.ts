@@ -421,7 +421,8 @@ export const ModelName = {
   UserUnlock: 'UserUnlock',
   Profile: 'Profile',
   BioLink: 'BioLink',
-  TelegramCheckin: 'TelegramCheckin'
+  TelegramCheckin: 'TelegramCheckin',
+  ShortLink: 'ShortLink'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -437,7 +438,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "session" | "account" | "verification" | "link" | "linkAction" | "unlockSession" | "unlockActionStart" | "unlockActionCompletion" | "analyticsEvent" | "emailLead" | "rateLimitBucket" | "abuseReport" | "setting" | "adUnit" | "headerLink" | "auditLog" | "platform" | "actionOption" | "mediaAsset" | "storedFile" | "userUnlock" | "profile" | "bioLink" | "telegramCheckin"
+    modelProps: "user" | "session" | "account" | "verification" | "link" | "linkAction" | "unlockSession" | "unlockActionStart" | "unlockActionCompletion" | "analyticsEvent" | "emailLead" | "rateLimitBucket" | "abuseReport" | "setting" | "adUnit" | "headerLink" | "auditLog" | "platform" | "actionOption" | "mediaAsset" | "storedFile" | "userUnlock" | "profile" | "bioLink" | "telegramCheckin" | "shortLink"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2091,6 +2092,72 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    ShortLink: {
+      payload: Prisma.$ShortLinkPayload<ExtArgs>
+      fields: Prisma.ShortLinkFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ShortLinkFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShortLinkPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ShortLinkFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShortLinkPayload>
+        }
+        findFirst: {
+          args: Prisma.ShortLinkFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShortLinkPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ShortLinkFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShortLinkPayload>
+        }
+        findMany: {
+          args: Prisma.ShortLinkFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShortLinkPayload>[]
+        }
+        create: {
+          args: Prisma.ShortLinkCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShortLinkPayload>
+        }
+        createMany: {
+          args: Prisma.ShortLinkCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.ShortLinkDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShortLinkPayload>
+        }
+        update: {
+          args: Prisma.ShortLinkUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShortLinkPayload>
+        }
+        deleteMany: {
+          args: Prisma.ShortLinkDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ShortLinkUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.ShortLinkUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShortLinkPayload>
+        }
+        aggregate: {
+          args: Prisma.ShortLinkAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateShortLink>
+        }
+        groupBy: {
+          args: Prisma.ShortLinkGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ShortLinkGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ShortLinkCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ShortLinkCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -2491,6 +2558,21 @@ export const TelegramCheckinScalarFieldEnum = {
 export type TelegramCheckinScalarFieldEnum = (typeof TelegramCheckinScalarFieldEnum)[keyof typeof TelegramCheckinScalarFieldEnum]
 
 
+export const ShortLinkScalarFieldEnum = {
+  id: 'id',
+  ownerId: 'ownerId',
+  code: 'code',
+  targetUrl: 'targetUrl',
+  status: 'status',
+  clicks: 'clicks',
+  lastClickAt: 'lastClickAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ShortLinkScalarFieldEnum = (typeof ShortLinkScalarFieldEnum)[keyof typeof ShortLinkScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -2788,6 +2870,16 @@ export const TelegramCheckinOrderByRelevanceFieldEnum = {
 export type TelegramCheckinOrderByRelevanceFieldEnum = (typeof TelegramCheckinOrderByRelevanceFieldEnum)[keyof typeof TelegramCheckinOrderByRelevanceFieldEnum]
 
 
+export const ShortLinkOrderByRelevanceFieldEnum = {
+  id: 'id',
+  ownerId: 'ownerId',
+  code: 'code',
+  targetUrl: 'targetUrl'
+} as const
+
+export type ShortLinkOrderByRelevanceFieldEnum = (typeof ShortLinkOrderByRelevanceFieldEnum)[keyof typeof ShortLinkOrderByRelevanceFieldEnum]
+
+
 
 /**
  * Field references
@@ -2882,6 +2974,13 @@ export type EnumAbuseReportStatusFieldRefInput<$PrismaModel> = FieldRefInputType
  * Reference to a field of type 'ActionBehavior'
  */
 export type EnumActionBehaviorFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ActionBehavior'>
+    
+
+
+/**
+ * Reference to a field of type 'ShortLinkStatus'
+ */
+export type EnumShortLinkStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ShortLinkStatus'>
     
 
 
@@ -3067,6 +3166,7 @@ export type GlobalOmitConfig = {
   profile?: Prisma.ProfileOmit
   bioLink?: Prisma.BioLinkOmit
   telegramCheckin?: Prisma.TelegramCheckinOmit
+  shortLink?: Prisma.ShortLinkOmit
 }
 
 /* Types for Logging */

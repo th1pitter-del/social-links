@@ -31,7 +31,7 @@ export async function GET(
           actions: { select: { id: true, type: true, label: true, target: true } },
         },
       },
-      completions: { select: { linkActionId: true, verified: true, proof: true } },
+      completions: { select: { linkActionId: true } },
     },
   })
 

@@ -355,6 +355,23 @@ export type EnumActionBehaviorWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumActionBehaviorFilter<$PrismaModel>
 }
 
+export type EnumShortLinkStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.ShortLinkStatus | Prisma.EnumShortLinkStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.ShortLinkStatus[]
+  notIn?: $Enums.ShortLinkStatus[]
+  not?: Prisma.NestedEnumShortLinkStatusFilter<$PrismaModel> | $Enums.ShortLinkStatus
+}
+
+export type EnumShortLinkStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ShortLinkStatus | Prisma.EnumShortLinkStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.ShortLinkStatus[]
+  notIn?: $Enums.ShortLinkStatus[]
+  not?: Prisma.NestedEnumShortLinkStatusWithAggregatesFilter<$PrismaModel> | $Enums.ShortLinkStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumShortLinkStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumShortLinkStatusFilter<$PrismaModel>
+}
+
 export type NestedStringFilter<$PrismaModel = never> = {
   equals?: string | Prisma.StringFieldRefInput<$PrismaModel>
   in?: string[]
@@ -711,6 +728,23 @@ export type NestedEnumActionBehaviorWithAggregatesFilter<$PrismaModel = never> =
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumActionBehaviorFilter<$PrismaModel>
   _max?: Prisma.NestedEnumActionBehaviorFilter<$PrismaModel>
+}
+
+export type NestedEnumShortLinkStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.ShortLinkStatus | Prisma.EnumShortLinkStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.ShortLinkStatus[]
+  notIn?: $Enums.ShortLinkStatus[]
+  not?: Prisma.NestedEnumShortLinkStatusFilter<$PrismaModel> | $Enums.ShortLinkStatus
+}
+
+export type NestedEnumShortLinkStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ShortLinkStatus | Prisma.EnumShortLinkStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.ShortLinkStatus[]
+  notIn?: $Enums.ShortLinkStatus[]
+  not?: Prisma.NestedEnumShortLinkStatusWithAggregatesFilter<$PrismaModel> | $Enums.ShortLinkStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumShortLinkStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumShortLinkStatusFilter<$PrismaModel>
 }
 
 

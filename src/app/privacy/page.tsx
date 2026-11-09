@@ -8,7 +8,7 @@ import { getPageContent } from '@/lib/settings'
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('pages.privacy')
-  return { title: t('metaTitle'), description: t('intro') }
+  return { title: t('metaTitle'), description: t('intro'), alternates: { canonical: '/privacy' } }
 }
 
 export default async function PrivacyPage() {

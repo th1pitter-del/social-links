@@ -24,19 +24,19 @@ export async function SiteFooter({
     <footer className={cn('mt-auto', bordered && 'border-t')}>
       <div
         className={cn(
-          'mx-auto flex w-full max-w-[1200px] flex-col px-4 sm:flex-row sm:items-center',
+          'mx-auto flex w-full max-w-[1200px] flex-col px-4 lg:flex-row lg:items-center',
           compact
             ? 'items-center justify-center gap-4 py-5 text-center'
-            : 'gap-6 py-10 sm:justify-between',
+            : 'gap-6 py-10 lg:justify-between',
         )}
       >
         {showBrand ? (
-          <div className="space-y-2">
-            <div className="flex items-center gap-2 font-semibold">
+          <div className="space-y-2 text-center lg:text-left">
+            <div className="flex items-center justify-center gap-2 font-semibold lg:justify-start">
               <BrandMark className="size-5" src={site.logoUrl || null} />
               {site.name}
             </div>
-            <p className="max-w-xs text-sm text-muted-foreground">
+            <p className="mx-auto max-w-xs text-sm text-muted-foreground lg:mx-0">
               {site.hasCustomTagline ? site.tagline : t('tagline')}
             </p>
           </div>
@@ -44,7 +44,7 @@ export async function SiteFooter({
         <nav
           className={cn(
             'flex flex-wrap gap-x-6 gap-y-2 text-sm text-muted-foreground',
-            compact && 'justify-center',
+            compact ? 'justify-center' : 'justify-center lg:justify-start',
           )}
         >
           <Link href="/faq" className="hover:text-foreground">
@@ -65,7 +65,7 @@ export async function SiteFooter({
         <p
           className={cn(
             'mx-auto w-full max-w-[1200px] px-4 text-xs text-muted-foreground',
-            compact ? 'py-2 text-center' : 'py-4',
+            compact ? 'py-2 text-center' : 'py-4 text-center lg:text-left',
           )}
         >
           © {new Date().getFullYear()} {site.name}. {t('disclaimer')}

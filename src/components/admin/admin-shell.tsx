@@ -18,6 +18,7 @@ import {
   Megaphone,
   Menu,
   PanelTop,
+  Scissors,
   ScrollText,
   Settings,
   ShieldCheck,
@@ -88,6 +89,7 @@ export function AdminShell({
       items: [
         { href: '/admin/reports', label: t('nav.abuseReports'), icon: Flag, badge: openReports },
         { href: '/admin/links', label: t('nav.links'), icon: Link2 },
+        { href: '/admin/short-links', label: t('nav.shortLinks'), icon: Scissors },
         { href: '/admin/users', label: t('nav.users'), icon: Users },
       ],
     },

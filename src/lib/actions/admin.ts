@@ -238,6 +238,48 @@ export async function updateActionOptionLabel(
   return { ok: true }
 }
 
+export async function adminSetShortLinkStatus(
+  shortLinkId: string,
+  status: 'ACTIVE' | 'DISABLED',
+): Promise<AdminActionResult> {
+  await requireAdmin()
+  const t = await getTranslations('errors')
+
+  const link = await prisma.shortLink.findUnique({
+    where: { id: shortLinkId },
+    select: { id: true },
+  })
+  if (!link) return { ok: false, error: t('shortLinkNotFound') }
+
+  await prisma.shortLink.update({ where: { id: shortLinkId }, data: { status } })
+  await writeAudit({
+    action: 'shortLink.status',
+    targetType: 'shortLink',
+    targetId: shortLinkId,
+    details: status,
+  })
+  revalidatePath('/admin/short-links')
+  revalidatePath('/dashboard/short-links')
+  return { ok: true }
+}
+
+export async function adminDeleteShortLink(shortLinkId: string): Promise<AdminActionResult> {
+  await requireAdmin()
+  const t = await getTranslations('errors')
+
+  const removed = await prisma.shortLink.deleteMany({ where: { id: shortLinkId } })
+  if (removed.count === 0) return { ok: false, error: t('shortLinkNotFound') }
+
+  await writeAudit({
+    action: 'shortLink.delete',
+    targetType: 'shortLink',
+    targetId: shortLinkId,
+  })
+  revalidatePath('/admin/short-links')
+  revalidatePath('/dashboard/short-links')
+  return { ok: true }
+}
+
 export async function deleteMediaAsset(mediaId: string): Promise<AdminActionResult> {
   await requireAdmin()
   const t = await getTranslations('errors')

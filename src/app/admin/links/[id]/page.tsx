@@ -51,7 +51,7 @@ export default async function AdminLinkDetailPage({
 
       actions: {
         orderBy: { position: 'asc' },
-        select: { id: true, type: true, label: true, target: true, verification: true },
+        select: { id: true, type: true, label: true, target: true },
       },
       abuseReports: {
         orderBy: { createdAt: 'desc' },
@@ -94,7 +94,7 @@ export default async function AdminLinkDetailPage({
 
       <PageHeader
         title={link.title}
-        description={`/u/${link.slug}`}
+        description={`/link/${link.slug}`}
         actions={<AdminLinkRowActions linkId={link.id} status={link.status} />}
       />
 
@@ -198,7 +198,6 @@ export default async function AdminLinkDetailPage({
                   <th className="px-5 py-3 font-medium">{t('linkDetail.colType')}</th>
                   <th className="px-5 py-3 font-medium">{t('linkDetail.colLabel')}</th>
                   <th className="hidden px-5 py-3 font-medium sm:table-cell">{t('linkDetail.colTarget')}</th>
-                  <th className="hidden px-5 py-3 font-medium md:table-cell">{t('linkDetail.colVerification')}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
@@ -208,9 +207,6 @@ export default async function AdminLinkDetailPage({
                     <td className="px-5 py-3 text-muted-foreground">{action.label ?? '—'}</td>
                     <td className="hidden max-w-xs truncate px-5 py-3 font-mono text-xs sm:table-cell">
                       {action.target}
-                    </td>
-                    <td className="hidden px-5 py-3 text-muted-foreground md:table-cell">
-                      {t(`status.${action.verification.toLowerCase().replace('_', '')}`)}
                     </td>
                   </tr>
                 ))}

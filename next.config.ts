@@ -33,6 +33,16 @@ const nextConfig: NextConfig = {
       },
     },
   },
+  async redirects() {
+    // Links shared before the /link/ move must keep opening.
+    return [
+      {
+        source: "/u/:slug*",
+        destination: "/link/:slug*",
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     return [
       {

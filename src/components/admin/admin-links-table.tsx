@@ -128,11 +128,11 @@ export function AdminLinksTable({ links }: { links: AdminLinkTableRow[] }) {
                     {link.title}
                   </Link>
                   <Link
-                    href={`/u/${link.slug}`}
+                    href={`/link/${link.slug}`}
                     target="_blank"
                     className="block font-mono text-xs text-muted-foreground hover:underline"
                   >
-                    /u/{link.slug}
+                    /link/{link.slug}
                   </Link>
                 </td>
                 <td className="hidden px-5 py-4 text-muted-foreground sm:table-cell">

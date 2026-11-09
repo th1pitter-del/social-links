@@ -4,22 +4,20 @@ import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from '
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useLocale, useTranslations } from 'next-intl'
-import { Check, CheckCircle2, Clock, Download, ExternalLink, Eye, FileLock, FileText, Loader2, Lock, Mail, Share2, Unlock } from 'lucide-react'
+import { Check, CheckCircle2, Download, ExternalLink, Eye, FileLock, FileText, Loader2, Lock, Mail, Share2, Unlock } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
-import { PlatformGlyph, platformTint } from '@/components/brand-icon'
+import { PlatformGlyph, platformActionColor } from '@/components/brand-icon'
 import { targetDisplayName, withTargetName } from '@/lib/action-target'
 import { formatBytes, formatNumber } from '@/lib/format'
 import { cn } from 'cn'
 import {
-  beginAction,
   claimContent,
   getUnlockState,
   markActionComplete,
   startUnlock,
-  type UnlockActionStatus,
   type UnlockState,
 } from '@/lib/actions/unlock'
 
@@ -40,8 +38,6 @@ export type UnlockStepPreview = {
   behavior: 'URL' | 'EMAIL'
   /** Where the row goes. Known up front so the first press opens it too. */
   target: string
-  /** Seconds the server makes the visitor wait after opening the step. */
-  waitSeconds: number
 }
 
 type StepAction = {
@@ -53,10 +49,7 @@ type StepAction = {
   behavior: 'URL' | 'EMAIL'
   completed: boolean
   target: string
-  waitSeconds: number
-  readyAt: string | null
-  waitRemaining: number
-  status: UnlockActionStatus
+  visitUrl: string | null
 }
 
 const emptySubscribe = () => () => {}
@@ -83,7 +76,7 @@ const ROW_CHECK =
 function useShareUrl(slug: string) {
   return useSyncExternalStore(
     emptySubscribe,
-    () => `${window.location.origin}/u/${slug}`,
+    () => `${window.location.origin}/link/${slug}`,
     () => '',
   )
 }
@@ -98,7 +91,6 @@ export function UnlockExperience({
   viewCount = 0,
   unlockCount = 0,
   steps = [],
-  notice = null,
 }: {
   slug: string
   title: string
@@ -109,7 +101,6 @@ export function UnlockExperience({
   viewCount?: number
   unlockCount?: number
   steps?: UnlockStepPreview[]
-  notice?: string | null
 }) {
   const t = useTranslations('unlock')
   const actionT = useTranslations('actions')
@@ -119,21 +110,16 @@ export function UnlockExperience({
   const router = useRouter()
   const [state, setState] = useState<UnlockState | null>(null)
   const [busy, setBusy] = useState(false)
-  const [error, setError] = useState<string | null>(notice)
+  const [error, setError] = useState<string | null>(null)
   const [email, setEmail] = useState('')
   const [consent, setConsent] = useState(false)
   const [claimed, setClaimed] = useState<ClaimedContent>(null)
-  const [receivedAt, setReceivedAt] = useState(0)
-  const [now, setNow] = useState(() => Date.now())
   const shareUrl = useShareUrl(slug)
   /** Token already loaded or created locally; keeps a route refresh from re-fetching it. */
   const loadedTokenRef = useRef<string | null>(null)
   const applyState = useCallback((next: UnlockState) => {
     loadedTokenRef.current = next.token
     setState(next)
-    const at = Date.now()
-    setReceivedAt(at)
-    setNow(at)
     const url = new URL(window.location.href)
     url.searchParams.set('token', next.token)
     window.history.replaceState(null, '', url.toString())
@@ -149,15 +135,6 @@ export function UnlockExperience({
       cancelled = true
     }
   }, [initialToken, applyState])
-
-  // Only tick while a wait is still running; the countdown is relative to the
-  // moment the server state arrived, so a wrong device clock cannot shorten it.
-  const hasWaiting = state?.actions.some((action) => action.status === 'WAITING') ?? false
-  useEffect(() => {
-    if (!hasWaiting) return
-    const timer = window.setInterval(() => setNow(Date.now()), 1000)
-    return () => window.clearInterval(timer)
-  }, [hasWaiting])
 
   // The row is the visitor's first move, so the session begins here instead of
   // behind a separate "start" press: one action per step, like the card shows.
@@ -182,21 +159,7 @@ export function UnlockExperience({
     await ensureSession()
   }
 
-  /** Opens a waiting step and lets the server set its deadline. */
-  async function handleBegin(actionId: string) {
-    const session = await ensureSession()
-    if (!session) return
-    setBusy(true)
-    setError(null)
-    const result = await beginAction({ token: session.token, actionId })
-    setBusy(false)
-    if (!result.ok) {
-      setError(result.error)
-      return
-    }
-    applyState(result.state)
-  }
-
+  /** Opens the step and records it in the same press. */
   async function handleComplete(actionId: string, isEmail = false) {
     const session = await ensureSession()
     if (!session) return
@@ -214,6 +177,45 @@ export function UnlockExperience({
       return
     }
     applyState(result.state)
+  }
+
+  /**
+   * A website step completes only after the server itself redirects the visitor,
+   * so the tab is opened from this gesture and the state is read back after.
+   */
+  async function handleVisit(actionId: string) {
+    if (busy || expired) return
+    const tab = window.open('', '_blank')
+    if (tab) tab.opener = null
+
+    const session = await ensureSession()
+    if (!session) {
+      tab?.close()
+      return
+    }
+    // The signed URL is short-lived, so rebuild it right before navigating.
+    const fresh = (await getUnlockState(session.token)) ?? session
+    applyState(fresh)
+    const visitUrl = fresh.actions.find((action) => action.id === actionId)?.visitUrl
+    if (!visitUrl) {
+      tab?.close()
+      setError(t('visitUnavailable'))
+      return
+    }
+
+    if (tab) tab.location.replace(visitUrl)
+    else window.location.assign(visitUrl)
+
+    // The redirect lands on another site; this tab stays open and catches up.
+    void (async () => {
+      for (let attempt = 0; attempt < 4; attempt += 1) {
+        await new Promise((resolve) => window.setTimeout(resolve, 700))
+        const next = await getUnlockState(session.token)
+        if (!next) return
+        applyState(next)
+        if (next.actions.find((action) => action.id === actionId)?.completed) return
+      }
+    })()
   }
 
   async function handleClaim() {
@@ -236,7 +238,7 @@ export function UnlockExperience({
   }
 
   // The card has one call to action, the way the demonstration card has one.
-  // What it does depends on where the visitor stands: begin, remind, reveal.
+  // It begins the session or reveals the reward.
   function handlePrimary() {
     if (!started) {
       void handleStart()
@@ -265,10 +267,7 @@ export function UnlockExperience({
         behavior: step.behavior,
         completed: false,
         target: step.target,
-        waitSeconds: step.waitSeconds,
-        readyAt: null,
-        waitRemaining: 0,
-        status: 'PENDING' as const,
+        visitUrl: null,
       }))
 
   const totalSteps = actionSteps.length
@@ -388,24 +387,15 @@ export function UnlockExperience({
                   />
                 </div>
 
-                {/* Each step is one frosted row wearing its platform's own colour,
-                    exactly the surface the demonstration card in the hero shows. */}
+                {/* Each step is one solid platform-coloured button, exactly the
+                    treatment the demonstration card in the hero shows. */}
                 <ol className="mx-auto mt-3 w-[92%] space-y-2">
                   {actionSteps.map((action) => {
                     const isEmail = action.behavior === 'EMAIL'
                     const done = action.completed
-                    const tint = platformTint(action.platform)
-                    // The countdown is measured from the moment the server state
-                    // arrived, so a wrong device clock cannot skip a wait.
-                    const elapsed = receivedAt ? Math.max(0, Math.floor((now - receivedAt) / 1000)) : 0
-                    const waitLeft =
-                      action.status === 'WAITING' ? Math.max(0, action.waitRemaining - elapsed) : 0
-                    const waiting = !done && action.status === 'WAITING' && waitLeft > 0
-                    const readyNow =
-                      !done && (action.status === 'READY' || (action.status === 'WAITING' && waitLeft === 0))
-                    const pending = !done && !waiting && !readyNow
-                    const clickable = pending && !expired && !busy
-                    const interactive = (clickable || readyNow) && !expired && !busy
+                    const fill = platformActionColor(action.platform, action.type)
+                    const clickable = !done && !expired && !busy
+                    const interactive = clickable
                     // A subscription row lands on the channel with the subscribe
                     // prompt already open; the channel link itself still works.
                     const href = action.target
@@ -414,22 +404,24 @@ export function UnlockExperience({
                         : action.target
                       : null
                     const surface = cn(
-                      'relative flex w-full items-center justify-center gap-3 px-4 py-3.5 text-sm backdrop-blur-md transition-[filter,background-color] duration-500 motion-reduce:transition-none',
-                      // A finished task drops its brand wash and settles to the
+                      'relative flex w-full items-center justify-center gap-3 px-4 py-3.5 text-sm',
+                      // A finished task drops its brand fill and settles to the
                       // neutral surface instead: only what is left keeps a colour.
                       done
-                        ? 'bg-muted/50 bg-gradient-to-b from-black/5 to-transparent dark:from-white/10'
-                        : tint
-                          ? 'bg-[var(--tint-l)] bg-gradient-to-b from-[var(--ramp-l)] to-transparent dark:bg-[var(--tint-d)] dark:from-[var(--ramp-d)]'
-                          : 'bg-transparent',
-                      interactive && 'cursor-pointer hover:brightness-105 dark:hover:brightness-125',
+                        ? 'bg-muted/50 text-muted-foreground'
+                        : fill
+                          ? cn(
+                              'bg-[var(--action-bg)] text-white',
+                              interactive && 'hover:bg-[var(--action-bg-hover)]',
+                            )
+                          : '',
+                      interactive &&
+                        'cursor-pointer transition-[background-color,scale] duration-200 ease-out motion-safe:hover:scale-[1.02] motion-reduce:transition-none',
                     )
-                    const tintVars = tint
+                    const fillVars = fill
                       ? ({
-                          '--tint-l': tint.light,
-                          '--tint-d': tint.dark,
-                          '--ramp-l': tint.rampLight,
-                          '--ramp-d': tint.rampDark,
+                          '--action-bg': fill.base,
+                          '--action-bg-hover': fill.hover,
                         } as React.CSSProperties)
                       : undefined
                     const glyph = (
@@ -438,11 +430,11 @@ export function UnlockExperience({
                         icon={action.icon}
                         neutral
                         className={cn(
-                          // The row is already washed in this platform's colour, so
-                          // the mark wears the text colour: brand on brand would
-                          // leave nothing to see.
-                          'size-6 shrink-0 transition-colors duration-500 motion-reduce:transition-none',
-                          done ? 'text-muted-foreground' : 'text-foreground',
+                          // The row carries the platform's solid colour, so the
+                          // mark wears white: brand on brand would leave nothing
+                          // to see.
+                          'size-6 shrink-0',
+                          done ? 'text-muted-foreground' : fill ? 'text-white' : 'text-foreground',
                         )}
                       />
                     )
@@ -484,7 +476,7 @@ export function UnlockExperience({
                           key={action.id}
                           className="overflow-hidden rounded-xl"
                         >
-                          <div style={tintVars} className={cn(surface, 'flex-col items-stretch gap-3')}>
+                          <div style={fillVars} className={cn(surface, 'flex-col items-stretch gap-3')}>
                             <div className="flex items-center justify-center gap-3">
                               {glyph}
                               {label}
@@ -531,22 +523,6 @@ export function UnlockExperience({
                       <>
                         {glyph}
                         {label}
-                        {/* Every non-finished row states its own condition, so the
-                            visitor never has to guess whether a wait is still on. */}
-                        {done ? null : waiting ? (
-                          <span
-                            aria-live="polite"
-                            className="flex shrink-0 items-center gap-1 rounded-full bg-background/70 px-2 py-0.5 text-[0.7rem] font-medium text-foreground tabular-nums ring-1 ring-border"
-                          >
-                            <Clock className="size-3" />
-                            {t('waiting', { seconds: waitLeft })}
-                          </span>
-                        ) : readyNow ? (
-                          <span className="flex shrink-0 items-center gap-1 rounded-full bg-primary/15 px-2 py-0.5 text-[0.7rem] font-medium text-foreground ring-1 ring-primary/30">
-                            <Check className="size-3" />
-                            {t('markDone')}
-                          </span>
-                        ) : null}
                         {/* The badge sits in a slot that takes no part in the row's
                             layout, so the row never changes height as it finishes. */}
                         <span
@@ -570,37 +546,34 @@ export function UnlockExperience({
 
                     return (
                       <li key={action.id} className="overflow-hidden rounded-xl">
-                        {clickable && href ? (
-                          // A real anchor, not a scripted popup: the browser opens
-                          // it on the visitor's own gesture, including the first
-                          // press before the unlock session exists. The server
-                          // stamps the deadline only when the step has a wait.
-                          <a
-                            href={href}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            onClick={() =>
-                              void (action.waitSeconds > 0
-                                ? handleBegin(action.id)
-                                : handleComplete(action.id))
-                            }
-                            style={tintVars}
-                            className={cn(surface, 'no-underline')}
-                          >
-                            {rowContent}
-                          </a>
-                        ) : readyNow ? (
+                        {action.type === 'VISIT' && !done && !expired ? (
+                          // The server performs this navigation and records it;
+                          // a plain link press could not prove the visit.
                           <button
                             type="button"
-                            onClick={() => void handleComplete(action.id)}
-                            disabled={busy || expired}
-                            style={tintVars}
+                            onClick={() => void handleVisit(action.id)}
+                            disabled={busy}
+                            style={fillVars}
                             className={surface}
                           >
                             {rowContent}
                           </button>
+                        ) : clickable && href ? (
+                          // A real anchor, not a scripted popup: the browser opens
+                          // it on the visitor's own gesture, including the first
+                          // press before the unlock session exists.
+                          <a
+                            href={href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={() => void handleComplete(action.id)}
+                            style={fillVars}
+                            className={cn(surface, 'no-underline')}
+                          >
+                            {rowContent}
+                          </a>
                         ) : (
-                          <button type="button" disabled style={tintVars} className={surface}>
+                          <button type="button" disabled style={fillVars} className={surface}>
                             {rowContent}
                           </button>
                         )}
@@ -609,9 +582,9 @@ export function UnlockExperience({
                   })}
                 </ol>
 
-                {/* One slot, one call to action - it begins, reminds or reveals
-                    depending on where the visitor stands. It matches a task row so
-                    it reads as the next row rather than a smaller control. */}
+                {/* One slot, one call to action - it begins the session or
+                    reveals the reward. It matches a task row so it reads as the
+                    next row rather than a smaller control. */}
                 <div className="relative mx-auto mt-3 h-[3.25rem] w-[92%]">
                   <Button
                     size="sm"
@@ -625,7 +598,13 @@ export function UnlockExperience({
                       'transition-[background-color,color] duration-500',
                     )}
                   >
-                    {busy ? <Loader2 className="animate-spin" /> : ready ? <Unlock /> : <Lock />}
+                    {busy ? (
+                      <Loader2 className="animate-spin" />
+                    ) : ready ? (
+                      <Unlock />
+                    ) : (
+                      <Lock />
+                    )}
                     {ctaLabel}
                   </Button>
                 </div>

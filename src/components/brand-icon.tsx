@@ -82,39 +82,28 @@ export function brandAccentFor(
 }
 
 /**
- * A translucent wash of the platform's real brand color, per theme. The hero's
- * demonstration card and the live unlock card share it so the same step looks
- * the same colour on both.
+ * The solid fill behind a platform's action button, plus a slightly brighter
+ * companion for hover. The hero's demonstration card and the live unlock card
+ * share it so the same step looks the same colour on both. Website visits have
+ * no brand of their own, so they wear the product's teal.
  */
-export function platformTint(platform: string | null | undefined): {
-  light: string
-  dark: string
-  rampLight: string
-  rampDark: string
-} | null {
+const PLATFORM_BUTTON_COLORS: Record<string, { base: string; hover: string }> = {
+  youtube: { base: '#FF0000', hover: '#FF2A2A' },
+  instagram: { base: '#E1306C', hover: '#E94C80' },
+  facebook: { base: '#1877F2', hover: '#3B8AF5' },
+  tiktok: { base: '#000000', hover: '#1F1F1F' },
+  discord: { base: '#5865F2', hover: '#6B77F5' },
+  spotify: { base: '#1DB954', hover: '#22C95C' },
+  website: { base: '#16A085', hover: '#1AB394' },
+}
+
+export function platformActionColor(
+  platform: string | null | undefined,
+  actionType?: string | null,
+): { base: string; hover: string } | null {
+  if (actionType === 'VISIT') return PLATFORM_BUTTON_COLORS.website
   const slug = brandSlugFor(platform)
-  if (!slug) return null
-  const hex = BRAND_ICONS[slug].hex
-  const r = parseInt(hex.slice(0, 2), 16)
-  const g = parseInt(hex.slice(2, 4), 16)
-  const b = parseInt(hex.slice(4, 6), 16)
-  const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255
-  const brand = `${r}, ${g}, ${b}`
-  // Near-black brands (X, TikTok, Threads) would vanish on the dark card, so
-  // there the wash goes light — but only for that theme, or it would disappear
-  // against the white card instead.
-  const dark = luminance < 0.13 ? '255, 255, 255' : brand
-  // The base is the row's colour and the ramp is the same hue lit from the top
-  // edge, so the glass highlight deepens the brand instead of greying it out.
-  // The light theme wears the same hue thinner than the dark one — over a white
-  // card the dark theme's alphas read as pastel blocks — but still deep enough
-  // that a row looks tinted rather than merely warm.
-  return {
-    light: `rgba(${brand}, 0.17)`,
-    dark: `rgba(${dark}, 0.34)`,
-    rampLight: `rgba(${brand}, 0.29)`,
-    rampDark: `rgba(${dark}, 0.54)`,
-  }
+  return (slug && PLATFORM_BUTTON_COLORS[slug]) || null
 }
 
 // Uses the official brand color when it stays legible on both light and dark

@@ -37,7 +37,7 @@ export async function GET() {
       [
         escapeCsvValue(lead.email),
         escapeCsvValue(lead.consentAt.toISOString()),
-        escapeCsvValue(`/u/${lead.link.slug}`),
+        escapeCsvValue(`/link/${lead.link.slug}`),
         escapeCsvValue(lead.link.title),
       ].join(','),
     )

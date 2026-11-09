@@ -16,6 +16,7 @@ import {
   LogIn,
   Plus,
   Search,
+  Share2,
   Sparkles,
   Upload,
   X,
@@ -26,6 +27,7 @@ import { cn } from 'cn'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { CopyButton } from '@/components/copy-button'
+import { LinkCreatedDialog } from '@/components/link-created-dialog'
 import { ActionGlyph, PlatformGlyph } from '@/components/brand-icon'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -40,21 +42,14 @@ import {
 import { createGuestLink, createLink, updateLink } from '@/lib/actions/links'
 import {
   ACTION_OPTION_DEFAULTS,
-  defaultWaitSeconds,
-  MAX_ACTION_WAIT_SECONDS,
   type ActionOptionView,
 } from '@/lib/action-defaults'
 import { actionLabel, platformLabel } from '@/lib/action-label'
 import { formatNumber } from '@/lib/format'
+import { SITE_URL } from '@/lib/seo'
 import type { LinkInput } from '@/lib/validation'
 
 const MAX_ACTIONS = 10
-
-function clampWait(value: string): number {
-  const parsed = Number.parseInt(value, 10)
-  if (!Number.isFinite(parsed)) return 0
-  return Math.min(MAX_ACTION_WAIT_SECONDS, Math.max(0, parsed))
-}
 
 // Shown first in the action picker so the common choices are one click away.
 // Every offered action is provable, so the list is the catalog itself.
@@ -64,7 +59,6 @@ type ActionRow = {
   type: string
   label: string
   target: string
-  waitSeconds: number
 }
 
 export type LinkFormValues = {
@@ -129,6 +123,8 @@ export function LinkForm({
   const [uploading, setUploading] = useState(false)
   const [uploadingFile, setUploadingFile] = useState(false)
   const [createdSlug, setCreatedSlug] = useState<string | null>(existingSlug ?? null)
+  const [shareOpen, setShareOpen] = useState(false)
+  const [createdTitle, setCreatedTitle] = useState('')
   const [needsAuth, setNeedsAuth] = useState(false)
   const [pickerOpen, setPickerOpen] = useState(false)
   const [pickerQuery, setPickerQuery] = useState('')
@@ -171,7 +167,7 @@ export function LinkForm({
             ...current,
             actions: [
               ...current.actions,
-              { type, label: '', target: '', waitSeconds: defaultWaitSeconds(type) },
+              { type, label: '', target: '' },
             ],
           },
     )
@@ -299,7 +295,6 @@ export function LinkForm({
         type: action.type,
         label: action.label.trim(),
         target: action.target.trim(),
-        waitSeconds: action.waitSeconds,
       })),
     }
 
@@ -320,6 +315,8 @@ export function LinkForm({
       if (guest) {
         toast.success(t('linkCreatedPublished'))
         setCreatedSlug(result.slug)
+        setCreatedTitle(values.title.trim())
+        setShareOpen(true)
         return
       }
 
@@ -332,34 +329,50 @@ export function LinkForm({
   // Success panel for the guest flow: the link is already live, so instead of
   // redirecting we surface the shareable URL and an upsell to create an account.
   if (createdSlug) {
-    const publicUrl = `${window.location.origin}/u/${createdSlug}`
+    const publicUrl = `${typeof window === 'undefined' ? SITE_URL : window.location.origin}/link/${createdSlug}`
     return (
-      <div className={cn('rounded-2xl border bg-card p-6 text-center shadow-sm', centered && 'mx-auto w-full max-w-2xl')}>
-        <div className="mx-auto flex size-12 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-600">
-          <CheckCircle2 className="size-6" />
-        </div>
-        <h2 className="mt-4 text-xl font-semibold">{t('successTitle')}</h2>
-        <p className="mt-2 text-sm text-muted-foreground">{t('successBody')}</p>
-        <div className="mx-auto mt-5 flex max-w-md items-center gap-2 rounded-lg border bg-background px-3 py-2">
-          <code className="min-w-0 flex-1 truncate text-left text-sm">/u/{createdSlug}</code>
-          <CopyButton value={publicUrl} />
-        </div>
-        <div className="mt-6 rounded-xl border border-amber-500/40 bg-amber-500/5 p-4 text-left text-sm">
-          <p className="font-medium">{t('upsellTitle')}</p>
-          <p className="mt-1 text-muted-foreground">{t('upsellBody')}</p>
-          <div className="mt-3 flex flex-wrap gap-2">
-            <Button size="sm" asChild>
-              <Link href="/sign-up">
-                <LogIn /> {t('createFreeAccount')}
-              </Link>
-            </Button>
-            <Button size="sm" variant="outline" asChild>
-              <Link href="/sign-in">{t('haveAccount')}</Link>
-            </Button>
+      <>
+        <div className={cn('rounded-2xl border bg-card p-6 text-center shadow-sm', centered && 'mx-auto w-full max-w-2xl')}>
+          <div className="mx-auto flex size-12 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-600">
+            <CheckCircle2 className="size-6" />
           </div>
+          <h2 className="mt-4 text-xl font-semibold">{t('successTitle')}</h2>
+          <p className="mt-2 text-sm text-muted-foreground">{t('successBody')}</p>
+          <div className="mx-auto mt-5 flex max-w-md items-center gap-2 rounded-lg border bg-background px-3 py-2">
+            <code className="min-w-0 flex-1 truncate text-left text-sm">/link/{createdSlug}</code>
+            <CopyButton value={publicUrl} />
+          </div>
+          <Button
+            size="sm"
+            variant="secondary"
+            className="mt-3"
+            onClick={() => setShareOpen(true)}
+          >
+            <Share2 /> {t('shareLink')}
+          </Button>
+          <div className="mt-6 rounded-xl border border-amber-500/40 bg-amber-500/5 p-4 text-left text-sm">
+            <p className="font-medium">{t('upsellTitle')}</p>
+            <p className="mt-1 text-muted-foreground">{t('upsellBody')}</p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              <Button size="sm" asChild>
+                <Link href="/sign-up">
+                  <LogIn /> {t('createFreeAccount')}
+                </Link>
+              </Button>
+              <Button size="sm" variant="outline" asChild>
+                <Link href="/sign-in">{t('haveAccount')}</Link>
+              </Button>
+            </div>
+          </div>
+          <p className="mt-4 text-xs text-muted-foreground">{t('autoAddNote')}</p>
         </div>
-        <p className="mt-4 text-xs text-muted-foreground">{t('autoAddNote')}</p>
-      </div>
+        <LinkCreatedDialog
+          open={shareOpen}
+          onOpenChange={setShareOpen}
+          url={publicUrl}
+          title={createdTitle || t('successTitle')}
+        />
+      </>
     )
   }
 
@@ -610,37 +623,6 @@ export function LinkForm({
                                 {t('emailNote')}
                               </p>
                             )}
-                            {behaviorFor(action.type) === 'URL' ? (
-                              <div className="space-y-1">
-                                <div className="flex flex-wrap items-center gap-2">
-                                  <Label
-                                    htmlFor={`wait-${index}`}
-                                    className="text-xs text-muted-foreground"
-                                  >
-                                    {t('waitLabel')}
-                                  </Label>
-                                  <Input
-                                    id={`wait-${index}`}
-                                    type="number"
-                                    min={0}
-                                    max={MAX_ACTION_WAIT_SECONDS}
-                                    inputMode="numeric"
-                                    value={action.waitSeconds}
-                                    onChange={(event) =>
-                                      updateAction(index, {
-                                        waitSeconds: clampWait(event.target.value),
-                                      })
-                                    }
-                                    className="h-7 w-20 text-xs"
-                                    aria-label={t('waitAria')}
-                                  />
-                                  <span className="text-xs text-muted-foreground">
-                                    {t('waitUnit')}
-                                  </span>
-                                </div>
-                                <p className="text-xs text-muted-foreground">{t('waitHint')}</p>
-                              </div>
-                            ) : null}
                             <Input
                               value={action.label}
                               onChange={(event) => updateAction(index, { label: event.target.value })}
@@ -1045,9 +1027,7 @@ function LinkPreview({
                       <p className="mt-0.5 text-xs text-muted-foreground">
                         {option?.behavior === 'EMAIL'
                           ? t('collectsEmailLong')
-                          : action.waitSeconds > 0
-                            ? t('opensWithWait', { seconds: action.waitSeconds })
-                            : t('opensNewTab')}
+                          : t('opensNewTab')}
                       </p>
                     </div>
                   </li>
@@ -1066,7 +1046,7 @@ function LinkPreview({
           </Button>
 
           {/* The other half of the card: what the visitor is handed once the
-              last step is verified. This is the part owners most want to see
+              last step is complete. This is the part owners most want to see
               and could not see before. */}
           <div className="rounded-xl border bg-muted/40 p-3">
             <p className="flex items-center gap-2 text-xs font-medium text-muted-foreground">

@@ -172,7 +172,7 @@ export default async function AnalyticsPage() {
                       >
                         {link.title}
                       </Link>
-                      <p className="text-xs text-muted-foreground">/u/{link.slug}</p>
+                      <p className="text-xs text-muted-foreground">/link/{link.slug}</p>
                     </td>
                     <td className="px-5 py-3">
                       <StatusPill status={link.status} label={ts(link.status.toLowerCase())} />

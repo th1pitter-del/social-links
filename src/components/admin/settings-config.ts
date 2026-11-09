@@ -1,5 +1,5 @@
 import type { ComponentType } from 'react'
-import { Database, Globe, KeyRound, Mail, Palette, Scale, ShieldCheck, Timer, Upload } from 'lucide-react'
+import { Database, Globe, KeyRound, Mail, Palette, Scale, Timer, Upload } from 'lucide-react'
 
 type IconType = ComponentType<{ className?: string }>
 
@@ -61,9 +61,9 @@ export const SETTINGS_GROUPS: SettingsGroup[] = [
     icon: Timer,
     fields: [
       { key: 'limits.linkCreatePerHour' },
+      { key: 'limits.shortLinkCreatePerHour' },
       { key: 'limits.guestLinkCreatePerHour' },
       { key: 'limits.unlockStartPerMinute' },
-      { key: 'limits.verifyPerMinute' },
       { key: 'limits.reportPerHour' },
       { key: 'limits.uploadPerHour' },
     ],
@@ -89,14 +89,6 @@ export const SETTINGS_GROUPS: SettingsGroup[] = [
       { key: 'demo.label' },
       { key: 'demo.email' },
       { key: 'demo.password' },
-    ],
-  },
-  {
-    id: 'step-verification',
-    icon: ShieldCheck,
-    fields: [
-      { key: 'verification.discordBotToken', secret: true },
-      { key: 'verification.discordGuildId' },
     ],
   },
   {

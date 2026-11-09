@@ -15,7 +15,7 @@ import {
 } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
-import { platformTint, PlatformGlyph } from '@/components/brand-icon'
+import { platformActionColor, PlatformGlyph } from '@/components/brand-icon'
 import { DemoShell, type DemoCycle } from '@/components/motion/demo-cycle'
 import { useInView, useReducedMotion } from '@/components/motion/reveal'
 import { cn } from 'cn'
@@ -600,7 +600,7 @@ export function UnlockDemo({
                 const current = activeStep === index
                 const clickable = !done && !unlocked
                 const flash = flashFlags[index]
-                const tint = platformTint(step.platform)
+                const fill = platformActionColor(step.platform)
                 return (
                   <li
                     key={`${step.platform}-${step.icon}-${index}`}
@@ -614,38 +614,39 @@ export function UnlockDemo({
                       onClick={() => completeStepByClick(index)}
                       disabled={!clickable}
                       style={
-                        tint
+                        fill
                           ? ({
-                              '--tint-l': tint.light,
-                              '--tint-d': tint.dark,
-                              '--ramp-l': tint.rampLight,
-                              '--ramp-d': tint.rampDark,
+                              '--action-bg': fill.base,
+                              '--action-bg-hover': fill.hover,
                             } as React.CSSProperties)
                           : undefined
                       }
                       className={cn(
-                        // Glass: the brand wash stays a background-color and the
-                        // top-down ramp a background-image, so both paint
-                        // together and the blur frosts whatever sits behind them.
-                        'relative flex w-full items-center justify-center gap-3 px-4 py-3.5 text-sm backdrop-blur-md transition-[filter,background-color] duration-500 motion-reduce:transition-none',
-                        // A finished task drops its brand wash and settles to
+                        'relative flex w-full items-center justify-center gap-3 px-4 py-3.5 text-sm',
+                        // A finished task drops its brand fill and settles to
                         // the neutral surface instead: only what is still to do
                         // keeps a color.
                         done
-                          ? 'bg-muted/50 bg-gradient-to-b from-black/5 to-transparent dark:from-white/10'
-                          : tint
-                            ? 'bg-[var(--tint-l)] bg-gradient-to-b from-[var(--ramp-l)] to-transparent dark:bg-[var(--tint-d)] dark:from-[var(--ramp-d)]'
-                            : 'bg-transparent',
+                          ? 'bg-muted/50 text-muted-foreground'
+                          : fill
+                            ? cn(
+                                'bg-[var(--action-bg)] text-white',
+                                // The pointer is the sign that a row can be
+                                // pressed; hover only brightens the fill.
+                                clickable && 'hover:bg-[var(--action-bg-hover)]',
+                              )
+                            : '',
                         // The tick itself is the news; the row only washes green
                         // for a moment to show where it happened, then settles
                         // to the neutral surface with the badge left behind.
                         done && flash && 'bg-success/15',
-                        // The step being demonstrated lifts its own brand colour
+                        // The step being demonstrated lifts its own colour
                         // rather than turning lime, so the platform stays legible
                         // at the moment it matters most; the accent belongs to
                         // the border and the pointer.
-                        current && !done && 'brightness-110 dark:brightness-135',
-                        clickable && 'cursor-pointer hover:brightness-105 dark:hover:brightness-125',
+                        current && !done && 'brightness-110',
+                        clickable &&
+                          'cursor-pointer transition-[background-color,scale] duration-200 ease-out motion-safe:hover:scale-[1.02] motion-reduce:transition-none',
                       )}
                     >
                       <PlatformGlyph
@@ -653,11 +654,11 @@ export function UnlockDemo({
                         icon={step.icon}
                         neutral
                         className={cn(
-                          // The row is already washed in this platform's colour,
-                          // so the glyph wears the text colour instead: brand on
-                          // brand would leave nothing to see.
-                          'size-6 shrink-0 transition-colors duration-500 motion-reduce:transition-none',
-                          done ? 'text-muted-foreground' : 'text-foreground',
+                          // The row carries the platform's solid colour, so the
+                          // glyph wears white instead: brand on brand would
+                          // leave nothing to see.
+                          'size-6 shrink-0',
+                          done ? 'text-muted-foreground' : fill ? 'text-white' : 'text-foreground',
                         )}
                       />
                       <span

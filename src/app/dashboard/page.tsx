@@ -215,7 +215,7 @@ export default async function DashboardOverviewPage() {
                       <ArrowUpRight className="size-3.5 shrink-0 text-muted-foreground" />
                     </Link>
                     <p className="truncate text-xs text-muted-foreground">
-                      /u/{link.slug}
+                      /link/{link.slug}
                       {' · '}
                       {t('createdOn', { date: dateFormatter.format(link.createdAt) })}
                       {link.expiresAt

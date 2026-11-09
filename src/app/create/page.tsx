@@ -13,7 +13,7 @@ import { getSession } from '@/lib/session'
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('create')
-  return { title: t('title') }
+  return { title: t('title'), alternates: { canonical: '/create' } }
 }
 
 export const dynamic = 'force-dynamic'

@@ -27,22 +27,6 @@ export async function configText(dbKey: string, envName?: string): Promise<strin
   return envName ? (process.env[envName]?.trim() ?? '') : ''
 }
 
-export const VERIFICATION_SETTINGS = {
-  telegramBotToken: { dbKey: 'verification.telegramBotToken', envName: 'TELEGRAM_BOT_TOKEN' },
-  githubToken: { dbKey: 'verification.githubToken', envName: 'VERIFIER_GITHUB_TOKEN' },
-  steamWebApiKey: { dbKey: 'verification.steamWebApiKey', envName: 'STEAM_WEB_API_KEY' },
-  discordBotToken: { dbKey: 'verification.discordBotToken', envName: 'DISCORD_BOT_TOKEN' },
-  /** Optional: lets the bot check any invite link the owner pastes. */
-  discordGuildId: { dbKey: 'verification.discordGuildId', envName: 'DISCORD_GUILD_ID' },
-} as const
-
-export type ConfigRef = { dbKey: string; envName?: string }
-
-/** Read one of the maps below without unpacking its two halves at the call site. */
-export async function configValue(ref: ConfigRef): Promise<string> {
-  return configText(ref.dbKey, ref.envName)
-}
-
 export const EMAIL_SETTINGS = {
   webhookUrl: { dbKey: 'email.webhookUrl', envName: 'EMAIL_WEBHOOK_URL' },
   webhookToken: { dbKey: 'email.webhookToken', envName: 'EMAIL_WEBHOOK_TOKEN' },

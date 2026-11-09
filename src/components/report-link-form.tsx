@@ -71,7 +71,7 @@ export function ReportLinkForm({ slug }: { slug: string }) {
     <div className="space-y-5">
       <div className="space-y-2">
         <Label>{t('linkLabel')}</Label>
-        <p className="rounded-lg bg-muted px-3 py-2 text-sm font-medium">/u/{slug}</p>
+        <p className="rounded-lg bg-muted px-3 py-2 text-sm font-medium">/link/{slug}</p>
       </div>
 
       <div className="space-y-2">

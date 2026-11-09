@@ -7,30 +7,14 @@ import { getTranslations } from 'next-intl/server'
 
 import { prisma } from '@/lib/prisma'
 import { getActionOptionMap } from '@/lib/action-catalog'
-import { defaultWaitSeconds } from '@/lib/action-defaults'
 import { actionLabel } from '@/lib/action-label'
-import {
-  buildCheckinLink,
-  findCheckinVisitor,
-  getBotUsername,
-  isTelegramConfigured,
-  normalizeHandle,
-  readMemberStatus,
-  verifierFor,
-} from '@/lib/verification'
 import { consumeBySetting } from '@/lib/rate-limit'
 import { getSession } from '@/lib/session'
+import { signVisitToken } from '@/lib/visit-token'
 import { createHash } from 'node:crypto'
 import type { UnlockStatus } from '@/generated/prisma/enums'
-import {
-  outstandingConfirmations,
-  recordConfirmation,
-  type HandleConfirmation,
-} from '@/lib/unlock-confirm'
 
 const UNLOCK_SESSION_TTL_MS = 2 * 60 * 60 * 1000
-
-export type UnlockActionStatus = 'PENDING' | 'WAITING' | 'READY' | 'COMPLETED'
 
 export type UnlockActionView = {
   id: string
@@ -41,13 +25,8 @@ export type UnlockActionView = {
   behavior: 'URL' | 'EMAIL'
   icon: string
   platform: string | null
-  /** Configured wait between opening and being allowed to mark the step done. */
-  waitSeconds: number
-  /** Server deadline once the visitor has opened a waiting step. */
-  readyAt: string | null
-  /** Whole seconds left when this state was built; 0 once the wait is over. */
-  waitRemaining: number
-  status: UnlockActionStatus
+  /** Signed redirect that records a website visit; null for other steps. */
+  visitUrl: string | null
 }
 
 export type UnlockState = {
@@ -101,20 +80,17 @@ async function buildState(sessionId: string): Promise<UnlockState | null> {
               type: true,
               label: true,
               target: true,
-              waitSeconds: true,
             },
           },
         },
       },
-      completions: { select: { linkActionId: true, verified: true, proof: true } },
-      starts: { select: { linkActionId: true, readyAt: true } },
+      completions: { select: { linkActionId: true } },
     },
   })
 
   if (!session) return null
 
   const completed = new Set(session.completions.map((row) => row.linkActionId))
-  const startedAt = new Map(session.starts.map((row) => [row.linkActionId, row.readyAt]))
   const now = Date.now()
   const expired = session.expiresAt.getTime() <= now
   const catalog = await getActionOptionMap()
@@ -122,17 +98,6 @@ async function buildState(sessionId: string): Promise<UnlockState | null> {
   const actions: UnlockActionView[] = session.link.actions.map((action) => {
     const option = catalog.get(action.type)
     const done = completed.has(action.id)
-    const readyAt = startedAt.get(action.id) ?? null
-    const waitRemaining = readyAt
-      ? Math.max(0, Math.ceil((readyAt.getTime() - now) / 1000))
-      : 0
-    const status: UnlockActionStatus = done
-      ? 'COMPLETED'
-      : readyAt && waitRemaining > 0
-        ? 'WAITING'
-        : readyAt
-          ? 'READY'
-          : 'PENDING'
 
     return {
       id: action.id,
@@ -145,10 +110,13 @@ async function buildState(sessionId: string): Promise<UnlockState | null> {
       behavior: option?.behavior ?? 'URL',
       icon: option?.icon ?? 'link',
       platform: option?.platform ?? null,
-      waitSeconds: action.waitSeconds ?? defaultWaitSeconds(action.type),
-      readyAt: readyAt?.toISOString() ?? null,
-      waitRemaining,
-      status,
+      visitUrl:
+        action.type === 'VISIT'
+          ? (() => {
+              const token = signVisitToken({ sessionId: session.id, actionId: action.id })
+              return token ? `/go?t=${encodeURIComponent(token)}` : null
+            })()
+          : null,
     }
   })
 
@@ -255,59 +223,7 @@ export async function startUnlock(
 }
 
 /**
- * Starts a waiting step. The first press creates the session's deadline; every
- * later press keeps the original one, so a reload cannot shorten the wait.
- */
-export async function beginAction(input: {
-  token: string
-  actionId: string
-}): Promise<{ ok: true; state: UnlockState } | { ok: false; error: string }> {
-  const t = await getTranslations('errors')
-
-  const session = await prisma.unlockSession.findUnique({
-    where: { id: input.token },
-    select: {
-      id: true,
-      expiresAt: true,
-      link: { select: { actions: { select: { id: true, type: true, waitSeconds: true } } } },
-      completions: { select: { linkActionId: true } },
-    },
-  })
-  if (!session) return { ok: false, error: t('sessionExpiredReload') }
-  if (session.expiresAt.getTime() <= Date.now()) {
-    return { ok: false, error: t('sessionExpiredReloadLong') }
-  }
-
-  const action = session.link.actions.find((candidate) => candidate.id === input.actionId)
-  if (!action) return { ok: false, error: t('unknownAction') }
-
-  const done = session.completions.some((row) => row.linkActionId === action.id)
-  const waitSeconds = Math.max(0, action.waitSeconds ?? defaultWaitSeconds(action.type))
-  if (!done && waitSeconds > 0) {
-    await prisma.unlockActionStart.upsert({
-      where: {
-        unlockSessionId_linkActionId: {
-          unlockSessionId: session.id,
-          linkActionId: action.id,
-        },
-      },
-      create: {
-        unlockSessionId: session.id,
-        linkActionId: action.id,
-        readyAt: new Date(Date.now() + waitSeconds * 1000),
-      },
-      update: {},
-    })
-  }
-
-  const state = await buildState(session.id)
-  if (!state) return { ok: false, error: t('updateSessionFailed') }
-  return { ok: true, state }
-}
-
-/**
- * Marks a creator-configured action as done for a visitor session. A step with
- * a waiting period is refused until the server's own deadline has passed.
+ * Marks a creator-configured action as done for a visitor session.
  */
 export async function markActionComplete(input: {
   token: string
@@ -325,8 +241,8 @@ export async function markActionComplete(input: {
       linkId: true,
       status: true,
       expiresAt: true,
-      link: { select: { actions: { select: { id: true, type: true, waitSeconds: true } } } },
-      starts: { select: { linkActionId: true, readyAt: true } },
+      link: { select: { actions: { select: { id: true, type: true } } } },
+      completions: { select: { linkActionId: true, verified: true } },
     },
   })
   if (!session) return { ok: false, error: t('sessionExpiredReload') }
@@ -340,17 +256,11 @@ export async function markActionComplete(input: {
   const option = (await getActionOptionMap()).get(action.type)
   const behavior = option?.behavior ?? 'URL'
 
-  if (behavior === 'URL') {
-    const waitSeconds = Math.max(0, action.waitSeconds ?? defaultWaitSeconds(action.type))
-    if (waitSeconds > 0) {
-      const started = session.starts.find((row) => row.linkActionId === action.id)
-      if (!started) return { ok: false, error: t('openStepFirst') }
-
-      const remaining = Math.ceil((started.readyAt.getTime() - Date.now()) / 1000)
-      if (remaining > 0) {
-        return { ok: false, error: t('waitBeforeComplete', { seconds: remaining }) }
-      }
-    }
+  if (behavior === 'URL' && action.type === 'VISIT') {
+    // A visit is proven by the server-side redirect, so no client call can
+    // complete one on its own.
+    const visit = session.completions.find((row) => row.linkActionId === action.id)
+    if (!visit?.verified) return { ok: false, error: t('openStepFirst') }
   }
 
   if (behavior === 'EMAIL') {
@@ -398,301 +308,6 @@ async function promoteIfComplete(sessionId: string, actionIds: string[]): Promis
   }
 }
 
-/** Records a platform-confirmed completion and reveals the content if nothing is left. */
-async function settleVerified(input: {
-  sessionId: string
-  linkId: string
-  actionId: string
-  actionIds: string[]
-  proof: string
-}): Promise<void> {
-  await prisma.unlockActionCompletion.upsert({
-    where: {
-      unlockSessionId_linkActionId: {
-        unlockSessionId: input.sessionId,
-        linkActionId: input.actionId,
-      },
-    },
-    create: {
-      unlockSessionId: input.sessionId,
-      linkActionId: input.actionId,
-      verified: true,
-      proof: input.proof,
-    },
-    update: { verified: true, proof: input.proof },
-  })
-
-  await prisma.analyticsEvent.create({
-    data: { linkId: input.linkId, unlockSessionId: input.sessionId, type: 'ACTION_DONE' },
-  })
-
-  await promoteIfComplete(input.sessionId, input.actionIds)
-}
-
-export type ConfirmProfileResult =
-  | { ok: true; state: UnlockState }
-  | { ok: false; error: string }
-
-/**
- * The quiet confirmation. The visitor names one profile and we read that
- * account's public record for every step that can be read, without them seeing
- * a ceremony per step. Only a real account that demonstrably does not follow
- * stops the release; a handle the platform does not know, or a lookup that
- * failed, is recorded as unproven and never reported as a cheat.
- */
-export async function confirmProfile(input: {
-  token: string
-  handle: string
-}): Promise<ConfirmProfileResult> {
-  const { token } = input
-  const t = await getTranslations('errors')
-  const handle = normalizeHandle(input.handle)
-  if (!handle) return { ok: false, error: t('confirmHandleRequired') }
-
-  const session = await prisma.unlockSession.findUnique({
-    where: { id: token },
-    select: {
-      id: true,
-      linkId: true,
-      expiresAt: true,
-      link: {
-        select: {
-          actions: { select: { id: true, type: true, label: true, target: true } },
-        },
-      },
-      completions: { select: { linkActionId: true, verified: true, proof: true } },
-    },
-  })
-  if (!session) return { ok: false, error: t('sessionExpiredReload') }
-  if (session.expiresAt.getTime() <= Date.now()) {
-    return { ok: false, error: t('sessionExpiredReloadLong') }
-  }
-
-  // Only a public-record step can be answered by naming a profile; the
-  // account-only steps wait for their own connect flow below.
-  const outstanding = (await outstandingConfirmations(session)).filter(
-    (item): item is HandleConfirmation => item.mode === 'HANDLE',
-  )
-  if (!outstanding.length) {
-    const built = await buildState(token)
-    return built ? { ok: true, state: built } : { ok: false, error: t('updateSessionFailed') }
-  }
-
-  const limited = await consumeBySetting(
-    `verify:${token}`,
-    'limits.verifyPerMinute',
-    8,
-    60,
-  )
-  if (!limited.ok) return { ok: false, error: t('rateLimited') }
-
-  // One handle names one account. When steps from several platforms are
-  // outstanding, the same string cannot answer for all of them, so each
-  // confirmation settles the first platform and the next field asks for the
-  // next one with its own format hint.
-  const platformKey = outstanding[0].platformKey
-  const batch = outstanding.filter((item) => item.platformKey === platformKey)
-
-  const refused: string[] = []
-  for (const item of batch) {
-    const outcome = await item.verifier.check(handle, item.creator, item.actionType)
-
-    if (outcome.status === 'VERIFIED') {
-      await recordConfirmation(token, item.actionId, true, outcome.proof)
-      continue
-    }
-    if (outcome.status === 'NOT_FOLLOWING') {
-      refused.push(item.label)
-      continue
-    }
-    await recordConfirmation(
-      token,
-      item.actionId,
-      false,
-      outcome.status === 'INVALID_HANDLE'
-        ? `Not checked: no ${item.platformName} profile named ${handle}`
-        : `Not checked: ${item.platformName} did not answer`,
-    )
-  }
-
-  if (refused.length) {
-    return { ok: false, error: t('confirmNotFollowing', { handle, steps: refused.join(', ') }) }
-  }
-
-  const built = await buildState(token)
-  if (!built) return { ok: false, error: t('updateSessionFailed') }
-  return { ok: true, state: built }
-}
-
-const TELEGRAM_CHECKIN_TTL_MS = 30 * 60 * 1000
-
-type TelegramContext = {
-  sessionId: string
-  linkId: string
-  actionId: string
-  actionIds: string[]
-  chatId: string
-}
-
-/** Resolves the session, the step and the channel its target points at. */
-async function telegramContext(
-  token: string,
-  actionId: string,
-): Promise<TelegramContext | { error: string }> {
-  const t = await getTranslations('errors')
-
-  const session = await prisma.unlockSession.findUnique({
-    where: { id: token },
-    select: {
-      id: true,
-      linkId: true,
-      expiresAt: true,
-      link: { select: { actions: { select: { id: true, type: true, target: true } } } },
-    },
-  })
-  if (!session) return { error: t('sessionExpiredReload') }
-  if (session.expiresAt.getTime() <= Date.now()) return { error: t('sessionExpiredReloadLong') }
-
-  const action = session.link.actions.find((candidate) => candidate.id === actionId)
-  if (!action) return { error: t('unknownAction') }
-
-  const option = (await getActionOptionMap()).get(action.type)
-  const verifier = verifierFor(option?.platform)
-  if (!verifier || verifier.platformKey !== 'telegram') return { error: t('unknownAction') }
-  if (!(await isTelegramConfigured())) return { error: t('telegramNotConfigured') }
-
-  const chatId = verifier.parseCreator(action.target)
-  if (!chatId) return { error: t('verifierTargetInvalid') }
-
-  return {
-    sessionId: session.id,
-    linkId: session.linkId,
-    actionId,
-    actionIds: session.link.actions.map((candidate) => candidate.id),
-    chatId,
-  }
-}
-
-export type BeginCheckinResult =
-  | { ok: true; checkinId: string; startUrl: string }
-  | { ok: false; error: string }
-
-/**
- * Opens a check-in for a Telegram step. The id is what the bot deep link
- * carries, so the account we later read out of the bot's queue is bound to this
- * session and step and cannot be claimed by someone else.
- */
-export async function beginTelegramCheckin(input: {
-  token: string
-  actionId: string
-}): Promise<BeginCheckinResult> {
-  const t = await getTranslations('errors')
-  const context = await telegramContext(input.token, input.actionId)
-  if ('error' in context) return { ok: false, error: context.error }
-
-  const botUsername = await getBotUsername()
-  if (!botUsername) return { ok: false, error: t('telegramNotConfigured') }
-
-  const checkinId = randomBytes(12).toString('base64url')
-  await prisma.telegramCheckin.create({
-    data: {
-      id: checkinId,
-      unlockSessionId: context.sessionId,
-      linkActionId: context.actionId,
-      chatId: context.chatId,
-      expiresAt: new Date(Date.now() + TELEGRAM_CHECKIN_TTL_MS),
-    },
-  })
-
-  return { ok: true, checkinId, startUrl: buildCheckinLink(botUsername, checkinId) }
-}
-
-/**
- * Reads the bot's queue for the check-in and asks Telegram itself whether that
- * account is in the channel. Until the queue shows the visit the step stays
- * open, so a visitor is never told they cheated just because they checked too
- * early.
- */
-export type CheckinResult =
-  | { ok: true; state: UnlockState }
-  | { ok: false; error: string; reason?: 'NOT_FOLLOWING' | 'UNAVAILABLE' }
-
-export async function completeTelegramCheckin(input: {
-  token: string
-  actionId: string
-  checkinId: string
-}): Promise<CheckinResult> {
-  const t = await getTranslations('errors')
-  const context = await telegramContext(input.token, input.actionId)
-  if ('error' in context) return { ok: false, error: context.error }
-
-  const checkin = await prisma.telegramCheckin.findUnique({
-    where: { id: input.checkinId },
-    select: { id: true, unlockSessionId: true, linkActionId: true, expiresAt: true },
-  })
-  if (
-    !checkin ||
-    checkin.unlockSessionId !== context.sessionId ||
-    checkin.linkActionId !== context.actionId
-  ) {
-    return { ok: false, error: t('telegramCheckinStale') }
-  }
-  if (checkin.expiresAt.getTime() <= Date.now()) {
-    return { ok: false, error: t('telegramCheckinStale') }
-  }
-
-  const limited = await consumeBySetting(
-    `verify:${context.sessionId}`,
-    'limits.verifyPerMinute',
-    8,
-    60,
-  )
-  if (!limited.ok) return { ok: false, error: t('rateLimited') }
-
-  const visitor = await findCheckinVisitor(checkin.id)
-  if (visitor === 'UNAVAILABLE') {
-    return { ok: false, error: t('verifyUnavailable'), reason: 'UNAVAILABLE' }
-  }
-  if (visitor === 'NOT_SEEN') {
-    return { ok: false, error: t('telegramWaiting'), reason: 'UNAVAILABLE' }
-  }
-
-  await prisma.telegramCheckin.update({
-    where: { id: checkin.id },
-    data: { userId: visitor.userId, username: visitor.username },
-  })
-
-  const outcome = await readMemberStatus(context.chatId, visitor)
-
-  if (outcome.status !== 'VERIFIED') {
-    if (outcome.status === 'NOT_FOLLOWING') {
-      await prisma.telegramCheckin.update({
-        where: { id: checkin.id },
-        data: { memberStatus: 'NOT_MEMBER' },
-      })
-      return { ok: false, error: t('telegramNotMember'), reason: 'NOT_FOLLOWING' }
-    }
-    return { ok: false, error: t('verifyUnavailable'), reason: 'UNAVAILABLE' }
-  }
-
-  await prisma.telegramCheckin.update({
-    where: { id: checkin.id },
-    data: { memberStatus: 'MEMBER' },
-  })
-
-  await settleVerified({
-    sessionId: context.sessionId,
-    linkId: context.linkId,
-    actionId: context.actionId,
-    actionIds: context.actionIds,
-    proof: outcome.proof,
-  })
-
-  const state = await buildState(context.sessionId)
-  if (!state) return { ok: false, error: t('updateSessionFailed') }
-  return { ok: true, state }
-}
-
 /**
  * Returns the protected payload when all actions are completed.
  */
@@ -710,7 +325,7 @@ export async function claimContent(
       linkId: true,
       status: true,
       expiresAt: true,
-      completions: { select: { linkActionId: true, verified: true, proof: true } },
+      completions: { select: { linkActionId: true } },
       link: {
         select: {
           fileId: true,
@@ -735,7 +350,6 @@ export async function claimContent(
   if (!session.link.actions.every((action) => completed.has(action.id))) {
     return { ok: false, error: t('completeAllSteps') }
   }
-
   await prisma.analyticsEvent.create({
     data: { linkId: session.linkId, unlockSessionId: session.id, type: 'UNLOCK_COMPLETE' },
   })

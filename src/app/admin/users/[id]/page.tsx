@@ -148,7 +148,7 @@ export default async function AdminUserDetailPage({
                       <Link href={`/admin/links/${link.id}`} className="font-medium hover:underline">
                         {link.title}
                       </Link>
-                      <p className="font-mono text-xs text-muted-foreground">/u/{link.slug}</p>
+                      <p className="font-mono text-xs text-muted-foreground">/link/{link.slug}</p>
                     </td>
                     <td className="hidden px-5 py-3 sm:table-cell">
                       <Badge

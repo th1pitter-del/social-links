@@ -174,10 +174,10 @@ Migrations:
 2. Create link (dashboard/links/new): fill details, choose protected content — a required http(s) **destination URL** or an uploaded **file** — add up to 10 actions (or none), optional expiry, custom slug optional, with a live unlock-page preview. Client validates, server creates the link in a transaction, redirects to the edit page.
 3. Edit (dashboard/links/[id]): change metadata/actions/content/expiry, per-link stats, Preview button, email leads list (50) + CSV export.
 4. Publish: activate link (ACTIVE). DISABLED → can re-enable at any time.
-5. Share: copy public URL `/u/<slug>`.
+5. Share: copy public URL `/link/<slug>`.
 
 ### Visitor
-1. Visit `/u/<slug>`: metadata generated from link. DISABLED → notice+report link. DRAFT → notice for non-owner; owner with `?preview=1` can preview. EXPIRED → notice.
+1. Visit `/link/<slug>`: metadata generated from link. DISABLED → notice+report link. DRAFT → notice for non-owner; owner with `?preview=1` can preview. EXPIRED → notice.
 2. Start unlock: clicks Start → `startUnlock` creates a session, logs VIEW/UNLOCK_START (non-preview). State machine: shows steps, progress.
 3. Complete creator actions: VISIT/etc open target (noopener); EMAIL requires email+consent → stored in EmailLead, marks action done.
 4. Once every action is complete the session becomes VERIFIED; links with no actions are VERIFIED from the start.

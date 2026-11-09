@@ -79,7 +79,7 @@ export default async function LinksPage() {
                     >
                       {link.title}
                     </Link>
-                    <p className="text-xs text-muted-foreground">/u/{link.slug}</p>
+                    <p className="text-xs text-muted-foreground">/link/{link.slug}</p>
                   </td>
                   <td className="hidden px-5 py-4 sm:table-cell">
                     <Badge variant={link.status === 'ACTIVE' ? 'default' : 'secondary'}>

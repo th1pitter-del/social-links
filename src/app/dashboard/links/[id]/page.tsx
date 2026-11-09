@@ -12,12 +12,11 @@ import { LinkForm, type LinkFormValues } from '@/components/link-form'
 import { LinkRowActions } from '@/components/link-row-actions'
 import { Button } from '@/components/ui/button'
 import { getActionOptionMap, getEnabledActionOptions } from '@/lib/action-catalog'
-import { defaultWaitSeconds, type ActionOptionView } from '@/lib/action-defaults'
-import { actionLabel, platformLabel } from '@/lib/action-label'
+import { type ActionOptionView } from '@/lib/action-defaults'
+import { actionLabel } from '@/lib/action-label'
 import { buildDayBuckets, windowStart } from '@/lib/activity-buckets'
 import { formatPercent } from '@/lib/format'
 import { prisma } from '@/lib/prisma'
-import { verifierFor } from '@/lib/verification'
 import { requireUser } from '@/lib/session'
 import { isExpired } from '@/lib/unlock'
 
@@ -39,7 +38,6 @@ export default async function EditLinkPage({
   const tc = await getTranslations('dashboard.common')
   const ts = await getTranslations('dashboard.status')
   const actionT = await getTranslations('actions')
-  const platformT = await getTranslations('platforms')
   const locale = await getLocale()
 
   const link = await prisma.link.findFirst({
@@ -57,7 +55,7 @@ export default async function EditLinkPage({
       expiresAt: true,
       actions: {
         orderBy: { position: 'asc' },
-        select: { type: true, label: true, target: true, waitSeconds: true },
+        select: { type: true, label: true, target: true },
       },
       _count: { select: { unlocks: true } },
     },
@@ -67,7 +65,7 @@ export default async function EditLinkPage({
 
   const actionCatalog = await getActionOptionMap()
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? ''
-  const publicUrl = `${appUrl}/u/${link.slug}`
+  const publicUrl = `${appUrl}/link/${link.slug}`
 
   const since = windowStart(DAYS)
   const [views, starts, completed, seriesEvents] = await Promise.all([
@@ -120,30 +118,6 @@ export default async function EditLinkPage({
       })
     : []
 
-  // Public-record checks leave a proof string behind; the owner gets to read it.
-  const verifiable = link.actions.some((action) =>
-    verifierFor(actionCatalog.get(action.type)?.platform),
-  )
-  const proofs = verifiable
-    ? await prisma.unlockActionCompletion.findMany({
-        where: { verified: true, linkAction: { linkId: link.id } },
-        orderBy: { completedAt: 'desc' },
-        take: 50,
-        select: {
-          id: true,
-          proof: true,
-          completedAt: true,
-          linkAction: {
-            select: {
-              label: true,
-              type: true,
-              option: { select: { label: true, platform: { select: { key: true, label: true } } } },
-            },
-          },
-        },
-      })
-    : []
-
   const initial: LinkFormValues = {
     title: link.title,
     targetUrl: link.contentType === 'URL' ? (link.targetUrl ?? '') : '',
@@ -157,7 +131,6 @@ export default async function EditLinkPage({
       type: action.type,
       label: action.label ?? '',
       target: action.target,
-      waitSeconds: action.waitSeconds ?? defaultWaitSeconds(action.type),
     })),
   }
 
@@ -201,7 +174,7 @@ export default async function EditLinkPage({
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <Link href={`/u/${link.slug}?preview=1`} target="_blank">
+          <Link href={`/link/${link.slug}?preview=1`} target="_blank">
             <Button variant="outline">{tc('preview')}</Button>
           </Link>
           <LinkRowActions id={link.id} slug={link.slug} status={link.status} />
@@ -246,7 +219,7 @@ export default async function EditLinkPage({
           <p className="truncate text-sm font-medium">{publicUrl}</p>
         </div>
         <CopyButton value={publicUrl} />
-        <Link href={`/u/${link.slug}`} target="_blank">
+        <Link href={`/link/${link.slug}`} target="_blank">
           <ExternalLink />
         </Link>
       </div>
@@ -288,58 +261,6 @@ export default async function EditLinkPage({
                       <td className="px-5 py-3">{lead.email}</td>
                       <td className="px-5 py-3 text-muted-foreground tabular-nums">
                         {dateFormatter.format(lead.consentAt)}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </section>
-      ) : null}
-
-      {verifiable ? (
-        <section className="space-y-3">
-          <div>
-            <h2 className="font-medium">{t('verifiedTitle')}</h2>
-            <p className="text-sm text-muted-foreground">{t('verifiedDescription')}</p>
-          </div>
-
-          {proofs.length === 0 ? (
-            <p className="rounded-2xl border border-dashed p-5 text-sm text-muted-foreground">
-              {t('noVerified')}
-            </p>
-          ) : (
-            <div className="overflow-hidden rounded-2xl border bg-card">
-              <table className="w-full text-sm">
-                <thead className="border-b text-left text-xs text-muted-foreground">
-                  <tr>
-                    <th className="px-5 py-3 font-medium">{t('colVerifiedAction')}</th>
-                    <th className="px-5 py-3 font-medium">{t('colEvidence')}</th>
-                    <th className="px-5 py-3 font-medium">{t('colVerifiedAt')}</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y">
-                  {proofs.map((row) => (
-                    <tr key={row.id}>
-                      <td className="px-5 py-3 whitespace-nowrap">
-                        {row.linkAction.option?.platform
-                          ? platformLabel(row.linkAction.option.platform, platformT)
-                          : row.linkAction.option
-                            ? actionLabel(
-                                {
-                                  key: row.linkAction.type,
-                                  label: row.linkAction.option.label,
-                                },
-                                actionT,
-                              )
-                            : row.linkAction.label}
-                      </td>
-                      <td className="px-5 py-3 text-muted-foreground" dir="ltr">
-                        {row.proof}
-                      </td>
-                      <td className="px-5 py-3 text-muted-foreground tabular-nums">
-                        {dateFormatter.format(row.completedAt)}
                       </td>
                     </tr>
                   ))}

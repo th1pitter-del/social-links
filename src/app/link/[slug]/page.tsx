@@ -12,7 +12,7 @@ import { getPublicUnlockLink, isExpired, recordShortLinkVisit, type PublicUnlock
 
 type PageProps = {
   params: Promise<{ slug: string }>
-  searchParams: Promise<{ token?: string; preview?: string; verify?: string }>
+  searchParams: Promise<{ token?: string; preview?: string }>
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -30,17 +30,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function UnlockPage({ params, searchParams }: PageProps) {
   const { slug } = await params
-  const { token, preview, verify } = await searchParams
+  const { token, preview } = await searchParams
   const t = await getTranslations('unlock')
-
-  // A return trip from the account check either confirms the step silently or
-  // says, in one quiet line, that the account does not show it yet.
-  const notice =
-    verify === 'notdone'
-      ? t('verifyNotDone')
-      : verify === 'unavailable'
-        ? t('verifyUnavailable')
-        : null
 
   const link = await getPublicUnlockLink(slug)
   if (!link) {
@@ -82,7 +73,6 @@ export default async function UnlockPage({ params, searchParams }: PageProps) {
         coverImage={link.coverImage}
         initialToken={token && token.length <= 128 ? token : null}
         steps={steps}
-        notice={notice}
         {...stats}
         preview
       />
@@ -114,7 +104,6 @@ export default async function UnlockPage({ params, searchParams }: PageProps) {
       coverImage={link.coverImage}
       initialToken={token && token.length <= 128 ? token : null}
       steps={steps}
-      notice={notice}
       {...stats}
     />
   )
@@ -136,7 +125,6 @@ function toSteps(
     icon: action.icon,
     behavior: action.behavior,
     target: action.target,
-    waitSeconds: action.waitSeconds,
   }))
 }
 

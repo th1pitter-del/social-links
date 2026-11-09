@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button'
 export type ContentPageKind = 'faq' | 'privacy' | 'terms'
 
 /** The copy on these pages was last reviewed in this release. */
-export const CONTENT_UPDATED_AT = new Date('2026-11-06T00:00:00Z')
+export const CONTENT_UPDATED_AT = new Date('2026-11-09T00:00:00Z')
 
 type Section = {
   title: string | null
@@ -22,7 +22,7 @@ type Section = {
  * styling one long column) is what lets the page show a contents rail and give
  * every section a stable anchor without asking the author for extra syntax.
  */
-function parseSections(content: string, kind: ContentPageKind): Section[] {
+export function parseSections(content: string, kind: ContentPageKind): Section[] {
   const lines = content.replace(/\r\n/g, '\n').split('\n')
   const marker = kind === 'faq' ? '### ' : '## '
   const parsed: { title: string | null; body: string }[] = []

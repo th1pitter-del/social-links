@@ -32,6 +32,7 @@ model User {
   files    StoredFile[]
   unlocks  UserUnlock[]
   profile  Profile?
+  shortLinks ShortLink[]
 }
 
 model Session {
@@ -490,4 +491,28 @@ model TelegramCheckin {
   linkAction    LinkAction    @relation(fields: [linkActionId], references: [id], onDelete: Cascade)
 
   @@index([unlockSessionId])
+}
+enum ShortLinkStatus {
+  ACTIVE
+  DISABLED
+}
+
+/**
+ * A plain redirect short link, independent of the unlock product: no steps, no
+ * sessions and no analytics beyond a click counter.
+ */
+model ShortLink {
+  id          String          @id @default(cuid())
+  ownerId     String
+  code        String          @unique
+  targetUrl   String          @db.Text
+  status      ShortLinkStatus @default(ACTIVE)
+  clicks      Int             @default(0)
+  lastClickAt DateTime?
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  @@index([ownerId])
 }
