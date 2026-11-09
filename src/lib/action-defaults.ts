@@ -72,4 +72,7 @@ export const ACTION_OPTION_DEFAULTS: ActionOptionDefault[] = [
 
   // Website
   { key: 'VISIT', label: 'Visit a website', platform: null, icon: 'link', behavior: 'URL', position: 17 },
+  // The optional email step: no destination, it asks the visitor for an address
+  // and a consent tick, and stores them as an EmailLead for the link owner.
+  { key: 'EMAIL', label: 'Collect email address', platform: null, icon: 'mail', behavior: 'EMAIL', position: 18 },
 ]
