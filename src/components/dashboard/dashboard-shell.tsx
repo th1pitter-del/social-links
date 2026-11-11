@@ -30,6 +30,7 @@ import {
 import { cn } from 'cn'
 import { BrandMark } from '@/components/brand-mark'
 import { CustomSidebarMenu } from '@/components/dashboard/custom-sidebar-menu'
+import { LanguageSwitcher } from '@/components/language-switcher'
 import { navIcons } from '@/components/site-nav-icons'
 import { ThemeSwitcher } from '@/components/theme-switcher'
 import {
@@ -382,6 +383,7 @@ export function DashboardShell({
           </div>
 
           <div className="ms-auto flex items-center gap-1.5">
+            <LanguageSwitcher />
             <ThemeSwitcher />
             <Link
               href="/"
