@@ -171,16 +171,52 @@ model UnlockSession {
   userAgent     String?       @db.Text
   referrer      String?       @db.Text
   expiresAt     DateTime
+  /** Offers shown as the session's offer step, as [{ id, name }]. Null when OGAds is off. */
+  ogadsOffers   Json?
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
 
-  link        Link                   @relation(fields: [linkId], references: [id], onDelete: Cascade)
-  completions UnlockActionCompletion[]
-  starts      UnlockActionStart[]
-  events      AnalyticsEvent[]
-  checkins    TelegramCheckin[]
+  link         Link                   @relation(fields: [linkId], references: [id], onDelete: Cascade)
+  completions  UnlockActionCompletion[]
+  starts       UnlockActionStart[]
+  events       AnalyticsEvent[]
+  checkins     TelegramCheckin[]
+  ogadsClicks  OgadsOfferClick[]
 
   @@index([linkId])
+}
+
+enum OgadsOfferStatus {
+  PENDING
+  CREDITED
+  REVERSED
+}
+
+/**
+ * A visitor's click-through on one OGAds offer, plus the conversion OGAds later
+ * posts back for it. One row per session and offer; the postback updates the row
+ * it already has instead of inserting a duplicate.
+ */
+model OgadsOfferClick {
+  id              String            @id @default(cuid())
+  unlockSessionId String
+  offerId         String
+  offerName       String?
+  status          OgadsOfferStatus  @default(PENDING)
+  payout          Decimal?          @db.Decimal(10, 4)
+  clickCount      Int               @default(0)
+  firstClickedAt  DateTime?
+  creditedAt      DateTime?
+  /** The postback's query string, with the shared secret removed. */
+  rawPostback     Json?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  unlockSession UnlockSession @relation(fields: [unlockSessionId], references: [id], onDelete: Cascade)
+
+  @@unique([unlockSessionId, offerId])
+  @@index([status, creditedAt])
+  @@index([creditedAt])
 }
 
 /**

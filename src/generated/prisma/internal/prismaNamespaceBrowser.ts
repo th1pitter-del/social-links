@@ -58,6 +58,7 @@ export const ModelName = {
   Link: 'Link',
   LinkAction: 'LinkAction',
   UnlockSession: 'UnlockSession',
+  OgadsOfferClick: 'OgadsOfferClick',
   UnlockActionStart: 'UnlockActionStart',
   UnlockActionCompletion: 'UnlockActionCompletion',
   AnalyticsEvent: 'AnalyticsEvent',
@@ -206,11 +207,30 @@ export const UnlockSessionScalarFieldEnum = {
   userAgent: 'userAgent',
   referrer: 'referrer',
   expiresAt: 'expiresAt',
+  ogadsOffers: 'ogadsOffers',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type UnlockSessionScalarFieldEnum = (typeof UnlockSessionScalarFieldEnum)[keyof typeof UnlockSessionScalarFieldEnum]
+
+
+export const OgadsOfferClickScalarFieldEnum = {
+  id: 'id',
+  unlockSessionId: 'unlockSessionId',
+  offerId: 'offerId',
+  offerName: 'offerName',
+  status: 'status',
+  payout: 'payout',
+  clickCount: 'clickCount',
+  firstClickedAt: 'firstClickedAt',
+  creditedAt: 'creditedAt',
+  rawPostback: 'rawPostback',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type OgadsOfferClickScalarFieldEnum = (typeof OgadsOfferClickScalarFieldEnum)[keyof typeof OgadsOfferClickScalarFieldEnum]
 
 
 export const UnlockActionStartScalarFieldEnum = {
@@ -611,6 +631,23 @@ export const LinkActionOrderByRelevanceFieldEnum = {
 export type LinkActionOrderByRelevanceFieldEnum = (typeof LinkActionOrderByRelevanceFieldEnum)[keyof typeof LinkActionOrderByRelevanceFieldEnum]
 
 
+export const JsonNullValueFilter = {
+  DbNull: DbNull,
+  JsonNull: JsonNull,
+  AnyNull: AnyNull
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
+
+
+export const QueryMode = {
+  default: 'default',
+  insensitive: 'insensitive'
+} as const
+
+export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
+
+
 export const UnlockSessionOrderByRelevanceFieldEnum = {
   id: 'id',
   linkId: 'linkId',
@@ -620,6 +657,16 @@ export const UnlockSessionOrderByRelevanceFieldEnum = {
 } as const
 
 export type UnlockSessionOrderByRelevanceFieldEnum = (typeof UnlockSessionOrderByRelevanceFieldEnum)[keyof typeof UnlockSessionOrderByRelevanceFieldEnum]
+
+
+export const OgadsOfferClickOrderByRelevanceFieldEnum = {
+  id: 'id',
+  unlockSessionId: 'unlockSessionId',
+  offerId: 'offerId',
+  offerName: 'offerName'
+} as const
+
+export type OgadsOfferClickOrderByRelevanceFieldEnum = (typeof OgadsOfferClickOrderByRelevanceFieldEnum)[keyof typeof OgadsOfferClickOrderByRelevanceFieldEnum]
 
 
 export const UnlockActionStartOrderByRelevanceFieldEnum = {
@@ -704,23 +751,6 @@ export const AdUnitOrderByRelevanceFieldEnum = {
 } as const
 
 export type AdUnitOrderByRelevanceFieldEnum = (typeof AdUnitOrderByRelevanceFieldEnum)[keyof typeof AdUnitOrderByRelevanceFieldEnum]
-
-
-export const JsonNullValueFilter = {
-  DbNull: DbNull,
-  JsonNull: JsonNull,
-  AnyNull: AnyNull
-} as const
-
-export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
-
-
-export const QueryMode = {
-  default: 'default',
-  insensitive: 'insensitive'
-} as const
-
-export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
 
 
 export const HeaderLinkOrderByRelevanceFieldEnum = {

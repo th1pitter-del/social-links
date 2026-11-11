@@ -4,9 +4,10 @@ import { notFound, redirect } from 'next/navigation'
 import { AlertTriangle, CalendarClock, Ban } from 'lucide-react'
 import { getTranslations } from 'next-intl/server'
 
-import { UnlockExperience, type UnlockStepPreview } from '@/components/unlock/unlock-experience'
+import { UnlockExperience, type UnlockOfferPreview, type UnlockStepPreview } from '@/components/unlock/unlock-experience'
 import { Button } from '@/components/ui/button'
 import { actionLabel } from '@/lib/action-label'
+import { fetchOgadsOffers, getOgadsConfig, getVisitorTargeting, isOgadsReady } from '@/lib/ogads'
 import { getSession } from '@/lib/session'
 import { getPublicUnlockLink, isExpired, recordShortLinkVisit, type PublicUnlockLink } from '@/lib/unlock'
 
@@ -74,6 +75,7 @@ export default async function UnlockPage({ params, searchParams }: PageProps) {
         initialToken={token && token.length <= 128 ? token : null}
         theme={link.theme}
         steps={steps}
+        offers={await getOfferPreviews(link)}
         {...stats}
         preview
       />
@@ -106,9 +108,28 @@ export default async function UnlockPage({ params, searchParams }: PageProps) {
       initialToken={token && token.length <= 128 ? token : null}
       theme={link.theme}
       steps={steps}
+      offers={await getOfferPreviews(link)}
       {...stats}
     />
   )
+}
+
+/**
+ * Offers the visitor will see as a task. Fetched per request because OGAds
+ * targets by IP and User-Agent, and a failure simply leaves the offer step out.
+ */
+async function getOfferPreviews(link: PublicUnlockLink): Promise<UnlockOfferPreview[]> {
+  if (link.actions.length === 0) return []
+  const config = await getOgadsConfig()
+  if (!isOgadsReady(config)) return []
+  const { ip, userAgent } = await getVisitorTargeting()
+  try {
+    const offers = await fetchOgadsOffers({ ip, userAgent })
+    return offers.map(({ id, name }) => ({ id, name }))
+  } catch (error) {
+    console.error('[ogads] could not load preview offers', error)
+    return []
+  }
 }
 
 function toSteps(

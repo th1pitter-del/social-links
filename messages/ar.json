@@ -332,7 +332,12 @@
     "metaTitleSuffix": "Link Unlocker",
     "visitUnavailable": "انتهت صلاحية رابط الزيارة. أعد تحميل الصفحة وحاول مرة أخرى.",
     "stepsFirst": "أكمل كل الخطوات أعلاه أولًا",
-    "guestOwner": "ضيف"
+    "guestOwner": "ضيف",
+    "offersTitle": "أكمل أي عرض واحد",
+    "offersHint": "أي عرض في القائمة يُنهي هذه الخطوة. يأتي التأكيد من مزوّد العروض وقد يستغرق دقيقة.",
+    "offerWaiting": "بانتظار التأكيد…",
+    "offerVerified": "تم التحقق من العرض",
+    "offerUnavailable": "العروض غير متاحة الآن. أعد تحميل الصفحة للمحاولة مرة أخرى."
   },
   "report": {
     "title": "الإبلاغ عن رابط",
@@ -537,7 +542,17 @@
       "contentPagesDescription": "{count} صفحات · {published} منشورة",
       "noContentPages": "لا توجد صفحات محتوى بعد.",
       "colContentPage": "الصفحة",
-      "colMenuLinks": "روابط القوائم"
+      "colMenuLinks": "روابط القوائم",
+      "ogadsTitle": "تحويلات OGAds",
+      "ogadsDescription": "عروض مُعتمدة عبر صفحات إلغاء القفل، مؤكَّدة بواسطة postback من OGAds.",
+      "ogadsTotal": "إجمالي التحويلات",
+      "ogadsToday": "اليوم",
+      "ogadsRecent": "أحدث العروض المعتمدة",
+      "ogadsEmpty": "لم يُعتمد أي عرض بعد.",
+      "ogadsColOffer": "العرض",
+      "ogadsColLink": "صفحة إلغاء القفل",
+      "ogadsColPayout": "العمولة",
+      "ogadsColWhen": "الاعتماد"
     },
     "audit": {
       "title": "سجل التدقيق",
@@ -1025,6 +1040,10 @@
         "data-retention": {
           "title": "مدة الاحتفاظ بالبيانات",
           "description": "كم من الوقت تُبقي مهمة التنظيف أحداث التحليلات."
+        },
+        "ogads": {
+          "title": "عروض OGAds",
+          "description": "عروض CPA من OGAds تظهر كمهمة إلغاء قفل. تُؤكَّد التحويلات عبر postback من OGAds."
         }
       },
       "fields": {
@@ -1144,6 +1163,44 @@
           "label": "أيام الاحتفاظ بالتحليلات",
           "hint": "القيمة 0 تحتفظ بكل الأحداث، وهذا ما تحتاجه تقارير اللوحة.",
           "placeholder": "0"
+        },
+        "ogads_enabled": {
+          "label": "عرض عروض OGAds في صفحات إلغاء القفل",
+          "hint": "يضيف خطوة عروض إلى كل صفحة إلغاء قفل تحتوي مهام أخرى. إكمال أي عرض واحد يُنهي الخطوة."
+        },
+        "ogads_apiKey": {
+          "label": "مفتاح API",
+          "hint": "يوجد في منطقة أعضاء OGAds. يُحفظ للكتابة فقط."
+        },
+        "ogads_endpoint": {
+          "label": "نقطة نهاية API للعروض",
+          "hint": "نطاق الخزانة المخصص لحسابك. اتركه فارغًا لاستخدام الافتراضي الحالي.",
+          "placeholder": "https://lockerpreview.com/api/v2"
+        },
+        "ogads_affiliateId": {
+          "label": "معرّف المسوّق",
+          "hint": "اختياري. عند ضبطه تُرفض أي postbacks تخص مسوّقًا آخر.",
+          "placeholder": "123456"
+        },
+        "ogads_ctype": {
+          "label": "أنواع العروض",
+          "hint": "اجمع الأنواع المقبولة: 1 تثبيت تطبيقات، 2 CPA، 4 إرسال PIN، 8 فيديو. الفراغ يقبل كل الأنواع.",
+          "placeholder": "3"
+        },
+        "ogads_offersShown": {
+          "label": "عدد العروض في الصفحة",
+          "hint": "من 1 إلى 10. كل عرض صف مهمة، وتحويل واحد يُنهي الخطوة.",
+          "placeholder": "3"
+        },
+        "ogads_postbackSecret": {
+          "label": "سر الـ postback",
+          "hint": "16 حرفًا على الأقل. مطلوب، وهو الدليل الوحيد على أن الـ postback حقيقي.",
+          "placeholder": "قيمة طويلة وعشوائية"
+        },
+        "ogads_postbackUrl": {
+          "label": "رابط الـ postback",
+          "hint": "الصقه في إعدادات الـ postback في OGAds. يحتوي على السر، لذا احتفظ به خاصًا.",
+          "placeholder": "احفظ سر الـ postback لتوليد الرابط"
         }
       },
       "uploadImage": "تحميل صورة",
@@ -1152,7 +1209,10 @@
       "secretConfigured": "مُعدّ",
       "secretNotConfigured": "غير مُعدّ",
       "secretReplacePlaceholder": "الصق قيمة جديدة لاستبدالها",
-      "secretRemove": "إزالة"
+      "secretRemove": "إزالة",
+      "copy": "نسخ",
+      "copiedToast": "تم النسخ.",
+      "copyFailedToast": "تعذّر النسخ. حدّد النص وانسخه يدويًا."
     },
     "bioPages": {
       "title": "صفحات البايو",
@@ -1681,7 +1741,14 @@
     "menuParentHasChildren": "تحتوي هذه القائمة على عناصر فرعية. انقلها أو احذفها قبل تضمينها.",
     "menuPageRequired": "اختر صفحة لهذا العنصر الفرعي.",
     "menuNotFound": "عنصر القائمة غير موجود.",
-    "menuOrderInvalid": "ترتيب القائمة هذا لم يعد صالحًا. أعد تحميل الصفحة وحاول مرة أخرى."
+    "menuOrderInvalid": "ترتيب القائمة هذا لم يعد صالحًا. أعد تحميل الصفحة وحاول مرة أخرى.",
+    "readOnlySetting": "تُولَّد هذه القيمة تلقائيًا ولا يمكن تعديلها.",
+    "invalidOgadsEndpoint": "أدخل نقطة نهاية عروض http:// أو https:// صالحة.",
+    "invalidOgadsOffersShown": "اختر بين عرض واحد و10 عروض في الصفحة.",
+    "invalidOgadsCtype": "يجب أن تكون أنواع العروض عددًا صحيحًا بين 0 و15.",
+    "invalidOgadsAffiliateId": "يمكن أن يحتوي معرّف المسوّق على حروف وأرقام وشرطات فقط.",
+    "invalidOgadsApiKey": "مفتاح API قصير جدًا. الصق المفتاح كاملًا.",
+    "invalidOgadsPostbackSecret": "استخدم 16 حرفًا على الأقل لسر الـ postback."
   },
   "linkForm": {
     "uploadFailed": "تعذّر الرفع.",

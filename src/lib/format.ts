@@ -24,8 +24,20 @@ export function formatPercent(locale: string, percent: number): string {
   return formatter.format(percent / 100)
 }
 
-const byteUnits = new Map<string, Intl.NumberFormat>()
+const currencies = new Map<string, Intl.NumberFormat>()
 
+/** Money in the reader's own separators and digits; OGAds pays in USD. */
+export function formatCurrency(locale: string, value: number, currency = 'USD'): string {
+  const key = `${locale}:${currency}`
+  let formatter = currencies.get(key)
+  if (!formatter) {
+    formatter = new Intl.NumberFormat(locale, { style: 'currency', currency })
+    currencies.set(key, formatter)
+  }
+  return formatter.format(value)
+}
+
+const byteUnits = new Map<string, Intl.NumberFormat>()
 /** File size in the reader's own units and digit shapes. */
 export function formatBytes(locale: string, bytes: number): string {
   const unit = bytes < 1024 ? 'byte' : bytes < 1024 * 1024 ? 'kilobyte' : 'megabyte'

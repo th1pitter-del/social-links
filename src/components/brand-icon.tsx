@@ -106,6 +106,9 @@ export function platformActionColor(
   return (slug && PLATFORM_BUTTON_COLORS[slug]) || null
 }
 
+/** Offer rows have no platform brand of their own; this is the offer step's fill. */
+export const OFFER_BUTTON_COLOR = { base: '#0F9D63', hover: '#13B874' }
+
 // Uses the official brand color when it stays legible on both light and dark
 // backgrounds; near-black (GitHub, X, …) and near-white (Snapchat) brands fall
 // back to `currentColor` so the glyph never disappears.

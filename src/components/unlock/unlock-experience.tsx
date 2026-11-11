@@ -9,7 +9,7 @@ import { Check, CheckCircle2, Download, ExternalLink, Eye, FileLock, FileText, L
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
-import { PlatformGlyph, platformActionColor } from '@/components/brand-icon'
+import { OFFER_BUTTON_COLOR, PlatformGlyph, platformActionColor } from '@/components/brand-icon'
 import { targetDisplayName, withTargetName } from '@/lib/action-target'
 import { bioHeadingStyle, resolveBioTheme } from '@/lib/bio-themes'
 import { formatBytes, formatNumber } from '@/lib/format'
@@ -53,6 +53,19 @@ type StepAction = {
   visitUrl: string | null
 }
 
+/** An OGAds offer as shown before the unlock session exists. */
+export type UnlockOfferPreview = {
+  id: string
+  name: string
+}
+
+type OfferRow = {
+  id: string
+  name: string
+  credited: boolean
+  clickUrl: string | null
+}
+
 const emptySubscribe = () => () => {}
 
 /** Adds YouTube's one-click subscribe prompt when the row is a subscribe step. */
@@ -93,6 +106,7 @@ export function UnlockExperience({
   viewCount = 0,
   unlockCount = 0,
   steps = [],
+  offers = [],
 }: {
   slug: string
   title: string
@@ -105,6 +119,7 @@ export function UnlockExperience({
   viewCount?: number
   unlockCount?: number
   steps?: UnlockStepPreview[]
+  offers?: UnlockOfferPreview[]
 }) {
   const t = useTranslations('unlock')
   const actionT = useTranslations('actions')
@@ -118,9 +133,11 @@ export function UnlockExperience({
   const [email, setEmail] = useState('')
   const [consent, setConsent] = useState(false)
   const [claimed, setClaimed] = useState<ClaimedContent>(null)
+  const [offerPending, setOfferPending] = useState<string | null>(null)
   const shareUrl = useShareUrl(slug)
   /** Token already loaded or created locally; keeps a route refresh from re-fetching it. */
   const loadedTokenRef = useRef<string | null>(null)
+  const offerTimerRef = useRef<number | null>(null)
   const applyState = useCallback((next: UnlockState) => {
     loadedTokenRef.current = next.token
     setState(next)
@@ -139,6 +156,32 @@ export function UnlockExperience({
       cancelled = true
     }
   }, [initialToken, applyState])
+
+  useEffect(
+    () => () => {
+      if (offerTimerRef.current) window.clearInterval(offerTimerRef.current)
+    },
+    [],
+  )
+
+  // A conversion is confirmed on OGAds' side, so the only signal this tab gets
+  // is time and the visitor coming back. Both are used while offers are open.
+  const offersOpen = (state?.offers.length ?? offers.length) > 0 && !(state?.offersSatisfied ?? false)
+  useEffect(() => {
+    if (!offersOpen || !state?.token) return
+    const refresh = () => {
+      if (document.visibilityState !== 'visible') return
+      void getUnlockState(state.token).then((next) => {
+        if (next) applyState(next)
+      })
+    }
+    window.addEventListener('focus', refresh)
+    document.addEventListener('visibilitychange', refresh)
+    return () => {
+      window.removeEventListener('focus', refresh)
+      document.removeEventListener('visibilitychange', refresh)
+    }
+  }, [offersOpen, state?.token, applyState])
 
   // The row is the visitor's first move, so the session begins here instead of
   // behind a separate "start" press: one action per step, like the card shows.
@@ -222,6 +265,56 @@ export function UnlockExperience({
     })()
   }
 
+  /**
+   * An offer opens in its own tab and is confirmed later by OGAds' postback.
+   * The tab is opened from this gesture so the browser allows it, the session
+   * is started if needed, and this tab then polls until the credit lands.
+   */
+  async function handleOffer(offerId: string) {
+    if (busy || expired || offersSatisfied) return
+    const tab = window.open('', '_blank')
+    if (tab) tab.opener = null
+
+    const session = await ensureSession()
+    if (!session) {
+      tab?.close()
+      return
+    }
+    let clickUrl = session.offers.find((offer) => offer.id === offerId)?.clickUrl ?? null
+    if (!clickUrl) {
+      // The offer list is re-fetched when the session starts, so a preview the
+      // network has since rotated away cannot be clicked.
+      const fresh = await getUnlockState(session.token)
+      if (fresh) applyState(fresh)
+      clickUrl = fresh?.offers.find((offer) => offer.id === offerId)?.clickUrl ?? null
+    }
+    if (!clickUrl) {
+      tab?.close()
+      setError(t('offerUnavailable'))
+      return
+    }
+
+    setOfferPending(offerId)
+    setError(null)
+    if (tab) tab.location.replace(clickUrl)
+    else window.location.assign(clickUrl)
+
+    if (offerTimerRef.current) window.clearInterval(offerTimerRef.current)
+    let attempts = 0
+    offerTimerRef.current = window.setInterval(() => {
+      attempts += 1
+      void (async () => {
+        const next = await getUnlockState(session.token)
+        if (next) applyState(next)
+        if (next?.offersSatisfied || attempts >= 30) {
+          if (offerTimerRef.current) window.clearInterval(offerTimerRef.current)
+          offerTimerRef.current = null
+          if (!next?.offersSatisfied) setOfferPending(null)
+        }
+      })()
+    }, 4000)
+  }
+
   async function handleClaim() {
     if (!state) return
     setBusy(true)
@@ -258,6 +351,7 @@ export function UnlockExperience({
   const started = Boolean(state)
   const expired = Boolean(state?.expired)
   const ready = Boolean(state?.canUnlock)
+  const offersSatisfied = state?.offersSatisfied ?? false
   const ctaLabel = !started ? t('start') : t('unlockButton')
 
   const actionSteps: StepAction[] = state
@@ -274,8 +368,16 @@ export function UnlockExperience({
         visitUrl: null,
       }))
 
-  const totalSteps = actionSteps.length
-  const doneSteps = actionSteps.filter((action) => action.completed).length
+  // Offers are one step by themselves: any single credit finishes it, so the
+  // progress bar counts the group once no matter how many rows it shows.
+  const offerRows: OfferRow[] = state
+    ? state.offers
+    : offers.map((offer) => ({ id: offer.id, name: offer.name, credited: false, clickUrl: null }))
+  const offerStepCount = offerRows.length > 0 ? 1 : 0
+  const offerStepDone = offerStepCount > 0 && offersSatisfied ? 1 : 0
+
+  const totalSteps = actionSteps.length + offerStepCount
+  const doneSteps = actionSteps.filter((action) => action.completed).length + offerStepDone
   const percent = totalSteps > 0 ? Math.round((doneSteps / totalSteps) * 100) : 0
 
   return (
@@ -590,6 +692,102 @@ export function UnlockExperience({
                     )
                   })}
                 </ol>
+
+                {/* Offers sit in their own group because any one of them
+                    finishes the step: rows are choices, not a checklist. */}
+                {offerRows.length > 0 ? (
+                  <div className="mx-auto mt-3 w-[92%]">
+                    <div className="flex items-center justify-between gap-2">
+                      <h3 className="text-[0.65rem] font-medium tracking-wider text-muted-foreground uppercase">
+                        {t('offersTitle')}
+                      </h3>
+                      {offersSatisfied ? (
+                        <span className="flex items-center gap-1 text-xs text-emerald-600 dark:text-emerald-400">
+                          <Check className="size-3.5 shrink-0 strokeWidth={3}" />
+                          {t('offerVerified')}
+                        </span>
+                      ) : null}
+                    </div>
+                    <ul className="mt-2 space-y-2">
+                      {offerRows.map((offer) => {
+                        const credited = offer.credited
+                        // Once the step is done the other choices settle too,
+                        // without pretending they were completed.
+                        const dimmed = offersSatisfied && !credited
+                        const interactive = !credited && !dimmed && !expired && !busy
+                        const waiting = offerPending === offer.id && !offersSatisfied
+                        const fillVars =
+                          credited || dimmed
+                            ? undefined
+                            : ({
+                                '--action-bg': OFFER_BUTTON_COLOR.base,
+                                '--action-bg-hover': OFFER_BUTTON_COLOR.hover,
+                              } as React.CSSProperties)
+                        const surface = cn(
+                          'relative flex w-full items-center justify-center gap-3 px-4 py-3.5 text-sm',
+                          credited || dimmed
+                            ? 'bg-muted/50 text-muted-foreground'
+                            : 'bg-[var(--action-bg)] text-white',
+                          interactive &&
+                            'cursor-pointer transition-[background-color,scale] duration-200 ease-out hover:bg-[var(--action-bg-hover)] motion-safe:hover:scale-[1.02] motion-reduce:transition-none',
+                        )
+                        return (
+                          <li key={offer.id} className="overflow-hidden rounded-xl">
+                            <button
+                              type="button"
+                              onClick={() => void handleOffer(offer.id)}
+                              disabled={!interactive}
+                              style={fillVars}
+                              className={surface}
+                            >
+                              {waiting ? (
+                                <Loader2 className="size-6 shrink-0 animate-spin text-white" />
+                              ) : (
+                                <PlatformGlyph
+                                  platform={null}
+                                  icon="gift"
+                                  neutral
+                                  className={cn(
+                                    'size-6 shrink-0',
+                                    credited || dimmed ? 'text-muted-foreground' : 'text-white',
+                                  )}
+                                />
+                              )}
+                              <span
+                                className={cn(
+                                  'min-w-0 truncate font-medium',
+                                  credited &&
+                                    'text-muted-foreground line-through decoration-muted-foreground/50',
+                                )}
+                              >
+                                {offer.name}
+                              </span>
+                              <span
+                                aria-hidden
+                                className="pointer-events-none absolute inset-y-0 end-4 flex items-center"
+                              >
+                                <span
+                                  className={cn(
+                                    ROW_CHECK,
+                                    credited
+                                      ? 'motion-safe:animate-[demo-check_0.24s_ease-out]'
+                                      : 'opacity-0',
+                                  )}
+                                >
+                                  <Check className="size-3 shrink-0 strokeWidth={3}" />
+                                </span>
+                              </span>
+                              {credited ? <span className="sr-only">{t('offerVerified')}</span> : null}
+                            </button>
+                          </li>
+                        )
+                      })}
+                    </ul>
+                    <p className="mt-2 text-xs text-muted-foreground">
+                      {offerPending && !offersSatisfied ? t('offerWaiting') : t('offersHint')}
+                    </p>
+                  </div>
+                ) : null}
 
                 {/* One slot, one call to action - it begins the session or
                     reveals the reward. It matches a task row so it reads as the

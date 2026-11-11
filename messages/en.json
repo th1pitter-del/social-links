@@ -433,7 +433,14 @@
     "menuParentHasChildren": "This menu has sub-items. Move or delete them before nesting it.",
     "menuPageRequired": "Choose a page for this sub-item.",
     "menuNotFound": "Menu item not found.",
-    "menuOrderInvalid": "That menu order is no longer valid. Reload and try again."
+    "menuOrderInvalid": "That menu order is no longer valid. Reload and try again.",
+    "readOnlySetting": "This value is generated automatically and cannot be edited.",
+    "invalidOgadsEndpoint": "Enter a valid http:// or https:// offer API endpoint.",
+    "invalidOgadsOffersShown": "Choose between 1 and 10 offers per page.",
+    "invalidOgadsCtype": "Offer types must be a whole number between 0 and 15.",
+    "invalidOgadsAffiliateId": "The affiliate ID may only contain letters, numbers, dashes and underscores.",
+    "invalidOgadsApiKey": "That API key looks too short. Paste the full key.",
+    "invalidOgadsPostbackSecret": "Use at least 16 characters for the postback secret."
   },
   "common": {
     "siteName": "Link Unlocker",
@@ -837,7 +844,12 @@
     "goHome": "Go to homepage",
     "visitUnavailable": "This visit link expired. Reload the page and try again.",
     "stepsFirst": "Complete all steps above first",
-    "guestOwner": "Guest"
+    "guestOwner": "Guest",
+    "offersTitle": "Complete any one offer",
+    "offersHint": "Any single offer finishes this step. Confirmation comes from the offer provider and can take a minute.",
+    "offerWaiting": "Waiting for confirmation…",
+    "offerVerified": "Offer verified",
+    "offerUnavailable": "Offers are unavailable right now. Reload the page to try again."
   },
   "report": {
     "title": "Report a link",
@@ -1046,7 +1058,17 @@
       "contentPagesDescription": "{count} pages · {published} published",
       "noContentPages": "No content pages yet.",
       "colContentPage": "Page",
-      "colMenuLinks": "Menu links"
+      "colMenuLinks": "Menu links",
+      "ogadsTitle": "OGAds conversions",
+      "ogadsDescription": "Offers credited through unlock pages, confirmed by the OGAds postback.",
+      "ogadsTotal": "Total conversions",
+      "ogadsToday": "Today",
+      "ogadsRecent": "Latest credited offers",
+      "ogadsEmpty": "No offer has been credited yet.",
+      "ogadsColOffer": "Offer",
+      "ogadsColLink": "Unlock page",
+      "ogadsColPayout": "Payout",
+      "ogadsColWhen": "Credited"
     },
     "audit": {
       "title": "Audit log",
@@ -1534,6 +1556,10 @@
         "data-retention": {
           "title": "Data retention",
           "description": "How long the cleanup job keeps analytics events."
+        },
+        "ogads": {
+          "title": "OGAds offers",
+          "description": "CPA offers from OGAds shown as an unlock task. Conversions are confirmed by the OGAds postback."
         }
       },
       "fields": {
@@ -1653,6 +1679,44 @@
           "label": "Analytics retention days",
           "hint": "0 keeps every event, which is what the dashboard reports need.",
           "placeholder": "0"
+        },
+        "ogads_enabled": {
+          "label": "Show OGAds offers on unlock pages",
+          "hint": "Adds an offer step to every unlock page that has other tasks. Completing any one offer finishes it."
+        },
+        "ogads_apiKey": {
+          "label": "API key",
+          "hint": "Found in the OGAds members area. Stored write-only."
+        },
+        "ogads_endpoint": {
+          "label": "Offer API endpoint",
+          "hint": "The locker domain issued to your account. Leave empty to use the current default.",
+          "placeholder": "https://lockerpreview.com/api/v2"
+        },
+        "ogads_affiliateId": {
+          "label": "Affiliate ID",
+          "hint": "Optional. When set, postbacks reporting a different affiliate are rejected.",
+          "placeholder": "123456"
+        },
+        "ogads_ctype": {
+          "label": "Offer types",
+          "hint": "Add the types you accept: 1 app installs, 2 CPA, 4 PIN submit, 8 video. Empty accepts every type.",
+          "placeholder": "3"
+        },
+        "ogads_offersShown": {
+          "label": "Offers shown per page",
+          "hint": "Between 1 and 10. Each is a task row; one conversion finishes the step.",
+          "placeholder": "3"
+        },
+        "ogads_postbackSecret": {
+          "label": "Postback secret",
+          "hint": "At least 16 characters. Required — it is the only thing proving a postback is genuine.",
+          "placeholder": "A long random value"
+        },
+        "ogads_postbackUrl": {
+          "label": "Postback URL",
+          "hint": "Paste this into the OGAds postback settings. It contains the secret, so keep it private.",
+          "placeholder": "Save a postback secret to generate the URL"
         }
       },
       "uploadImage": "Upload image",
@@ -1661,7 +1725,10 @@
       "secretConfigured": "Configured",
       "secretNotConfigured": "Not configured",
       "secretReplacePlaceholder": "Paste a new value to replace it",
-      "secretRemove": "Remove"
+      "secretRemove": "Remove",
+      "copy": "Copy",
+      "copiedToast": "Copied.",
+      "copyFailedToast": "Could not copy. Select the text and copy it manually."
     },
     "bioPages": {
       "title": "Bio pages",

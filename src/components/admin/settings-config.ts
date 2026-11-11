@@ -1,5 +1,5 @@
 import type { ComponentType } from 'react'
-import { Database, Globe, KeyRound, Mail, Palette, Scale, Timer, Upload } from 'lucide-react'
+import { Database, Gift, Globe, KeyRound, Mail, Palette, Scale, Timer, Upload } from 'lucide-react'
 
 type IconType = ComponentType<{ className?: string }>
 
@@ -18,6 +18,8 @@ export type SettingsField = {
    * prefilled input.
    */
   secret?: boolean
+  /** Computed server-side and shown with a copy button; never saved from here. */
+  readonly?: boolean
 }
 
 export type SettingsGroup = {
@@ -104,6 +106,20 @@ export const SETTINGS_GROUPS: SettingsGroup[] = [
     id: 'data-retention',
     icon: Database,
     fields: [{ key: 'retention.analyticsDays' }],
+  },
+  {
+    id: 'ogads',
+    icon: Gift,
+    fields: [
+      { key: 'ogads.enabled', toggle: true },
+      { key: 'ogads.apiKey', secret: true },
+      { key: 'ogads.endpoint' },
+      { key: 'ogads.affiliateId' },
+      { key: 'ogads.ctype' },
+      { key: 'ogads.offersShown' },
+      { key: 'ogads.postbackSecret', secret: true },
+      { key: 'ogads.postbackUrl', readonly: true },
+    ],
   },
 ]
 

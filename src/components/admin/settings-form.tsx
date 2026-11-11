@@ -4,7 +4,7 @@ import { useRef, useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import { toast } from 'sonner'
-import { Loader2, Upload } from 'lucide-react'
+import { Copy, Loader2, Upload } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -65,8 +65,7 @@ export function SettingsGroupForm({
     return t('imageUploadFailed')
   }
 
-  async function uploadImage(key: string, file: File) {
-    setUploadingKey(key)
+  async function uploadImage(key: string, file: File) {    setUploadingKey(key)
     try {
       const body = new FormData()
       body.append('file', file)
@@ -90,6 +89,15 @@ export function SettingsGroupForm({
     }
   }
 
+  async function copyText(value: string) {
+    try {
+      await navigator.clipboard.writeText(value)
+      toast.success(t('copiedToast'))
+    } catch {
+      toast.error(t('copyFailedToast'))
+    }
+  }
+
   return (
     <section className="rounded-xl border border-border bg-card p-5 shadow-sm">
       <div className="space-y-4">
@@ -102,7 +110,30 @@ export function SettingsGroupForm({
           return (
             <div key={field.key} className="space-y-1.5">
               <Label htmlFor={field.key}>{label}</Label>
-              {field.color ? (
+              {field.readonly ? (
+                <div className="flex items-center gap-2">
+                  <Input
+                    id={field.key}
+                    readOnly
+                    value={values[field.key] ?? ''}
+                    onFocus={(e) => e.currentTarget.select()}
+                    placeholder={hasPlaceholder ? t(`fields.${fieldKey}.placeholder`) : undefined}
+                    className="flex-1 font-mono text-xs"
+                  />
+                  <Button
+                    type="button"
+                    size="icon"
+                    variant="outline"
+                    className="shrink-0"
+                    aria-label={t('copy')}
+                    title={t('copy')}
+                    disabled={!values[field.key]}
+                    onClick={() => void copyText(values[field.key] ?? '')}
+                  >
+                    <Copy className="size-4" />
+                  </Button>
+                </div>
+              ) : field.color ? (
                 <div className="flex items-center gap-2">
                   <input
                     type="color"
@@ -224,31 +255,33 @@ export function SettingsGroupForm({
               {hasHint ? (
                 <p className="text-xs text-muted-foreground">{t(`fields.${fieldKey}.hint`)}</p>
               ) : null}
-              <div className="flex items-center justify-end gap-2 pt-1">
-                {field.secret && isConfigured ? (
+              {field.readonly ? null : (
+                <div className="flex items-center justify-end gap-2 pt-1">
+                  {field.secret && isConfigured ? (
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="ghost"
+                      disabled={pendingKey === field.key}
+                      onClick={() => save(field.key, '')}
+                    >
+                      {t('secretRemove')}
+                    </Button>
+                  ) : null}
                   <Button
                     type="button"
                     size="sm"
-                    variant="ghost"
-                    disabled={pendingKey === field.key}
-                    onClick={() => save(field.key, '')}
+                    variant="outline"
+                    disabled={
+                      pendingKey === field.key ||
+                      (field.secret ? !(values[field.key] ?? '').trim() : false)
+                    }
+                    onClick={() => save(field.key)}
                   >
-                    {t('secretRemove')}
+                    {pendingKey === field.key ? tc('saving') : tc('save')}
                   </Button>
-                ) : null}
-                <Button
-                  type="button"
-                  size="sm"
-                  variant="outline"
-                  disabled={
-                    pendingKey === field.key ||
-                    (field.secret ? !(values[field.key] ?? '').trim() : false)
-                  }
-                  onClick={() => save(field.key)}
-                >
-                  {pendingKey === field.key ? tc('saving') : tc('save')}
-                </Button>
-              </div>
+                </div>
+              )}
             </div>
           )
         })}

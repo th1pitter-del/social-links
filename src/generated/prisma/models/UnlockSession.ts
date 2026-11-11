@@ -56,6 +56,7 @@ export type UnlockSessionCountAggregateOutputType = {
   userAgent: number
   referrer: number
   expiresAt: number
+  ogadsOffers: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -94,6 +95,7 @@ export type UnlockSessionCountAggregateInputType = {
   userAgent?: true
   referrer?: true
   expiresAt?: true
+  ogadsOffers?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -179,6 +181,7 @@ export type UnlockSessionGroupByOutputType = {
   userAgent: string | null
   referrer: string | null
   expiresAt: Date
+  ogadsOffers: runtime.JsonValue | null
   createdAt: Date
   updatedAt: Date
   _count: UnlockSessionCountAggregateOutputType | null
@@ -212,6 +215,7 @@ export type UnlockSessionWhereInput = {
   userAgent?: Prisma.StringNullableFilter<"UnlockSession"> | string | null
   referrer?: Prisma.StringNullableFilter<"UnlockSession"> | string | null
   expiresAt?: Prisma.DateTimeFilter<"UnlockSession"> | Date | string
+  ogadsOffers?: Prisma.JsonNullableFilter<"UnlockSession">
   createdAt?: Prisma.DateTimeFilter<"UnlockSession"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"UnlockSession"> | Date | string
   link?: Prisma.XOR<Prisma.LinkScalarRelationFilter, Prisma.LinkWhereInput>
@@ -219,6 +223,7 @@ export type UnlockSessionWhereInput = {
   starts?: Prisma.UnlockActionStartListRelationFilter
   events?: Prisma.AnalyticsEventListRelationFilter
   checkins?: Prisma.TelegramCheckinListRelationFilter
+  ogadsClicks?: Prisma.OgadsOfferClickListRelationFilter
 }
 
 export type UnlockSessionOrderByWithRelationInput = {
@@ -229,6 +234,7 @@ export type UnlockSessionOrderByWithRelationInput = {
   userAgent?: Prisma.SortOrderInput | Prisma.SortOrder
   referrer?: Prisma.SortOrderInput | Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
+  ogadsOffers?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   link?: Prisma.LinkOrderByWithRelationInput
@@ -236,6 +242,7 @@ export type UnlockSessionOrderByWithRelationInput = {
   starts?: Prisma.UnlockActionStartOrderByRelationAggregateInput
   events?: Prisma.AnalyticsEventOrderByRelationAggregateInput
   checkins?: Prisma.TelegramCheckinOrderByRelationAggregateInput
+  ogadsClicks?: Prisma.OgadsOfferClickOrderByRelationAggregateInput
   _relevance?: Prisma.UnlockSessionOrderByRelevanceInput
 }
 
@@ -250,6 +257,7 @@ export type UnlockSessionWhereUniqueInput = Prisma.AtLeast<{
   userAgent?: Prisma.StringNullableFilter<"UnlockSession"> | string | null
   referrer?: Prisma.StringNullableFilter<"UnlockSession"> | string | null
   expiresAt?: Prisma.DateTimeFilter<"UnlockSession"> | Date | string
+  ogadsOffers?: Prisma.JsonNullableFilter<"UnlockSession">
   createdAt?: Prisma.DateTimeFilter<"UnlockSession"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"UnlockSession"> | Date | string
   link?: Prisma.XOR<Prisma.LinkScalarRelationFilter, Prisma.LinkWhereInput>
@@ -257,6 +265,7 @@ export type UnlockSessionWhereUniqueInput = Prisma.AtLeast<{
   starts?: Prisma.UnlockActionStartListRelationFilter
   events?: Prisma.AnalyticsEventListRelationFilter
   checkins?: Prisma.TelegramCheckinListRelationFilter
+  ogadsClicks?: Prisma.OgadsOfferClickListRelationFilter
 }, "id">
 
 export type UnlockSessionOrderByWithAggregationInput = {
@@ -267,6 +276,7 @@ export type UnlockSessionOrderByWithAggregationInput = {
   userAgent?: Prisma.SortOrderInput | Prisma.SortOrder
   referrer?: Prisma.SortOrderInput | Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
+  ogadsOffers?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.UnlockSessionCountOrderByAggregateInput
@@ -285,6 +295,7 @@ export type UnlockSessionScalarWhereWithAggregatesInput = {
   userAgent?: Prisma.StringNullableWithAggregatesFilter<"UnlockSession"> | string | null
   referrer?: Prisma.StringNullableWithAggregatesFilter<"UnlockSession"> | string | null
   expiresAt?: Prisma.DateTimeWithAggregatesFilter<"UnlockSession"> | Date | string
+  ogadsOffers?: Prisma.JsonNullableWithAggregatesFilter<"UnlockSession">
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"UnlockSession"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"UnlockSession"> | Date | string
 }
@@ -296,6 +307,7 @@ export type UnlockSessionCreateInput = {
   userAgent?: string | null
   referrer?: string | null
   expiresAt: Date | string
+  ogadsOffers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   link: Prisma.LinkCreateNestedOneWithoutUnlocksInput
@@ -303,6 +315,7 @@ export type UnlockSessionCreateInput = {
   starts?: Prisma.UnlockActionStartCreateNestedManyWithoutUnlockSessionInput
   events?: Prisma.AnalyticsEventCreateNestedManyWithoutUnlockSessionInput
   checkins?: Prisma.TelegramCheckinCreateNestedManyWithoutUnlockSessionInput
+  ogadsClicks?: Prisma.OgadsOfferClickCreateNestedManyWithoutUnlockSessionInput
 }
 
 export type UnlockSessionUncheckedCreateInput = {
@@ -313,12 +326,14 @@ export type UnlockSessionUncheckedCreateInput = {
   userAgent?: string | null
   referrer?: string | null
   expiresAt: Date | string
+  ogadsOffers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   completions?: Prisma.UnlockActionCompletionUncheckedCreateNestedManyWithoutUnlockSessionInput
   starts?: Prisma.UnlockActionStartUncheckedCreateNestedManyWithoutUnlockSessionInput
   events?: Prisma.AnalyticsEventUncheckedCreateNestedManyWithoutUnlockSessionInput
   checkins?: Prisma.TelegramCheckinUncheckedCreateNestedManyWithoutUnlockSessionInput
+  ogadsClicks?: Prisma.OgadsOfferClickUncheckedCreateNestedManyWithoutUnlockSessionInput
 }
 
 export type UnlockSessionUpdateInput = {
@@ -328,6 +343,7 @@ export type UnlockSessionUpdateInput = {
   userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referrer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ogadsOffers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   link?: Prisma.LinkUpdateOneRequiredWithoutUnlocksNestedInput
@@ -335,6 +351,7 @@ export type UnlockSessionUpdateInput = {
   starts?: Prisma.UnlockActionStartUpdateManyWithoutUnlockSessionNestedInput
   events?: Prisma.AnalyticsEventUpdateManyWithoutUnlockSessionNestedInput
   checkins?: Prisma.TelegramCheckinUpdateManyWithoutUnlockSessionNestedInput
+  ogadsClicks?: Prisma.OgadsOfferClickUpdateManyWithoutUnlockSessionNestedInput
 }
 
 export type UnlockSessionUncheckedUpdateInput = {
@@ -345,12 +362,14 @@ export type UnlockSessionUncheckedUpdateInput = {
   userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referrer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ogadsOffers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completions?: Prisma.UnlockActionCompletionUncheckedUpdateManyWithoutUnlockSessionNestedInput
   starts?: Prisma.UnlockActionStartUncheckedUpdateManyWithoutUnlockSessionNestedInput
   events?: Prisma.AnalyticsEventUncheckedUpdateManyWithoutUnlockSessionNestedInput
   checkins?: Prisma.TelegramCheckinUncheckedUpdateManyWithoutUnlockSessionNestedInput
+  ogadsClicks?: Prisma.OgadsOfferClickUncheckedUpdateManyWithoutUnlockSessionNestedInput
 }
 
 export type UnlockSessionCreateManyInput = {
@@ -361,6 +380,7 @@ export type UnlockSessionCreateManyInput = {
   userAgent?: string | null
   referrer?: string | null
   expiresAt: Date | string
+  ogadsOffers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -372,6 +392,7 @@ export type UnlockSessionUpdateManyMutationInput = {
   userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referrer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ogadsOffers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -384,6 +405,7 @@ export type UnlockSessionUncheckedUpdateManyInput = {
   userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referrer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ogadsOffers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -412,6 +434,7 @@ export type UnlockSessionCountOrderByAggregateInput = {
   userAgent?: Prisma.SortOrder
   referrer?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
+  ogadsOffers?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -496,6 +519,20 @@ export type EnumUnlockStatusFieldUpdateOperationsInput = {
   set?: $Enums.UnlockStatus
 }
 
+export type UnlockSessionCreateNestedOneWithoutOgadsClicksInput = {
+  create?: Prisma.XOR<Prisma.UnlockSessionCreateWithoutOgadsClicksInput, Prisma.UnlockSessionUncheckedCreateWithoutOgadsClicksInput>
+  connectOrCreate?: Prisma.UnlockSessionCreateOrConnectWithoutOgadsClicksInput
+  connect?: Prisma.UnlockSessionWhereUniqueInput
+}
+
+export type UnlockSessionUpdateOneRequiredWithoutOgadsClicksNestedInput = {
+  create?: Prisma.XOR<Prisma.UnlockSessionCreateWithoutOgadsClicksInput, Prisma.UnlockSessionUncheckedCreateWithoutOgadsClicksInput>
+  connectOrCreate?: Prisma.UnlockSessionCreateOrConnectWithoutOgadsClicksInput
+  upsert?: Prisma.UnlockSessionUpsertWithoutOgadsClicksInput
+  connect?: Prisma.UnlockSessionWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UnlockSessionUpdateToOneWithWhereWithoutOgadsClicksInput, Prisma.UnlockSessionUpdateWithoutOgadsClicksInput>, Prisma.UnlockSessionUncheckedUpdateWithoutOgadsClicksInput>
+}
+
 export type UnlockSessionCreateNestedOneWithoutStartsInput = {
   create?: Prisma.XOR<Prisma.UnlockSessionCreateWithoutStartsInput, Prisma.UnlockSessionUncheckedCreateWithoutStartsInput>
   connectOrCreate?: Prisma.UnlockSessionCreateOrConnectWithoutStartsInput
@@ -561,12 +598,14 @@ export type UnlockSessionCreateWithoutLinkInput = {
   userAgent?: string | null
   referrer?: string | null
   expiresAt: Date | string
+  ogadsOffers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   completions?: Prisma.UnlockActionCompletionCreateNestedManyWithoutUnlockSessionInput
   starts?: Prisma.UnlockActionStartCreateNestedManyWithoutUnlockSessionInput
   events?: Prisma.AnalyticsEventCreateNestedManyWithoutUnlockSessionInput
   checkins?: Prisma.TelegramCheckinCreateNestedManyWithoutUnlockSessionInput
+  ogadsClicks?: Prisma.OgadsOfferClickCreateNestedManyWithoutUnlockSessionInput
 }
 
 export type UnlockSessionUncheckedCreateWithoutLinkInput = {
@@ -576,12 +615,14 @@ export type UnlockSessionUncheckedCreateWithoutLinkInput = {
   userAgent?: string | null
   referrer?: string | null
   expiresAt: Date | string
+  ogadsOffers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   completions?: Prisma.UnlockActionCompletionUncheckedCreateNestedManyWithoutUnlockSessionInput
   starts?: Prisma.UnlockActionStartUncheckedCreateNestedManyWithoutUnlockSessionInput
   events?: Prisma.AnalyticsEventUncheckedCreateNestedManyWithoutUnlockSessionInput
   checkins?: Prisma.TelegramCheckinUncheckedCreateNestedManyWithoutUnlockSessionInput
+  ogadsClicks?: Prisma.OgadsOfferClickUncheckedCreateNestedManyWithoutUnlockSessionInput
 }
 
 export type UnlockSessionCreateOrConnectWithoutLinkInput = {
@@ -621,8 +662,93 @@ export type UnlockSessionScalarWhereInput = {
   userAgent?: Prisma.StringNullableFilter<"UnlockSession"> | string | null
   referrer?: Prisma.StringNullableFilter<"UnlockSession"> | string | null
   expiresAt?: Prisma.DateTimeFilter<"UnlockSession"> | Date | string
+  ogadsOffers?: Prisma.JsonNullableFilter<"UnlockSession">
   createdAt?: Prisma.DateTimeFilter<"UnlockSession"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"UnlockSession"> | Date | string
+}
+
+export type UnlockSessionCreateWithoutOgadsClicksInput = {
+  id: string
+  status?: $Enums.UnlockStatus
+  ipHash?: string | null
+  userAgent?: string | null
+  referrer?: string | null
+  expiresAt: Date | string
+  ogadsOffers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  link: Prisma.LinkCreateNestedOneWithoutUnlocksInput
+  completions?: Prisma.UnlockActionCompletionCreateNestedManyWithoutUnlockSessionInput
+  starts?: Prisma.UnlockActionStartCreateNestedManyWithoutUnlockSessionInput
+  events?: Prisma.AnalyticsEventCreateNestedManyWithoutUnlockSessionInput
+  checkins?: Prisma.TelegramCheckinCreateNestedManyWithoutUnlockSessionInput
+}
+
+export type UnlockSessionUncheckedCreateWithoutOgadsClicksInput = {
+  id: string
+  linkId: string
+  status?: $Enums.UnlockStatus
+  ipHash?: string | null
+  userAgent?: string | null
+  referrer?: string | null
+  expiresAt: Date | string
+  ogadsOffers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  completions?: Prisma.UnlockActionCompletionUncheckedCreateNestedManyWithoutUnlockSessionInput
+  starts?: Prisma.UnlockActionStartUncheckedCreateNestedManyWithoutUnlockSessionInput
+  events?: Prisma.AnalyticsEventUncheckedCreateNestedManyWithoutUnlockSessionInput
+  checkins?: Prisma.TelegramCheckinUncheckedCreateNestedManyWithoutUnlockSessionInput
+}
+
+export type UnlockSessionCreateOrConnectWithoutOgadsClicksInput = {
+  where: Prisma.UnlockSessionWhereUniqueInput
+  create: Prisma.XOR<Prisma.UnlockSessionCreateWithoutOgadsClicksInput, Prisma.UnlockSessionUncheckedCreateWithoutOgadsClicksInput>
+}
+
+export type UnlockSessionUpsertWithoutOgadsClicksInput = {
+  update: Prisma.XOR<Prisma.UnlockSessionUpdateWithoutOgadsClicksInput, Prisma.UnlockSessionUncheckedUpdateWithoutOgadsClicksInput>
+  create: Prisma.XOR<Prisma.UnlockSessionCreateWithoutOgadsClicksInput, Prisma.UnlockSessionUncheckedCreateWithoutOgadsClicksInput>
+  where?: Prisma.UnlockSessionWhereInput
+}
+
+export type UnlockSessionUpdateToOneWithWhereWithoutOgadsClicksInput = {
+  where?: Prisma.UnlockSessionWhereInput
+  data: Prisma.XOR<Prisma.UnlockSessionUpdateWithoutOgadsClicksInput, Prisma.UnlockSessionUncheckedUpdateWithoutOgadsClicksInput>
+}
+
+export type UnlockSessionUpdateWithoutOgadsClicksInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumUnlockStatusFieldUpdateOperationsInput | $Enums.UnlockStatus
+  ipHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ogadsOffers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  link?: Prisma.LinkUpdateOneRequiredWithoutUnlocksNestedInput
+  completions?: Prisma.UnlockActionCompletionUpdateManyWithoutUnlockSessionNestedInput
+  starts?: Prisma.UnlockActionStartUpdateManyWithoutUnlockSessionNestedInput
+  events?: Prisma.AnalyticsEventUpdateManyWithoutUnlockSessionNestedInput
+  checkins?: Prisma.TelegramCheckinUpdateManyWithoutUnlockSessionNestedInput
+}
+
+export type UnlockSessionUncheckedUpdateWithoutOgadsClicksInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  linkId?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumUnlockStatusFieldUpdateOperationsInput | $Enums.UnlockStatus
+  ipHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ogadsOffers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  completions?: Prisma.UnlockActionCompletionUncheckedUpdateManyWithoutUnlockSessionNestedInput
+  starts?: Prisma.UnlockActionStartUncheckedUpdateManyWithoutUnlockSessionNestedInput
+  events?: Prisma.AnalyticsEventUncheckedUpdateManyWithoutUnlockSessionNestedInput
+  checkins?: Prisma.TelegramCheckinUncheckedUpdateManyWithoutUnlockSessionNestedInput
 }
 
 export type UnlockSessionCreateWithoutStartsInput = {
@@ -632,12 +758,14 @@ export type UnlockSessionCreateWithoutStartsInput = {
   userAgent?: string | null
   referrer?: string | null
   expiresAt: Date | string
+  ogadsOffers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   link: Prisma.LinkCreateNestedOneWithoutUnlocksInput
   completions?: Prisma.UnlockActionCompletionCreateNestedManyWithoutUnlockSessionInput
   events?: Prisma.AnalyticsEventCreateNestedManyWithoutUnlockSessionInput
   checkins?: Prisma.TelegramCheckinCreateNestedManyWithoutUnlockSessionInput
+  ogadsClicks?: Prisma.OgadsOfferClickCreateNestedManyWithoutUnlockSessionInput
 }
 
 export type UnlockSessionUncheckedCreateWithoutStartsInput = {
@@ -648,11 +776,13 @@ export type UnlockSessionUncheckedCreateWithoutStartsInput = {
   userAgent?: string | null
   referrer?: string | null
   expiresAt: Date | string
+  ogadsOffers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   completions?: Prisma.UnlockActionCompletionUncheckedCreateNestedManyWithoutUnlockSessionInput
   events?: Prisma.AnalyticsEventUncheckedCreateNestedManyWithoutUnlockSessionInput
   checkins?: Prisma.TelegramCheckinUncheckedCreateNestedManyWithoutUnlockSessionInput
+  ogadsClicks?: Prisma.OgadsOfferClickUncheckedCreateNestedManyWithoutUnlockSessionInput
 }
 
 export type UnlockSessionCreateOrConnectWithoutStartsInput = {
@@ -678,12 +808,14 @@ export type UnlockSessionUpdateWithoutStartsInput = {
   userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referrer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ogadsOffers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   link?: Prisma.LinkUpdateOneRequiredWithoutUnlocksNestedInput
   completions?: Prisma.UnlockActionCompletionUpdateManyWithoutUnlockSessionNestedInput
   events?: Prisma.AnalyticsEventUpdateManyWithoutUnlockSessionNestedInput
   checkins?: Prisma.TelegramCheckinUpdateManyWithoutUnlockSessionNestedInput
+  ogadsClicks?: Prisma.OgadsOfferClickUpdateManyWithoutUnlockSessionNestedInput
 }
 
 export type UnlockSessionUncheckedUpdateWithoutStartsInput = {
@@ -694,11 +826,13 @@ export type UnlockSessionUncheckedUpdateWithoutStartsInput = {
   userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referrer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ogadsOffers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completions?: Prisma.UnlockActionCompletionUncheckedUpdateManyWithoutUnlockSessionNestedInput
   events?: Prisma.AnalyticsEventUncheckedUpdateManyWithoutUnlockSessionNestedInput
   checkins?: Prisma.TelegramCheckinUncheckedUpdateManyWithoutUnlockSessionNestedInput
+  ogadsClicks?: Prisma.OgadsOfferClickUncheckedUpdateManyWithoutUnlockSessionNestedInput
 }
 
 export type UnlockSessionCreateWithoutCompletionsInput = {
@@ -708,12 +842,14 @@ export type UnlockSessionCreateWithoutCompletionsInput = {
   userAgent?: string | null
   referrer?: string | null
   expiresAt: Date | string
+  ogadsOffers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   link: Prisma.LinkCreateNestedOneWithoutUnlocksInput
   starts?: Prisma.UnlockActionStartCreateNestedManyWithoutUnlockSessionInput
   events?: Prisma.AnalyticsEventCreateNestedManyWithoutUnlockSessionInput
   checkins?: Prisma.TelegramCheckinCreateNestedManyWithoutUnlockSessionInput
+  ogadsClicks?: Prisma.OgadsOfferClickCreateNestedManyWithoutUnlockSessionInput
 }
 
 export type UnlockSessionUncheckedCreateWithoutCompletionsInput = {
@@ -724,11 +860,13 @@ export type UnlockSessionUncheckedCreateWithoutCompletionsInput = {
   userAgent?: string | null
   referrer?: string | null
   expiresAt: Date | string
+  ogadsOffers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   starts?: Prisma.UnlockActionStartUncheckedCreateNestedManyWithoutUnlockSessionInput
   events?: Prisma.AnalyticsEventUncheckedCreateNestedManyWithoutUnlockSessionInput
   checkins?: Prisma.TelegramCheckinUncheckedCreateNestedManyWithoutUnlockSessionInput
+  ogadsClicks?: Prisma.OgadsOfferClickUncheckedCreateNestedManyWithoutUnlockSessionInput
 }
 
 export type UnlockSessionCreateOrConnectWithoutCompletionsInput = {
@@ -754,12 +892,14 @@ export type UnlockSessionUpdateWithoutCompletionsInput = {
   userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referrer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ogadsOffers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   link?: Prisma.LinkUpdateOneRequiredWithoutUnlocksNestedInput
   starts?: Prisma.UnlockActionStartUpdateManyWithoutUnlockSessionNestedInput
   events?: Prisma.AnalyticsEventUpdateManyWithoutUnlockSessionNestedInput
   checkins?: Prisma.TelegramCheckinUpdateManyWithoutUnlockSessionNestedInput
+  ogadsClicks?: Prisma.OgadsOfferClickUpdateManyWithoutUnlockSessionNestedInput
 }
 
 export type UnlockSessionUncheckedUpdateWithoutCompletionsInput = {
@@ -770,11 +910,13 @@ export type UnlockSessionUncheckedUpdateWithoutCompletionsInput = {
   userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referrer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ogadsOffers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   starts?: Prisma.UnlockActionStartUncheckedUpdateManyWithoutUnlockSessionNestedInput
   events?: Prisma.AnalyticsEventUncheckedUpdateManyWithoutUnlockSessionNestedInput
   checkins?: Prisma.TelegramCheckinUncheckedUpdateManyWithoutUnlockSessionNestedInput
+  ogadsClicks?: Prisma.OgadsOfferClickUncheckedUpdateManyWithoutUnlockSessionNestedInput
 }
 
 export type UnlockSessionCreateWithoutEventsInput = {
@@ -784,12 +926,14 @@ export type UnlockSessionCreateWithoutEventsInput = {
   userAgent?: string | null
   referrer?: string | null
   expiresAt: Date | string
+  ogadsOffers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   link: Prisma.LinkCreateNestedOneWithoutUnlocksInput
   completions?: Prisma.UnlockActionCompletionCreateNestedManyWithoutUnlockSessionInput
   starts?: Prisma.UnlockActionStartCreateNestedManyWithoutUnlockSessionInput
   checkins?: Prisma.TelegramCheckinCreateNestedManyWithoutUnlockSessionInput
+  ogadsClicks?: Prisma.OgadsOfferClickCreateNestedManyWithoutUnlockSessionInput
 }
 
 export type UnlockSessionUncheckedCreateWithoutEventsInput = {
@@ -800,11 +944,13 @@ export type UnlockSessionUncheckedCreateWithoutEventsInput = {
   userAgent?: string | null
   referrer?: string | null
   expiresAt: Date | string
+  ogadsOffers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   completions?: Prisma.UnlockActionCompletionUncheckedCreateNestedManyWithoutUnlockSessionInput
   starts?: Prisma.UnlockActionStartUncheckedCreateNestedManyWithoutUnlockSessionInput
   checkins?: Prisma.TelegramCheckinUncheckedCreateNestedManyWithoutUnlockSessionInput
+  ogadsClicks?: Prisma.OgadsOfferClickUncheckedCreateNestedManyWithoutUnlockSessionInput
 }
 
 export type UnlockSessionCreateOrConnectWithoutEventsInput = {
@@ -830,12 +976,14 @@ export type UnlockSessionUpdateWithoutEventsInput = {
   userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referrer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ogadsOffers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   link?: Prisma.LinkUpdateOneRequiredWithoutUnlocksNestedInput
   completions?: Prisma.UnlockActionCompletionUpdateManyWithoutUnlockSessionNestedInput
   starts?: Prisma.UnlockActionStartUpdateManyWithoutUnlockSessionNestedInput
   checkins?: Prisma.TelegramCheckinUpdateManyWithoutUnlockSessionNestedInput
+  ogadsClicks?: Prisma.OgadsOfferClickUpdateManyWithoutUnlockSessionNestedInput
 }
 
 export type UnlockSessionUncheckedUpdateWithoutEventsInput = {
@@ -846,11 +994,13 @@ export type UnlockSessionUncheckedUpdateWithoutEventsInput = {
   userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referrer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ogadsOffers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completions?: Prisma.UnlockActionCompletionUncheckedUpdateManyWithoutUnlockSessionNestedInput
   starts?: Prisma.UnlockActionStartUncheckedUpdateManyWithoutUnlockSessionNestedInput
   checkins?: Prisma.TelegramCheckinUncheckedUpdateManyWithoutUnlockSessionNestedInput
+  ogadsClicks?: Prisma.OgadsOfferClickUncheckedUpdateManyWithoutUnlockSessionNestedInput
 }
 
 export type UnlockSessionCreateWithoutCheckinsInput = {
@@ -860,12 +1010,14 @@ export type UnlockSessionCreateWithoutCheckinsInput = {
   userAgent?: string | null
   referrer?: string | null
   expiresAt: Date | string
+  ogadsOffers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   link: Prisma.LinkCreateNestedOneWithoutUnlocksInput
   completions?: Prisma.UnlockActionCompletionCreateNestedManyWithoutUnlockSessionInput
   starts?: Prisma.UnlockActionStartCreateNestedManyWithoutUnlockSessionInput
   events?: Prisma.AnalyticsEventCreateNestedManyWithoutUnlockSessionInput
+  ogadsClicks?: Prisma.OgadsOfferClickCreateNestedManyWithoutUnlockSessionInput
 }
 
 export type UnlockSessionUncheckedCreateWithoutCheckinsInput = {
@@ -876,11 +1028,13 @@ export type UnlockSessionUncheckedCreateWithoutCheckinsInput = {
   userAgent?: string | null
   referrer?: string | null
   expiresAt: Date | string
+  ogadsOffers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   completions?: Prisma.UnlockActionCompletionUncheckedCreateNestedManyWithoutUnlockSessionInput
   starts?: Prisma.UnlockActionStartUncheckedCreateNestedManyWithoutUnlockSessionInput
   events?: Prisma.AnalyticsEventUncheckedCreateNestedManyWithoutUnlockSessionInput
+  ogadsClicks?: Prisma.OgadsOfferClickUncheckedCreateNestedManyWithoutUnlockSessionInput
 }
 
 export type UnlockSessionCreateOrConnectWithoutCheckinsInput = {
@@ -906,12 +1060,14 @@ export type UnlockSessionUpdateWithoutCheckinsInput = {
   userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referrer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ogadsOffers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   link?: Prisma.LinkUpdateOneRequiredWithoutUnlocksNestedInput
   completions?: Prisma.UnlockActionCompletionUpdateManyWithoutUnlockSessionNestedInput
   starts?: Prisma.UnlockActionStartUpdateManyWithoutUnlockSessionNestedInput
   events?: Prisma.AnalyticsEventUpdateManyWithoutUnlockSessionNestedInput
+  ogadsClicks?: Prisma.OgadsOfferClickUpdateManyWithoutUnlockSessionNestedInput
 }
 
 export type UnlockSessionUncheckedUpdateWithoutCheckinsInput = {
@@ -922,11 +1078,13 @@ export type UnlockSessionUncheckedUpdateWithoutCheckinsInput = {
   userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referrer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ogadsOffers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completions?: Prisma.UnlockActionCompletionUncheckedUpdateManyWithoutUnlockSessionNestedInput
   starts?: Prisma.UnlockActionStartUncheckedUpdateManyWithoutUnlockSessionNestedInput
   events?: Prisma.AnalyticsEventUncheckedUpdateManyWithoutUnlockSessionNestedInput
+  ogadsClicks?: Prisma.OgadsOfferClickUncheckedUpdateManyWithoutUnlockSessionNestedInput
 }
 
 export type UnlockSessionCreateManyLinkInput = {
@@ -936,6 +1094,7 @@ export type UnlockSessionCreateManyLinkInput = {
   userAgent?: string | null
   referrer?: string | null
   expiresAt: Date | string
+  ogadsOffers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -947,12 +1106,14 @@ export type UnlockSessionUpdateWithoutLinkInput = {
   userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referrer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ogadsOffers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completions?: Prisma.UnlockActionCompletionUpdateManyWithoutUnlockSessionNestedInput
   starts?: Prisma.UnlockActionStartUpdateManyWithoutUnlockSessionNestedInput
   events?: Prisma.AnalyticsEventUpdateManyWithoutUnlockSessionNestedInput
   checkins?: Prisma.TelegramCheckinUpdateManyWithoutUnlockSessionNestedInput
+  ogadsClicks?: Prisma.OgadsOfferClickUpdateManyWithoutUnlockSessionNestedInput
 }
 
 export type UnlockSessionUncheckedUpdateWithoutLinkInput = {
@@ -962,12 +1123,14 @@ export type UnlockSessionUncheckedUpdateWithoutLinkInput = {
   userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referrer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ogadsOffers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completions?: Prisma.UnlockActionCompletionUncheckedUpdateManyWithoutUnlockSessionNestedInput
   starts?: Prisma.UnlockActionStartUncheckedUpdateManyWithoutUnlockSessionNestedInput
   events?: Prisma.AnalyticsEventUncheckedUpdateManyWithoutUnlockSessionNestedInput
   checkins?: Prisma.TelegramCheckinUncheckedUpdateManyWithoutUnlockSessionNestedInput
+  ogadsClicks?: Prisma.OgadsOfferClickUncheckedUpdateManyWithoutUnlockSessionNestedInput
 }
 
 export type UnlockSessionUncheckedUpdateManyWithoutLinkInput = {
@@ -977,6 +1140,7 @@ export type UnlockSessionUncheckedUpdateManyWithoutLinkInput = {
   userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referrer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ogadsOffers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -991,6 +1155,7 @@ export type UnlockSessionCountOutputType = {
   starts: number
   events: number
   checkins: number
+  ogadsClicks: number
 }
 
 export type UnlockSessionCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -998,6 +1163,7 @@ export type UnlockSessionCountOutputTypeSelect<ExtArgs extends runtime.Types.Ext
   starts?: boolean | UnlockSessionCountOutputTypeCountStartsArgs
   events?: boolean | UnlockSessionCountOutputTypeCountEventsArgs
   checkins?: boolean | UnlockSessionCountOutputTypeCountCheckinsArgs
+  ogadsClicks?: boolean | UnlockSessionCountOutputTypeCountOgadsClicksArgs
 }
 
 /**
@@ -1038,6 +1204,13 @@ export type UnlockSessionCountOutputTypeCountCheckinsArgs<ExtArgs extends runtim
   where?: Prisma.TelegramCheckinWhereInput
 }
 
+/**
+ * UnlockSessionCountOutputType without action
+ */
+export type UnlockSessionCountOutputTypeCountOgadsClicksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.OgadsOfferClickWhereInput
+}
+
 
 export type UnlockSessionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1047,6 +1220,7 @@ export type UnlockSessionSelect<ExtArgs extends runtime.Types.Extensions.Interna
   userAgent?: boolean
   referrer?: boolean
   expiresAt?: boolean
+  ogadsOffers?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   link?: boolean | Prisma.LinkDefaultArgs<ExtArgs>
@@ -1054,6 +1228,7 @@ export type UnlockSessionSelect<ExtArgs extends runtime.Types.Extensions.Interna
   starts?: boolean | Prisma.UnlockSession$startsArgs<ExtArgs>
   events?: boolean | Prisma.UnlockSession$eventsArgs<ExtArgs>
   checkins?: boolean | Prisma.UnlockSession$checkinsArgs<ExtArgs>
+  ogadsClicks?: boolean | Prisma.UnlockSession$ogadsClicksArgs<ExtArgs>
   _count?: boolean | Prisma.UnlockSessionCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["unlockSession"]>
 
@@ -1067,17 +1242,19 @@ export type UnlockSessionSelectScalar = {
   userAgent?: boolean
   referrer?: boolean
   expiresAt?: boolean
+  ogadsOffers?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type UnlockSessionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "linkId" | "status" | "ipHash" | "userAgent" | "referrer" | "expiresAt" | "createdAt" | "updatedAt", ExtArgs["result"]["unlockSession"]>
+export type UnlockSessionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "linkId" | "status" | "ipHash" | "userAgent" | "referrer" | "expiresAt" | "ogadsOffers" | "createdAt" | "updatedAt", ExtArgs["result"]["unlockSession"]>
 export type UnlockSessionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   link?: boolean | Prisma.LinkDefaultArgs<ExtArgs>
   completions?: boolean | Prisma.UnlockSession$completionsArgs<ExtArgs>
   starts?: boolean | Prisma.UnlockSession$startsArgs<ExtArgs>
   events?: boolean | Prisma.UnlockSession$eventsArgs<ExtArgs>
   checkins?: boolean | Prisma.UnlockSession$checkinsArgs<ExtArgs>
+  ogadsClicks?: boolean | Prisma.UnlockSession$ogadsClicksArgs<ExtArgs>
   _count?: boolean | Prisma.UnlockSessionCountOutputTypeDefaultArgs<ExtArgs>
 }
 
@@ -1089,6 +1266,7 @@ export type $UnlockSessionPayload<ExtArgs extends runtime.Types.Extensions.Inter
     starts: Prisma.$UnlockActionStartPayload<ExtArgs>[]
     events: Prisma.$AnalyticsEventPayload<ExtArgs>[]
     checkins: Prisma.$TelegramCheckinPayload<ExtArgs>[]
+    ogadsClicks: Prisma.$OgadsOfferClickPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1098,6 +1276,10 @@ export type $UnlockSessionPayload<ExtArgs extends runtime.Types.Extensions.Inter
     userAgent: string | null
     referrer: string | null
     expiresAt: Date
+    /**
+     * * Offers shown as the session's offer step, as [{ id, name }]. Null when OGAds is off.
+     */
+    ogadsOffers: runtime.JsonValue | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["unlockSession"]>
@@ -1445,6 +1627,7 @@ export interface Prisma__UnlockSessionClient<T, Null = never, ExtArgs extends ru
   starts<T extends Prisma.UnlockSession$startsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UnlockSession$startsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UnlockActionStartPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   events<T extends Prisma.UnlockSession$eventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UnlockSession$eventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AnalyticsEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   checkins<T extends Prisma.UnlockSession$checkinsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UnlockSession$checkinsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TelegramCheckinPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  ogadsClicks<T extends Prisma.UnlockSession$ogadsClicksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UnlockSession$ogadsClicksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OgadsOfferClickPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1481,6 +1664,7 @@ export interface UnlockSessionFieldRefs {
   readonly userAgent: Prisma.FieldRef<"UnlockSession", 'String'>
   readonly referrer: Prisma.FieldRef<"UnlockSession", 'String'>
   readonly expiresAt: Prisma.FieldRef<"UnlockSession", 'DateTime'>
+  readonly ogadsOffers: Prisma.FieldRef<"UnlockSession", 'Json'>
   readonly createdAt: Prisma.FieldRef<"UnlockSession", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"UnlockSession", 'DateTime'>
 }
@@ -1924,6 +2108,30 @@ export type UnlockSession$checkinsArgs<ExtArgs extends runtime.Types.Extensions.
   take?: number
   skip?: number
   distinct?: Prisma.TelegramCheckinScalarFieldEnum | Prisma.TelegramCheckinScalarFieldEnum[]
+}
+
+/**
+ * UnlockSession.ogadsClicks
+ */
+export type UnlockSession$ogadsClicksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the OgadsOfferClick
+   */
+  select?: Prisma.OgadsOfferClickSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the OgadsOfferClick
+   */
+  omit?: Prisma.OgadsOfferClickOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OgadsOfferClickInclude<ExtArgs> | null
+  where?: Prisma.OgadsOfferClickWhereInput
+  orderBy?: Prisma.OgadsOfferClickOrderByWithRelationInput | Prisma.OgadsOfferClickOrderByWithRelationInput[]
+  cursor?: Prisma.OgadsOfferClickWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.OgadsOfferClickScalarFieldEnum | Prisma.OgadsOfferClickScalarFieldEnum[]
 }
 
 /**

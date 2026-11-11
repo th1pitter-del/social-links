@@ -404,6 +404,7 @@ export const ModelName = {
   Link: 'Link',
   LinkAction: 'LinkAction',
   UnlockSession: 'UnlockSession',
+  OgadsOfferClick: 'OgadsOfferClick',
   UnlockActionStart: 'UnlockActionStart',
   UnlockActionCompletion: 'UnlockActionCompletion',
   AnalyticsEvent: 'AnalyticsEvent',
@@ -440,7 +441,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "session" | "account" | "verification" | "link" | "linkAction" | "unlockSession" | "unlockActionStart" | "unlockActionCompletion" | "analyticsEvent" | "emailLead" | "rateLimitBucket" | "abuseReport" | "setting" | "adUnit" | "headerLink" | "customPage" | "customMenuItem" | "auditLog" | "platform" | "actionOption" | "mediaAsset" | "storedFile" | "userUnlock" | "profile" | "bioLink" | "telegramCheckin" | "shortLink"
+    modelProps: "user" | "session" | "account" | "verification" | "link" | "linkAction" | "unlockSession" | "ogadsOfferClick" | "unlockActionStart" | "unlockActionCompletion" | "analyticsEvent" | "emailLead" | "rateLimitBucket" | "abuseReport" | "setting" | "adUnit" | "headerLink" | "customPage" | "customMenuItem" | "auditLog" | "platform" | "actionOption" | "mediaAsset" | "storedFile" | "userUnlock" | "profile" | "bioLink" | "telegramCheckin" | "shortLink"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -903,6 +904,72 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.UnlockSessionCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.UnlockSessionCountAggregateOutputType> | number
+        }
+      }
+    }
+    OgadsOfferClick: {
+      payload: Prisma.$OgadsOfferClickPayload<ExtArgs>
+      fields: Prisma.OgadsOfferClickFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.OgadsOfferClickFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OgadsOfferClickPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.OgadsOfferClickFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OgadsOfferClickPayload>
+        }
+        findFirst: {
+          args: Prisma.OgadsOfferClickFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OgadsOfferClickPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.OgadsOfferClickFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OgadsOfferClickPayload>
+        }
+        findMany: {
+          args: Prisma.OgadsOfferClickFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OgadsOfferClickPayload>[]
+        }
+        create: {
+          args: Prisma.OgadsOfferClickCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OgadsOfferClickPayload>
+        }
+        createMany: {
+          args: Prisma.OgadsOfferClickCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.OgadsOfferClickDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OgadsOfferClickPayload>
+        }
+        update: {
+          args: Prisma.OgadsOfferClickUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OgadsOfferClickPayload>
+        }
+        deleteMany: {
+          args: Prisma.OgadsOfferClickDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.OgadsOfferClickUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.OgadsOfferClickUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OgadsOfferClickPayload>
+        }
+        aggregate: {
+          args: Prisma.OgadsOfferClickAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateOgadsOfferClick>
+        }
+        groupBy: {
+          args: Prisma.OgadsOfferClickGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.OgadsOfferClickGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.OgadsOfferClickCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.OgadsOfferClickCountAggregateOutputType> | number
         }
       }
     }
@@ -2440,11 +2507,30 @@ export const UnlockSessionScalarFieldEnum = {
   userAgent: 'userAgent',
   referrer: 'referrer',
   expiresAt: 'expiresAt',
+  ogadsOffers: 'ogadsOffers',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type UnlockSessionScalarFieldEnum = (typeof UnlockSessionScalarFieldEnum)[keyof typeof UnlockSessionScalarFieldEnum]
+
+
+export const OgadsOfferClickScalarFieldEnum = {
+  id: 'id',
+  unlockSessionId: 'unlockSessionId',
+  offerId: 'offerId',
+  offerName: 'offerName',
+  status: 'status',
+  payout: 'payout',
+  clickCount: 'clickCount',
+  firstClickedAt: 'firstClickedAt',
+  creditedAt: 'creditedAt',
+  rawPostback: 'rawPostback',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type OgadsOfferClickScalarFieldEnum = (typeof OgadsOfferClickScalarFieldEnum)[keyof typeof OgadsOfferClickScalarFieldEnum]
 
 
 export const UnlockActionStartScalarFieldEnum = {
@@ -2845,6 +2931,23 @@ export const LinkActionOrderByRelevanceFieldEnum = {
 export type LinkActionOrderByRelevanceFieldEnum = (typeof LinkActionOrderByRelevanceFieldEnum)[keyof typeof LinkActionOrderByRelevanceFieldEnum]
 
 
+export const JsonNullValueFilter = {
+  DbNull: DbNull,
+  JsonNull: JsonNull,
+  AnyNull: AnyNull
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
+
+
+export const QueryMode = {
+  default: 'default',
+  insensitive: 'insensitive'
+} as const
+
+export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
+
+
 export const UnlockSessionOrderByRelevanceFieldEnum = {
   id: 'id',
   linkId: 'linkId',
@@ -2854,6 +2957,16 @@ export const UnlockSessionOrderByRelevanceFieldEnum = {
 } as const
 
 export type UnlockSessionOrderByRelevanceFieldEnum = (typeof UnlockSessionOrderByRelevanceFieldEnum)[keyof typeof UnlockSessionOrderByRelevanceFieldEnum]
+
+
+export const OgadsOfferClickOrderByRelevanceFieldEnum = {
+  id: 'id',
+  unlockSessionId: 'unlockSessionId',
+  offerId: 'offerId',
+  offerName: 'offerName'
+} as const
+
+export type OgadsOfferClickOrderByRelevanceFieldEnum = (typeof OgadsOfferClickOrderByRelevanceFieldEnum)[keyof typeof OgadsOfferClickOrderByRelevanceFieldEnum]
 
 
 export const UnlockActionStartOrderByRelevanceFieldEnum = {
@@ -2938,23 +3051,6 @@ export const AdUnitOrderByRelevanceFieldEnum = {
 } as const
 
 export type AdUnitOrderByRelevanceFieldEnum = (typeof AdUnitOrderByRelevanceFieldEnum)[keyof typeof AdUnitOrderByRelevanceFieldEnum]
-
-
-export const JsonNullValueFilter = {
-  DbNull: DbNull,
-  JsonNull: JsonNull,
-  AnyNull: AnyNull
-} as const
-
-export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
-
-
-export const QueryMode = {
-  default: 'default',
-  insensitive: 'insensitive'
-} as const
-
-export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
 
 
 export const HeaderLinkOrderByRelevanceFieldEnum = {
@@ -3176,6 +3272,34 @@ export type EnumUnlockStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$Pri
 
 
 /**
+ * Reference to a field of type 'Json'
+ */
+export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+/**
+ * Reference to a field of type 'QueryMode'
+ */
+export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
+    
+
+
+/**
+ * Reference to a field of type 'OgadsOfferStatus'
+ */
+export type EnumOgadsOfferStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OgadsOfferStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'Decimal'
+ */
+export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
+    
+
+
+/**
  * Reference to a field of type 'AnalyticsEventType'
  */
 export type EnumAnalyticsEventTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AnalyticsEventType'>
@@ -3193,20 +3317,6 @@ export type EnumAbuseReasonFieldRefInput<$PrismaModel> = FieldRefInputType<$Pris
  * Reference to a field of type 'AbuseReportStatus'
  */
 export type EnumAbuseReportStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AbuseReportStatus'>
-    
-
-
-/**
- * Reference to a field of type 'Json'
- */
-export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
-    
-
-
-/**
- * Reference to a field of type 'QueryMode'
- */
-export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
     
 
 
@@ -3395,6 +3505,7 @@ export type GlobalOmitConfig = {
   link?: Prisma.LinkOmit
   linkAction?: Prisma.LinkActionOmit
   unlockSession?: Prisma.UnlockSessionOmit
+  ogadsOfferClick?: Prisma.OgadsOfferClickOmit
   unlockActionStart?: Prisma.UnlockActionStartOmit
   unlockActionCompletion?: Prisma.UnlockActionCompletionOmit
   analyticsEvent?: Prisma.AnalyticsEventOmit

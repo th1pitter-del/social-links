@@ -3,7 +3,7 @@
 import { useMemo, useRef, useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { useTranslations } from 'next-intl'
-import { ArrowDown, ArrowUp, Code2, Loader2, Pencil, Plus, Trash2, Upload } from 'lucide-react'
+import { ArrowDown, ArrowUp, Code2, Image as ImageIcon, Link2, Loader2, Pencil, Plus, Trash2, Upload } from 'lucide-react'
 import { toast } from 'sonner'
 
 import { Badge } from '@/components/ui/badge'
@@ -302,7 +302,13 @@ export function AdsTable({ initial }: { initial: AdUnitData[] }) {
                 />
               ) : (
                 <span className="flex size-10 shrink-0 items-center justify-center rounded-md bg-muted text-muted-foreground">
-                  {ad.type === 'html' ? <Code2 className="size-4" /> : <Plus className="size-4" />}
+                  {ad.type === 'html' ? (
+                    <Code2 className="size-4" />
+                  ) : ad.type === 'link' ? (
+                    <Link2 className="size-4" />
+                  ) : (
+                    <ImageIcon className="size-4" />
+                  )}
                 </span>
               )}
 

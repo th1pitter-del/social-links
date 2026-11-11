@@ -1,10 +1,10 @@
 import Link from 'next/link'
 import { getLocale, getTranslations } from 'next-intl/server'
 import {
-  AtSign,
   CheckCircle2,
   Eye,
   Flag,
+  Gift,
   Link2,
   MousePointerClick,
   Users,
@@ -23,7 +23,8 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { getActionMix } from '@/lib/action-mix'
 import { buildHeatBuckets, windowStart, HEAT_DAYS } from '@/lib/activity-buckets'
-import { formatNumber, formatPercent } from '@/lib/format'
+import { formatCurrency, formatNumber, formatPercent } from '@/lib/format'
+import { getOgadsConfig } from '@/lib/ogads'
 import { prisma } from '@/lib/prisma'
 
 export async function generateMetadata() {
@@ -203,6 +204,44 @@ export default async function AdminOverviewPage() {
   const heat = buildHeatBuckets(recentActivity)
 
   const actionMix = await getActionMix()
+
+  const ogads = await getOgadsConfig()
+  let ogadsStats: {
+    total: number
+    today: number
+    recent: Array<{
+      id: string
+      offerName: string | null
+      offerId: string
+      payout: unknown
+      creditedAt: Date | null
+      unlockSession: { link: { title: string; slug: string } }
+    }>
+  } | null = null
+  if (ogads.enabled) {
+    const todayStart = new Date()
+    todayStart.setHours(0, 0, 0, 0)
+    const [total, today, recent] = await Promise.all([
+      prisma.ogadsOfferClick.count({ where: { status: 'CREDITED' } }),
+      prisma.ogadsOfferClick.count({
+        where: { status: 'CREDITED', creditedAt: { gte: todayStart } },
+      }),
+      prisma.ogadsOfferClick.findMany({
+        where: { status: 'CREDITED' },
+        orderBy: { creditedAt: 'desc' },
+        take: 5,
+        select: {
+          id: true,
+          offerId: true,
+          offerName: true,
+          payout: true,
+          creditedAt: true,
+          unlockSession: { select: { link: { select: { title: true, slug: true } } } },
+        },
+      }),
+    ])
+    ogadsStats = { total, today, recent }
+  }
 
   return (
     <div className="space-y-6">
@@ -633,6 +672,83 @@ export default async function AdminOverviewPage() {
           </div>
         )}
       </Panel>
+
+      {ogadsStats ? (
+        <Panel>
+          <PanelHeader
+            title={t('overview.ogadsTitle')}
+            description={t('overview.ogadsDescription')}
+          />
+          <div className="grid gap-4 border-b border-border p-5 sm:grid-cols-2">
+            <StatCard
+              label={t('overview.ogadsTotal')}
+              value={ogadsStats.total}
+              icon={Gift}
+              tone="emerald"
+            />
+            <StatCard
+              label={t('overview.ogadsToday')}
+              value={ogadsStats.today}
+              icon={CheckCircle2}
+              tone="indigo"
+            />
+          </div>
+          {ogadsStats.recent.length === 0 ? (
+            <PanelContent>
+              <EmptyState>{t('overview.ogadsEmpty')}</EmptyState>
+            </PanelContent>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead className="border-b border-border text-start text-xs text-muted-foreground">
+                  <tr>
+                    <th className="px-5 py-3 font-medium">{t('overview.ogadsColOffer')}</th>
+                    <th className="hidden px-5 py-3 font-medium sm:table-cell">
+                      {t('overview.ogadsColLink')}
+                    </th>
+                    <th className="hidden px-5 py-3 text-end font-medium md:table-cell">
+                      {t('overview.ogadsColPayout')}
+                    </th>
+                    <th className="hidden px-5 py-3 font-medium md:table-cell">
+                      {t('overview.ogadsColWhen')}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-border">
+                  {ogadsStats.recent.map((row) => (
+                    <tr key={row.id} className="hover:bg-muted/40">
+                      <td className="px-5 py-3">
+                        <p className="max-w-64 truncate font-medium">
+                          {row.offerName ?? row.offerId}
+                        </p>
+                        <p className="mt-0.5 font-mono text-xs text-muted-foreground">
+                          #{row.offerId}
+                        </p>
+                      </td>
+                      <td className="hidden max-w-64 px-5 py-3 sm:table-cell">
+                        <Link
+                          href={`/link/${row.unlockSession.link.slug}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="block truncate hover:underline"
+                        >
+                          {row.unlockSession.link.title}
+                        </Link>
+                      </td>
+                      <td className="hidden px-5 py-3 text-end text-muted-foreground tabular-nums md:table-cell">
+                        {formatCurrency(locale, Number(row.payout ?? 0))}
+                      </td>
+                      <td className="hidden px-5 py-3 text-muted-foreground md:table-cell">
+                        {row.creditedAt ? <Timestamp value={row.creditedAt} /> : '—'}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </Panel>
+      ) : null}
     </div>
   )
 }

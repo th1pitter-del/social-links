@@ -3,7 +3,7 @@ import type { AdPlacement, AdUnitData } from '@/lib/ads'
 import { AdHtml } from '@/components/ads/ad-html'
 
 function adRel(newTab: boolean) {
-  return newTab ? 'sponsorednoopener noreferrer' : 'sponsored'
+  return newTab ? 'sponsored noopener noreferrer' : 'sponsored'
 }
 
 function AdUnitView({ ad }: { ad: AdUnitData }) {

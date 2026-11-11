@@ -53,6 +53,14 @@ export type LinkAction = Prisma.LinkActionModel
  */
 export type UnlockSession = Prisma.UnlockSessionModel
 /**
+ * Model OgadsOfferClick
+ * *
+ *  * A visitor's click-through on one OGAds offer, plus the conversion OGAds later
+ *  * posts back for it. One row per session and offer; the postback updates the row
+ *  * it already has instead of inserting a duplicate.
+ */
+export type OgadsOfferClick = Prisma.OgadsOfferClickModel
+/**
  * Model UnlockActionStart
  * *
  *  * The moment a visitor first opened a step that has a waiting period. It is

@@ -12,6 +12,13 @@ import { consumeBySetting } from '@/lib/rate-limit'
 import { getSession } from '@/lib/session'
 import { signVisitToken } from '@/lib/visit-token'
 import { createHash } from 'node:crypto'
+import {
+  fetchOgadsOffers,
+  getOgadsConfig,
+  isOgadsReady,
+  readStoredOffers,
+} from '@/lib/ogads'
+import { promoteIfComplete } from '@/lib/unlock-completion'
 import type { UnlockStatus } from '@/generated/prisma/enums'
 
 const UNLOCK_SESSION_TTL_MS = 2 * 60 * 60 * 1000
@@ -29,12 +36,24 @@ export type UnlockActionView = {
   visitUrl: string | null
 }
 
+/** One OGAds offer shown as part of the single "complete any offer" step. */
+export type UnlockOfferView = {
+  id: string
+  name: string
+  credited: boolean
+  /** Server redirect that mints the attributed smartlink; null once credited. */
+  clickUrl: string | null
+}
+
 export type UnlockState = {
   token: string
   linkTitle: string
   status: UnlockStatus
   expired: boolean
   actions: UnlockActionView[]
+  offers: UnlockOfferView[]
+  /** True when every offer step is done (or there is none to do). */
+  offersSatisfied: boolean
   allActionsCompleted: boolean
   canUnlock: boolean
   expiresAt: string
@@ -85,12 +104,17 @@ async function buildState(sessionId: string): Promise<UnlockState | null> {
         },
       },
       completions: { select: { linkActionId: true } },
+      ogadsOffers: true,
+      ogadsClicks: { select: { offerId: true, status: true } },
     },
   })
 
   if (!session) return null
 
   const completed = new Set(session.completions.map((row) => row.linkActionId))
+  const credited = new Set(
+    session.ogadsClicks.filter((row) => row.status === 'CREDITED').map((row) => row.offerId),
+  )
   const now = Date.now()
   const expired = session.expiresAt.getTime() <= now
   const catalog = await getActionOptionMap()
@@ -121,6 +145,16 @@ async function buildState(sessionId: string): Promise<UnlockState | null> {
   })
 
   const allActionsCompleted = actions.every((action) => action.completed)
+  const offers: UnlockOfferView[] = readStoredOffers(session.ogadsOffers).map((offer) => {
+    const done = credited.has(offer.id)
+    return {
+      id: offer.id,
+      name: offer.name,
+      credited: done,
+      clickUrl: done ? null : `/o/${encodeURIComponent(session.id)}/${encodeURIComponent(offer.id)}`,
+    }
+  })
+  const offersSatisfied = offers.length === 0 || offers.some((offer) => offer.credited)
   const verified = session.status === 'VERIFIED'
 
   return {
@@ -129,8 +163,10 @@ async function buildState(sessionId: string): Promise<UnlockState | null> {
     status: expired ? 'EXPIRED' : session.status,
     expired,
     actions,
+    offers,
+    offersSatisfied,
     allActionsCompleted,
-    canUnlock: !expired && allActionsCompleted && verified,
+    canUnlock: !expired && allActionsCompleted && offersSatisfied && verified,
     expiresAt: session.expiresAt.toISOString(),
   }
 }
@@ -215,6 +251,26 @@ export async function startUnlock(
     })
   }
 
+  // Offers are part of the unlock only when the link asks for other tasks. Their
+  // smartlinks are minted per session, so the snapshot is fetched here with this
+  // session id as aff_sub4; a failure leaves the unlock working without the step.
+  if (link.actions.length > 0) {
+    const ogads = await getOgadsConfig()
+    if (isOgadsReady(ogads)) {
+      try {
+        const offers = await fetchOgadsOffers({ ip, userAgent, affSub4: session.id })
+        if (offers.length > 0) {
+          await prisma.unlockSession.update({
+            where: { id: session.id },
+            data: { ogadsOffers: offers.map(({ id, name }) => ({ id, name })) },
+          })
+        }
+      } catch (error) {
+        console.error('[ogads] could not load offers for session', session.id, error)
+      }
+    }
+  }
+
   const state = await buildState(session.id)
   if (!state) {
     return { ok: false, error: t('startSessionFailed') }
@@ -286,26 +342,11 @@ export async function markActionComplete(input: {
     data: { linkId: session.linkId, unlockSessionId: token, type: 'ACTION_DONE' },
   })
 
-  await promoteIfComplete(token, session.link.actions.map((candidate) => candidate.id))
+  await promoteIfComplete(token)
 
   const state = await buildState(token)
   if (!state) return { ok: false, error: t('updateSessionFailed') }
   return { ok: true, state }
-}
-
-/** Moves a session to VERIFIED once every configured action has a completion row. */
-async function promoteIfComplete(sessionId: string, actionIds: string[]): Promise<void> {
-  const completions = await prisma.unlockActionCompletion.findMany({
-    where: { unlockSessionId: sessionId },
-    select: { linkActionId: true },
-  })
-  const completedSet = new Set(completions.map((row) => row.linkActionId))
-  if (actionIds.every((id) => completedSet.has(id))) {
-    await prisma.unlockSession.update({
-      where: { id: sessionId },
-      data: { status: 'VERIFIED' },
-    })
-  }
 }
 
 /**

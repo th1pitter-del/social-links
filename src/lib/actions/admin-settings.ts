@@ -18,6 +18,55 @@ export async function updateSetting(key: string, value: string): Promise<Setting
   if (!trimmedKey || trimmedKey.length > 64) {
     return { ok: false, error: t('invalidSettingKey') }
   }
+  if (trimmedKey === 'ogads.postbackUrl') {
+    // Computed from the site URL and postback secret; never typed by hand.
+    return { ok: false, error: t('readOnlySetting') }
+  }
+  if (trimmedKey.startsWith('ogads.')) {
+    value = value.trim()
+    if (trimmedKey === 'ogads.enabled') {
+      value = value === 'true' ? 'true' : 'false'
+    } else if (trimmedKey === 'ogads.endpoint') {
+      if (value !== '') {
+        try {
+          const protocol = new URL(value).protocol
+          if (protocol !== 'https:' && protocol !== 'http:') {
+            return { ok: false, error: t('invalidOgadsEndpoint') }
+          }
+        } catch {
+          return { ok: false, error: t('invalidOgadsEndpoint') }
+        }
+      }
+    } else if (trimmedKey === 'ogads.offersShown') {
+      if (value !== '') {
+        const parsed = Number(value)
+        if (!Number.isInteger(parsed) || parsed < 1 || parsed > 10) {
+          return { ok: false, error: t('invalidOgadsOffersShown') }
+        }
+        value = String(parsed)
+      }
+    } else if (trimmedKey === 'ogads.ctype') {
+      if (value !== '') {
+        const parsed = Number(value)
+        if (!Number.isInteger(parsed) || parsed < 0 || parsed > 15) {
+          return { ok: false, error: t('invalidOgadsCtype') }
+        }
+        value = String(parsed)
+      }
+    } else if (trimmedKey === 'ogads.affiliateId') {
+      if (value !== '' && !/^[A-Za-z0-9_-]{1,64}$/.test(value)) {
+        return { ok: false, error: t('invalidOgadsAffiliateId') }
+      }
+    } else if (trimmedKey === 'ogads.apiKey') {
+      if (value !== '' && value.length < 8) {
+        return { ok: false, error: t('invalidOgadsApiKey') }
+      }
+    } else if (trimmedKey === 'ogads.postbackSecret') {
+      if (value !== '' && value.length < 16) {
+        return { ok: false, error: t('invalidOgadsPostbackSecret') }
+      }
+    }
+  }
   if (trimmedKey.startsWith('theme.')) {
     const trimmedValue = value.trim()
     // Empty value = reset to the built-in default; otherwise it must be hex.

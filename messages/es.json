@@ -332,7 +332,12 @@
     "metaTitleSuffix": "Link Unlocker",
     "visitUnavailable": "Este enlace de visita caducó. Recarga la página e inténtalo de nuevo.",
     "stepsFirst": "Completa primero todos los pasos de arriba",
-    "guestOwner": "Invitado"
+    "guestOwner": "Invitado",
+    "offersTitle": "Completa cualquiera de las ofertas",
+    "offersHint": "Cualquier oferta de la lista finaliza este paso. La confirmación llega del proveedor y puede tardar un minuto.",
+    "offerWaiting": "Esperando confirmación…",
+    "offerVerified": "Oferta verificada",
+    "offerUnavailable": "Las ofertas no están disponibles ahora mismo. Recarga la página para intentarlo de nuevo."
   },
   "report": {
     "title": "Reportar un enlace",
@@ -537,7 +542,17 @@
       "contentPagesDescription": "{count} páginas · {published} publicadas",
       "noContentPages": "Aún no hay páginas de contenido.",
       "colContentPage": "Página",
-      "colMenuLinks": "Enlaces en menús"
+      "colMenuLinks": "Enlaces en menús",
+      "ogadsTitle": "Conversiones de OGAds",
+      "ogadsDescription": "Ofertas acreditadas a través de páginas de desbloqueo, confirmadas por el postback de OGAds.",
+      "ogadsTotal": "Conversiones totales",
+      "ogadsToday": "Hoy",
+      "ogadsRecent": "Últimas ofertas acreditadas",
+      "ogadsEmpty": "Todavía no se ha acreditado ninguna oferta.",
+      "ogadsColOffer": "Oferta",
+      "ogadsColLink": "Página de desbloqueo",
+      "ogadsColPayout": "Comisión",
+      "ogadsColWhen": "Acreditada"
     },
     "audit": {
       "title": "Registro de auditoría",
@@ -1025,6 +1040,10 @@
         "data-retention": {
           "title": "Retención de datos",
           "description": "Cuánto tiempo conserva la tarea de limpieza los eventos de analítica."
+        },
+        "ogads": {
+          "title": "Ofertas de OGAds",
+          "description": "Ofertas CPA de OGAds mostradas como una tarea de desbloqueo. Las conversiones se confirman mediante el postback de OGAds."
         }
       },
       "fields": {
@@ -1144,6 +1163,44 @@
           "label": "Días de retención de analítica",
           "hint": "0 conserva todos los eventos, que es lo que necesitan los informes del panel.",
           "placeholder": "0"
+        },
+        "ogads_enabled": {
+          "label": "Mostrar ofertas de OGAds en las páginas de desbloqueo",
+          "hint": "Añade un paso de ofertas a cada página de desbloqueo que tenga otras tareas. Completar una sola oferta finaliza el paso."
+        },
+        "ogads_apiKey": {
+          "label": "Clave API",
+          "hint": "Se encuentra en el área de miembros de OGAds. Solo se puede sobrescribir."
+        },
+        "ogads_endpoint": {
+          "label": "Endpoint de la API de ofertas",
+          "hint": "El dominio de locker asignado a tu cuenta. Déjalo vacío para usar el predeterminado actual.",
+          "placeholder": "https://lockerpreview.com/api/v2"
+        },
+        "ogads_affiliateId": {
+          "label": "ID de afiliado",
+          "hint": "Opcional. Si se define, se rechazan los postbacks que informen otro afiliado.",
+          "placeholder": "123456"
+        },
+        "ogads_ctype": {
+          "label": "Tipos de oferta",
+          "hint": "Suma los tipos que aceptas: 1 instalaciones, 2 CPA, 4 PIN, 8 vídeo. Vacío acepta todos.",
+          "placeholder": "3"
+        },
+        "ogads_offersShown": {
+          "label": "Ofertas mostradas por página",
+          "hint": "Entre 1 y 10. Cada una es una fila de tarea; una conversión finaliza el paso.",
+          "placeholder": "3"
+        },
+        "ogads_postbackSecret": {
+          "label": "Secreto del postback",
+          "hint": "Al menos 16 caracteres. Obligatorio: es lo único que demuestra que un postback es auténtico.",
+          "placeholder": "Un valor largo y aleatorio"
+        },
+        "ogads_postbackUrl": {
+          "label": "URL del postback",
+          "hint": "Pégala en la configuración de postback de OGAds. Contiene el secreto, así que mantenla privada.",
+          "placeholder": "Guarda un secreto de postback para generar la URL"
         }
       },
       "uploadImage": "Subir imagen",
@@ -1152,7 +1209,10 @@
       "secretConfigured": "Configurado",
       "secretNotConfigured": "Sin configurar",
       "secretReplacePlaceholder": "Pega un valor nuevo para reemplazarlo",
-      "secretRemove": "Quitar"
+      "secretRemove": "Quitar",
+      "copy": "Copiar",
+      "copiedToast": "Copiado.",
+      "copyFailedToast": "No se pudo copiar. Selecciona el texto y cópialo manualmente."
     },
     "bioPages": {
       "title": "Páginas bio",
@@ -1681,7 +1741,14 @@
     "menuParentHasChildren": "Este menú tiene subelementos. Muévelos o elimínalos antes de anidarlo.",
     "menuPageRequired": "Elige una página para este subelemento.",
     "menuNotFound": "Elemento del menú no encontrado.",
-    "menuOrderInvalid": "Ese orden del menú ya no es válido. Recarga e inténtalo de nuevo."
+    "menuOrderInvalid": "Ese orden del menú ya no es válido. Recarga e inténtalo de nuevo.",
+    "readOnlySetting": "Este valor se genera automáticamente y no se puede editar.",
+    "invalidOgadsEndpoint": "Introduce un endpoint de ofertas http:// o https:// válido.",
+    "invalidOgadsOffersShown": "Elige entre 1 y 10 ofertas por página.",
+    "invalidOgadsCtype": "Los tipos de oferta deben ser un número entero entre 0 y 15.",
+    "invalidOgadsAffiliateId": "El ID de afiliado solo puede tener letras, números, guiones y guiones bajos.",
+    "invalidOgadsApiKey": "Esa clave API parece demasiado corta. Pega la clave completa.",
+    "invalidOgadsPostbackSecret": "Usa al menos 16 caracteres para el secreto del postback."
   },
   "linkForm": {
     "uploadFailed": "Error al subir.",

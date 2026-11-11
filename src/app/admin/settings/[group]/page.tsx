@@ -4,6 +4,7 @@ import { getTranslations } from 'next-intl/server'
 import { getSettingsGroup } from '@/components/admin/settings-config'
 import { SettingsGroupForm } from '@/components/admin/settings-form'
 import { getSettings } from '@/lib/admin-utils'
+import { getOgadsConfig, ogadsPostbackUrl } from '@/lib/ogads'
 import { defaultThemeValue } from '@/lib/settings'
 import { requireAdmin } from '@/lib/session'
 
@@ -42,6 +43,13 @@ export default async function AdminSettingsGroupPage({
     } else {
       settings[field.key] = stored ?? defaultThemeValue(field.key) ?? ''
     }
+  }
+
+  if (group.id === 'ogads') {
+    // The postback URL must contain the secret for OGAds to call us at all, so
+    // it is the one credential that reaches this page — as the URL to paste.
+    const ogads = await getOgadsConfig()
+    settings['ogads.postbackUrl'] = ogads.postbackSecret ? ogadsPostbackUrl(ogads) : ''
   }
 
   return <SettingsGroupForm groupId={group.id} settings={settings} configured={configured} />

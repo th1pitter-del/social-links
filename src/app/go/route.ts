@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 
 import { prisma } from '@/lib/prisma'
+import { promoteIfComplete } from '@/lib/unlock-completion'
 import { readVisitToken } from '@/lib/visit-token'
 
 export const runtime = 'nodejs'
@@ -78,17 +79,7 @@ export async function GET(request: Request) {
       data: { linkId: session.linkId, unlockSessionId: session.id, type: 'ACTION_DONE' },
     })
 
-    const completions = await prisma.unlockActionCompletion.findMany({
-      where: { unlockSessionId: session.id },
-      select: { linkActionId: true },
-    })
-    const done = new Set(completions.map((row) => row.linkActionId))
-    if (session.link.actions.every((candidate) => done.has(candidate.id))) {
-      await prisma.unlockSession.update({
-        where: { id: session.id },
-        data: { status: 'VERIFIED' },
-      })
-    }
+    await promoteIfComplete(session.id)
   }
 
   return NextResponse.redirect(action.target, 302)

@@ -53,6 +53,15 @@ export const UnlockStatus = {
 export type UnlockStatus = (typeof UnlockStatus)[keyof typeof UnlockStatus]
 
 
+export const OgadsOfferStatus = {
+  PENDING: 'PENDING',
+  CREDITED: 'CREDITED',
+  REVERSED: 'REVERSED'
+} as const
+
+export type OgadsOfferStatus = (typeof OgadsOfferStatus)[keyof typeof OgadsOfferStatus]
+
+
 export const AnalyticsEventType = {
   VIEW: 'VIEW',
   UNLOCK_START: 'UNLOCK_START',
