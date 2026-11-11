@@ -413,6 +413,8 @@ export const ModelName = {
   Setting: 'Setting',
   AdUnit: 'AdUnit',
   HeaderLink: 'HeaderLink',
+  CustomPage: 'CustomPage',
+  CustomMenuItem: 'CustomMenuItem',
   AuditLog: 'AuditLog',
   Platform: 'Platform',
   ActionOption: 'ActionOption',
@@ -438,7 +440,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "session" | "account" | "verification" | "link" | "linkAction" | "unlockSession" | "unlockActionStart" | "unlockActionCompletion" | "analyticsEvent" | "emailLead" | "rateLimitBucket" | "abuseReport" | "setting" | "adUnit" | "headerLink" | "auditLog" | "platform" | "actionOption" | "mediaAsset" | "storedFile" | "userUnlock" | "profile" | "bioLink" | "telegramCheckin" | "shortLink"
+    modelProps: "user" | "session" | "account" | "verification" | "link" | "linkAction" | "unlockSession" | "unlockActionStart" | "unlockActionCompletion" | "analyticsEvent" | "emailLead" | "rateLimitBucket" | "abuseReport" | "setting" | "adUnit" | "headerLink" | "customPage" | "customMenuItem" | "auditLog" | "platform" | "actionOption" | "mediaAsset" | "storedFile" | "userUnlock" | "profile" | "bioLink" | "telegramCheckin" | "shortLink"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1498,6 +1500,138 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    CustomPage: {
+      payload: Prisma.$CustomPagePayload<ExtArgs>
+      fields: Prisma.CustomPageFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CustomPageFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomPagePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CustomPageFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomPagePayload>
+        }
+        findFirst: {
+          args: Prisma.CustomPageFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomPagePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CustomPageFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomPagePayload>
+        }
+        findMany: {
+          args: Prisma.CustomPageFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomPagePayload>[]
+        }
+        create: {
+          args: Prisma.CustomPageCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomPagePayload>
+        }
+        createMany: {
+          args: Prisma.CustomPageCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.CustomPageDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomPagePayload>
+        }
+        update: {
+          args: Prisma.CustomPageUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomPagePayload>
+        }
+        deleteMany: {
+          args: Prisma.CustomPageDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CustomPageUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.CustomPageUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomPagePayload>
+        }
+        aggregate: {
+          args: Prisma.CustomPageAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCustomPage>
+        }
+        groupBy: {
+          args: Prisma.CustomPageGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CustomPageGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CustomPageCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CustomPageCountAggregateOutputType> | number
+        }
+      }
+    }
+    CustomMenuItem: {
+      payload: Prisma.$CustomMenuItemPayload<ExtArgs>
+      fields: Prisma.CustomMenuItemFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CustomMenuItemFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomMenuItemPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CustomMenuItemFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomMenuItemPayload>
+        }
+        findFirst: {
+          args: Prisma.CustomMenuItemFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomMenuItemPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CustomMenuItemFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomMenuItemPayload>
+        }
+        findMany: {
+          args: Prisma.CustomMenuItemFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomMenuItemPayload>[]
+        }
+        create: {
+          args: Prisma.CustomMenuItemCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomMenuItemPayload>
+        }
+        createMany: {
+          args: Prisma.CustomMenuItemCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.CustomMenuItemDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomMenuItemPayload>
+        }
+        update: {
+          args: Prisma.CustomMenuItemUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomMenuItemPayload>
+        }
+        deleteMany: {
+          args: Prisma.CustomMenuItemDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CustomMenuItemUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.CustomMenuItemUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomMenuItemPayload>
+        }
+        aggregate: {
+          args: Prisma.CustomMenuItemAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCustomMenuItem>
+        }
+        groupBy: {
+          args: Prisma.CustomMenuItemGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CustomMenuItemGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CustomMenuItemCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CustomMenuItemCountAggregateOutputType> | number
+        }
+      }
+    }
     AuditLog: {
       payload: Prisma.$AuditLogPayload<ExtArgs>
       fields: Prisma.AuditLogFieldRefs
@@ -2270,6 +2404,7 @@ export const LinkScalarFieldEnum = {
   coverImage: 'coverImage',
   status: 'status',
   contentType: 'contentType',
+  theme: 'theme',
   targetUrl: 'targetUrl',
   textContent: 'textContent',
   fileId: 'fileId',
@@ -2435,6 +2570,38 @@ export const HeaderLinkScalarFieldEnum = {
 } as const
 
 export type HeaderLinkScalarFieldEnum = (typeof HeaderLinkScalarFieldEnum)[keyof typeof HeaderLinkScalarFieldEnum]
+
+
+export const CustomPageScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  slug: 'slug',
+  excerpt: 'excerpt',
+  content: 'content',
+  status: 'status',
+  featuredImage: 'featuredImage',
+  translations: 'translations',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CustomPageScalarFieldEnum = (typeof CustomPageScalarFieldEnum)[keyof typeof CustomPageScalarFieldEnum]
+
+
+export const CustomMenuItemScalarFieldEnum = {
+  id: 'id',
+  parentId: 'parentId',
+  pageId: 'pageId',
+  title: 'title',
+  labels: 'labels',
+  icon: 'icon',
+  sortOrder: 'sortOrder',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CustomMenuItemScalarFieldEnum = (typeof CustomMenuItemScalarFieldEnum)[keyof typeof CustomMenuItemScalarFieldEnum]
 
 
 export const AuditLogScalarFieldEnum = {
@@ -2658,6 +2825,7 @@ export const LinkOrderByRelevanceFieldEnum = {
   title: 'title',
   description: 'description',
   coverImage: 'coverImage',
+  theme: 'theme',
   targetUrl: 'targetUrl',
   textContent: 'textContent',
   fileId: 'fileId'
@@ -2800,6 +2968,29 @@ export const HeaderLinkOrderByRelevanceFieldEnum = {
 } as const
 
 export type HeaderLinkOrderByRelevanceFieldEnum = (typeof HeaderLinkOrderByRelevanceFieldEnum)[keyof typeof HeaderLinkOrderByRelevanceFieldEnum]
+
+
+export const CustomPageOrderByRelevanceFieldEnum = {
+  id: 'id',
+  title: 'title',
+  slug: 'slug',
+  excerpt: 'excerpt',
+  content: 'content',
+  featuredImage: 'featuredImage'
+} as const
+
+export type CustomPageOrderByRelevanceFieldEnum = (typeof CustomPageOrderByRelevanceFieldEnum)[keyof typeof CustomPageOrderByRelevanceFieldEnum]
+
+
+export const CustomMenuItemOrderByRelevanceFieldEnum = {
+  id: 'id',
+  parentId: 'parentId',
+  pageId: 'pageId',
+  title: 'title',
+  icon: 'icon'
+} as const
+
+export type CustomMenuItemOrderByRelevanceFieldEnum = (typeof CustomMenuItemOrderByRelevanceFieldEnum)[keyof typeof CustomMenuItemOrderByRelevanceFieldEnum]
 
 
 export const AuditLogOrderByRelevanceFieldEnum = {
@@ -3020,6 +3211,13 @@ export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$Prisma
 
 
 /**
+ * Reference to a field of type 'CustomPageStatus'
+ */
+export type EnumCustomPageStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CustomPageStatus'>
+    
+
+
+/**
  * Reference to a field of type 'ActionBehavior'
  */
 export type EnumActionBehaviorFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ActionBehavior'>
@@ -3206,6 +3404,8 @@ export type GlobalOmitConfig = {
   setting?: Prisma.SettingOmit
   adUnit?: Prisma.AdUnitOmit
   headerLink?: Prisma.HeaderLinkOmit
+  customPage?: Prisma.CustomPageOmit
+  customMenuItem?: Prisma.CustomMenuItemOmit
   auditLog?: Prisma.AuditLogOmit
   platform?: Prisma.PlatformOmit
   actionOption?: Prisma.ActionOptionOmit

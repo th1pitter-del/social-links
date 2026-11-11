@@ -11,6 +11,7 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
 import { PlatformGlyph, platformActionColor } from '@/components/brand-icon'
 import { targetDisplayName, withTargetName } from '@/lib/action-target'
+import { bioHeadingStyle, resolveBioTheme } from '@/lib/bio-themes'
 import { formatBytes, formatNumber } from '@/lib/format'
 import { cn } from 'cn'
 import {
@@ -87,6 +88,7 @@ export function UnlockExperience({
   description,
   coverImage,
   initialToken,
+  theme,
   preview = false,
   viewCount = 0,
   unlockCount = 0,
@@ -97,6 +99,8 @@ export function UnlockExperience({
   description: string | null
   coverImage: string | null
   initialToken: string | null
+  /** The creator's page theme; the surrounding layout already paints its palette. */
+  theme: string
   preview?: boolean
   viewCount?: number
   unlockCount?: number
@@ -308,7 +312,12 @@ export function UnlockExperience({
               ) : null}
 
               <div className="space-y-2">
-                <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
+                <h1
+                  className="text-2xl font-semibold tracking-tight"
+                  style={bioHeadingStyle(resolveBioTheme(theme))}
+                >
+                  {title}
+                </h1>
                 {description ? (
                   <p className="text-sm font-medium text-foreground whitespace-pre-line">{description}</p>
                 ) : null}

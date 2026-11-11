@@ -49,6 +49,7 @@ export default async function EditLinkPage({
       coverImage: true,
       status: true,
       contentType: true,
+      theme: true,
       targetUrl: true,
       fileId: true,
       file: { select: { filename: true } },
@@ -125,6 +126,7 @@ export default async function EditLinkPage({
     slug: link.slug,
     expiresAt: link.expiresAt ? toDatetimeLocal(link.expiresAt) : '',
     contentType: link.contentType === 'FILE' ? 'FILE' : 'URL',
+    theme: link.theme,
     fileId: link.fileId ?? '',
     fileName: link.file?.filename ?? '',
     actions: link.actions.map((action) => ({

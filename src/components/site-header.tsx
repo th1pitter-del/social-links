@@ -26,7 +26,14 @@ import { cn } from 'cn'
 
 export { BrandMark }
 
-export async function SiteHeader({ variant = 'default' }: { variant?: 'default' | 'bio' }) {
+export async function SiteHeader({
+  variant = 'default',
+  transparent,
+}: {
+  variant?: 'default' | 'bio'
+  /** Clear rail for pages that paint their own theme; bio pages default to it. */
+  transparent?: boolean
+}) {
   const [site, nav, common, session, headerLinks, locale] = await Promise.all([
     getSiteSettings(),
     getTranslations('nav'),
@@ -179,7 +186,7 @@ export async function SiteHeader({ variant = 'default' }: { variant?: 'default' 
     )
 
   return (
-    <FloatingHeader transparent={isBio}>
+    <FloatingHeader transparent={transparent ?? isBio}>
       {/* Logo left, navigation centred, actions right. Once the inline row is
           shown, equal side columns keep the links on the container's centre
           line regardless of how wide the logo or account actions grow. */}

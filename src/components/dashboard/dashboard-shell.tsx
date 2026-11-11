@@ -3,7 +3,7 @@
 import { useState, useSyncExternalStore, type ComponentType, type ReactNode } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import {
   ChevronRight,
   ChevronsLeft,
@@ -29,7 +29,17 @@ import {
 
 import { cn } from 'cn'
 import { BrandMark } from '@/components/brand-mark'
+import { CustomSidebarMenu } from '@/components/dashboard/custom-sidebar-menu'
+import { navIcons } from '@/components/site-nav-icons'
 import { ThemeSwitcher } from '@/components/theme-switcher'
+import {
+  CUSTOM_MENU_ICON_DEFAULT,
+  customPageHref,
+  isCustomMenuIcon,
+  menuLabel,
+  type CustomMenuNode,
+} from '@/lib/custom-content'
+import type { Locale } from '@/i18n/config'
 import { signOutAction } from '@/lib/actions/auth'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import {
@@ -93,14 +103,17 @@ export function DashboardShell({
   user,
   siteName,
   logoUrl,
+  customMenus = [],
   children,
 }: {
   user: DashboardShellUser
   siteName: string
   logoUrl?: string
+  customMenus?: CustomMenuNode[]
   children: ReactNode
 }) {
   const t = useTranslations('dashboardShell')
+  const locale = useLocale() as Locale
   const pathname = usePathname()
   const [mobileOpen, setMobileOpen] = useState(false)
   const collapsed = useCollapsed()
@@ -155,7 +168,26 @@ export function DashboardShell({
   const currentGroup = groups.find((group) =>
     group.items.some((item) => item.href === activeHref),
   )?.title
-  const CurrentIcon = current?.icon
+  // A content page the admin linked into the custom section has no entry in
+  // the built-in groups, so its header trail comes from the menu row itself.
+  const activeCustom =
+    customMenus.find((item) => item.page && pathname === customPageHref(item.page.slug)) ??
+    customMenus
+      .flatMap((item) => item.children)
+      .find((child) => child.page && pathname === customPageHref(child.page.slug))
+  const CurrentIcon =
+    current?.icon ??
+    (activeCustom
+      ? navIcons[
+          (isCustomMenuIcon(activeCustom.icon)
+            ? activeCustom.icon
+            : CUSTOM_MENU_ICON_DEFAULT) as keyof typeof navIcons
+        ]
+      : undefined)
+  const currentLabel =
+    current?.label ?? (activeCustom ? menuLabel(activeCustom, locale) : undefined)
+  const currentGroupLabel =
+    currentGroup ?? (activeCustom ? t('customPagesGroup') : undefined)
 
   return (
     <div className="flex min-h-screen w-full flex-1 bg-background text-foreground">
@@ -254,6 +286,11 @@ export function DashboardShell({
               </ul>
             </div>
           ))}
+          <CustomSidebarMenu
+            items={customMenus}
+            collapsed={collapsed}
+            onNavigate={() => setMobileOpen(false)}
+          />
         </nav>
 
         <div className="border-t p-3">
@@ -337,10 +374,10 @@ export function DashboardShell({
                 {t('breadcrumbDashboard')}
               </Link>
               <ChevronRight className="hidden size-3 shrink-0 text-muted-foreground/50 rtl:rotate-180 sm:inline" />
-              <span className="truncate tracking-wide uppercase">{currentGroup ?? t('groups.workspace')}</span>
+              <span className="truncate tracking-wide uppercase">{currentGroupLabel ?? t('groups.workspace')}</span>
             </nav>
             <p className="truncate text-sm font-semibold text-foreground">
-              {current?.label ?? t('nav.overview')}
+              {currentLabel ?? t('nav.overview')}
             </p>
           </div>
 

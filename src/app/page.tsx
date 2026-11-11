@@ -11,6 +11,7 @@ import { SiteHeader } from '@/components/site-header'
 import { Button } from '@/components/ui/button'
 import { AdSlot } from '@/components/ads/ad-slot'
 import { ActionMixer, type DemoPlatform } from '@/components/home/action-mixer'
+import { BioLinksHero } from '@/components/home/bio-links-hero'
 import { FeatureBento } from '@/components/home/feature-bento'
 import { FlowDiagram } from '@/components/home/flow-diagram'
 import { JsonLd } from '@/components/json-ld'
@@ -308,6 +309,8 @@ export default async function HomePage() {
             />
           </div>
         </section>
+
+        <BioLinksHero href={signedIn ? '/dashboard/profile' : '/sign-up'} />
 
         <section className="border-t">
           <Reveal>

@@ -389,6 +389,23 @@ export type JsonNullableWithAggregatesFilterBase<$PrismaModel = never> = {
   _max?: Prisma.NestedJsonNullableFilter<$PrismaModel>
 }
 
+export type EnumCustomPageStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.CustomPageStatus | Prisma.EnumCustomPageStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.CustomPageStatus[]
+  notIn?: $Enums.CustomPageStatus[]
+  not?: Prisma.NestedEnumCustomPageStatusFilter<$PrismaModel> | $Enums.CustomPageStatus
+}
+
+export type EnumCustomPageStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.CustomPageStatus | Prisma.EnumCustomPageStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.CustomPageStatus[]
+  notIn?: $Enums.CustomPageStatus[]
+  not?: Prisma.NestedEnumCustomPageStatusWithAggregatesFilter<$PrismaModel> | $Enums.CustomPageStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumCustomPageStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumCustomPageStatusFilter<$PrismaModel>
+}
+
 export type EnumActionBehaviorFilter<$PrismaModel = never> = {
   equals?: $Enums.ActionBehavior | Prisma.EnumActionBehaviorFieldRefInput<$PrismaModel>
   in?: $Enums.ActionBehavior[]
@@ -786,6 +803,23 @@ export type NestedJsonNullableFilterBase<$PrismaModel = never> = {
   gt?: runtime.InputJsonValue
   gte?: runtime.InputJsonValue
   not?: runtime.InputJsonValue | Prisma.JsonFieldRefInput<$PrismaModel> | Prisma.JsonNullValueFilter
+}
+
+export type NestedEnumCustomPageStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.CustomPageStatus | Prisma.EnumCustomPageStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.CustomPageStatus[]
+  notIn?: $Enums.CustomPageStatus[]
+  not?: Prisma.NestedEnumCustomPageStatusFilter<$PrismaModel> | $Enums.CustomPageStatus
+}
+
+export type NestedEnumCustomPageStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.CustomPageStatus | Prisma.EnumCustomPageStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.CustomPageStatus[]
+  notIn?: $Enums.CustomPageStatus[]
+  not?: Prisma.NestedEnumCustomPageStatusWithAggregatesFilter<$PrismaModel> | $Enums.CustomPageStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumCustomPageStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumCustomPageStatusFilter<$PrismaModel>
 }
 
 export type NestedEnumActionBehaviorFilter<$PrismaModel = never> = {

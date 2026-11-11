@@ -9,6 +9,7 @@ import { cn } from 'cn'
  */
 const tones: Record<string, string> = {
   ACTIVE: 'bg-success',
+  PUBLISHED: 'bg-success',
   DRAFT: 'bg-muted-foreground/50',
   DISABLED: 'bg-error',
   OPEN: 'bg-warning',

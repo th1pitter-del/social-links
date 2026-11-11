@@ -84,6 +84,14 @@ export const AbuseReportStatus = {
 export type AbuseReportStatus = (typeof AbuseReportStatus)[keyof typeof AbuseReportStatus]
 
 
+export const CustomPageStatus = {
+  DRAFT: 'DRAFT',
+  PUBLISHED: 'PUBLISHED'
+} as const
+
+export type CustomPageStatus = (typeof CustomPageStatus)[keyof typeof CustomPageStatus]
+
+
 export const ActionBehavior = {
   URL: 'URL',
   EMAIL: 'EMAIL'

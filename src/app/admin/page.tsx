@@ -63,6 +63,9 @@ export default async function AdminOverviewPage() {
     bioCount,
     bioPublished,
     recentBios,
+    contentPageCount,
+    contentPagePublished,
+    recentContentPages,
   ] = await Promise.all([
     prisma.user.count(),
     prisma.link.count(),
@@ -133,6 +136,19 @@ export default async function AdminOverviewPage() {
         published: true,
         _count: { select: { links: true } },
         user: { select: { email: true } },
+      },
+    }),
+    prisma.customPage.count(),
+    prisma.customPage.count({ where: { status: 'PUBLISHED' } }),
+    prisma.customPage.findMany({
+      orderBy: { updatedAt: 'desc' },
+      take: 5,
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        status: true,
+        _count: { select: { menuItems: true } },
       },
     }),
   ])
@@ -542,6 +558,72 @@ export default async function AdminOverviewPage() {
                       <StatusPill
                         status={bio.published ? 'ACTIVE' : 'DRAFT'}
                         label={bio.published ? t('bioPages.published') : t('bioPages.draft')}
+                      />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </Panel>
+
+      <Panel>
+        <PanelHeader
+          title={t('overview.contentPagesTitle')}
+          description={t('overview.contentPagesDescription', {
+            count: contentPageCount,
+            published: contentPagePublished,
+          })}
+          actions={
+            <Button variant="ghost" size="sm" asChild>
+              <Link href="/admin/content-pages">{t('common.viewAll')}</Link>
+            </Button>
+          }
+        />
+        {recentContentPages.length === 0 ? (
+          <PanelContent>
+            <p className="text-sm text-muted-foreground">{t('overview.noContentPages')}</p>
+          </PanelContent>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="border-b border-border text-start text-xs text-muted-foreground">
+                <tr>
+                  <th className="px-5 py-3 font-medium">{t('overview.colContentPage')}</th>
+                  <th className="hidden px-5 py-3 text-end font-medium sm:table-cell">
+                    {t('overview.colMenuLinks')}
+                  </th>
+                  <th className="hidden px-5 py-3 font-medium md:table-cell">
+                    {t('overview.colStatus')}
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border">
+                {recentContentPages.map((page) => (
+                  <tr key={page.id} className="hover:bg-muted/40">
+                    <td className="px-5 py-3">
+                      <Link
+                        href={`/admin/content-pages/${page.id}`}
+                        className="font-medium hover:underline"
+                      >
+                        {page.title}
+                      </Link>
+                      <p className="mt-0.5 max-w-64 truncate font-mono text-xs text-muted-foreground">
+                        /dashboard/pages/{page.slug}
+                      </p>
+                    </td>
+                    <td className="hidden px-5 py-3 text-end text-muted-foreground tabular-nums sm:table-cell">
+                      {formatNumber(locale, page._count.menuItems)}
+                    </td>
+                    <td className="hidden px-5 py-3 md:table-cell">
+                      <StatusPill
+                        status={page.status}
+                        label={
+                          page.status === 'PUBLISHED'
+                            ? t('contentPages.published')
+                            : t('contentPages.draft')
+                        }
                       />
                     </td>
                   </tr>

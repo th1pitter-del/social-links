@@ -67,6 +67,8 @@ export const ModelName = {
   Setting: 'Setting',
   AdUnit: 'AdUnit',
   HeaderLink: 'HeaderLink',
+  CustomPage: 'CustomPage',
+  CustomMenuItem: 'CustomMenuItem',
   AuditLog: 'AuditLog',
   Platform: 'Platform',
   ActionOption: 'ActionOption',
@@ -168,6 +170,7 @@ export const LinkScalarFieldEnum = {
   coverImage: 'coverImage',
   status: 'status',
   contentType: 'contentType',
+  theme: 'theme',
   targetUrl: 'targetUrl',
   textContent: 'textContent',
   fileId: 'fileId',
@@ -333,6 +336,38 @@ export const HeaderLinkScalarFieldEnum = {
 } as const
 
 export type HeaderLinkScalarFieldEnum = (typeof HeaderLinkScalarFieldEnum)[keyof typeof HeaderLinkScalarFieldEnum]
+
+
+export const CustomPageScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  slug: 'slug',
+  excerpt: 'excerpt',
+  content: 'content',
+  status: 'status',
+  featuredImage: 'featuredImage',
+  translations: 'translations',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CustomPageScalarFieldEnum = (typeof CustomPageScalarFieldEnum)[keyof typeof CustomPageScalarFieldEnum]
+
+
+export const CustomMenuItemScalarFieldEnum = {
+  id: 'id',
+  parentId: 'parentId',
+  pageId: 'pageId',
+  title: 'title',
+  labels: 'labels',
+  icon: 'icon',
+  sortOrder: 'sortOrder',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CustomMenuItemScalarFieldEnum = (typeof CustomMenuItemScalarFieldEnum)[keyof typeof CustomMenuItemScalarFieldEnum]
 
 
 export const AuditLogScalarFieldEnum = {
@@ -556,6 +591,7 @@ export const LinkOrderByRelevanceFieldEnum = {
   title: 'title',
   description: 'description',
   coverImage: 'coverImage',
+  theme: 'theme',
   targetUrl: 'targetUrl',
   textContent: 'textContent',
   fileId: 'fileId'
@@ -698,6 +734,29 @@ export const HeaderLinkOrderByRelevanceFieldEnum = {
 } as const
 
 export type HeaderLinkOrderByRelevanceFieldEnum = (typeof HeaderLinkOrderByRelevanceFieldEnum)[keyof typeof HeaderLinkOrderByRelevanceFieldEnum]
+
+
+export const CustomPageOrderByRelevanceFieldEnum = {
+  id: 'id',
+  title: 'title',
+  slug: 'slug',
+  excerpt: 'excerpt',
+  content: 'content',
+  featuredImage: 'featuredImage'
+} as const
+
+export type CustomPageOrderByRelevanceFieldEnum = (typeof CustomPageOrderByRelevanceFieldEnum)[keyof typeof CustomPageOrderByRelevanceFieldEnum]
+
+
+export const CustomMenuItemOrderByRelevanceFieldEnum = {
+  id: 'id',
+  parentId: 'parentId',
+  pageId: 'pageId',
+  title: 'title',
+  icon: 'icon'
+} as const
+
+export type CustomMenuItemOrderByRelevanceFieldEnum = (typeof CustomMenuItemOrderByRelevanceFieldEnum)[keyof typeof CustomMenuItemOrderByRelevanceFieldEnum]
 
 
 export const AuditLogOrderByRelevanceFieldEnum = {

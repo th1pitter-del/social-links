@@ -86,6 +86,10 @@ export function makeLinkInputSchema(t: ValidatorMessages) {
         .optional()
         .or(z.literal('')),
       contentType: z.enum(LINK_CONTENT_TYPES),
+      theme: z
+        .string()
+        .trim()
+        .refine((value) => BIO_THEME_IDS.includes(value), t('invalidTheme')),
       targetUrl: z
         .string()
         .trim()

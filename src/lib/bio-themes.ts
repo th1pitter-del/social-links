@@ -679,3 +679,47 @@ export function bioHeadingStyle(theme: BioTheme): CSSProperties {
     textShadow: theme.headingShadow,
   }
 }
+
+/**
+ * Repaints the app's semantic tokens with a theme's palette so cards, borders,
+ * controls and the surrounding chrome (header, footer) all resolve from it.
+ * Unlock link pages and their editor preview share this map; `--card` and
+ * `--muted` are split because those pages put their content in cards, and a
+ * finished step has to stay visible against its own card.
+ */
+export function bioThemeSurfaceStyle(
+  themeId: string | null | undefined,
+  accent: string | null | undefined,
+): CSSProperties {
+  const theme = resolveBioTheme(themeId)
+  const palette = resolveBioPalette(theme.id, accent)
+  const muted = `color-mix(in srgb, ${palette.text} 8%, ${palette.surface})`
+  return {
+    '--background': palette.background,
+    '--foreground': palette.text,
+    '--card': palette.surface,
+    '--card-foreground': palette.text,
+    '--popover': palette.surface,
+    '--popover-foreground': palette.text,
+    '--primary': palette.accent,
+    '--primary-foreground': palette.onAccent,
+    '--secondary': muted,
+    '--secondary-foreground': palette.text,
+    '--muted': muted,
+    '--muted-foreground': palette.muted,
+    '--accent': muted,
+    '--accent-foreground': palette.text,
+    '--border': palette.border,
+    '--input': palette.border,
+    '--ring': palette.accent,
+    '--brand-mark-bg': palette.accent,
+    '--brand-mark-fg': palette.onAccent,
+    '--bio-accent': palette.accent,
+    backgroundColor: palette.background,
+    backgroundImage: theme.backdrop,
+    backgroundRepeat: 'no-repeat',
+    backgroundSize: theme.backdropSize ?? 'cover',
+    color: palette.text,
+    fontFamily: theme.bodyFont,
+  } as CSSProperties
+}

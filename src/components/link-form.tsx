@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useRef, useState, useTransition } from 'react'
+import { useMemo, useRef, useState, useTransition, type CSSProperties } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useTranslations, useLocale } from 'next-intl'
@@ -45,6 +45,15 @@ import {
   type ActionOptionView,
 } from '@/lib/action-defaults'
 import { actionLabel, platformLabel } from '@/lib/action-label'
+import {
+  BIO_THEMES,
+  BIO_THEME_DEFAULT,
+  bioButtonVisual,
+  bioHeadingStyle,
+  bioThemeSurfaceStyle,
+  resolveBioPalette,
+  resolveBioTheme,
+} from '@/lib/bio-themes'
 import { formatNumber } from '@/lib/format'
 import { SITE_URL } from '@/lib/seo'
 import type { LinkInput } from '@/lib/validation'
@@ -68,6 +77,7 @@ export type LinkFormValues = {
   slug: string
   expiresAt: string
   contentType: 'URL' | 'FILE'
+  theme: string
   fileId: string
   fileName: string
   actions: ActionRow[]
@@ -138,6 +148,7 @@ export function LinkForm({
     slug: '',
     expiresAt: '',
     contentType: 'URL',
+    theme: BIO_THEME_DEFAULT,
     fileId: '',
     fileName: '',
     actions: [],
@@ -288,6 +299,7 @@ export function LinkForm({
       coverImage: values.coverImage.trim(),
       slug: values.slug.trim(),
       contentType: values.contentType,
+      theme: values.theme,
       targetUrl: values.contentType === 'URL' ? values.targetUrl.trim() : '',
       fileId: values.contentType === 'FILE' ? values.fileId : '',
       expiresAt: values.expiresAt ? new Date(values.expiresAt).toISOString() : '',
@@ -660,6 +672,97 @@ export function LinkForm({
               ) : null}
             </section>
 
+            <section className="space-y-4 rounded-2xl border bg-card p-5">
+              <div>
+                <h2 className="font-medium">{t('appearanceTitle')}</h2>
+                <p className="text-xs text-muted-foreground">{t('appearanceDescription')}</p>
+              </div>
+
+              <div className="space-y-2">
+                <Label>{t('themeLabel')}</Label>
+                <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                  {BIO_THEMES.map((theme) => {
+                    const selected = theme.id === values.theme
+                    const button = bioButtonVisual(theme.id, null)
+                    return (
+                      <button
+                        key={theme.id}
+                        type="button"
+                        onClick={() => update('theme', theme.id)}
+                        aria-pressed={selected}
+                        className="rounded-xl border p-2 text-start transition-colors hover:border-foreground/30"
+                        style={selected ? { borderColor: 'var(--primary)' } : undefined}
+                      >
+                        <span
+                          className="flex h-24 w-full flex-col items-center gap-1.5 overflow-hidden rounded-lg px-3 pt-3"
+                          style={
+                            {
+                              '--bio-accent': theme.palette.accent,
+                              backgroundColor: theme.palette.background,
+                              backgroundImage: theme.backdrop,
+                              backgroundRepeat: 'no-repeat',
+                              backgroundSize: theme.backdropSize ?? 'cover',
+                            } as CSSProperties
+                          }
+                        >
+                          <span
+                            className={
+                              theme.card
+                                ? 'flex w-full flex-col items-center gap-1.5 rounded-md border p-1.5'
+                                : 'flex w-full flex-col items-center gap-1.5'
+                            }
+                            style={
+                              theme.card
+                                ? {
+                                    backgroundColor: theme.card.background,
+                                    borderColor: theme.card.border,
+                                    borderRadius: Math.min(theme.card.radius, 10),
+                                  }
+                                : undefined
+                            }
+                          >
+                            <span
+                              className="size-5 rounded-full border"
+                              style={{
+                                backgroundColor: theme.palette.surface,
+                                borderColor: theme.palette.border,
+                              }}
+                            />
+                            {[0, 1].map((row) => (
+                              <span
+                                key={row}
+                                className="flex h-4 w-full items-center gap-1 px-2"
+                                style={{
+                                  backgroundColor: button.backgroundColor,
+                                  backgroundImage: button.backgroundImage,
+                                  border: `1px solid ${button.borderColor}`,
+                                  borderRadius: Math.min(button.borderRadius, 8),
+                                }}
+                              >
+                                <span
+                                  className="size-1.5 rounded-full"
+                                  style={{ backgroundColor: button.color, opacity: 0.8 }}
+                                />
+                                <span
+                                  className="h-1 flex-1 rounded-full"
+                                  style={{ backgroundColor: button.color, opacity: 0.55 }}
+                                />
+                              </span>
+                            ))}
+                          </span>
+                        </span>
+                        <span className="mt-2 flex items-center justify-between gap-1 text-xs font-medium">
+                          {theme.label}
+                          {selected ? <Check className="size-3.5" /> : null}
+                        </span>
+                      </button>
+                    )
+                  })}
+                </div>
+                <FieldError errors={fieldErrors.theme} />
+              </div>
+            </section>
+
             <section className="rounded-2xl border bg-card">
               <button
                 type="button"
@@ -922,6 +1025,11 @@ function LinkPreview({
   const coverImage = values.coverImage.trim()
   const slug = values.slug.trim()
   const actions = values.actions
+  // The preview is the public page, so it wears the selected theme: the same
+  // palette tokens the unlock layout paints, applied to this card.
+  const theme = resolveBioTheme(values.theme)
+  const palette = resolveBioPalette(values.theme, null)
+  const surface = bioThemeSurfaceStyle(values.theme, null)
 
   // Everything below is read straight out of the form state: the preview is the
   // visitor's card with the owner's own inputs in it, not a stand-in picture of
@@ -948,7 +1056,10 @@ function LinkPreview({
         <Badge variant="secondary">{t('updatesLive')}</Badge>
       </div>
 
-      <div className="overflow-hidden rounded-2xl border bg-card shadow-sm">
+      <div
+        className="overflow-hidden rounded-2xl border shadow-sm"
+        style={{ ...surface, borderColor: palette.border }}
+      >
         {coverImage ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -966,7 +1077,9 @@ function LinkPreview({
             <p className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
               {t('sharedByYou')}
             </p>
-            <h3 className="text-xl font-semibold tracking-tight">{title}</h3>
+            <h3 className="text-xl font-semibold tracking-tight" style={bioHeadingStyle(theme)}>
+              {title}
+            </h3>
             {destination || expiryLabel ? (
               <div className="flex flex-wrap gap-1.5 pt-0.5">
                 {destination ? (

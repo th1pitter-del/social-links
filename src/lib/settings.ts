@@ -160,6 +160,10 @@ function themeMatchesDefaults(theme: ThemeSettings) {
  * `html:root` / `html:root.dark` selectors, which out-specify the `:root` and
  * `.dark` rules in `globals.css`. Returns '' when everything is default so no
  * extra CSS ships.
+ *
+ * These tokens are content tokens only: the admin console gets the same
+ * light/dark values as the rest of the app and keeps its permanently dark
+ * sidebar from the static `.admin-theme` rule in `globals.css`.
  */
 export function getThemeOverrideCss(map: Record<string, string>): string {
   const theme = getThemeSettings(map)
@@ -185,7 +189,7 @@ export function getThemeOverrideCss(map: Record<string, string>): string {
     `--sidebar-ring:${theme.dark.primary}`,
   ].join(';')
 
-  return `html:root{${light}}html:root.dark{${dark}}html .admin-theme{${dark}}`
+  return `html:root{${light}}html:root.dark{${dark}}`
 }
 
 /**

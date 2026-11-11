@@ -12,6 +12,7 @@ import { StatusPill } from '@/components/status-pill'
 import { Timestamp } from '@/components/timestamp'
 import { getActionOptionMap } from '@/lib/action-catalog'
 import { actionLabel } from '@/lib/action-label'
+import { resolveBioTheme } from '@/lib/bio-themes'
 import { prisma } from '@/lib/prisma'
 import { requireAdmin } from '@/lib/session'
 
@@ -42,6 +43,7 @@ export default async function AdminLinkDetailPage({
       description: true,
       status: true,
       contentType: true,
+      theme: true,
       targetUrl: true,
       textContent: true,
       expiresAt: true,
@@ -158,6 +160,10 @@ export default async function AdminLinkDetailPage({
                 t('common.noExpiry')
               )}
             </dd>
+          </div>
+          <div>
+            <dt className="text-muted-foreground">{t('linkDetail.theme')}</dt>
+            <dd className="mt-0.5">{resolveBioTheme(link.theme).label}</dd>
           </div>
           <div>
             <dt className="text-muted-foreground">{t('linkDetail.created')}</dt>

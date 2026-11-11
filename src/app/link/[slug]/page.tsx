@@ -72,6 +72,7 @@ export default async function UnlockPage({ params, searchParams }: PageProps) {
         description={link.description}
         coverImage={link.coverImage}
         initialToken={token && token.length <= 128 ? token : null}
+        theme={link.theme}
         steps={steps}
         {...stats}
         preview
@@ -103,6 +104,7 @@ export default async function UnlockPage({ params, searchParams }: PageProps) {
       description={link.description}
       coverImage={link.coverImage}
       initialToken={token && token.length <= 128 ? token : null}
+      theme={link.theme}
       steps={steps}
       {...stats}
     />

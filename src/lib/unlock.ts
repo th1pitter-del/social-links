@@ -25,6 +25,7 @@ export type PublicUnlockLink = {
   coverImage: string | null
   status: 'DRAFT' | 'ACTIVE' | 'DISABLED'
   contentType: 'URL' | 'TEXT' | 'FILE'
+  theme: string
   targetUrl: string | null
   expiresAt: Date | null
   ownerName: string | null
@@ -46,6 +47,7 @@ export async function getPublicUnlockLink(slug: string): Promise<PublicUnlockLin
       coverImage: true,
       status: true,
       contentType: true,
+      theme: true,
       targetUrl: true,
       expiresAt: true,
       owner: { select: { name: true } },
@@ -81,6 +83,7 @@ export async function getPublicUnlockLink(slug: string): Promise<PublicUnlockLin
     coverImage: link.coverImage,
     status: link.status,
     contentType: link.contentType,
+    theme: link.theme,
     targetUrl: link.targetUrl,
     expiresAt: link.expiresAt,
     ownerName: link.owner?.name ?? null,

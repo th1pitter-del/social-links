@@ -34,6 +34,7 @@ export type LinkMinAggregateOutputType = {
   coverImage: string | null
   status: $Enums.LinkStatus | null
   contentType: $Enums.LinkContentType | null
+  theme: string | null
   targetUrl: string | null
   textContent: string | null
   fileId: string | null
@@ -52,6 +53,7 @@ export type LinkMaxAggregateOutputType = {
   coverImage: string | null
   status: $Enums.LinkStatus | null
   contentType: $Enums.LinkContentType | null
+  theme: string | null
   targetUrl: string | null
   textContent: string | null
   fileId: string | null
@@ -70,6 +72,7 @@ export type LinkCountAggregateOutputType = {
   coverImage: number
   status: number
   contentType: number
+  theme: number
   targetUrl: number
   textContent: number
   fileId: number
@@ -90,6 +93,7 @@ export type LinkMinAggregateInputType = {
   coverImage?: true
   status?: true
   contentType?: true
+  theme?: true
   targetUrl?: true
   textContent?: true
   fileId?: true
@@ -108,6 +112,7 @@ export type LinkMaxAggregateInputType = {
   coverImage?: true
   status?: true
   contentType?: true
+  theme?: true
   targetUrl?: true
   textContent?: true
   fileId?: true
@@ -126,6 +131,7 @@ export type LinkCountAggregateInputType = {
   coverImage?: true
   status?: true
   contentType?: true
+  theme?: true
   targetUrl?: true
   textContent?: true
   fileId?: true
@@ -217,6 +223,7 @@ export type LinkGroupByOutputType = {
   coverImage: string | null
   status: $Enums.LinkStatus
   contentType: $Enums.LinkContentType
+  theme: string
   targetUrl: string | null
   textContent: string | null
   fileId: string | null
@@ -256,6 +263,7 @@ export type LinkWhereInput = {
   coverImage?: Prisma.StringNullableFilter<"Link"> | string | null
   status?: Prisma.EnumLinkStatusFilter<"Link"> | $Enums.LinkStatus
   contentType?: Prisma.EnumLinkContentTypeFilter<"Link"> | $Enums.LinkContentType
+  theme?: Prisma.StringFilter<"Link"> | string
   targetUrl?: Prisma.StringNullableFilter<"Link"> | string | null
   textContent?: Prisma.StringNullableFilter<"Link"> | string | null
   fileId?: Prisma.StringNullableFilter<"Link"> | string | null
@@ -282,6 +290,7 @@ export type LinkOrderByWithRelationInput = {
   coverImage?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   contentType?: Prisma.SortOrder
+  theme?: Prisma.SortOrder
   targetUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   textContent?: Prisma.SortOrderInput | Prisma.SortOrder
   fileId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -312,6 +321,7 @@ export type LinkWhereUniqueInput = Prisma.AtLeast<{
   coverImage?: Prisma.StringNullableFilter<"Link"> | string | null
   status?: Prisma.EnumLinkStatusFilter<"Link"> | $Enums.LinkStatus
   contentType?: Prisma.EnumLinkContentTypeFilter<"Link"> | $Enums.LinkContentType
+  theme?: Prisma.StringFilter<"Link"> | string
   targetUrl?: Prisma.StringNullableFilter<"Link"> | string | null
   textContent?: Prisma.StringNullableFilter<"Link"> | string | null
   fileId?: Prisma.StringNullableFilter<"Link"> | string | null
@@ -338,6 +348,7 @@ export type LinkOrderByWithAggregationInput = {
   coverImage?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   contentType?: Prisma.SortOrder
+  theme?: Prisma.SortOrder
   targetUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   textContent?: Prisma.SortOrderInput | Prisma.SortOrder
   fileId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -362,6 +373,7 @@ export type LinkScalarWhereWithAggregatesInput = {
   coverImage?: Prisma.StringNullableWithAggregatesFilter<"Link"> | string | null
   status?: Prisma.EnumLinkStatusWithAggregatesFilter<"Link"> | $Enums.LinkStatus
   contentType?: Prisma.EnumLinkContentTypeWithAggregatesFilter<"Link"> | $Enums.LinkContentType
+  theme?: Prisma.StringWithAggregatesFilter<"Link"> | string
   targetUrl?: Prisma.StringNullableWithAggregatesFilter<"Link"> | string | null
   textContent?: Prisma.StringNullableWithAggregatesFilter<"Link"> | string | null
   fileId?: Prisma.StringNullableWithAggregatesFilter<"Link"> | string | null
@@ -379,6 +391,7 @@ export type LinkCreateInput = {
   coverImage?: string | null
   status?: $Enums.LinkStatus
   contentType: $Enums.LinkContentType
+  theme?: string
   targetUrl?: string | null
   textContent?: string | null
   expiresAt?: Date | string | null
@@ -404,6 +417,7 @@ export type LinkUncheckedCreateInput = {
   coverImage?: string | null
   status?: $Enums.LinkStatus
   contentType: $Enums.LinkContentType
+  theme?: string
   targetUrl?: string | null
   textContent?: string | null
   fileId?: string | null
@@ -427,6 +441,7 @@ export type LinkUpdateInput = {
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumLinkStatusFieldUpdateOperationsInput | $Enums.LinkStatus
   contentType?: Prisma.EnumLinkContentTypeFieldUpdateOperationsInput | $Enums.LinkContentType
+  theme?: Prisma.StringFieldUpdateOperationsInput | string
   targetUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   textContent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -452,6 +467,7 @@ export type LinkUncheckedUpdateInput = {
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumLinkStatusFieldUpdateOperationsInput | $Enums.LinkStatus
   contentType?: Prisma.EnumLinkContentTypeFieldUpdateOperationsInput | $Enums.LinkContentType
+  theme?: Prisma.StringFieldUpdateOperationsInput | string
   targetUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   textContent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -476,6 +492,7 @@ export type LinkCreateManyInput = {
   coverImage?: string | null
   status?: $Enums.LinkStatus
   contentType: $Enums.LinkContentType
+  theme?: string
   targetUrl?: string | null
   textContent?: string | null
   fileId?: string | null
@@ -493,6 +510,7 @@ export type LinkUpdateManyMutationInput = {
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumLinkStatusFieldUpdateOperationsInput | $Enums.LinkStatus
   contentType?: Prisma.EnumLinkContentTypeFieldUpdateOperationsInput | $Enums.LinkContentType
+  theme?: Prisma.StringFieldUpdateOperationsInput | string
   targetUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   textContent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -510,6 +528,7 @@ export type LinkUncheckedUpdateManyInput = {
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumLinkStatusFieldUpdateOperationsInput | $Enums.LinkStatus
   contentType?: Prisma.EnumLinkContentTypeFieldUpdateOperationsInput | $Enums.LinkContentType
+  theme?: Prisma.StringFieldUpdateOperationsInput | string
   targetUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   textContent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -544,6 +563,7 @@ export type LinkCountOrderByAggregateInput = {
   coverImage?: Prisma.SortOrder
   status?: Prisma.SortOrder
   contentType?: Prisma.SortOrder
+  theme?: Prisma.SortOrder
   targetUrl?: Prisma.SortOrder
   textContent?: Prisma.SortOrder
   fileId?: Prisma.SortOrder
@@ -562,6 +582,7 @@ export type LinkMaxOrderByAggregateInput = {
   coverImage?: Prisma.SortOrder
   status?: Prisma.SortOrder
   contentType?: Prisma.SortOrder
+  theme?: Prisma.SortOrder
   targetUrl?: Prisma.SortOrder
   textContent?: Prisma.SortOrder
   fileId?: Prisma.SortOrder
@@ -580,6 +601,7 @@ export type LinkMinOrderByAggregateInput = {
   coverImage?: Prisma.SortOrder
   status?: Prisma.SortOrder
   contentType?: Prisma.SortOrder
+  theme?: Prisma.SortOrder
   targetUrl?: Prisma.SortOrder
   textContent?: Prisma.SortOrder
   fileId?: Prisma.SortOrder
@@ -778,6 +800,7 @@ export type LinkCreateWithoutOwnerInput = {
   coverImage?: string | null
   status?: $Enums.LinkStatus
   contentType: $Enums.LinkContentType
+  theme?: string
   targetUrl?: string | null
   textContent?: string | null
   expiresAt?: Date | string | null
@@ -801,6 +824,7 @@ export type LinkUncheckedCreateWithoutOwnerInput = {
   coverImage?: string | null
   status?: $Enums.LinkStatus
   contentType: $Enums.LinkContentType
+  theme?: string
   targetUrl?: string | null
   textContent?: string | null
   fileId?: string | null
@@ -854,6 +878,7 @@ export type LinkScalarWhereInput = {
   coverImage?: Prisma.StringNullableFilter<"Link"> | string | null
   status?: Prisma.EnumLinkStatusFilter<"Link"> | $Enums.LinkStatus
   contentType?: Prisma.EnumLinkContentTypeFilter<"Link"> | $Enums.LinkContentType
+  theme?: Prisma.StringFilter<"Link"> | string
   targetUrl?: Prisma.StringNullableFilter<"Link"> | string | null
   textContent?: Prisma.StringNullableFilter<"Link"> | string | null
   fileId?: Prisma.StringNullableFilter<"Link"> | string | null
@@ -871,6 +896,7 @@ export type LinkCreateWithoutActionsInput = {
   coverImage?: string | null
   status?: $Enums.LinkStatus
   contentType: $Enums.LinkContentType
+  theme?: string
   targetUrl?: string | null
   textContent?: string | null
   expiresAt?: Date | string | null
@@ -895,6 +921,7 @@ export type LinkUncheckedCreateWithoutActionsInput = {
   coverImage?: string | null
   status?: $Enums.LinkStatus
   contentType: $Enums.LinkContentType
+  theme?: string
   targetUrl?: string | null
   textContent?: string | null
   fileId?: string | null
@@ -933,6 +960,7 @@ export type LinkUpdateWithoutActionsInput = {
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumLinkStatusFieldUpdateOperationsInput | $Enums.LinkStatus
   contentType?: Prisma.EnumLinkContentTypeFieldUpdateOperationsInput | $Enums.LinkContentType
+  theme?: Prisma.StringFieldUpdateOperationsInput | string
   targetUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   textContent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -957,6 +985,7 @@ export type LinkUncheckedUpdateWithoutActionsInput = {
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumLinkStatusFieldUpdateOperationsInput | $Enums.LinkStatus
   contentType?: Prisma.EnumLinkContentTypeFieldUpdateOperationsInput | $Enums.LinkContentType
+  theme?: Prisma.StringFieldUpdateOperationsInput | string
   targetUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   textContent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -979,6 +1008,7 @@ export type LinkCreateWithoutUnlocksInput = {
   coverImage?: string | null
   status?: $Enums.LinkStatus
   contentType: $Enums.LinkContentType
+  theme?: string
   targetUrl?: string | null
   textContent?: string | null
   expiresAt?: Date | string | null
@@ -1003,6 +1033,7 @@ export type LinkUncheckedCreateWithoutUnlocksInput = {
   coverImage?: string | null
   status?: $Enums.LinkStatus
   contentType: $Enums.LinkContentType
+  theme?: string
   targetUrl?: string | null
   textContent?: string | null
   fileId?: string | null
@@ -1041,6 +1072,7 @@ export type LinkUpdateWithoutUnlocksInput = {
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumLinkStatusFieldUpdateOperationsInput | $Enums.LinkStatus
   contentType?: Prisma.EnumLinkContentTypeFieldUpdateOperationsInput | $Enums.LinkContentType
+  theme?: Prisma.StringFieldUpdateOperationsInput | string
   targetUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   textContent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1065,6 +1097,7 @@ export type LinkUncheckedUpdateWithoutUnlocksInput = {
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumLinkStatusFieldUpdateOperationsInput | $Enums.LinkStatus
   contentType?: Prisma.EnumLinkContentTypeFieldUpdateOperationsInput | $Enums.LinkContentType
+  theme?: Prisma.StringFieldUpdateOperationsInput | string
   targetUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   textContent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1087,6 +1120,7 @@ export type LinkCreateWithoutEventsInput = {
   coverImage?: string | null
   status?: $Enums.LinkStatus
   contentType: $Enums.LinkContentType
+  theme?: string
   targetUrl?: string | null
   textContent?: string | null
   expiresAt?: Date | string | null
@@ -1111,6 +1145,7 @@ export type LinkUncheckedCreateWithoutEventsInput = {
   coverImage?: string | null
   status?: $Enums.LinkStatus
   contentType: $Enums.LinkContentType
+  theme?: string
   targetUrl?: string | null
   textContent?: string | null
   fileId?: string | null
@@ -1149,6 +1184,7 @@ export type LinkUpdateWithoutEventsInput = {
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumLinkStatusFieldUpdateOperationsInput | $Enums.LinkStatus
   contentType?: Prisma.EnumLinkContentTypeFieldUpdateOperationsInput | $Enums.LinkContentType
+  theme?: Prisma.StringFieldUpdateOperationsInput | string
   targetUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   textContent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1173,6 +1209,7 @@ export type LinkUncheckedUpdateWithoutEventsInput = {
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumLinkStatusFieldUpdateOperationsInput | $Enums.LinkStatus
   contentType?: Prisma.EnumLinkContentTypeFieldUpdateOperationsInput | $Enums.LinkContentType
+  theme?: Prisma.StringFieldUpdateOperationsInput | string
   targetUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   textContent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1195,6 +1232,7 @@ export type LinkCreateWithoutEmailLeadsInput = {
   coverImage?: string | null
   status?: $Enums.LinkStatus
   contentType: $Enums.LinkContentType
+  theme?: string
   targetUrl?: string | null
   textContent?: string | null
   expiresAt?: Date | string | null
@@ -1219,6 +1257,7 @@ export type LinkUncheckedCreateWithoutEmailLeadsInput = {
   coverImage?: string | null
   status?: $Enums.LinkStatus
   contentType: $Enums.LinkContentType
+  theme?: string
   targetUrl?: string | null
   textContent?: string | null
   fileId?: string | null
@@ -1257,6 +1296,7 @@ export type LinkUpdateWithoutEmailLeadsInput = {
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumLinkStatusFieldUpdateOperationsInput | $Enums.LinkStatus
   contentType?: Prisma.EnumLinkContentTypeFieldUpdateOperationsInput | $Enums.LinkContentType
+  theme?: Prisma.StringFieldUpdateOperationsInput | string
   targetUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   textContent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1281,6 +1321,7 @@ export type LinkUncheckedUpdateWithoutEmailLeadsInput = {
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumLinkStatusFieldUpdateOperationsInput | $Enums.LinkStatus
   contentType?: Prisma.EnumLinkContentTypeFieldUpdateOperationsInput | $Enums.LinkContentType
+  theme?: Prisma.StringFieldUpdateOperationsInput | string
   targetUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   textContent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1303,6 +1344,7 @@ export type LinkCreateWithoutAbuseReportsInput = {
   coverImage?: string | null
   status?: $Enums.LinkStatus
   contentType: $Enums.LinkContentType
+  theme?: string
   targetUrl?: string | null
   textContent?: string | null
   expiresAt?: Date | string | null
@@ -1327,6 +1369,7 @@ export type LinkUncheckedCreateWithoutAbuseReportsInput = {
   coverImage?: string | null
   status?: $Enums.LinkStatus
   contentType: $Enums.LinkContentType
+  theme?: string
   targetUrl?: string | null
   textContent?: string | null
   fileId?: string | null
@@ -1365,6 +1408,7 @@ export type LinkUpdateWithoutAbuseReportsInput = {
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumLinkStatusFieldUpdateOperationsInput | $Enums.LinkStatus
   contentType?: Prisma.EnumLinkContentTypeFieldUpdateOperationsInput | $Enums.LinkContentType
+  theme?: Prisma.StringFieldUpdateOperationsInput | string
   targetUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   textContent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1389,6 +1433,7 @@ export type LinkUncheckedUpdateWithoutAbuseReportsInput = {
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumLinkStatusFieldUpdateOperationsInput | $Enums.LinkStatus
   contentType?: Prisma.EnumLinkContentTypeFieldUpdateOperationsInput | $Enums.LinkContentType
+  theme?: Prisma.StringFieldUpdateOperationsInput | string
   targetUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   textContent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1411,6 +1456,7 @@ export type LinkCreateWithoutFileInput = {
   coverImage?: string | null
   status?: $Enums.LinkStatus
   contentType: $Enums.LinkContentType
+  theme?: string
   targetUrl?: string | null
   textContent?: string | null
   expiresAt?: Date | string | null
@@ -1435,6 +1481,7 @@ export type LinkUncheckedCreateWithoutFileInput = {
   coverImage?: string | null
   status?: $Enums.LinkStatus
   contentType: $Enums.LinkContentType
+  theme?: string
   targetUrl?: string | null
   textContent?: string | null
   expiresAt?: Date | string | null
@@ -1483,6 +1530,7 @@ export type LinkCreateWithoutUserUnlocksInput = {
   coverImage?: string | null
   status?: $Enums.LinkStatus
   contentType: $Enums.LinkContentType
+  theme?: string
   targetUrl?: string | null
   textContent?: string | null
   expiresAt?: Date | string | null
@@ -1507,6 +1555,7 @@ export type LinkUncheckedCreateWithoutUserUnlocksInput = {
   coverImage?: string | null
   status?: $Enums.LinkStatus
   contentType: $Enums.LinkContentType
+  theme?: string
   targetUrl?: string | null
   textContent?: string | null
   fileId?: string | null
@@ -1545,6 +1594,7 @@ export type LinkUpdateWithoutUserUnlocksInput = {
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumLinkStatusFieldUpdateOperationsInput | $Enums.LinkStatus
   contentType?: Prisma.EnumLinkContentTypeFieldUpdateOperationsInput | $Enums.LinkContentType
+  theme?: Prisma.StringFieldUpdateOperationsInput | string
   targetUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   textContent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1569,6 +1619,7 @@ export type LinkUncheckedUpdateWithoutUserUnlocksInput = {
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumLinkStatusFieldUpdateOperationsInput | $Enums.LinkStatus
   contentType?: Prisma.EnumLinkContentTypeFieldUpdateOperationsInput | $Enums.LinkContentType
+  theme?: Prisma.StringFieldUpdateOperationsInput | string
   targetUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   textContent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1591,6 +1642,7 @@ export type LinkCreateManyOwnerInput = {
   coverImage?: string | null
   status?: $Enums.LinkStatus
   contentType: $Enums.LinkContentType
+  theme?: string
   targetUrl?: string | null
   textContent?: string | null
   fileId?: string | null
@@ -1608,6 +1660,7 @@ export type LinkUpdateWithoutOwnerInput = {
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumLinkStatusFieldUpdateOperationsInput | $Enums.LinkStatus
   contentType?: Prisma.EnumLinkContentTypeFieldUpdateOperationsInput | $Enums.LinkContentType
+  theme?: Prisma.StringFieldUpdateOperationsInput | string
   targetUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   textContent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1631,6 +1684,7 @@ export type LinkUncheckedUpdateWithoutOwnerInput = {
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumLinkStatusFieldUpdateOperationsInput | $Enums.LinkStatus
   contentType?: Prisma.EnumLinkContentTypeFieldUpdateOperationsInput | $Enums.LinkContentType
+  theme?: Prisma.StringFieldUpdateOperationsInput | string
   targetUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   textContent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1654,6 +1708,7 @@ export type LinkUncheckedUpdateManyWithoutOwnerInput = {
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumLinkStatusFieldUpdateOperationsInput | $Enums.LinkStatus
   contentType?: Prisma.EnumLinkContentTypeFieldUpdateOperationsInput | $Enums.LinkContentType
+  theme?: Prisma.StringFieldUpdateOperationsInput | string
   targetUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   textContent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1672,6 +1727,7 @@ export type LinkCreateManyFileInput = {
   coverImage?: string | null
   status?: $Enums.LinkStatus
   contentType: $Enums.LinkContentType
+  theme?: string
   targetUrl?: string | null
   textContent?: string | null
   expiresAt?: Date | string | null
@@ -1688,6 +1744,7 @@ export type LinkUpdateWithoutFileInput = {
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumLinkStatusFieldUpdateOperationsInput | $Enums.LinkStatus
   contentType?: Prisma.EnumLinkContentTypeFieldUpdateOperationsInput | $Enums.LinkContentType
+  theme?: Prisma.StringFieldUpdateOperationsInput | string
   targetUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   textContent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1712,6 +1769,7 @@ export type LinkUncheckedUpdateWithoutFileInput = {
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumLinkStatusFieldUpdateOperationsInput | $Enums.LinkStatus
   contentType?: Prisma.EnumLinkContentTypeFieldUpdateOperationsInput | $Enums.LinkContentType
+  theme?: Prisma.StringFieldUpdateOperationsInput | string
   targetUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   textContent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1735,6 +1793,7 @@ export type LinkUncheckedUpdateManyWithoutFileInput = {
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumLinkStatusFieldUpdateOperationsInput | $Enums.LinkStatus
   contentType?: Prisma.EnumLinkContentTypeFieldUpdateOperationsInput | $Enums.LinkContentType
+  theme?: Prisma.StringFieldUpdateOperationsInput | string
   targetUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   textContent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1828,6 +1887,7 @@ export type LinkSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   coverImage?: boolean
   status?: boolean
   contentType?: boolean
+  theme?: boolean
   targetUrl?: boolean
   textContent?: boolean
   fileId?: boolean
@@ -1857,6 +1917,7 @@ export type LinkSelectScalar = {
   coverImage?: boolean
   status?: boolean
   contentType?: boolean
+  theme?: boolean
   targetUrl?: boolean
   textContent?: boolean
   fileId?: boolean
@@ -1865,7 +1926,7 @@ export type LinkSelectScalar = {
   updatedAt?: boolean
 }
 
-export type LinkOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "ownerId" | "guestToken" | "slug" | "title" | "description" | "coverImage" | "status" | "contentType" | "targetUrl" | "textContent" | "fileId" | "expiresAt" | "createdAt" | "updatedAt", ExtArgs["result"]["link"]>
+export type LinkOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "ownerId" | "guestToken" | "slug" | "title" | "description" | "coverImage" | "status" | "contentType" | "theme" | "targetUrl" | "textContent" | "fileId" | "expiresAt" | "createdAt" | "updatedAt", ExtArgs["result"]["link"]>
 export type LinkInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   owner?: boolean | Prisma.Link$ownerArgs<ExtArgs>
   file?: boolean | Prisma.Link$fileArgs<ExtArgs>
@@ -1900,6 +1961,10 @@ export type $LinkPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     coverImage: string | null
     status: $Enums.LinkStatus
     contentType: $Enums.LinkContentType
+    /**
+     * * Public page theme id from BIO_THEMES; the header and footer use it too.
+     */
+    theme: string
     targetUrl: string | null
     textContent: string | null
     fileId: string | null
@@ -2292,6 +2357,7 @@ export interface LinkFieldRefs {
   readonly coverImage: Prisma.FieldRef<"Link", 'String'>
   readonly status: Prisma.FieldRef<"Link", 'LinkStatus'>
   readonly contentType: Prisma.FieldRef<"Link", 'LinkContentType'>
+  readonly theme: Prisma.FieldRef<"Link", 'String'>
   readonly targetUrl: Prisma.FieldRef<"Link", 'String'>
   readonly textContent: Prisma.FieldRef<"Link", 'String'>
   readonly fileId: Prisma.FieldRef<"Link", 'String'>

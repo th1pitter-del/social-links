@@ -101,6 +101,19 @@ export type AdUnit = Prisma.AdUnitModel
  */
 export type HeaderLink = Prisma.HeaderLinkModel
 /**
+ * Model CustomPage
+ * Admin-authored page opened from the dashboard sidebar. The stored HTML is
+ * sanitized on save and again on render; drafts are hidden from regular users.
+ */
+export type CustomPage = Prisma.CustomPageModel
+/**
+ * Model CustomMenuItem
+ * One row in the extra dashboard sidebar section. One level deep: null
+ * parentId is a top-level menu, children point at a top-level parent. A row
+ * without a page is only valid when it has children (an expandable group).
+ */
+export type CustomMenuItem = Prisma.CustomMenuItemModel
+/**
  * Model AuditLog
  * 
  */

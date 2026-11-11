@@ -112,6 +112,8 @@ model Link {
   coverImage   String?         @db.Text
   status       LinkStatus      @default(DRAFT)
   contentType  LinkContentType
+  /** Public page theme id from BIO_THEMES; the header and footer use it too. */
+  theme        String          @default("pulse")
   targetUrl    String?         @db.Text
   textContent  String?         @db.Text
   fileId       String?
@@ -351,6 +353,55 @@ model HeaderLink {
 
   @@index([position])
   @@index([parentId, position])
+}
+
+enum CustomPageStatus {
+  DRAFT
+  PUBLISHED
+}
+
+/// Admin-authored page opened from the dashboard sidebar. The stored HTML is
+/// sanitized on save and again on render; drafts are hidden from regular users.
+model CustomPage {
+  id            String           @id @default(cuid())
+  title         String
+  slug          String           @unique
+  excerpt       String?          @db.Text
+  content       String           @db.LongText
+  status        CustomPageStatus @default(DRAFT)
+  featuredImage String?          @db.Text
+  /** Per-locale overrides `{ es: { title, excerpt, content } }`; empty locales fall back to English. */
+  translations  Json?
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+
+  menuItems CustomMenuItem[]
+
+  @@index([status])
+}
+
+/// One row in the extra dashboard sidebar section. One level deep: null
+/// parentId is a top-level menu, children point at a top-level parent. A row
+/// without a page is only valid when it has children (an expandable group).
+model CustomMenuItem {
+  id        String   @id @default(cuid())
+  parentId  String?
+  pageId    String?
+  title     String
+  /** Per-locale label overrides (`{ en, es, 'pt-br', ar }`). */
+  labels    Json?
+  icon      String   @default("link")
+  sortOrder Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  parent   CustomMenuItem?  @relation("CustomMenuItemChildren", fields: [parentId], references: [id], onDelete: Cascade)
+  children CustomMenuItem[] @relation("CustomMenuItemChildren")
+  page     CustomPage?      @relation(fields: [pageId], references: [id], onDelete: Restrict)
+
+  @@index([parentId, sortOrder])
+  @@index([pageId])
 }
 
 model AuditLog {
