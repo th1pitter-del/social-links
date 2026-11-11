@@ -45,7 +45,14 @@ import {
 
 type IconType = ComponentType<{ className?: string }>
 
-type NavItem = { href: string; label: string; icon: IconType; badge?: number }
+type NavItem = {
+  href: string
+  label: string
+  icon: IconType
+  badge?: number
+  /** Second line spelling out who the section affects. */
+  hint?: string
+}
 type NavGroup = { title: string; items: NavItem[] }
 
 export type AdminShellUser = { id: string; name: string; email: string }
@@ -101,11 +108,26 @@ export function AdminShell({
       title: t('groups.content'),
       items: [
         { href: '/admin/content', label: t('nav.siteContent'), icon: FileText },
-        { href: '/admin/content-pages', label: t('nav.contentPages'), icon: NotebookText },
-        { href: '/admin/custom-menus', label: t('nav.customMenus'), icon: Layers },
         { href: '/admin/platforms', label: t('nav.platforms'), icon: Globe },
         { href: '/admin/media', label: t('nav.mediaLibrary'), icon: Images },
         { href: '/admin/files', label: t('nav.lockedFiles'), icon: FileLock2 },
+      ],
+    },
+    {
+      title: t('groups.memberDashboard'),
+      items: [
+        {
+          href: '/admin/content-pages',
+          label: t('nav.contentPages'),
+          icon: NotebookText,
+          hint: t('navHints.usersOnly'),
+        },
+        {
+          href: '/admin/custom-menus',
+          label: t('nav.customMenus'),
+          icon: Layers,
+          hint: t('navHints.usersOnly'),
+        },
       ],
     },
     {
@@ -195,11 +217,23 @@ export function AdminShell({
                         )}
                       >
                         <item.icon className="size-4 shrink-0" />
-                        <span className="truncate">{item.label}</span>
+                        <span className="min-w-0 flex-1">
+                          <span className="block truncate">{item.label}</span>
+                          {item.hint ? (
+                            <span
+                              className={cn(
+                                'block truncate text-[10px] font-normal',
+                                active ? 'text-primary-foreground/70' : 'text-sidebar-primary',
+                              )}
+                            >
+                              {item.hint}
+                            </span>
+                          ) : null}
+                        </span>
                         {item.badge ? (
                           <span
                             className={cn(
-                              'ms-auto rounded-full px-1.5 py-0.5 text-[10px] font-semibold',
+                              'ms-auto shrink-0 rounded-full px-1.5 py-0.5 text-[10px] font-semibold',
                               active ? 'bg-black/15 text-primary-foreground' : 'bg-error text-white',
                             )}
                           >

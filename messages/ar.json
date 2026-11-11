@@ -17,6 +17,7 @@
       "overview": "نظرة عامة",
       "moderation": "الإشراف",
       "content": "المحتوى",
+      "memberDashboard": "لوحة المستخدم",
       "monetization": "تحقيق الدخل",
       "system": "النظام"
     },
@@ -37,6 +38,9 @@
       "bioPages": "صفحات البايو",
       "contentPages": "صفحات المحتوى",
       "customMenus": "قوائم الشريط الجانبي"
+    },
+    "navHints": {
+      "usersOnly": "للمستخدمين فقط"
     }
   },
   "dashboardShell": {

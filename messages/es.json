@@ -17,6 +17,7 @@
       "overview": "Resumen",
       "moderation": "Moderación",
       "content": "Contenido",
+      "memberDashboard": "Panel del usuario",
       "monetization": "Monetización",
       "system": "Sistema"
     },
@@ -37,6 +38,9 @@
       "bioPages": "Páginas bio",
       "contentPages": "Páginas de contenido",
       "customMenus": "Menús laterales"
+    },
+    "navHints": {
+      "usersOnly": "Solo para usuarios"
     }
   },
   "dashboardShell": {
