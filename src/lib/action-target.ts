@@ -7,6 +7,12 @@
 const RESERVED: Record<string, Set<string>> = {
   instagram: new Set(['accounts', 'explore', 'p', 'reel', 'reels', 'stories', 'tv']),
   facebook: new Set(['events', 'groups', 'photo', 'reel', 'share', 'sharer', 'story', 'watch']),
+  x: new Set(['home', 'explore', 'notifications', 'messages', 'i', 'intent', 'search', 'settings', 'share', 'hashtag']),
+  twitch: new Set(['directory', 'videos', 'search', 'settings', 'p', 'downloads']),
+  reddit: new Set(['user', 'u', 'submit', 'settings', 'message', 'premium']),
+  soundcloud: new Set(['discover', 'stream', 'upload', 'search', 'you', 'charts', 'pages', 'stations']),
+  pinterest: new Set(['pin', 'ideas', 'search', 'settings', 'resource']),
+  kick: new Set(['directory', 'categories', 'search', 'settings', 'following']),
 }
 
 function segments(pathname: string): string[] {
@@ -58,6 +64,61 @@ export function targetDisplayName(platform: string | null, target: string | null
   if (host === 'tiktok.com') {
     const [first] = segments(path)
     return first?.startsWith('@') ? handle(first) : null
+  }
+  if (host === 'x.com' || host === 'twitter.com') return firstProfileName('x', path)
+  if (host === 'twitch.tv' || host === 'm.twitch.tv') return firstProfileName('twitch', path)
+  if (host === 'kick.com') return firstProfileName('kick', path)
+  if (host === 'soundcloud.com') return firstProfileName('soundcloud', path)
+  if (host === 'pinterest.com' || host.endsWith('.pinterest.com')) {
+    return firstProfileName('pinterest', path)
+  }
+  if (host === 'reddit.com' || host === 'old.reddit.com') {
+    const parts = segments(path)
+    if (parts[0]?.toLowerCase() === 'r' && parts[1]) return `r/${parts[1]}`
+    return firstProfileName('reddit', path)
+  }
+  if (host === 'github.com') {
+    const parts = segments(path)
+    if (!parts[0]) return null
+    // A repository is named by both halves; a profile by its login alone.
+    return parts[1] ? `${parts[0]}/${parts[1]}` : handle(parts[0])
+  }
+  if (host === 't.me' || host === 'telegram.me') {
+    const [first] = segments(path)
+    // Private invites carry no readable name, only a join hash.
+    if (!first || first.startsWith('+') || first === 'joinchat') return null
+    return handle(first)
+  }
+  if (host === 'bsky.app') {
+    const parts = segments(path)
+    return parts[0] === 'profile' && parts[1] ? handle(parts[1]) : null
+  }
+  if (host === 'steamcommunity.com') {
+    const parts = segments(path)
+    return (parts[0] === 'groups' || parts[0] === 'id') && parts[1] ? handle(parts[1]) : null
+  }
+  if (host === 'linkedin.com' || host.endsWith('.linkedin.com')) {
+    const parts = segments(path)
+    return (parts[0] === 'company' || parts[0] === 'in' || parts[0] === 'showcase') && parts[1]
+      ? handle(parts[1])
+      : null
+  }
+  if (host === 'snapchat.com') {
+    const parts = segments(path)
+    return parts[0] === 'add' && parts[1] ? handle(parts[1]) : null
+  }
+  if (host === 'threads.net' || host === 'threads.com') {
+    const [first] = segments(path)
+    return first?.startsWith('@') ? handle(first) : null
+  }
+  // Mastodon has no single host: the account is `@name@server`, and that whole
+  // address is what a visitor recognises.
+  if (platform === 'mastodon') {
+    const account = segments(path)[0]
+    if (account?.startsWith('@') && account.length > 1) {
+      return `${account.slice(1)}@${host}`
+    }
+    return null
   }
 
   // A plain website step is the only case where the host itself is the name.

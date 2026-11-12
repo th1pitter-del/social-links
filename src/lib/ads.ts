@@ -6,7 +6,10 @@ import type { Locale } from '@/i18n/config'
 /** Slots where ad units can be rendered across the site. */
 export const AD_PLACEMENTS = [
   'home-top',
+  'home-mid',
   'home-bottom',
+  'page-top',
+  'page-bottom',
   'unlock-top',
   'unlock-bottom',
   'bio-top',
@@ -17,6 +20,25 @@ export const AD_PLACEMENTS = [
 
 export type AdPlacement = (typeof AD_PLACEMENTS)[number]
 
+/**
+ * Standard IAB creative size each slot is designed for. Banner images are
+ * rendered in a reserved frame of this ratio, so a page never shifts when the
+ * creative loads and an ad looks exactly as it would on a real network.
+ */
+export const AD_SLOT_SIZES: Record<AdPlacement, { width: number; height: number }> = {
+  'home-top': { width: 970, height: 250 }, // billboard
+  'home-mid': { width: 970, height: 250 }, // in-feed billboard
+  'home-bottom': { width: 728, height: 90 }, // leaderboard
+  'page-top': { width: 970, height: 250 }, // billboard
+  'page-bottom': { width: 728, height: 90 }, // leaderboard
+  'unlock-top': { width: 728, height: 90 }, // leaderboard
+  'unlock-bottom': { width: 728, height: 90 }, // leaderboard
+  'bio-top': { width: 300, height: 250 }, // medium rectangle
+  'bio-bottom': { width: 320, height: 100 }, // mobile banner
+  'dashboard-top': { width: 728, height: 90 }, // leaderboard
+  'dashboard-bottom': { width: 728, height: 90 }, // leaderboard
+}
+
 export const AD_TYPES = ['banner', 'html', 'link'] as const
 export type AdType = (typeof AD_TYPES)[number]
 
@@ -24,6 +46,8 @@ export const AD_NAME_MAX_LENGTH = 80
 export const AD_LABEL_MAX_LENGTH = 60
 export const AD_URL_MAX_LENGTH = 2048
 export const AD_HTML_MAX_LENGTH = 20000
+/** Site-wide ad-network snippet (loader, auto ads, verification) pasted in settings. */
+export const AD_NETWORK_SCRIPT_MAX_LENGTH = 20000
 export const HEADER_LINK_LABEL_MAX_LENGTH = 60
 
 /** Serializable ad unit shape shared by admin UI and public renderers. */
@@ -149,4 +173,15 @@ export function isUsableTargetUrl(value: string): boolean {
   const trimmed = value.trim()
   if (/^https?:\/\//.test(trimmed)) return true
   return /^\/[A-Za-z0-9?#&=/_.-]*$/.test(trimmed)
+}
+
+/**
+ * Banner creatives: an http(s) image, an uploaded media file, or a static
+ * image shipped in `public/` — the seeded placeholder creatives live there.
+ */
+export function isUsableAdImageUrl(value: string): boolean {
+  const trimmed = value.trim()
+  if (/^https?:\/\//.test(trimmed)) return true
+  if (/^\/api\/media\/[A-Za-z0-9_-]+$/.test(trimmed)) return true
+  return /^\/[A-Za-z0-9/_.-]+\.(?:svg|png|jpe?g|webp|gif)$/i.test(trimmed)
 }

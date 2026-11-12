@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="728" height="90" viewBox="0 0 728 90" role="img" aria-label="Placeholder leaderboard ad, 728 by 90">
+  <defs>
+    <radialGradient id="glow" cx="88%" cy="0%" r="70%">
+      <stop offset="0" stop-color="#D5FF2F" stop-opacity="0.18"/>
+      <stop offset="1" stop-color="#D5FF2F" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="728" height="90" fill="#0B0D12"/>
+  <rect width="728" height="90" fill="url(#glow)"/>
+  <g fill="none" stroke="#D5FF2F">
+    <circle cx="626" cy="-42" r="128" stroke-opacity="0.14"/>
+    <circle cx="626" cy="-42" r="86" stroke-opacity="0.10"/>
+  </g>
+  <text x="28" y="36" fill="#9AA1AD" font-family="Inter, system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="11" letter-spacing="2.5">PLACEHOLDER AD · 728 × 90</text>
+  <text x="28" y="64" fill="#E7E9EE" font-family="Inter, system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="20" font-weight="600">Your ad could be here.</text>
+  <rect x="556" y="26" width="144" height="38" rx="10" fill="#D5FF2F"/>
+  <text x="628" y="50" fill="#0B0D12" font-family="Inter, system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="14" font-weight="600" text-anchor="middle">Book this slot</text>
+</svg>

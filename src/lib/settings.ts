@@ -212,6 +212,7 @@ export const getSettingMap = cache(async (): Promise<Record<string, string>> => 
             'demo.label',
             'demo.email',
             'demo.password',
+            'ads.headScripts',
             ...THEME_KEYS,
             ...CONTENT_PAGES.map((page) => `content.${page}`),
           ],

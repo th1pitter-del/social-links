@@ -1,95 +1,21 @@
 'use client'
 
-import { useEffect, useRef, useSyncExternalStore } from 'react'
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
 import { ArrowRight, ArrowUpRight, FileText, Link2 } from 'lucide-react'
+import { cn } from 'cn'
 
 import { BrandIcon } from '@/components/brand-icon'
-import { useInView, useReducedMotion } from '@/components/motion/reveal'
 import { Button } from '@/components/ui/button'
+import { useRotator } from '@/components/home/use-rotator'
 import {
   bioButtonVisual,
   bioHeadingStyle,
   resolveBioTheme,
 } from '@/lib/bio-themes'
-import { cn } from 'cn'
 
-type FanFrame = {
-  /** Centre of the card, as a percentage of the stage. */
-  x: number
-  y: number
-  rotate: number
-  /** Card width as a share of the stage. */
-  width: number
-}
-
-type FanCard = {
-  /** A preset from `bio-themes`; each card previews a different look. */
-  theme: string
-  fan: FanFrame
-  /** The three-card fan for phones; cards without one are hidden there. */
-  phone?: FanFrame
-  drift: { x: number; y: number; rotate: number }
-  /** Ambient loop length in ms and its phase offset, so no two cards sync. */
-  duration: number
-  delay: number
-  /** Cards behind the centre one sit in shadow, as in the reference. */
-  dim?: number
-  z: number
-}
-
-// A five-card fan traced from the reference: one larger centre card with the
-// earlier cards peeking out either side, each rotated a little further.
-const CARDS: FanCard[] = [
-  {
-    theme: 'luxury',
-    fan: { x: 15.9, y: 52.7, rotate: -7, width: 18.3 },
-    drift: { x: -1.2, y: 0.8, rotate: -1.1 },
-    duration: 12_400,
-    delay: -3_200,
-    dim: 0.74,
-    z: 1,
-  },
-  {
-    theme: 'midnight',
-    fan: { x: 31.2, y: 52, rotate: -3.5, width: 19.7 },
-    phone: { x: 22.5, y: 53.5, rotate: -6, width: 31 },
-    drift: { x: -1, y: -0.9, rotate: 1 },
-    duration: 10_900,
-    delay: -5_100,
-    dim: 0.88,
-    z: 2,
-  },
-  {
-    theme: 'sunset',
-    fan: { x: 51, y: 51, rotate: 0, width: 23 },
-    phone: { x: 50, y: 52, rotate: 0, width: 36 },
-    drift: { x: 0.6, y: -1.1, rotate: 0.7 },
-    duration: 13_200,
-    delay: -1_400,
-    z: 4,
-  },
-  {
-    theme: 'glass-card',
-    fan: { x: 68.4, y: 51.5, rotate: 3.5, width: 19.7 },
-    phone: { x: 77.5, y: 53.5, rotate: 6, width: 31 },
-    drift: { x: 1.1, y: 0.9, rotate: -0.9 },
-    duration: 11_700,
-    delay: -6_100,
-    dim: 0.88,
-    z: 2,
-  },
-  {
-    theme: 'neo-brutalist',
-    fan: { x: 84.4, y: 52.4, rotate: 7, width: 18.3 },
-    drift: { x: 1.3, y: 0.7, rotate: 1.2 },
-    duration: 12_800,
-    delay: -4_400,
-    dim: 0.74,
-    z: 1,
-  },
-]
+/** The presets the carousel walks, in the order it shows them. */
+const THEMES = ['luxury', 'midnight', 'sunset', 'glass-card', 'neo-brutalist'] as const
 
 type CardCopy = {
   bio: string
@@ -98,29 +24,13 @@ type CardCopy = {
   playlist: string
 }
 
-function subscribeWide(onChange: () => void) {
-  const query = window.matchMedia('(min-width: 640px)')
-  query.addEventListener('change', onChange)
-  return () => query.removeEventListener('change', onChange)
-}
-
-/** The desktop fan is the art-directed default; phones get the three-card fan. */
-function useWideStage() {
-  return useSyncExternalStore(
-    subscribeWide,
-    () => window.matchMedia('(min-width: 640px)').matches,
-    () => true,
-  )
-}
-
 /**
  * A miniature bio page in one of the product's real presets. Same pieces as the
  * live page - avatar, name, handle, link buttons - with the theme's own palette,
- * typography and button shapes, so the fan reads as five themes, not five mocks.
+ * typography and button shapes, so each slide reads as a theme, not a mock.
  */
-function Card({ card, wide, copy }: { card: FanCard; wide: boolean; copy: CardCopy }) {
-  const frame = wide ? card.fan : (card.phone ?? card.fan)
-  const theme = resolveBioTheme(card.theme)
+function BioCard({ themeId, copy }: { themeId: string; copy: CardCopy }) {
+  const theme = resolveBioTheme(themeId)
   const palette = theme.palette
   const heading = bioHeadingStyle(theme)
   const button = bioButtonVisual(theme.id, null)
@@ -137,25 +47,11 @@ function Card({ card, wide, copy }: { card: FanCard; wide: boolean; copy: CardCo
 
   return (
     <div
-      data-card={card.theme}
-      className={cn(
-        'absolute origin-center overflow-hidden',
-        !card.phone && 'hidden sm:block',
-      )}
+      className="relative w-full overflow-hidden"
       style={{
-        left: `${frame.x}%`,
-        top: `${frame.y}%`,
-        width: `${frame.width}%`,
         aspectRatio: '0.58',
-        transform: `translate(-50%, -50%) rotate(${frame.rotate}deg)`,
-        borderRadius: 'clamp(8px, 2cqw, 14px)',
-        boxShadow:
-          card.z > 2
-            ? '0 30px 70px -28px rgba(0, 0, 0, 0.78)'
-            : '0 22px 50px -26px rgba(0, 0, 0, 0.65)',
-        filter: card.dim ? `brightness(${card.dim})` : undefined,
-        zIndex: card.z,
-        willChange: 'transform',
+        borderRadius: 14,
+        boxShadow: '0 34px 80px -30px rgba(0, 0, 0, 0.8)',
       }}
     >
       <div
@@ -272,15 +168,14 @@ function Card({ card, wide, copy }: { card: FanCard; wide: boolean; copy: CardCo
 }
 
 /**
- * The fan only breathes: each card drifts a few pixels on its own clock. The
- * composition in the reference stays put, so the loop never reshuffles the row.
+ * One bio page at a time, on the right, in the same panel language as the rest
+ * of the page. The carousel shows a preset for a few seconds and crossfades to
+ * the next one; the dots let a visitor pick a theme, and holding the pointer on
+ * the card stops the walk while it is read.
  */
 export function BioLinksHero({ href }: { href: string }) {
   const t = useTranslations('home.bioSection')
-  const reducedMotion = useReducedMotion()
-  const wide = useWideStage()
-  const { setNode, inView } = useInView<HTMLDivElement>('-8% 0px -8% 0px')
-  const stageRef = useRef<HTMLDivElement | null>(null)
+  const rotator = useRotator(THEMES.length, 4800)
   const copy: CardCopy = {
     bio: t('cardBio'),
     video: t('cardVideo'),
@@ -288,93 +183,101 @@ export function BioLinksHero({ href }: { href: string }) {
     playlist: t('cardPlaylist'),
   }
 
-  useEffect(() => {
-    const stage = stageRef.current
-    if (!stage || reducedMotion || !inView) return
-
-    let animations: Animation[] = []
-
-    const build = () => {
-      const rect = stage.getBoundingClientRect()
-      if (!rect.width || !rect.height) return
-
-      animations.forEach((animation) => animation.cancel())
-      animations = CARDS.flatMap((card) => {
-        const frame = wide ? card.fan : card.phone
-        if (!frame) return []
-        const element = stage.querySelector<HTMLElement>(
-          `[data-card="${card.theme}"]`,
-        )
-        if (!element || element.offsetParent === null) return []
-
-        const dx = (card.drift.x / 100) * rect.width
-        const dy = (card.drift.y / 100) * rect.height
-        const base = `translate(-50%, -50%) rotate(${frame.rotate}deg)`
-        const moved = `translate(calc(-50% + ${dx.toFixed(2)}px), calc(-50% + ${dy.toFixed(2)}px)) rotate(${(frame.rotate + card.drift.rotate).toFixed(2)}deg)`
-
-        return [
-          element.animate([{ transform: base }, { transform: moved }], {
-            duration: card.duration,
-            delay: card.delay,
-            direction: 'alternate',
-            iterations: Infinity,
-            easing: 'ease-in-out',
-          }),
-        ]
-      })
-    }
-
-    build()
-    const observer = new ResizeObserver(build)
-    observer.observe(stage)
-
-    return () => {
-      observer.disconnect()
-      animations.forEach((animation) => animation.cancel())
-    }
-  }, [inView, reducedMotion, wide])
-
+  /* This project's react-hooks/refs rule reads the callback ref and the handlers
+     as ref values because they travel on the same object, and reports every
+     property access on it while rendering. Nothing here touches `ref.current`;
+     the exception is scoped to the element that wires the rotator up. */
+  /* eslint-disable react-hooks/refs */
   return (
-    <section className="overflow-hidden bg-[#3b0a1e]">
-      <div className="mx-auto grid w-full max-w-[1200px] gap-14 px-4 py-20 sm:py-24 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:items-center lg:gap-10 lg:py-28">
-        <div className="max-w-lg">
-          <p className="text-sm font-medium text-[#ffb3c7]">{t('eyebrow')}</p>
-          <h2 className="mt-4 text-4xl font-semibold leading-[1.05] tracking-tight text-balance text-[#ffe3ec] sm:text-5xl lg:text-[3.4rem]">
-            {t('title')}
-          </h2>
-          <p className="mt-5 text-base leading-relaxed text-[#f3c9d6] sm:text-lg">
-            {t('body')}
-          </p>
-          <Button
-            asChild
-            size="lg"
-            className="mt-8 h-12 rounded-full bg-[#ffd3e0] px-6 text-base text-[#3b0a1e] hover:bg-[#ffc2d4] focus-visible:ring-[#ffd3e0]/50"
-          >
-            <Link href={href}>
-              {t('cta')}
-              <ArrowRight className="rtl:rotate-180" />
-            </Link>
-          </Button>
-        </div>
+    <section id="bio" className="relative">
+      <div className="mx-auto w-full max-w-[1200px] px-4 pb-12 sm:pb-20">
+        <div className="relative overflow-hidden rounded-3xl border bg-card">
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 bg-[radial-gradient(65%_45%_at_50%_20%,rgba(201,247,42,0.16),transparent)] dark:bg-[radial-gradient(65%_45%_at_50%_20%,rgba(213,255,47,0.12),transparent)] lg:bg-[radial-gradient(45%_70%_at_78%_50%,rgba(201,247,42,0.16),transparent)] lg:dark:bg-[radial-gradient(45%_70%_at_78%_50%,rgba(213,255,47,0.12),transparent)]"
+          />
+          <div className="relative grid gap-6 p-5 sm:p-10 lg:grid-cols-[minmax(0,1.02fr)_minmax(0,0.98fr)] lg:grid-rows-[auto_1fr] lg:items-center lg:gap-x-10 lg:gap-y-4">
+            <div className="max-w-lg lg:col-start-1 lg:row-start-1 lg:self-end">
+              <p className="text-sm font-medium text-accent-text">{t('eyebrow')}</p>
+              <h2 className="mt-3 text-3xl leading-[1.08] font-semibold tracking-tight text-balance sm:mt-4 sm:text-4xl lg:text-5xl">
+                {t('title')}
+              </h2>
+            </div>
 
-        <div
-          ref={(node) => {
-            stageRef.current = node
-            setNode(node)
-          }}
-          aria-hidden
-          className="relative mx-auto aspect-[7/6] w-full max-w-[560px] sm:aspect-[16/10] lg:aspect-[16/9]"
-          style={{ containerType: 'inline-size' }}
-        >
-          {CARDS.map((card) => (
-            <Card key={card.theme} card={card} wide={wide} copy={copy} />
-          ))}
+            <div
+              ref={rotator.setNode}
+              onPointerEnter={rotator.pause}
+              onPointerLeave={rotator.resume}
+              onFocusCapture={rotator.pause}
+              onBlurCapture={(event) => {
+                if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+                  rotator.resume()
+                }
+              }}
+              className="mx-auto w-full max-w-[19rem] sm:max-w-[18rem] lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:max-w-[20rem] lg:self-center"
+            >
+              <div className="relative grid">
+                {THEMES.map((themeId, index) => {
+                  const active = index === rotator.active
+                  return (
+                    <div
+                      key={themeId}
+                      aria-hidden={!active}
+                      className={cn(
+                        'col-start-1 row-start-1 transition-[opacity,transform] duration-[900ms] ease-out motion-reduce:transition-none',
+                        active
+                          ? 'translate-y-0 scale-100 opacity-100'
+                          : 'pointer-events-none translate-y-2 scale-[0.97] opacity-0',
+                      )}
+                    >
+                      <BioCard themeId={themeId} copy={copy} />
+                    </div>
+                  )
+                })}
+              </div>
 
-          {/* The side cards sink into the section on the reference while the
-              centre card stays in front of the vignette. */}
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[3] h-[24%] bg-gradient-to-t from-[#3b0a1e] via-[#3b0a1e]/80 to-transparent" />
+              <div className="mt-5 flex items-center justify-center gap-1.5">
+                {THEMES.map((themeId, index) => {
+                  const active = index === rotator.active
+                  return (
+                    <button
+                      key={themeId}
+                      type="button"
+                      onClick={() => rotator.goTo(index)}
+                      aria-label={resolveBioTheme(themeId).label}
+                      aria-current={active ? 'true' : undefined}
+                      className="flex size-5 cursor-pointer items-center justify-center rounded-full focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-ring"
+                    >
+                      <span
+                        aria-hidden
+                        className={cn(
+                          'block h-1.5 rounded-full transition-[width,background-color] duration-300',
+                          active
+                            ? 'w-5 bg-primary'
+                            : 'w-1.5 bg-border hover:bg-muted-foreground/50',
+                        )}
+                      />
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+
+            <div className="max-w-lg lg:col-start-1 lg:row-start-2 lg:self-start">
+              <p className="text-base leading-relaxed text-muted-foreground sm:text-lg">
+                {t('body')}
+              </p>
+              <Button asChild size="lg" className="mt-6 w-full sm:w-auto lg:mt-7">
+                <Link href={href}>
+                  {t('cta')}
+                  <ArrowRight className="rtl:rotate-180" />
+                </Link>
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
     </section>
   )
+  /* eslint-enable react-hooks/refs */
 }

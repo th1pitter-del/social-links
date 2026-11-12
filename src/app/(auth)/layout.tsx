@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { getTranslations } from 'next-intl/server'
 
 import { BrandMark } from '@/components/site-header'
+import { AdSlot } from '@/components/ads/ad-slot'
 import { getSiteSettings } from '@/lib/settings'
 
 export default async function AuthLayout({ children }: { children: React.ReactNode }) {
@@ -43,6 +44,7 @@ export default async function AuthLayout({ children }: { children: React.ReactNo
           </Link>
           {t('agreementAfter')}
         </p>
+        <AdSlot placement="page-bottom" className="mt-8" />
       </div>
     </div>
   )

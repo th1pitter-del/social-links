@@ -13,7 +13,7 @@ import { getPublicUnlockLink, isExpired, recordShortLinkVisit, type PublicUnlock
 
 type PageProps = {
   params: Promise<{ slug: string }>
-  searchParams: Promise<{ token?: string; preview?: string }>
+  searchParams: Promise<{ token?: string; preview?: string; verify?: string }>
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -31,7 +31,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function UnlockPage({ params, searchParams }: PageProps) {
   const { slug } = await params
-  const { token, preview } = await searchParams
+  const { token, preview, verify } = await searchParams
   const t = await getTranslations('unlock')
 
   const link = await getPublicUnlockLink(slug)
@@ -76,6 +76,7 @@ export default async function UnlockPage({ params, searchParams }: PageProps) {
         theme={link.theme}
         steps={steps}
         offers={await getOfferPreviews(link)}
+        verifyOutcome={verify ?? null}
         {...stats}
         preview
       />
@@ -109,6 +110,7 @@ export default async function UnlockPage({ params, searchParams }: PageProps) {
       theme={link.theme}
       steps={steps}
       offers={await getOfferPreviews(link)}
+      verifyOutcome={verify ?? null}
       {...stats}
     />
   )

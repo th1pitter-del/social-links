@@ -4,6 +4,7 @@ import { cn } from 'cn'
 
 import { Markdown } from '@/components/markdown'
 import { Button } from '@/components/ui/button'
+import { AdSlot } from '@/components/ads/ad-slot'
 
 export type ContentPageKind = 'faq' | 'privacy' | 'terms'
 
@@ -156,6 +157,8 @@ export function ContentPage({
         </div>
       </section>
 
+      <AdSlot placement="page-top" className="mx-auto w-full max-w-[1200px] px-4 pt-10" />
+
       <div className="mx-auto grid w-full max-w-[1200px] gap-10 px-4 py-12 lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-16 lg:py-16">
         <aside className="hidden lg:block">
           <nav aria-label={tocLabel} className="sticky top-24">
@@ -266,6 +269,8 @@ export function ContentPage({
           </section>
         </div>
       </div>
+
+      <AdSlot placement="page-bottom" className="mx-auto w-full max-w-[1200px] px-4 pb-14" />
     </main>
   )
 }

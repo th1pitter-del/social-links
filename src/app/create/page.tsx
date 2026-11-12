@@ -6,6 +6,7 @@ import { Gift, Lock, ShieldCheck } from 'lucide-react'
 import { LinkForm } from '@/components/link-form'
 import { SiteFooter } from '@/components/site-footer'
 import { SiteHeader } from '@/components/site-header'
+import { AdSlot } from '@/components/ads/ad-slot'
 import { getEnabledActionOptions } from '@/lib/action-catalog'
 import { getGuestToken } from '@/lib/guest'
 import { prisma } from '@/lib/prisma'
@@ -42,6 +43,8 @@ export default async function CreatePage() {
     <>
       <SiteHeader />
       <main className="mx-auto w-full max-w-[1200px] flex-1 px-4 py-12">
+        <AdSlot placement="page-top" className="mb-10" />
+
         <div className="mb-8 max-w-2xl">
           <span className="inline-flex items-center gap-2 rounded-full border bg-card px-3 py-1 text-xs font-medium text-muted-foreground">
             <Gift className="size-3.5 text-accent-text" />
@@ -68,6 +71,8 @@ export default async function CreatePage() {
           actionTypes={actionTypes}
           existingSlug={existingGuestLink?.slug}
         />
+
+        <AdSlot placement="page-bottom" className="mt-12" />
       </main>
       <SiteFooter />
     </>

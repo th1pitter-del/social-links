@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache'
 import { getTranslations } from 'next-intl/server'
 
 import { setSetting, writeAudit } from '@/lib/admin-utils'
+import { AD_NETWORK_SCRIPT_MAX_LENGTH } from '@/lib/ads'
 import { isMediaOrHttpUrl, sanitizeHex } from '@/lib/settings'
 import { CONTENT_VALUE_MAX_LENGTH } from '@/lib/validation'
 import { requireAdmin } from '@/lib/session'
@@ -86,6 +87,16 @@ export async function updateSetting(key: string, value: string): Promise<Setting
   if (trimmedKey === 'demo.loginEnabled') {
     value = value === 'true' ? 'true' : 'false'
   }
+  if (trimmedKey.startsWith('verification.')) {
+    // The callback address is computed from the site URL, never typed by hand.
+    if (trimmedKey === 'verification.oauthRedirectUrl') {
+      return { ok: false, error: t('readOnlySetting') }
+    }
+    value = value.trim()
+    if (trimmedKey === 'verification.enabled') {
+      value = value === 'true' ? 'true' : 'false'
+    }
+  }
   if (trimmedKey.startsWith('email.')) {
     // Credentials are pasted, so surrounding whitespace is never part of the
     // value. An accidental space makes every platform request fail.
@@ -94,9 +105,16 @@ export async function updateSetting(key: string, value: string): Promise<Setting
       return { ok: false, error: t('invalidWebhookUrl') }
     }
   }
+  if (trimmedKey === 'ads.headScripts') {
+    // Ad-network snippets are pasted verbatim; only surrounding whitespace is
+    // dropped so the injected code keeps its own formatting.
+    value = value.trim()
+  }
   const maxLength = trimmedKey.startsWith('content.')
     ? CONTENT_VALUE_MAX_LENGTH
-    : 2000
+    : trimmedKey === 'ads.headScripts'
+      ? AD_NETWORK_SCRIPT_MAX_LENGTH
+      : 2000
   if (value.length > maxLength) {
     return { ok: false, error: t('contentTooLong', { max: maxLength }) }
   }

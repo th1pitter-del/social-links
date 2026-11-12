@@ -19,8 +19,10 @@ import {
   getUnlockState,
   markActionComplete,
   startUnlock,
+  type StepVerificationView,
   type UnlockState,
 } from '@/lib/actions/unlock'
+import { StepConfirm } from '@/components/unlock/step-confirm'
 
 type ClaimedContent =
   | { contentType: 'URL'; targetUrl: string | null }
@@ -49,8 +51,10 @@ type StepAction = {
   icon: string
   behavior: 'URL' | 'EMAIL'
   completed: boolean
+  opened: boolean
   target: string
   visitUrl: string | null
+  verification: StepVerificationView | null
 }
 
 /** An OGAds offer as shown before the unlock session exists. */
@@ -107,6 +111,7 @@ export function UnlockExperience({
   unlockCount = 0,
   steps = [],
   offers = [],
+  verifyOutcome = null,
 }: {
   slug: string
   title: string
@@ -120,6 +125,8 @@ export function UnlockExperience({
   unlockCount?: number
   steps?: UnlockStepPreview[]
   offers?: UnlockOfferPreview[]
+  /** What an account consent round trip reported on the way back. */
+  verifyOutcome?: string | null
 }) {
   const t = useTranslations('unlock')
   const actionT = useTranslations('actions')
@@ -129,7 +136,13 @@ export function UnlockExperience({
   const router = useRouter()
   const [state, setState] = useState<UnlockState | null>(null)
   const [busy, setBusy] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(
+    verifyOutcome === 'notdone'
+      ? t('verifyNotDoneYet')
+      : verifyOutcome === 'unavailable'
+        ? t('verifyUnavailable')
+        : null,
+  )
   const [email, setEmail] = useState('')
   const [consent, setConsent] = useState(false)
   const [claimed, setClaimed] = useState<ClaimedContent>(null)
@@ -143,6 +156,8 @@ export function UnlockExperience({
     setState(next)
     const url = new URL(window.location.href)
     url.searchParams.set('token', next.token)
+    // The consent outcome belongs to the trip that just ended, not to a reload.
+    url.searchParams.delete('verify')
     window.history.replaceState(null, '', url.toString())
   }, [])
 
@@ -364,8 +379,10 @@ export function UnlockExperience({
         icon: step.icon,
         behavior: step.behavior,
         completed: false,
+        opened: false,
         target: step.target,
         visitUrl: null,
+        verification: null,
       }))
 
   // Offers are one step by themselves: any single credit finishes it, so the
@@ -522,7 +539,7 @@ export function UnlockExperience({
                         ? 'bg-muted/50 text-muted-foreground'
                         : fill
                           ? cn(
-                              'bg-[var(--action-bg)] text-white',
+                              'bg-[var(--action-bg)] text-[var(--action-fg)]',
                               interactive && 'hover:bg-[var(--action-bg-hover)]',
                             )
                           : '',
@@ -533,6 +550,9 @@ export function UnlockExperience({
                       ? ({
                           '--action-bg': fill.base,
                           '--action-bg-hover': fill.hover,
+                          // Snapchat yellow, Kick green and WhatsApp green are
+                          // too bright to carry white; those brands say so.
+                          '--action-fg': fill.foreground ?? '#ffffff',
                         } as React.CSSProperties)
                       : undefined
                     const glyph = (
@@ -542,10 +562,14 @@ export function UnlockExperience({
                         neutral
                         className={cn(
                           // The row carries the platform's solid colour, so the
-                          // mark wears white: brand on brand would leave nothing
-                          // to see.
+                          // mark wears the row's ink: brand on brand would leave
+                          // nothing to see.
                           'size-6 shrink-0',
-                          done ? 'text-muted-foreground' : fill ? 'text-white' : 'text-foreground',
+                          done
+                            ? 'text-muted-foreground'
+                            : fill
+                              ? 'text-[var(--action-fg)]'
+                              : 'text-foreground',
                         )}
                       />
                     )
@@ -655,39 +679,57 @@ export function UnlockExperience({
                       </>
                     )
 
+                    // A step the platform can answer for keeps its row open
+                    // until the answer is in, and asks for it right underneath.
+                    const needsProof = Boolean(
+                      action.verification && action.opened && !done && !expired && state,
+                    )
+
                     return (
-                      <li key={action.id} className="overflow-hidden rounded-xl">
-                        {action.type === 'VISIT' && !done && !expired ? (
-                          // The server performs this navigation and records it;
-                          // a plain link press could not prove the visit.
-                          <button
-                            type="button"
-                            onClick={() => void handleVisit(action.id)}
-                            disabled={busy}
-                            style={fillVars}
-                            className={surface}
-                          >
-                            {rowContent}
-                          </button>
-                        ) : clickable && href ? (
-                          // A real anchor, not a scripted popup: the browser opens
-                          // it on the visitor's own gesture, including the first
-                          // press before the unlock session exists.
-                          <a
-                            href={href}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            onClick={() => void handleComplete(action.id)}
-                            style={fillVars}
-                            className={cn(surface, 'no-underline')}
-                          >
-                            {rowContent}
-                          </a>
-                        ) : (
-                          <button type="button" disabled style={fillVars} className={surface}>
-                            {rowContent}
-                          </button>
-                        )}
+                      <li key={action.id} className="space-y-1.5">
+                        <div className="overflow-hidden rounded-xl">
+                          {action.type === 'VISIT' && !done && !expired ? (
+                            // The server performs this navigation and records it;
+                            // a plain link press could not prove the visit.
+                            <button
+                              type="button"
+                              onClick={() => void handleVisit(action.id)}
+                              disabled={busy}
+                              style={fillVars}
+                              className={surface}
+                            >
+                              {rowContent}
+                            </button>
+                          ) : clickable && href ? (
+                            // A real anchor, not a scripted popup: the browser opens
+                            // it on the visitor's own gesture, including the first
+                            // press before the unlock session exists.
+                            <a
+                              href={href}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={() => void handleComplete(action.id)}
+                              style={fillVars}
+                              className={cn(surface, 'no-underline')}
+                            >
+                              {rowContent}
+                            </a>
+                          ) : (
+                            <button type="button" disabled style={fillVars} className={surface}>
+                              {rowContent}
+                            </button>
+                          )}
+                        </div>
+                        {needsProof && action.verification && state ? (
+                          <StepConfirm
+                            token={state.token}
+                            actionId={action.id}
+                            verification={action.verification}
+                            platformLabel={platformName ?? action.verification.platformKey}
+                            disabled={busy || expired}
+                            onState={applyState}
+                          />
+                        ) : null}
                       </li>
                     )
                   })}

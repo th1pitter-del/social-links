@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { getTranslations } from 'next-intl/server'
 
 import { prisma } from '@/lib/prisma'
+import { isUnlockLinkAvailable, settledActionIds } from '@/lib/unlock-confirm'
 import { getStoredFile, createStoredFileStream } from '@/lib/file-storage'
 
 export const runtime = 'nodejs'
@@ -26,6 +27,9 @@ export async function GET(
       link: {
         select: {
           id: true,
+          status: true,
+          expiresAt: true,
+          ownerId: true,
           contentType: true,
           file: { select: { id: true, filename: true, mimeType: true, size: true } },
           actions: { select: { id: true, type: true, label: true, target: true } },

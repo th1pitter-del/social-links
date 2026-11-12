@@ -5,6 +5,7 @@ import { getTranslations } from 'next-intl/server'
 import { ReportLinkForm } from '@/components/report-link-form'
 import { SiteFooter } from '@/components/site-footer'
 import { SiteHeader } from '@/components/site-header'
+import { AdSlot } from '@/components/ads/ad-slot'
 import { Button } from '@/components/ui/button'
 import { prisma } from '@/lib/prisma'
 import { getSiteSettings } from '@/lib/settings'
@@ -34,7 +35,8 @@ export default async function ReportPage({
   return (
     <>
       <SiteHeader />
-      <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-16">
+      <AdSlot placement="page-top" className="mx-auto w-full max-w-2xl px-4 pt-10" />
+      <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-12">
         <h1 className="text-3xl font-semibold tracking-tight">{t('title')}</h1>
         <p className="mt-2 text-sm text-muted-foreground">{t('subtitle')}</p>
 
@@ -63,6 +65,7 @@ export default async function ReportPage({
           </section>
         ) : null}
       </main>
+      <AdSlot placement="page-bottom" className="mx-auto w-full max-w-2xl px-4 pb-12" />
       <SiteFooter />
     </>
   )

@@ -27,10 +27,30 @@ export async function configText(dbKey: string, envName?: string): Promise<strin
   return envName ? (process.env[envName]?.trim() ?? '') : ''
 }
 
+export type ConfigRef = { dbKey: string; envName?: string }
+
+/** Effective text value for a settings reference. */
+export async function configValue(ref: ConfigRef): Promise<string> {
+  return configText(ref.dbKey, ref.envName)
+}
+
 export const EMAIL_SETTINGS = {
   webhookUrl: { dbKey: 'email.webhookUrl', envName: 'EMAIL_WEBHOOK_URL' },
   webhookToken: { dbKey: 'email.webhookToken', envName: 'EMAIL_WEBHOOK_TOKEN' },
   from: { dbKey: 'email.from', envName: 'EMAIL_FROM' },
+} as const
+
+/**
+ * Credentials for visitor-authenticated Google/GitHub verification and Telegram
+ * check-ins. Public handles alone are not proof of account ownership.
+ */
+export const VERIFICATION_SETTINGS = {
+  enabled: { dbKey: 'verification.enabled' },
+  googleClientId: { dbKey: 'verification.googleClientId', envName: 'GOOGLE_CLIENT_ID' },
+  googleClientSecret: { dbKey: 'verification.googleClientSecret', envName: 'GOOGLE_CLIENT_SECRET' },
+  githubClientId: { dbKey: 'verification.githubClientId', envName: 'GITHUB_CLIENT_ID' },
+  githubClientSecret: { dbKey: 'verification.githubClientSecret', envName: 'GITHUB_CLIENT_SECRET' },
+  telegramBotToken: { dbKey: 'verification.telegramBotToken', envName: 'TELEGRAM_BOT_TOKEN' },
 } as const
 
 export const RETENTION_SETTINGS = {

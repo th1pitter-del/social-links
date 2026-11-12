@@ -6,6 +6,7 @@ import { SettingsGroupForm } from '@/components/admin/settings-form'
 import { getSettings } from '@/lib/admin-utils'
 import { getOgadsConfig, ogadsPostbackUrl } from '@/lib/ogads'
 import { defaultThemeValue } from '@/lib/settings'
+import { SITE_URL } from '@/lib/seo'
 import { requireAdmin } from '@/lib/session'
 
 export const dynamic = 'force-dynamic'
@@ -50,6 +51,14 @@ export default async function AdminSettingsGroupPage({
     // it is the one credential that reaches this page — as the URL to paste.
     const ogads = await getOgadsConfig()
     settings['ogads.postbackUrl'] = ogads.postbackSecret ? ogadsPostbackUrl(ogads) : ''
+  }
+
+  if (group.id === 'step-verification') {
+    // Providers must be told where to send the visitor back. It is derived
+    // from the site's own address, never typed, so it cannot drift.
+    settings['verification.oauthRedirectUrl'] = `${SITE_URL}/api/verify/callback`
+    // The switch is on until an administrator turns it off.
+    settings['verification.enabled'] = all['verification.enabled'] === 'false' ? 'false' : 'true'
   }
 
   return <SettingsGroupForm groupId={group.id} settings={settings} configured={configured} />

@@ -8,7 +8,6 @@ import { getHeaderMenuTranslations } from '@/lib/ads-data'
 import { writeAudit } from '@/lib/admin-utils'
 import { locales } from '@/i18n/config'
 import { prisma } from '@/lib/prisma'
-import { isMediaOrHttpUrl } from '@/lib/settings'
 import { requireAdmin } from '@/lib/session'
 import {
   AD_LABEL_MAX_LENGTH,
@@ -21,6 +20,7 @@ import {
   HEADER_LINK_LABEL_MAX_LENGTH,
   isHeaderMenuColor,
   isHeaderMenuKey,
+  isUsableAdImageUrl,
   isUsableTargetUrl,
   type AdUnitData,
   type AdType,
@@ -113,7 +113,7 @@ async function validateAdInput(
     if (!isUsableTargetUrl(url) || url.length > AD_URL_MAX_LENGTH) {
       return { ok: false, error: t('invalidUrl') }
     }
-    if (!isMediaOrHttpUrl(imageUrl)) {
+    if (!isUsableAdImageUrl(imageUrl)) {
       return { ok: false, error: t('invalidCoverImage') }
     }
   }

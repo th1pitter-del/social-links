@@ -8,12 +8,15 @@ import { getLocale, getTranslations } from 'next-intl/server'
 
 import { SiteFooter } from '@/components/site-footer'
 import { SiteHeader } from '@/components/site-header'
+import { BrandIcon } from '@/components/brand-icon'
 import { Button } from '@/components/ui/button'
 import { AdSlot } from '@/components/ads/ad-slot'
-import { ActionMixer, type DemoPlatform } from '@/components/home/action-mixer'
+import { AnalyticsSpotlight } from '@/components/home/analytics-spotlight'
 import { BioLinksHero } from '@/components/home/bio-links-hero'
-import { FeatureBento } from '@/components/home/feature-bento'
-import { FlowDiagram } from '@/components/home/flow-diagram'
+import { FeatureSwitcher } from '@/components/home/feature-switcher'
+import { FlowPanel } from '@/components/home/flow-panel'
+import { LeadsSpotlight } from '@/components/home/leads-spotlight'
+import { PlatformShowcase, type ShowcasePlatform } from '@/components/home/platform-showcase'
 import { JsonLd } from '@/components/json-ld'
 import { StepRail } from '@/components/home/step-rail'
 import { UnlockDemo, type DemoStep } from '@/components/home/unlock-demo'
@@ -28,12 +31,29 @@ import { getSiteSettings } from '@/lib/settings'
 export const dynamic = 'force-dynamic'
 export const metadata: Metadata = { alternates: { canonical: '/' } }
 
+// Scattered marks behind the closing ask. Fixed positions so the band is the
+// same on every render; kept off the centre line where the headline sits.
+const CTA_GLYPHS = [
+  { platform: 'youtube', className: 'absolute top-[16%] left-[5%] size-7 sm:size-9' },
+  { platform: 'instagram', className: 'absolute top-[62%] left-[12%] size-6 sm:size-8' },
+  { platform: 'tiktok', className: 'absolute top-[10%] left-[24%] size-5 sm:size-7' },
+  { platform: 'x', className: 'absolute bottom-[14%] left-[30%] size-5 sm:size-6' },
+  { platform: 'discord', className: 'absolute top-[18%] right-[7%] size-7 sm:size-9' },
+  { platform: 'facebook', className: 'absolute top-[60%] right-[14%] size-6 sm:size-8' },
+  { platform: 'spotify', className: 'absolute top-[9%] right-[25%] size-5 sm:size-7' },
+  { platform: 'twitch', className: 'absolute right-[31%] bottom-[12%] size-5 sm:size-6' },
+  { platform: 'telegram', className: 'absolute top-[44%] left-[2%] size-5 sm:size-6' },
+  { platform: 'snapchat', className: 'absolute top-[42%] right-[3%] size-5 sm:size-6' },
+  { platform: 'reddit', className: 'absolute top-[7%] left-[43%] size-4 sm:size-5' },
+  { platform: 'pinterest', className: 'absolute right-[44%] bottom-[8%] size-4 sm:size-5' },
+]
+
 /**
  * The homepage demonstrates the product instead of only describing it: the hero
- * runs the real unlock card through its phases, the steps and the one-click
- * flow are explorable with a pointer, and the features are composed per claim
- * rather than repeated as matching cards. Identity, palette and components are
- * the ones already in docs/design-spec.md - the motion is additive, gated on
+ * runs the real unlock card through its phases, the platform picker and the
+ * feature previewer swap their panel under the pointer, and the flow's claims
+ * walk the diagram they belong to. Identity, palette and components are the ones
+ * already in docs/design-spec.md - the motion is additive, gated on
  * prefers-reduced-motion, and never replaces the text it animates.
  */
 export default async function HomePage() {
@@ -42,7 +62,6 @@ export default async function HomePage() {
     nav,
     common,
     unlockCopy,
-    motionCopy,
     actionCopy,
     platformCopy,
     meta,
@@ -55,7 +74,6 @@ export default async function HomePage() {
       getTranslations('nav'),
       getTranslations('common'),
       getTranslations('unlock'),
-      getTranslations('motion'),
       getTranslations('actions'),
       getTranslations('platforms'),
       getTranslations('meta'),
@@ -87,7 +105,7 @@ export default async function HomePage() {
     { label: actionCopy('SPOTIFY_TRACK'), platform: 'spotify', icon: 'music' },
   ]
 
-  const platforms: DemoPlatform[] = platformRows.map((platform) => ({
+  const platforms: ShowcasePlatform[] = platformRows.map((platform) => ({
     key: platform.key,
     label: platformLabel(platform, platformCopy),
     icon: platform.icon,
@@ -101,8 +119,8 @@ export default async function HomePage() {
   const stats = [
     { value: t('stats.creatorsValue'), label: t('stats.creatorsLabel') },
     { value: t('stats.unlocksValue'), label: t('stats.unlocksLabel') },
-    // Counted, not written: this is the same set of enabled platforms the ring
-    // below walks through, so an admin switching one on moves this number.
+    // Counted, not written: this is the same set of enabled platforms the picker
+    // below lists, so an admin switching one on moves this number.
     { value: formatNumber(locale, platforms.length), label: t('stats.platformsLabel') },
   ]
 
@@ -185,35 +203,33 @@ export default async function HomePage() {
         </section>
 
         <section>
-          <div className="mx-auto w-full max-w-[1200px] px-4 py-20">
-            {/* No frame and no divider: the numbers, the ring and the roots sit
-                straight on the page background, so nothing competes with the
-                brand colours or the lime wash above them. */}
+          <div className="mx-auto w-full max-w-[1200px] px-4 py-16 sm:py-20">
+            {/* No frame and no divider: the numbers, the platform picker and the
+                panels sit straight on the page background, so nothing competes
+                with the brand colours or the lime wash above them. */}
             <Reveal>
-              <h2 className="grid gap-4 text-center sm:grid-cols-3">
+              <dl className="grid gap-6 text-center sm:grid-cols-3 sm:gap-0 sm:divide-x sm:divide-border">
                 {stats.map((stat) => (
-                  <span
-                    key={stat.label}
-                    className="flex items-baseline justify-center gap-2 sm:flex-col sm:items-center sm:gap-1"
-                  >
-                    <span
+                  <div key={stat.label} className="flex flex-col-reverse items-center gap-1">
+                    <dt className="text-sm text-muted-foreground">{stat.label}</dt>
+                    <dd
                       dir="ltr"
                       className="text-3xl font-semibold tracking-tight tabular-nums sm:text-4xl"
                     >
                       {stat.value}
-                    </span>
-                    <span className="text-sm text-muted-foreground">{stat.label}</span>
-                  </span>
+                    </dd>
+                  </div>
                 ))}
-              </h2>
-              <p className="mt-12 text-center text-sm text-muted-foreground">{t('worksWith')}</p>
-              <ActionMixer platforms={platforms} />
+              </dl>
+            </Reveal>
+            <Reveal delay={80}>
+              <PlatformShowcase platforms={platforms} label={t('worksWith')} />
             </Reveal>
           </div>
         </section>
 
-        <section id="how-it-works" className="border-t bg-muted/30">
-          <div className="mx-auto w-full max-w-[1200px] px-4 py-20">
+        <section id="how-it-works">
+          <div className="mx-auto w-full max-w-[1200px] px-4 py-16 sm:py-20">
             <Reveal>
               <h2 className="text-3xl font-semibold tracking-tight">{nav('howItWorks')}</h2>
               <p className="mt-3 max-w-2xl text-muted-foreground">{t('stepsIntro')}</p>
@@ -231,50 +247,32 @@ export default async function HomePage() {
           </div>
         </section>
 
-        <section id="verification" className="border-t">
-          <div className="mx-auto grid w-full max-w-[1200px] gap-10 px-4 py-20 lg:grid-cols-2 lg:items-center">
+        <section id="verification">
+          <div className="mx-auto w-full max-w-[1200px] px-4 py-16 sm:py-20">
             <Reveal>
-              <div>
-                <h2 className="text-3xl font-semibold tracking-tight">{t('flow.title')}</h2>
-                <p className="mt-4 text-muted-foreground">{t('flow.body')}</p>
-                {/* Each claim names the stage of the flow it belongs to, so the
-                    list and the diagram beside it read as one mechanism instead
-                    of two unrelated blocks. Ordered by stage so the numbers ascend
-                    and never look like a broken 1-2-3. */}
-                <ul className="mt-6 space-y-3 text-sm">
-                  {[
-                    { text: t('flow.progressBullet'), node: 1 },
-                    { text: t('flow.serverBullet'), node: 2 },
-                    { text: t('flow.signedBullet'), node: 3 },
-                  ].map((item) => (
-                    <li key={item.text} className="flex items-start gap-2.5">
-                      <span className="flex size-6 shrink-0 items-center justify-center rounded-lg bg-primary/12 text-[0.65rem] font-semibold text-accent-text tabular-nums ring-1 ring-primary/20">
-                        {item.node + 1}
-                        <span className="sr-only">
-                          {motionCopy('stageRef', { current: item.node + 1 })}
-                        </span>
-                      </span>
-                      <span className="pt-1 text-muted-foreground">{item.text}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </Reveal>
-
-            <Reveal delay={120}>
-              <FlowDiagram title={t('flow.diagramTitle')} nodes={flowNodes} />
+              <FlowPanel
+                title={t('flow.title')}
+                body={t('flow.body')}
+                claims={[
+                  t('flow.progressBullet'),
+                  t('flow.serverBullet'),
+                  t('flow.signedBullet'),
+                ]}
+                diagramTitle={t('flow.diagramTitle')}
+                nodes={flowNodes}
+              />
             </Reveal>
           </div>
         </section>
 
-        <section id="features" className="border-t bg-muted/30">
-          <div className="mx-auto w-full max-w-[1200px] px-4 py-20">
+        <section id="features">
+          <div className="mx-auto w-full max-w-[1200px] px-4 py-16 sm:py-20">
             <Reveal>
               <h2 className="text-3xl font-semibold tracking-tight">{t('featuresTitle')}</h2>
               <p className="mt-3 max-w-2xl text-muted-foreground">{t('featuresIntro')}</p>
             </Reveal>
 
-            <FeatureBento
+            <FeatureSwitcher
               features={{
                 actions: {
                   title: t('features.actions.title'),
@@ -310,36 +308,50 @@ export default async function HomePage() {
           </div>
         </section>
 
+        <AdSlot placement="home-mid" className="mx-auto w-full max-w-[1200px] px-4" />
+
+        <Reveal>
+          <AnalyticsSpotlight href={signedIn ? '/dashboard' : '/sign-up'} />
+        </Reveal>
+
+        <Reveal>
+          <LeadsSpotlight href={signedIn ? '/dashboard/leads' : '/sign-up'} />
+        </Reveal>
+
         <BioLinksHero href={signedIn ? '/dashboard/profile' : '/sign-up'} />
 
-        <section className="border-t">
+        <section className="relative overflow-hidden border-t bg-card">
+          {/* The closing ask is a full-width invitation rather than another
+              framed card: one centred headline, one action. The platform marks
+              that fade behind it are the same brands the unlocks ask for. */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 bg-[radial-gradient(55%_80%_at_50%_0%,rgba(201,247,42,0.14),transparent)] dark:bg-[radial-gradient(55%_80%_at_50%_0%,rgba(213,255,47,0.10),transparent)]"
+          />
+          <div aria-hidden className="pointer-events-none absolute inset-0 text-foreground/[0.08]">
+            {CTA_GLYPHS.map((glyph) => (
+              <BrandIcon
+                key={glyph.platform}
+                platform={glyph.platform}
+                neutral
+                className={glyph.className}
+              />
+            ))}
+          </div>
           <Reveal>
-            <div className="mx-auto w-full max-w-[1200px] px-4 py-16">
-              {/* The closing ask gets the same framed treatment as the blocks
-                  above it, with the accent light inside the frame rather than
-                  bleeding across the whole page. */}
-              <div className="relative overflow-hidden rounded-2xl border bg-card">
-                <div
-                  aria-hidden
-                  className="pointer-events-none absolute inset-0 bg-[radial-gradient(50%_130%_at_88%_100%,rgba(201,247,42,0.16),transparent)] dark:bg-[radial-gradient(50%_130%_at_88%_100%,rgba(213,255,47,0.12),transparent)]"
-                />
-                <div className="relative flex flex-col items-start gap-6 p-6 sm:flex-row sm:items-center sm:justify-between sm:p-10">
-                  <div>
-                    <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
-                      {t('ctaTitle')}
-                    </h2>
-                    <p className="mt-2 max-w-xl text-muted-foreground">{t('ctaBody')}</p>
-                  </div>
-                  <div className="shrink-0">
-                    <Button size="lg" asChild>
-                      <Link href="/create">
-                        {t('ctaButton')}
-                        <ArrowRight className="rtl:rotate-180" />
-                      </Link>
-                    </Button>
-                  </div>
-                </div>
-              </div>
+            <div className="relative mx-auto flex w-full max-w-[1200px] flex-col items-center px-4 py-20 text-center sm:py-24">
+              <h2 className="max-w-4xl text-3xl font-semibold tracking-tight text-balance sm:text-4xl lg:text-5xl">
+                {t.rich('ctaTitle', {
+                  accent: (chunks) => <span className="text-accent-text">{chunks}</span>,
+                })}
+              </h2>
+              <p className="mt-4 max-w-md text-base text-muted-foreground">{t('ctaBody')}</p>
+              <Button size="lg" asChild className="mt-8 w-full sm:w-auto">
+                <Link href="/create">
+                  {t('ctaButton')}
+                  <ArrowRight className="rtl:rotate-180" />
+                </Link>
+              </Button>
             </div>
           </Reveal>
         </section>

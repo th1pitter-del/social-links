@@ -1,20 +1,18 @@
 'use client'
 
+import { Link2, Share2, Unlock } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { cn } from 'cn'
 
 import { DemoStage, useDemoCycle } from '@/components/motion/demo-cycle'
 
+const ICONS = [Link2, Share2, Unlock]
+
 /**
- * The three steps of the product as nodes threaded on one rail: the connector
- * fills to the active node, that node's badge is the only solid one, and its
- * card is the only one lit - so the sequence is followed with the eye rather
- * than read from a caption below. Each card carries its own text, which means
- * the mobile stack and the desktop rail say the same thing.
- *
- * Tap or click pins a step (the loop stops so it can be read); the transport in
- * the page's other demos is not needed here because the rail is small enough to
- * control directly.
+ * The three moves as columns of one rail: the header rule fills as the sequence
+ * advances, the active icon is the only solid one, and a pointer takes the walk
+ * over while it is on a step. Every column carries its own text, so the stacked
+ * phone layout says exactly what the rail says.
  */
 export function StepRail({
   steps,
@@ -26,29 +24,17 @@ export function StepRail({
   const t = useTranslations('motion')
   const cycle = useDemoCycle({ phaseCount: steps.length, intervalMs: 4200 })
 
-  // The rail runs badge-center to badge-center: 4px of button padding plus half
-  // of the 32px badge.
-  const ratio = cycle.phase / Math.max(1, steps.length - 1)
-
   return (
     <DemoStage cycle={cycle} label={title}>
-      <div className="relative grid gap-3 sm:grid-cols-3">
-        {/* The track, and the filled part of it. Both sit at the badges' own
-            height, so they pass behind them instead of cutting across the
-            cards. */}
-        <span
-          aria-hidden
-          className="absolute inset-x-5 top-5 z-10 hidden h-0.5 -translate-y-1/2 rounded-full bg-border sm:block"
-        />
-        <span
-          aria-hidden
-          className="absolute start-5 top-5 z-10 hidden h-0.5 -translate-y-1/2 rounded-full bg-gradient-to-r from-primary/40 to-primary rtl:bg-gradient-to-l transition-[width] duration-700 ease-out motion-reduce:transition-none sm:block"
-          style={{ width: `calc((100% - 2.5rem) * ${ratio})` }}
-        />
-
+      <div
+        onPointerEnter={cycle.pause}
+        onPointerLeave={cycle.resume}
+        className="grid gap-6 sm:grid-cols-3 sm:gap-8"
+      >
         {steps.map((step, index) => {
           const active = index === cycle.phase
           const reached = index <= cycle.phase
+          const Icon = ICONS[index] ?? Link2
           return (
             <button
               key={step.title}
@@ -57,42 +43,51 @@ export function StepRail({
                 cycle.goTo(index)
                 cycle.pause()
               }}
+              onPointerEnter={() => cycle.goTo(index)}
               aria-current={active ? 'step' : undefined}
-              className="group relative flex cursor-pointer flex-col items-start gap-3 p-1 text-start focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+              className="group relative flex cursor-pointer flex-col items-start rounded-xl text-start focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring"
             >
-              {/* Only the current node wears the full accent: the ones already
-                  passed stay marked, but recede. */}
-              <span
-                className={cn(
-                  'relative z-20 flex size-8 items-center justify-center rounded-lg text-sm font-semibold transition-[background-color,color,box-shadow] duration-500 motion-reduce:transition-none',
-                  active
-                    ? 'bg-primary text-primary-foreground shadow-md shadow-primary/25'
-                    : reached
-                      ? 'bg-primary/15 text-accent-text'
-                      : 'bg-muted text-muted-foreground',
-                )}
-              >
-                {index + 1}
+              <span className="flex w-full items-center gap-3">
+                <span
+                  className={cn(
+                    'grid size-9 shrink-0 place-items-center rounded-xl ring-1 transition-[background-color,color,box-shadow,border-color] duration-500 motion-reduce:transition-none',
+                    active
+                      ? 'bg-primary text-primary-foreground shadow-md shadow-primary/25 ring-primary'
+                      : 'bg-card text-muted-foreground ring-border group-hover:text-foreground group-hover:ring-primary/40',
+                  )}
+                >
+                  <Icon className="size-4" />
+                </span>
+                <span
+                  className={cn(
+                    'text-xs font-medium tabular-nums transition-colors duration-300',
+                    active ? 'text-foreground' : 'text-muted-foreground/70',
+                  )}
+                >
+                  0{index + 1}
+                </span>
+                <span aria-hidden className="h-px flex-1 overflow-hidden rounded-full bg-border">
+                  <span
+                    className="block h-full rounded-full bg-gradient-to-r from-primary/40 to-primary transition-[width] duration-700 ease-out motion-reduce:transition-none"
+                    style={{ width: reached ? '100%' : '0%' }}
+                  />
+                </span>
               </span>
               <span
                 className={cn(
-                  'w-full rounded-xl border p-4 transition-[background-color,border-color,box-shadow] duration-500 motion-reduce:transition-none',
-                  active
-                    ? 'border-primary/45 bg-card shadow-lg shadow-primary/10'
-                    : 'border-border bg-card/55 group-hover:border-primary/25',
+                  'mt-4 block font-medium transition-colors duration-300',
+                  active ? 'text-foreground' : 'text-muted-foreground group-hover:text-foreground',
                 )}
               >
-                <span
-                  className={cn(
-                    'block font-medium transition-colors duration-300',
-                    active ? 'text-foreground' : 'text-muted-foreground',
-                  )}
-                >
-                  {step.title}
-                </span>
-                <span className="mt-1.5 block text-sm leading-relaxed text-muted-foreground">
-                  {step.body}
-                </span>
+                {step.title}
+              </span>
+              <span
+                className={cn(
+                  'mt-1.5 block text-sm leading-relaxed transition-colors duration-300',
+                  active ? 'text-foreground/75' : 'text-muted-foreground',
+                )}
+              >
+                {step.body}
               </span>
             </button>
           )

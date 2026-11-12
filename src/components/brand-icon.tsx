@@ -86,21 +86,41 @@ export function brandAccentFor(
  * companion for hover. The hero's demonstration card and the live unlock card
  * share it so the same step looks the same colour on both. Website visits have
  * no brand of their own, so they wear the product's teal.
+ *
+ * `foreground` is only set for brands whose own colour is too bright to carry
+ * white lettering (Snapchat yellow, Kick green, WhatsApp green).
  */
-const PLATFORM_BUTTON_COLORS: Record<string, { base: string; hover: string }> = {
+type ButtonFill = { base: string; hover: string; foreground?: string }
+
+const PLATFORM_BUTTON_COLORS: Record<string, ButtonFill> = {
   youtube: { base: '#FF0000', hover: '#FF2A2A' },
   instagram: { base: '#E1306C', hover: '#E94C80' },
   facebook: { base: '#1877F2', hover: '#3B8AF5' },
   tiktok: { base: '#000000', hover: '#1F1F1F' },
+  x: { base: '#000000', hover: '#1F1F1F' },
+  twitch: { base: '#9146FF', hover: '#A263FF' },
   discord: { base: '#5865F2', hover: '#6B77F5' },
+  telegram: { base: '#229ED9', hover: '#38ADE4' },
+  github: { base: '#24292F', hover: '#373E47' },
+  reddit: { base: '#FF4500', hover: '#FF5E24' },
+  bluesky: { base: '#0285FF', hover: '#2196FF' },
+  mastodon: { base: '#563ACC', hover: '#6748DE' },
+  steam: { base: '#1B2838', hover: '#2A475E' },
   spotify: { base: '#1DB954', hover: '#22C95C' },
+  soundcloud: { base: '#FF3300', hover: '#FF4D1F' },
+  linkedin: { base: '#0A66C2', hover: '#1278DB' },
+  snapchat: { base: '#FFFC00', hover: '#FFFD3D', foreground: '#151614' },
+  threads: { base: '#000000', hover: '#1F1F1F' },
+  kick: { base: '#53FC19', hover: '#6BFC3B', foreground: '#0B1A05' },
+  pinterest: { base: '#BD081C', hover: '#D40A21' },
+  whatsapp: { base: '#25D366', hover: '#34E075', foreground: '#06251A' },
   website: { base: '#16A085', hover: '#1AB394' },
 }
 
 export function platformActionColor(
   platform: string | null | undefined,
   actionType?: string | null,
-): { base: string; hover: string } | null {
+): ButtonFill | null {
   if (actionType === 'VISIT') return PLATFORM_BUTTON_COLORS.website
   const slug = brandSlugFor(platform)
   return (slug && PLATFORM_BUTTON_COLORS[slug]) || null

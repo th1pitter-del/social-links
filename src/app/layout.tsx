@@ -4,6 +4,7 @@ import { NextIntlClientProvider } from 'next-intl'
 import { getLocale, getMessages, getTranslations } from 'next-intl/server'
 
 import { JsonLd } from '@/components/json-ld'
+import { AdNetworkCode } from '@/components/ads/ad-network-code'
 import { ThemeProvider } from '@/components/theme-provider'
 import { Toaster } from '@/components/ui/sonner'
 import { isLocale, localeDirection, type Locale } from '@/i18n/config'
@@ -50,13 +51,15 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function RootLayout({ children }: LayoutProps<'/'>) {
-  const [rawLocale, messages, themeCss, site, meta] = await Promise.all([
+  const [rawLocale, messages, settingMap, site, meta] = await Promise.all([
     getLocale(),
     getMessages(),
-    getSettingMap().then(getThemeOverrideCss),
+    getSettingMap(),
     getSiteSettings(),
     getTranslations('meta'),
   ])
+  const themeCss = getThemeOverrideCss(settingMap)
+  const adNetworkCode = settingMap['ads.headScripts']?.trim() ?? ''
   const locale: Locale = isLocale(rawLocale) ? rawLocale : 'en'
   const description = site.hasCustomTagline ? site.tagline : meta('description')
   const jsonLd = {
@@ -92,6 +95,7 @@ export default async function RootLayout({ children }: LayoutProps<'/'>) {
       <body className="flex min-h-full flex-col" suppressHydrationWarning>
         <JsonLd data={jsonLd} />
         {themeCss ? <style dangerouslySetInnerHTML={{ __html: themeCss }} /> : null}
+        <AdNetworkCode code={adNetworkCode} />
         <NextIntlClientProvider messages={messages}>
           <ThemeProvider attribute="class" defaultTheme="dark" disableTransitionOnChange>
             {children}

@@ -97,7 +97,8 @@
     "copied": "Copiado",
     "back": "Voltar",
     "toggleTheme": "Alternar tema claro/escuro",
-    "close": "Fechar"
+    "close": "Fechar",
+    "sponsored": "Patrocinado"
   },
   "nav": {
     "howItWorks": "Como funciona",
@@ -151,13 +152,13 @@
     },
     "flow": {
       "title": "Um fluxo de desbloqueio claro e controlado pelo servidor",
-      "body": "Os visitantes sempre sabem exatamente o que falta fazer. Cada etapa é registrada nos nossos servidores e conta no momento em que o visitante a abre.",
+      "body": "Cada etapa é registrada nos nossos servidores. As verificações configuradas do YouTube, GitHub e Telegram exigem o consentimento do visitante e a confirmação da plataforma; as demais etapas sociais usam um clique sem verificação.",
       "serverBullet": "Acompanhamento no servidor de cada etapa concluída",
       "signedBullet": "Acesso assinado e com expiração ao conteúdo protegido",
       "progressBullet": "Progresso que sobrevive a um recarregamento acidental",
       "progressTitle": "Progresso do desbloqueio",
       "progressValue": "2 de 3 etapas",
-      "stepDone": "Comentou no YouTube",
+      "stepDone": "Abriu um comentário do YouTube",
       "completed": "Concluído",
       "stepNext": "Ação final obrigatória",
       "required": "Obrigatório",
@@ -167,8 +168,8 @@
         "visitorDetail": "Uma URL curta: sem app e sem conta para começar.",
         "action": "Ação concluída",
         "actionDetail": "Seguem, se inscrevem, assistem ou ouvem para onde a ação aponta.",
-        "verify": "Etapa concluída",
-        "verifyDetail": "Uma etapa conta no momento em que o visitante a abre.",
+        "verify": "Verificação de conta ou um clique",
+        "verifyDetail": "Verificações configuradas ficam pendentes até serem confirmadas. Etapas de um clique não são verificadas.",
         "deliver": "Conteúdo entregue",
         "deliverDetail": "Um link assinado e com expiração entrega o destino."
       }
@@ -212,7 +213,7 @@
       "music": "Ouvir uma faixa",
       "email": "Coletar endereços de e-mail (opcional)"
     },
-    "ctaTitle": "Comece a compartilhar links bloqueados hoje",
+    "ctaTitle": "Comece a compartilhar links bloqueados <accent>hoje</accent>",
     "ctaBody": "Grátis para criadores. Sem planos premium nem cobrança de assinatura.",
     "ctaButton": "Criar seu link",
     "stepsIntro": "São três passos, e o público só enxerga a etapa em que está.",
@@ -235,6 +236,37 @@
       "views": "Visualizações",
       "unlocks": "Inícios de desbloqueio",
       "completed": "Concluídos"
+    },
+    "analytics": {
+      "eyebrow": "Análises",
+      "title": "Veja o que cada desbloqueio realmente faz",
+      "body": "Visualizações, inícios de desbloqueio, etapas concluídas e desbloqueios finalizados são contados em cada link, para você ver onde os visitantes param e quais links convertem.",
+      "bullet1": "Funil por link, não totais vazios",
+      "bullet2": "Tendência de 14 dias com contagens diárias",
+      "bullet3": "As contagens pertencem ao link; as evidências de verificação de conta são guardadas separadamente",
+      "demoTag": "Painel de exemplo",
+      "period": "Últimos 14 dias",
+      "metric": "desbloqueios concluídos",
+      "delta": "+37% em relação aos 14 dias anteriores",
+      "views": "Visualizações",
+      "starts": "Inícios de desbloqueio",
+      "completed": "Concluídos",
+      "cta": "Ver suas análises"
+    },
+    "leads": {
+      "eyebrow": "Leads de email",
+      "title": "Transforme desbloqueios em uma lista sua",
+      "body": "Adicione uma etapa de email opcional a qualquer link. Os visitantes veem por que você pede e consentem antes de o endereço ser salvo, e a lista fica no seu painel, pronta para exportar.",
+      "bullet1": "Somente opt-in — nada é salvo sem consentimento",
+      "bullet2": "Só você pode ver ou exportar a lista",
+      "bullet3": "Exporte todos os endereços em um arquivo CSV",
+      "demoTag": "Caixa de entrada de exemplo",
+      "consent": "Consentimento dado",
+      "newBadge": "Novo",
+      "count": "{count} coletados",
+      "export": "Exportar CSV",
+      "note": "Aqui aparecem apenas os endereços que os visitantes escolheram compartilhar.",
+      "cta": "Abrir leads de email"
     }
   },
   "auth": {
@@ -294,7 +326,7 @@
     "title": "Crie um link grátis",
     "subtitle": "Configure seu destino e ações. Seu primeiro link entra no ar imediatamente. Para criar mais de um link — ou editá-los e excluí-los depois — crie uma conta grátis.",
     "bulletHidden": "O conteúdo permanece oculto até que cada etapa seja concluída.",
-    "bulletServer": "Cada etapa conta no momento em que o visitante a abre."
+    "bulletServer": "Verificações configuradas do YouTube, GitHub e Telegram confirmam a ação do visitante; as demais etapas sociais são de um clique e não verificadas."
   },
   "unlock": {
     "previewBanner": "Modo de visualização. Este link não está publicado, então os visitantes ainda não podem abrir esta página e esta execução não entra nas suas análises.",
@@ -337,7 +369,25 @@
     "offersHint": "Qualquer oferta da lista conclui esta etapa. A confirmação vem do provedor e pode levar um minuto.",
     "offerWaiting": "Aguardando confirmação…",
     "offerVerified": "Oferta verificada",
-    "offerUnavailable": "As ofertas estão indisponíveis agora. Recarregue a página para tentar novamente."
+    "offerUnavailable": "As ofertas estão indisponíveis agora. Recarregue a página para tentar novamente.",
+    "verifyConnectHint": "Conecte sua conta do {platform} para provar que ela é sua e verificar esta ação. Lemos a ação correspondente; nunca publicamos nem guardamos seu token de acesso.",
+    "verifyCheckinHint": "Toque em Iniciar na conversa privada com nosso bot para identificar sua conta do {platform} e verificar sua participação no canal ou grupo.",
+    "verifyConnectButton": "Conectar {platform}",
+    "verifyCheckinButton": "Abrir o Telegram",
+    "verifyCheckinWaiting": "Aguardando seu check-in…",
+    "verifyNotDoneYet": "Sua conta autenticada ainda não mostra esta ação. Conclua a ação e verifique novamente.",
+    "verifyUnavailable": "Não foi possível confirmar esta etapa. Ela continua pendente; autorize o acesso se solicitado e tente novamente."
+  },
+  "verification": {
+    "title": "Verificação de tarefas",
+    "description": "Confirmado significa que uma verificação autenticada na plataforma foi bem-sucedida para a conta do visitante. Abrir uma etapa não comprova a ação.",
+    "colStep": "Etapa",
+    "colOpened": "Abertas",
+    "colVerified": "Confirmadas",
+    "colUnchecked": "Sem resposta",
+    "checkable": "Verificação de conta",
+    "notCheckable": "Um clique · não verificada",
+    "uncheckedNote": "“Sem resposta” significa que houve uma tentativa de consulta à API, mas a plataforma não conseguiu responder. Não é uma conclusão: verificações configuradas ficam pendentes e podem ser tentadas novamente. As não compatíveis, não configuradas ou desativadas usam um clique sem verificação."
   },
   "report": {
     "title": "Denunciar um link",
@@ -380,7 +430,7 @@
       "helpTitle": "Ainda tem uma dúvida?",
       "helpBody": "Envie o link curto ou o passo em que você travou e vamos dar uma olhada.",
       "helpCta": "Fale conosco",
-      "content": "### O que é o Link Unlocker?\nO Link Unlocker transforma qualquer link ou arquivo em uma página curta de desbloqueio. Você escolhe os passos que o visitante precisa concluir — seguir um canal, curtir um vídeo, entrar em um servidor do Discord, deixar um comentário ou simplesmente visitar uma página — e o conteúdo só é revelado depois desses passos. Você fica com um link curto para compartilhar em vez de uma planilha de sorteio, uma pilha de capturas de tela ou a conferência manual de cada participação.\n\n### O Link Unlocker é realmente grátis?\nSim. Criar links, proteger arquivos, coletar endereços de e-mail, a página de bio e o painel de análises estão incluídos. Não há planos premium, créditos, testes ou taxas por desbloqueio. Também não cobramos os visitantes.\n\n### Como o visitante desbloqueia meu conteúdo?\nO fluxo é o mesmo em todos os links:\n- O visitante abre seu link curto e vê as ações configuradas.\n- Criamos uma sessão privada que dura duas horas.\n- O visitante conclui cada ação em ordem e volta ao cartão.\n- Quando todos os passos obrigatórios estão completos, o conteúdo abre: uma URL de destino, um download ou uma mensagem na página.\nO visitante não precisa de uma conta no Link Unlocker, a menos que o link peça uma.\n\n### Quais plataformas e ações posso usar?\nO catálogo integrado cobre YouTube, Instagram, Facebook, TikTok, Discord, Spotify e qualquer outro site. São 18 ações, como se inscrever, curtir, comentar, assistir, seguir, entrar em um servidor, impulsionar um servidor, ouvir uma faixa e visitar uma página. Você pode combinar várias ações em um link e pedir um endereço de e-mail como passo extra.\n\n### As ações são verificadas?\nUma etapa é registrada como concluída no momento em que o visitante a abre. Não nos conectamos à conta de ninguém em uma plataforma social, e o cartão nunca afirma que uma etapa foi checada.\n\n### O que o visitante precisa compartilhar?\nSó o que a etapa pede: um endereço de e-mail quando o criador adicionou a etapa opcional de e-mail, guardado só depois do consentimento do visitante. A maioria das etapas não pede nada, e nunca pedimos login ou conexão de conta.\n\n### O que acontece se um link expirar ou for pausado?\nVocê pode definir uma data de expiração em qualquer link. Quando um link expira, ou enquanto está pausado, a página de desbloqueio para imediatamente e informa ao visitante que o link não está mais disponível. Você pode reativar um link pausado no painel a qualquer momento. Uma sessão expirada não pode ser estendida pelo navegador; o visitante começa de novo com uma sessão nova.\n\n### Quem pode ver o conteúdo que eu protejo?\nSomente o visitante cuja sessão concluiu todos os passos obrigatórios. O servidor verifica a sessão a cada solicitação e recusa sessões incompletas, então uma URL de desbloqueio copiada sozinha não revela nada. Os downloads são emitidos por sessão. Uma URL de destino fica visível para o visitante depois do desbloqueio, então trate-a como compartilhável e não coloque segredos em uma URL que você distribui.\n\n### Posso coletar endereços de e-mail?\nSim, como ação opcional. O visitante vê por que o endereço é solicitado e precisa consentir ativamente antes de ele ser guardado. Os endereços ficam por link, visíveis apenas para você, e podem ser exportados como CSV ou excluídos no painel. Nunca os vendemos nem os compartilhamos com outros criadores.\n\n### Preciso de uma conta para usar o Link Unlocker?\nVocê pode publicar um link como convidado; o navegador guarda um cookie assinado para que você ainda consiga gerenciar esse link. Para mais links, envio de arquivos, listas de e-mail, análises, metas e a página de bio é necessária uma conta gratuita.\n\n### Posso proteger um arquivo em vez de um link de site?\nSim. Envie um arquivo pelo painel, escolha o modo de download ao criar o link e o arquivo só é transmitido depois que o visitante conclui os passos. Os arquivos são privados por padrão e precisam respeitar os limites de tipo e tamanho definidos pelo operador desta instalação.\n\n### Quais análises vou ver?\nVocê vê contagens de visitas, inícios de desbloqueio, ações concluídas e desbloqueios completos por link, um gráfico de 14 dias e uma tabela de conversão por link. São contagens agregadas ligadas ao link, não perfis de visitantes individuais. Não vendemos análises nem as repassamos a anunciantes.\n\n### Quanto tempo um link dura?\nUm link fica disponível até você excluí-lo, a menos que defina uma data de expiração. Cada sessão de desbloqueio dura duas horas, normalmente o suficiente para concluir os passos sem manter uma sessão aberta indefinidamente.\n\n### O que não é permitido?\nNada de malware, phishing, conteúdo pirateado, assédio, falsidade ideológica, golpes ou qualquer coisa que viole as regras da plataforma que você usa. Não peça aos visitantes senhas, dados de pagamento ou documentos de identidade. Não use o serviço para coletar e-mails para spam. Podemos desativar links e contas que gerem denúncias de abuso críveis.\n\n### Como denuncio um link?\nUse o link de denúncia exibido na página de desbloqueio ou envie o link curto pela página de contato. As denúncias são analisadas primeiro e não são mostradas ao dono do link. Se você incluir um e-mail, podemos responder quando a denúncia for resolvida.\n\n### Posso apagar meus dados?\nExcluir um link também apaga suas sessões, análises e endereços coletados. Você pode excluir endereços individuais da sua lista a qualquer momento. Para encerrar sua conta e remover os dados do perfil, fale conosco — ainda não há um botão de exclusão automática, então fazemos isso manualmente.\n\n### E se uma plataforma mudar a API?\nNão chamamos APIs de plataformas para checar etapas: a etapa conta quando o visitante a abre, então mudanças na plataforma não afetam o desbloqueio. Se um link de destino mudar, o criador pode atualizá-lo no painel a qualquer momento.\n\n### Como consigo ajuda?\nEscreva para [support@linkunlock.app](mailto:support@linkunlock.app) para dúvidas sobre o produto ou a conta, e use o link de denúncia de uma página de desbloqueio para abusos. Incluir o link curto e o passo em que você travou ajuda a responder mais rápido."
+      "content": "### O que é o Link Unlocker?\nO Link Unlocker transforma um link ou arquivo em uma página curta de desbloqueio. Você escolhe ações do catálogo e o conteúdo é revelado quando os requisitos configurados são atendidos. Algumas etapas sociais exigem uma verificação de conta autenticada; outras se concluem com um clique sem verificar a ação na plataforma. Um desbloqueio concluído não garante novos seguidores.\n\n### O Link Unlocker é realmente grátis?\nSim. Criar links, proteger arquivos, coletar endereços de e-mail, a página de bio e o painel de análises estão incluídos. Não há planos premium, créditos, testes ou taxas por desbloqueio. Também não cobramos os visitantes.\n\n### Como o visitante desbloqueia meu conteúdo?\nO fluxo é o mesmo em todos os links:\n- O visitante abre seu link curto e vê as ações configuradas.\n- Criamos uma sessão privada que dura duas horas.\n- O visitante conclui cada ação em ordem e volta ao cartão.\n- Quando todos os passos obrigatórios estão completos, o conteúdo abre: uma URL de destino, um download ou uma mensagem na página.\nO visitante não precisa de uma conta no Link Unlocker, a menos que o link peça uma.\n\n### Quais plataformas e ações posso usar?\nO catálogo integrado cobre 22 plataformas e 41 ações: YouTube, Instagram, Facebook, TikTok, X, Twitch, Discord, Telegram, GitHub, Reddit, Bluesky, Mastodon, Steam, Spotify, SoundCloud, LinkedIn, Snapchat, Threads, Kick, Pinterest, WhatsApp e qualquer outro site. As ações incluem se inscrever, curtir, comentar, assistir, compartilhar, seguir, repostar, marcar um repositório com estrela, entrar em um servidor, grupo ou canal, impulsionar um servidor, votar positivamente em um post, ouvir uma faixa e visitar uma página. Você pode combinar várias ações em um link e pedir um endereço de e-mail como passo extra.\n\n### As ações são verificadas?\nApenas seis ações sociais aceitam verificações autenticadas, quando o operador ativa e configura o provedor:\n- Curtidas e inscrições do YouTube usam Google OAuth.\n- Ações de seguir e estrelas em repositórios do GitHub usam GitHub OAuth.\n- A participação em canais e grupos do Telegram usa um check-in em bot privado para identificar a conta do visitante antes de verificar a participação.\n\nNão aceitamos um nome de usuário digitado como prova de que a conta pertence ao visitante. Estrelas do GitHub são públicas, mas aqui a autenticação comprova de quem é a conta verificada.\n\nTodas as demais ações sociais do catálogo de 22 plataformas e 41 ações usam um clique e continuam não verificadas, incluindo comentários do YouTube e todas as ações do Discord, Twitch, Steam, Bluesky e Mastodon. Isso reflete o que esta implementação suporta, não se a plataforma tem registros públicos.\n\nO interruptor geral vem ativado por padrão, mas sem credenciais configuradas nenhuma ação social é autenticada. Verificações não compatíveis, não configuradas ou desativadas usam um clique. Uma verificação configurada não libera a etapa em caso de falha: API indisponível, consentimento negado ou ação não encontrada deixam a etapa pendente, e o visitante pode tentar novamente. O painel distingue etapas abertas, confirmações autenticadas e consultas que a API não conseguiu responder; uma consulta sem resposta não é uma conclusão.\n\n### O que o visitante precisa compartilhar?\nEtapas sociais de um clique não pedem conexão de conta. Verificações configuradas do YouTube e GitHub pedem que o visitante autorize a própria conta pelo provedor. As permissões OAuth podem permitir a leitura de mais dados que uma ação, mas esta implementação só lê o necessário para a verificação correspondente, nunca publica, segue nem altera nada, e usa o token de acesso do visitante sem guardá-lo.\n\nNo Telegram, o visitante toca em Iniciar em uma conversa privada com nosso bot. Guardamos o id da conta do Telegram, o nome de usuário se fornecido e o resultado da participação. Nenhum nome digitado é aceito como prova de identidade, e nunca pedimos senhas de plataformas. A etapa opcional de e-mail guarda um endereço após o consentimento. Não é preciso ter uma conta no Link Unlocker apenas para autorizar uma verificação social.\n\n### O que acontece se um link expirar ou for pausado?\nVocê pode definir uma data de expiração em qualquer link. Quando um link expira, ou enquanto está pausado, a página de desbloqueio para imediatamente e informa ao visitante que o link não está mais disponível. Você pode reativar um link pausado no painel a qualquer momento. Uma sessão expirada não pode ser estendida pelo navegador; o visitante começa de novo com uma sessão nova.\n\n### Quem pode ver o conteúdo que eu protejo?\nSomente o visitante cuja sessão concluiu todos os passos obrigatórios. O servidor verifica a sessão a cada solicitação e recusa sessões incompletas, então uma URL de desbloqueio copiada sozinha não revela nada. Os downloads são emitidos por sessão. Uma URL de destino fica visível para o visitante depois do desbloqueio, então trate-a como compartilhável e não coloque segredos em uma URL que você distribui.\n\n### Posso coletar endereços de e-mail?\nSim, como ação opcional. O visitante vê por que o endereço é solicitado e precisa consentir ativamente antes de ele ser guardado. Os endereços ficam por link, visíveis apenas para você, e podem ser exportados como CSV ou excluídos no painel. Nunca os vendemos nem os compartilhamos com outros criadores.\n\n### Preciso de uma conta para usar o Link Unlocker?\nVocê pode publicar um link como convidado; o navegador guarda um cookie assinado para que você ainda consiga gerenciar esse link. Para mais links, envio de arquivos, listas de e-mail, análises, metas e a página de bio é necessária uma conta gratuita.\n\n### Posso proteger um arquivo em vez de um link de site?\nSim. Envie um arquivo pelo painel, escolha o modo de download ao criar o link e o arquivo só é transmitido depois que o visitante conclui os passos. Os arquivos são privados por padrão e precisam respeitar os limites de tipo e tamanho definidos pelo operador desta instalação.\n\n### Quais análises vou ver?\nVocê vê contagens de visitas, inícios de desbloqueio, ações concluídas e desbloqueios completos por link, um gráfico de 14 dias e uma tabela de conversão por link. São contagens agregadas ligadas ao link, não perfis de visitantes individuais. Não vendemos análises nem as repassamos a anunciantes.\n\n### Quanto tempo um link dura?\nUm link fica disponível até você excluí-lo, a menos que defina uma data de expiração. Cada sessão de desbloqueio dura duas horas, normalmente o suficiente para concluir os passos sem manter uma sessão aberta indefinidamente.\n\n### O que não é permitido?\nNada de malware, phishing, conteúdo pirateado, assédio, falsidade ideológica, golpes ou qualquer coisa que viole as regras da plataforma que você usa. Não peça aos visitantes senhas, dados de pagamento ou documentos de identidade. Não use o serviço para coletar e-mails para spam. Podemos desativar links e contas que gerem denúncias de abuso críveis.\n\n### Como denuncio um link?\nUse o link de denúncia exibido na página de desbloqueio ou envie o link curto pela página de contato. As denúncias são analisadas primeiro e não são mostradas ao dono do link. Se você incluir um e-mail, podemos responder quando a denúncia for resolvida.\n\n### Posso apagar meus dados?\nExcluir um link também apaga suas sessões, análises e endereços coletados. Você pode excluir endereços individuais da sua lista a qualquer momento. Para encerrar sua conta e remover os dados do perfil, fale conosco — ainda não há um botão de exclusão automática, então fazemos isso manualmente.\n\n### E se uma plataforma mudar a API?\nUma verificação configurada fica pendente se a API não conseguir responder ou o consentimento for negado. Ela não é concluída nem recebe um resultado verificado; o visitante pode tentar novamente quando o acesso ou a disponibilidade forem restabelecidos. O operador pode desativar explicitamente as verificações, devolvendo as etapas sociais ao comportamento de um clique sem verificação. Verificações não compatíveis ou não configuradas já usam esse comportamento. O criador pode atualizar um destino alterado pelo painel.\n\n### Como consigo ajuda?\nEscreva para [support@linkunlock.app](mailto:support@linkunlock.app) para dúvidas sobre o produto ou a conta, e use o link de denúncia de uma página de desbloqueio para abusos. Incluir o link curto e o passo em que você travou ajuda a responder mais rápido."
     },
     "privacy": {
       "metaTitle": "Política de privacidade",
@@ -393,7 +443,7 @@
       "helpTitle": "Dúvidas sobre seus dados?",
       "helpBody": "Peça uma cópia, uma correção ou uma exclusão e vamos ajudar.",
       "helpCta": "Fale conosco",
-      "content": "## A quem esta política se aplica\nO Link Unlocker é operado pela equipe por trás deste site (\"nós\"). Esta política explica o que acontece com dados pessoais quando você visita o site público, desbloqueia um link, cria links como criador ou fala conosco. Ela se aplica a esta instalação do serviço, não às plataformas sociais com que você interage — essas plataformas têm políticas próprias, e concluir uma ação lá também segue as regras delas.\n\n## Dados que coletamos\n- **Dados de conta:** seu nome, endereço de e-mail e uma senha com hash ao se cadastrar, além de dados de perfil como um avatar, se você adicionar.\n- **Dados de links e arquivos:** os links que você cria, sua configuração, as URLs de destino que você cola, imagens de capa enviadas e os arquivos que você protege.\n- **Contatos de e-mail:** endereços que visitantes enviam para você pela ação de e-mail opcional, junto com o momento do consentimento.\n- **Dados de desbloqueio e análises:** visitas, inícios de desbloqueio, ações concluídas, desbloqueios completos e dados técnicos como endereço IP com hash, agente do navegador e página de referência.\n- **Denúncias de abuso:** o link denunciado, o motivo e os detalhes informados, um e-mail opcional e um endereço IP com hash.\n- **Mensagens de suporte:** o que você nos envia ao pedir ajuda.\nNão pedimos dados de pagamento porque o serviço não tem planos pagos.\n\n## Como usamos os dados\nUsamos dados de conta e links para operar, proteger e dar suporte ao serviço; análises para mostrar aos criadores como seus links performam; contatos de e-mail para entregar os endereços que o visitante escolheu compartilhar com aquele criador; e denúncias para investigar uso indevido. Dados técnicos servem para limitar solicitações, prevenir fraude e manter as sessões funcionando. Não usamos seus dados para criar perfis publicitários sobre você.\n\n## Bases legais\nQuando a lei de proteção de dados exige uma base legal, usamos:\n- **Contrato:** para fornecer o serviço que você pediu.\n- **Interesses legítimos:** para proteger o serviço, evitar abusos e entender o desempenho agregado.\n- **Consentimento:** para a coleta opcional de e-mail e para qualquer cookie não essencial que o solicite. O visitante dá esse consentimento diretamente ao criador.\n- **Obrigação legal:** para responder a pedidos legais válidos ou defender reivindicações.\n\n## Cookies e armazenamento local\n- **Cookie de sessão:** mantém um criador conectado. É HTTP-only e same-site.\n- **Cookie de convidado:** lembra o único link gratuito criado por um convidado para que o mesmo navegador ainda possa gerenciá-lo.\n- **Cookie de idioma:** lembra o idioma escolhido.\n- **Preferência de tema:** pode ser guardada no navegador para manter o modo claro ou escuro após recarregar.\nEles são usados para o serviço funcionar. Se o operador ativar uma unidade publicitária, esse anúncio pode carregar recursos do próprio provedor e definir cookies próprios; não repassamos aos anunciantes seus dados de conta nem os e-mails coletados.\n\n## Sessões de desbloqueio e dados de visitantes\nQuando um visitante abre um link, criamos uma sessão temporária que expira em duas horas. Para análises de desbloqueio e limitação de solicitações, guardamos o IP do visitante apenas como hash com sal, junto com o agente do navegador e a página de referência. Sessões de login também podem registrar o IP e o navegador para que a pessoa titular possa revisar acessos. Usamos esses dados para manter o serviço disponível e investigar abusos, não para seguir visitantes pela web.\n\n## Endereços de e-mail coletados por criadores\nA ação de e-mail é opcional e só aparece quando um criador a adiciona a um link. O endereço é guardado com o momento do consentimento, apenas o dono daquele link pode vê-lo ou exportá-lo, e ele é apagado quando o link é excluído ou quando o dono o remove. Os criadores são responsáveis por usar esses endereços de forma lícita e por atender qualquer retirada de consentimento que receberem.\n\n## Etapas concluídas, não checagens de conta\nUma etapa é registrada como concluída no momento em que o visitante a abre. Guardamos o horário de conclusão por etapa e sessão. Não nos conectamos à conta do visitante em nenhuma plataforma, não lemos atividade lá e não pedimos login do Google nem do Spotify.\n\n## Arquivos e uploads\nArquivos e imagens que você envia são armazenados pelo serviço e entregues apenas a sessões que concluíram os passos do link. Nome, tamanho e tipo MIME são guardados para transmitir o arquivo e mostrá-lo no painel. Excluir um arquivo desativa os links que o usavam.\n\n## Compartilhamento e operadores\nNão vendemos dados pessoais. Compartilhamos o mínimo necessário com:\n- Provedores de hospedagem e banco de dados que executam o serviço.\n- Provedores de envio de e-mail, quando uma redefinição de senha ou mensagem de contato precisa ser enviada.\n- Autoridades ou outras partes quando a lei exige, ou quando é necessário investigar abuso crível.\nEsses provedores tratam dados conforme nossas instruções ou os próprios termos, e podem operar em países diferentes do seu. Quando exigido, aplicamos garantias adequadas para essas transferências.\n\n## Retenção\nSessões de desbloqueio expiram em duas horas. Eventos de análise são mantidos enquanto o link existir, para que o criador veja totais históricos. Contatos de e-mail são mantidos até o link ou o endereço individual ser excluído. Denúncias são mantidas pelo tempo necessário para resolvê-las e evitar abusos repetidos. Registros de limitação são de curta duração. Excluir um link remove junto suas sessões, eventos e contatos. Cópias de backup podem permanecer por um curto período antes de serem sobrescritas.\n\n## Segurança\nAs senhas são guardadas com hash, o tráfego vai por HTTPS, os cookies de sessão são HTTP-only e o acesso aos links de outro criador é verificado no servidor. Aplicamos limites a ações sensíveis. Nenhum serviço pode prometer segurança perfeita, mas mantemos a superfície pequena: não guardamos dados de pagamento.\n\n## Seus direitos\nDependendo de onde você mora, você pode ter direito de acessar, corrigir, exportar, restringir ou excluir seus dados pessoais, de se opor a alguns tratamentos e de retirar consentimento. Você pode exercer a maioria pelo painel. Para o resto, fale conosco e responderemos no prazo exigido pela lei. Você também pode reclamar com a autoridade local de proteção de dados.\n\n## Crianças\nO serviço não se destina a crianças abaixo da idade em que podem consentir com o tratamento de dados no país delas. Não coletamos dados de crianças de forma consciente. Se você acredita que uma criança criou uma conta, fale conosco e nós a removeremos.\n\n## Mudanças nesta política\nAtualizamos esta página quando a forma de tratar dados muda. A data no topo mostra a última revisão. Se a mudança for relevante, vamos anunciá-la no site ou por e-mail para as pessoas titulares de contas.\n\n## Contato\nDúvidas, pedidos ou reclamações: [support@linkunlock.app](mailto:support@linkunlock.app). Respondemos primeiro aos pedidos de privacidade."
+      "content": "## A quem esta política se aplica\nO Link Unlocker é operado pela equipe por trás deste site (\"nós\"). Esta política explica o que acontece com dados pessoais quando você visita o site público, desbloqueia um link, cria links como criador ou fala conosco. Ela se aplica a esta instalação do serviço, não às plataformas sociais com que você interage — essas plataformas têm políticas próprias, e concluir uma ação lá também segue as regras delas.\n\n## Dados que coletamos\n- **Dados de conta:** seu nome, endereço de e-mail e uma senha com hash ao se cadastrar, além de dados de perfil como um avatar, se você adicionar.\n- **Dados de links e arquivos:** os links que você cria, sua configuração, as URLs de destino que você cola, imagens de capa enviadas e os arquivos que você protege.\n- **Contatos de e-mail:** endereços que visitantes enviam para você pela ação de e-mail opcional, junto com o momento do consentimento.\n- **Dados de desbloqueio e análises:** visitas, inícios de desbloqueio, ações concluídas, desbloqueios completos e dados técnicos como endereço IP com hash, agente do navegador e página de referência.\n- **Dados de verificação de conta:** resultados e referências de evidência; no Telegram, o id da conta, o nome de usuário se fornecido e o resultado da participação associados à etapa. Tokens de acesso OAuth dos visitantes não são guardados.\n- **Denúncias de abuso:** o link denunciado, o motivo e os detalhes informados, um e-mail opcional e um endereço IP com hash.\n- **Mensagens de suporte:** o que você nos envia ao pedir ajuda.\nNão pedimos dados de pagamento porque o serviço não tem planos pagos.\n\n## Como usamos os dados\nUsamos dados de conta e links para operar, proteger e dar suporte ao serviço; análises para mostrar aos criadores como seus links performam; contatos de e-mail para entregar os endereços que o visitante escolheu compartilhar com aquele criador; e denúncias para investigar uso indevido. Dados técnicos servem para limitar solicitações, prevenir fraude e manter as sessões funcionando. Não usamos seus dados para criar perfis publicitários sobre você.\n\n## Bases legais\nQuando a lei de proteção de dados exige uma base legal, usamos:\n- **Contrato:** para fornecer o serviço que você pediu.\n- **Interesses legítimos:** para proteger o serviço, evitar abusos e entender o desempenho agregado.\n- **Consentimento:** para a coleta opcional de e-mail, a autorização de verificações de conta quando exigida e cookies não essenciais que o solicitem. O consentimento de e-mail é dado ao criador; o acesso à conta é autorizado com a plataforma.\n- **Obrigação legal:** para responder a pedidos legais válidos ou defender reivindicações.\n\n## Cookies e armazenamento local\n- **Cookie de sessão:** mantém um criador conectado. É HTTP-only e same-site.\n- **Cookie de convidado:** lembra o único link gratuito criado por um convidado para que o mesmo navegador ainda possa gerenciá-lo.\n- **Cookie de idioma:** lembra o idioma escolhido.\n- **Preferência de tema:** pode ser guardada no navegador para manter o modo claro ou escuro após recarregar.\nEles são usados para o serviço funcionar. Se o operador ativar uma unidade publicitária, esse anúncio pode carregar recursos do próprio provedor e definir cookies próprios; não repassamos aos anunciantes seus dados de conta nem os e-mails coletados.\n\n## Sessões de desbloqueio e dados de visitantes\nQuando um visitante abre um link, criamos uma sessão temporária que expira em duas horas. Para análises de desbloqueio e limitação de solicitações, guardamos o IP do visitante apenas como hash com sal, junto com o agente do navegador e a página de referência. Sessões de login também podem registrar o IP e o navegador para que a pessoa titular possa revisar acessos. Usamos esses dados para manter o serviço disponível e investigar abusos, não para seguir visitantes pela web.\n\n## Endereços de e-mail coletados por criadores\nA ação de e-mail é opcional e só aparece quando um criador a adiciona a um link. O endereço é guardado com o momento do consentimento, apenas o dono daquele link pode vê-lo ou exportá-lo, e ele é apagado quando o link é excluído ou quando o dono o remove. Os criadores são responsáveis por usar esses endereços de forma lícita e por atender qualquer retirada de consentimento que receberem.\n\n## Etapas concluídas e verificações na plataforma\nEtapas sociais de um clique registram a conclusão ao serem abertas, sem confirmar a ação na plataforma. Nas verificações de conta configuradas, a abertura é registrada, mas a conclusão exige que a plataforma confirme a ação na conta autenticada do visitante. Guardamos resultados e referências de evidência por etapa e sessão. Uma consulta à API sem resposta também pode deixar um registro não verificado; esse registro não conclui a etapa. As evidências podem conter identificadores de conta e referências ao destino, portanto não são dados anônimos.\n\nGoogle OAuth verifica curtidas e inscrições do YouTube; GitHub OAuth verifica ações de seguir e estrelas em repositórios. Autenticamos a conta do visitante em vez de aceitar um nome digitado como prova de titularidade. Estrelas do GitHub são públicas; a autenticação vincula essa ação pública ao visitante. As permissões OAuth podem permitir a leitura de mais dados, mas esta implementação só lê o necessário para a verificação correspondente. Nunca publica, segue nem altera a conta e não guarda o token de acesso do visitante. Nunca pedimos senhas de plataformas.\n\nO Telegram usa um check-in em bot privado: tocar em Iniciar identifica a conta do visitante, e o bot consulta a participação no canal ou grupo de destino. Guardamos o id da conta do Telegram, o nome de usuário se o Telegram o fornecer e o resultado da participação, vinculados à sessão e à etapa de desbloqueio.\n\nAs demais ações sociais, incluindo comentários do YouTube, Discord, Twitch, Steam, Bluesky e Mastodon, usam um clique sem autenticação ou verificação. O interruptor geral vem ativado, mas é preciso configurar credenciais para autenticar uma ação social. Verificações não compatíveis, não configuradas ou desativadas usam um clique. Se uma verificação configurada não conseguir responder, o consentimento for negado ou a ação não for encontrada, a etapa fica pendente e pode ser tentada novamente; a impossibilidade de verificar nunca é um resultado verificado.\n\n## Arquivos e uploads\nArquivos e imagens que você envia são armazenados pelo serviço e entregues apenas a sessões que concluíram os passos do link. Nome, tamanho e tipo MIME são guardados para transmitir o arquivo e mostrá-lo no painel. Excluir um arquivo desativa os links que o usavam.\n\n## Compartilhamento e operadores\nNão vendemos dados pessoais. Compartilhamos o mínimo necessário com:\n- Google, GitHub ou Telegram quando você autoriza uma verificação configurada ou usa o bot do Telegram; as solicitações incluem os dados necessários para identificar a conta e verificar a ação de destino.\n- Provedores de hospedagem e banco de dados que executam o serviço.\n- Provedores de envio de e-mail, quando uma redefinição de senha ou mensagem de contato precisa ser enviada.\n- Autoridades ou outras partes quando a lei exige, ou quando é necessário investigar abuso crível.\nEsses provedores tratam dados conforme nossas instruções ou os próprios termos, e podem operar em países diferentes do seu. Quando exigido, aplicamos garantias adequadas para essas transferências.\n\n## Retenção\nSessões de desbloqueio expiram em duas horas. Eventos de análise são mantidos enquanto o link existir, para que o criador veja totais históricos. Contatos de e-mail são mantidos até o link ou o endereço individual ser excluído. Denúncias são mantidas pelo tempo necessário para resolvê-las e evitar abusos repetidos. Registros de limitação são de curta duração. Excluir um link remove junto suas sessões, eventos e contatos. Cópias de backup podem permanecer por um curto período antes de serem sobrescritas.\n\n## Segurança\nAs senhas são guardadas com hash, o tráfego vai por HTTPS, os cookies de sessão são HTTP-only e o acesso aos links de outro criador é verificado no servidor. Aplicamos limites a ações sensíveis. Nenhum serviço pode prometer segurança perfeita, mas mantemos a superfície pequena: não guardamos dados de pagamento.\n\n## Seus direitos\nDependendo de onde você mora, você pode ter direito de acessar, corrigir, exportar, restringir ou excluir seus dados pessoais, de se opor a alguns tratamentos e de retirar consentimento. Você pode exercer a maioria pelo painel. Para o resto, fale conosco e responderemos no prazo exigido pela lei. Você também pode reclamar com a autoridade local de proteção de dados.\n\n## Crianças\nO serviço não se destina a crianças abaixo da idade em que podem consentir com o tratamento de dados no país delas. Não coletamos dados de crianças de forma consciente. Se você acredita que uma criança criou uma conta, fale conosco e nós a removeremos.\n\n## Mudanças nesta política\nAtualizamos esta página quando a forma de tratar dados muda. A data no topo mostra a última revisão. Se a mudança for relevante, vamos anunciá-la no site ou por e-mail para as pessoas titulares de contas.\n\n## Contato\nDúvidas, pedidos ou reclamações: [support@linkunlock.app](mailto:support@linkunlock.app). Respondemos primeiro aos pedidos de privacidade."
     },
     "terms": {
       "metaTitle": "Termos de serviço",
@@ -406,7 +456,7 @@
       "helpTitle": "Precisa esclarecer algo?",
       "helpBody": "Pergunte antes de contar com uma cláusula — preferimos explicar a surpreender.",
       "helpCta": "Fale conosco",
-      "content": "## Concordância com estes termos\nAo usar o Link Unlocker — como criador, visitante ou denunciante — você concorda com estes termos. Se não concordar, não use o serviço. Se usar o serviço por uma organização, você confirma que pode aceitar estes termos por ela.\n\n## O que o serviço faz\nO Link Unlocker permite que um criador publique um link curto cujo conteúdo é revelado depois que o visitante conclui ações configuradas, como seguir um canal ou entrar em um servidor. O serviço é gratuito e não tem planos pagos. Não cobramos visitantes nem pagamos criadores; não há recompensa, sorteio ou prêmio ligado ao serviço.\n\n## Contas e links de convidado\nVocê pode criar um link como convidado. Links adicionais e recursos como arquivos, listas de e-mail, análises e a página de bio exigem uma conta gratuita. Mantenha suas credenciais seguras e avise-nos rapidamente se acreditar que outra pessoa tem acesso à sua conta. Você é responsável pela atividade na sua conta.\n\n## Suas responsabilidades como criador\nVocê deve:\n- ser titular do conteúdo que protege ou ter permissão para compartilhá-lo;\n- descrever o conteúdo protegido com honestidade e entregar o que a página promete;\n- pedir apenas ações que tem o direito de solicitar e respeitar as regras de cada plataforma;\n- coletar e-mails apenas com consentimento claro e usá-los de forma lícita;\n- manter seus links e destinos atualizados e remover conteúdo que não tem mais direito de compartilhar.\nVocê é o controlador dos e-mails que coleta com seus links. O Link Unlocker os armazena e exibe para você, mas não os usa para marketing próprio.\n\n## Usos proibidos\nNão use o Link Unlocker para:\n- distribuir malware, páginas de phishing, material pirateado ou conteúdo que infrinja direitos de terceiros;\n- assediar, ameaçar, se passar por alguém ou enganar pessoas;\n- executar golpes, sorteios falsos ou esquemas de engajamento que violem as regras de uma plataforma;\n- pedir aos visitantes senhas, dados de cartão, documentos oficiais ou outras credenciais sensíveis;\n- coletar e-mails para spam, revenda ou marketing não relacionado;\n- sondar, sobrecarregar ou tentar burlar a segurança ou os limites do serviço.\nPodemos remover conteúdo ou desativar links e contas que violem estas regras.\n\n## Plataformas de terceiros\nAs ações de um link acontecem em plataformas de terceiros. Não controlamos essas plataformas, sua disponibilidade, suas regras ou suas práticas de dados. Concluir uma ação não cria nenhuma relação entre você e nós além destes termos, e uma plataforma pode mudar sua API, permissões ou limites a qualquer momento. As etapas contam no momento em que o visitante as abre; não lemos nem confirmamos atividade na plataforma e nunca pedimos que os visitantes conectem uma conta. Se uma etapa não puder ser aberta, por exemplo porque um destino foi removido, o criador pode atualizá-la.\n\n## Conteúdo e propriedade\nVocê mantém os direitos que já possui sobre o conteúdo que envia ou vincula. Você nos concede uma licença limitada para armazenar, exibir e entregar esse conteúdo com a finalidade de operar seus links e mostrá-los no painel. Você confirma que tem os direitos necessários para conceder essa licença. Nós somos titulares do serviço, do software e da marca; estes termos não transferem essa propriedade para você.\n\n## Visitantes e consentimento\nOs visitantes precisam concluir os passos por conta própria. Criadores não devem concluir ações em nome de um visitante, automatizá-las ou distorcer o que será desbloqueado. A coleta de e-mail exige consentimento afirmativo do visitante; caixas pré-marcadas, consentimento agrupado ou exigência escondida em texto não relacionado não valem. Criadores devem respeitar a retirada de consentimento e a legislação de marketing aplicável no país do visitante.\n\n## Arquivos e limites\nArquivos enviados devem respeitar os tipos permitidos e os limites de tamanho mostrados no painel, que o operador pode alterar. Não use a entrega de arquivos para distribuir material que você não tem direito de compartilhar. Podemos desativar um arquivo e os links que dependem dele se ele violar estes termos ou gerar uma denúncia de abuso.\n\n## Disponibilidade e mudanças\nO serviço é fornecido no estado em que se encontra e conforme a disponibilidade. Podemos adicionar, alterar ou descontinuar recursos, definir limites de uso ou suspender o serviço para manutenção. Quando uma mudança afetar materialmente seus links, tentaremos avisar com antecedência razoável no site ou por e-mail. Não garantimos que um link fique online para sempre.\n\n## Suspensão e encerramento\nVocê pode parar de usar o serviço a qualquer momento e excluir seus links. Podemos suspender ou encerrar o acesso se você violar estes termos, se seus links gerarem denúncias de abuso críveis ou se a lei exigir. Quando possível, explicaremos o motivo. Conteúdo ilegal, prejudicial ou objeto de reclamação válida pode ser removido imediatamente.\n\n## Isenções de responsabilidade\nNão prometemos um número específico de seguidores, visitas, cliques, desbloqueios ou receita, e não garantimos que uma plataforma reconheça ou verifique uma ação. O serviço é fornecido sem garantias na medida permitida por lei. Nada nestes termos exclui direitos que consumidores têm por normas locais obrigatórias.\n\n## Limitação de responsabilidade\nNa medida permitida por lei, não somos responsáveis por perdas indiretas ou consequenciais, lucros cessantes, perda de dados ou danos causados por uma plataforma de terceiros, pela conduta de um visitante ou pelo conteúdo que você decidiu proteger. Quando a responsabilidade não puder ser excluída, ela se limita ao valor que você nos pagou nos doze meses anteriores à reivindicação — que, como o serviço é gratuito, é zero. Isso não limita a responsabilidade por fraude, dolo ou qualquer outro caso que a lei não permita limitar.\n\n## Indenização\nVocê concorda em nos indenizar por reivindicações e custos decorrentes do conteúdo que protegeu, das ações que pediu aos visitantes ou da sua violação destes termos ou de direitos de terceiros, na medida permitida por lei. Vamos informar você sobre uma reivindicação e permitir que participe da defesa.\n\n## Lei aplicável e disputas\nEstes termos são regidos pelas leis aplicáveis ao operador deste site, sem considerar regras de conflito de leis. Se você for consumidor, mantém a proteção das leis obrigatórias do seu país de residência e pode reivindicar lá. Antes de iniciar uma disputa formal, fale conosco para tentarmos resolver.\n\n## Mudanças nestes termos\nPodemos atualizar estes termos conforme o serviço evolui. A data no topo mostra a versão atual. Se a mudança for relevante, vamos anunciá-la no site ou por e-mail para as pessoas titulares de contas. Continuar usando o serviço após a mudança significa que você aceita os termos atualizados.\n\n## Contato\nDúvidas sobre estes termos: [support@linkunlock.app](mailto:support@linkunlock.app). Para um link que viole estas regras, use o link de denúncia da página de desbloqueio."
+      "content": "## Concordância com estes termos\nAo usar o Link Unlocker — como criador, visitante ou denunciante — você concorda com estes termos. Se não concordar, não use o serviço. Se usar o serviço por uma organização, você confirma que pode aceitar estes termos por ela.\n\n## O que o serviço faz\nO Link Unlocker permite que um criador publique um link curto cujo conteúdo é revelado depois que o visitante conclui ações configuradas, como seguir um canal ou entrar em um servidor. O serviço é gratuito e não tem planos pagos. Não cobramos visitantes nem pagamos criadores; não há recompensa, sorteio ou prêmio ligado ao serviço.\n\n## Contas e links de convidado\nVocê pode criar um link como convidado. Links adicionais e recursos como arquivos, listas de e-mail, análises e a página de bio exigem uma conta gratuita. Mantenha suas credenciais seguras e avise-nos rapidamente se acreditar que outra pessoa tem acesso à sua conta. Você é responsável pela atividade na sua conta.\n\n## Suas responsabilidades como criador\nVocê deve:\n- ser titular do conteúdo que protege ou ter permissão para compartilhá-lo;\n- descrever o conteúdo protegido com honestidade e entregar o que a página promete;\n- pedir apenas ações que tem o direito de solicitar e respeitar as regras de cada plataforma;\n- coletar e-mails apenas com consentimento claro e usá-los de forma lícita;\n- manter seus links e destinos atualizados e remover conteúdo que não tem mais direito de compartilhar.\nVocê é o controlador dos e-mails que coleta com seus links. O Link Unlocker os armazena e exibe para você, mas não os usa para marketing próprio.\n\n## Usos proibidos\nNão use o Link Unlocker para:\n- distribuir malware, páginas de phishing, material pirateado ou conteúdo que infrinja direitos de terceiros;\n- assediar, ameaçar, se passar por alguém ou enganar pessoas;\n- executar golpes, sorteios falsos ou esquemas de engajamento que violem as regras de uma plataforma;\n- pedir aos visitantes senhas, dados de cartão, documentos oficiais ou outras credenciais sensíveis;\n- coletar e-mails para spam, revenda ou marketing não relacionado;\n- sondar, sobrecarregar ou tentar burlar a segurança ou os limites do serviço.\nPodemos remover conteúdo ou desativar links e contas que violem estas regras.\n\n## Plataformas de terceiros\nAs ações acontecem em plataformas de terceiros cuja disponibilidade, regras e práticas de dados não controlamos. Quando ativados e configurados, Google OAuth verifica curtidas e inscrições do YouTube, GitHub OAuth verifica ações de seguir e estrelas, e um check-in no bot privado do Telegram identifica o visitante antes de verificar sua participação em canais ou grupos. Um nome de usuário digitado não comprova a titularidade de uma conta. A implementação só lê o necessário para a verificação correspondente, nunca publica nem altera a conta e não guarda tokens de acesso dos visitantes, mesmo que as permissões OAuth permitam uma leitura mais ampla.\n\nAs demais ações sociais, incluindo comentários do YouTube, Discord, Twitch, Steam, Bluesky e Mastodon, são de um clique e não verificadas. Verificações não compatíveis, não configuradas ou desativadas também usam um clique. Verificações configuradas ficam pendentes se o provedor não conseguir responder, o consentimento for negado ou a ação não for encontrada; os visitantes podem tentar novamente. Não rotulamos um resultado indisponível como verificado. Criadores podem atualizar destinos removidos ou alterados.\n\n## Conteúdo e propriedade\nVocê mantém os direitos que já possui sobre o conteúdo que envia ou vincula. Você nos concede uma licença limitada para armazenar, exibir e entregar esse conteúdo com a finalidade de operar seus links e mostrá-los no painel. Você confirma que tem os direitos necessários para conceder essa licença. Nós somos titulares do serviço, do software e da marca; estes termos não transferem essa propriedade para você.\n\n## Visitantes e consentimento\nOs visitantes precisam concluir os passos por conta própria. Criadores não devem concluir ações em nome de um visitante, automatizá-las ou distorcer o que será desbloqueado. A coleta de e-mail exige consentimento afirmativo do visitante; caixas pré-marcadas, consentimento agrupado ou exigência escondida em texto não relacionado não valem. Criadores devem respeitar a retirada de consentimento e a legislação de marketing aplicável no país do visitante.\n\n## Arquivos e limites\nArquivos enviados devem respeitar os tipos permitidos e os limites de tamanho mostrados no painel, que o operador pode alterar. Não use a entrega de arquivos para distribuir material que você não tem direito de compartilhar. Podemos desativar um arquivo e os links que dependem dele se ele violar estes termos ou gerar uma denúncia de abuso.\n\n## Disponibilidade e mudanças\nO serviço é fornecido no estado em que se encontra e conforme a disponibilidade. Podemos adicionar, alterar ou descontinuar recursos, definir limites de uso ou suspender o serviço para manutenção. Quando uma mudança afetar materialmente seus links, tentaremos avisar com antecedência razoável no site ou por e-mail. Não garantimos que um link fique online para sempre.\n\n## Suspensão e encerramento\nVocê pode parar de usar o serviço a qualquer momento e excluir seus links. Podemos suspender ou encerrar o acesso se você violar estes termos, se seus links gerarem denúncias de abuso críveis ou se a lei exigir. Quando possível, explicaremos o motivo. Conteúdo ilegal, prejudicial ou objeto de reclamação válida pode ser removido imediatamente.\n\n## Isenções de responsabilidade\nNão prometemos um número específico de seguidores, visitas, cliques, desbloqueios ou receita. Uma confirmação autenticada reflete apenas a ação compatível e a resposta da plataforma no momento da verificação, não engajamento futuro ou participação contínua. Concluir com um clique não comprova uma ação social. Uma verificação configurada que não consegue responder fica pendente, não concluída nem verificada. Não garantimos a disponibilidade ou precisão das APIs de terceiros. O serviço é fornecido sem garantias na medida permitida por lei. Nada nestes termos exclui direitos obrigatórios dos consumidores.\n\n## Limitação de responsabilidade\nNa medida permitida por lei, não somos responsáveis por perdas indiretas ou consequenciais, lucros cessantes, perda de dados ou danos causados por uma plataforma de terceiros, pela conduta de um visitante ou pelo conteúdo que você decidiu proteger. Quando a responsabilidade não puder ser excluída, ela se limita ao valor que você nos pagou nos doze meses anteriores à reivindicação — que, como o serviço é gratuito, é zero. Isso não limita a responsabilidade por fraude, dolo ou qualquer outro caso que a lei não permita limitar.\n\n## Indenização\nVocê concorda em nos indenizar por reivindicações e custos decorrentes do conteúdo que protegeu, das ações que pediu aos visitantes ou da sua violação destes termos ou de direitos de terceiros, na medida permitida por lei. Vamos informar você sobre uma reivindicação e permitir que participe da defesa.\n\n## Lei aplicável e disputas\nEstes termos são regidos pelas leis aplicáveis ao operador deste site, sem considerar regras de conflito de leis. Se você for consumidor, mantém a proteção das leis obrigatórias do seu país de residência e pode reivindicar lá. Antes de iniciar uma disputa formal, fale conosco para tentarmos resolver.\n\n## Mudanças nestes termos\nPodemos atualizar estes termos conforme o serviço evolui. A data no topo mostra a versão atual. Se a mudança for relevante, vamos anunciá-la no site ou por e-mail para as pessoas titulares de contas. Continuar usando o serviço após a mudança significa que você aceita os termos atualizados.\n\n## Contato\nDúvidas sobre estes termos: [support@linkunlock.app](mailto:support@linkunlock.app). Para um link que viole estas regras, use o link de denúncia da página de desbloqueio."
     },
     "contact": {
       "metaTitle": "Contato",
@@ -912,12 +962,15 @@
       "typeLabel": "Tipo",
       "types": {
         "banner": "Banner de imagem",
-        "html": "Código de anúncio (HTML)",
+        "html": "Código de anúncio (qualquer rede)",
         "link": "Botão de link"
       },
       "placements": {
         "home-top": "Início — topo",
+        "home-mid": "Início — entre seções",
         "home-bottom": "Início — rodapé",
+        "page-top": "Páginas de conteúdo — topo",
+        "page-bottom": "Páginas de conteúdo — rodapé",
         "unlock-top": "Página de desbloqueio — topo",
         "unlock-bottom": "Página de desbloqueio — rodapé",
         "bio-top": "Página de bio — topo",
@@ -936,7 +989,7 @@
       "labelHint": "Exibido como texto do botão (link) ou texto alternativo da imagem (banner).",
       "htmlLabel": "Código do anúncio",
       "htmlPlaceholder": "'<'!-- Cole aqui o snippet da sua rede de anúncios --'>'",
-      "htmlHint": "Cole o snippet da sua rede de anúncios. Os scripts rodam quando a página carrega.",
+      "htmlHint": "Cole o snippet da unidade de qualquer rede de anúncios — AdSense, Ezoic, Monetag, Adsterra e outras. Os scripts rodam ao carregar; o carregador global fica em Configurações → Rede de anúncios.",
       "newTabLabel": "Abrir em uma nova aba",
       "createAd": "Criar anúncio",
       "htmlPreview": "Código da rede de anúncios",
@@ -1037,6 +1090,10 @@
           "title": "Envio de e-mails",
           "description": "Os e-mails de redefinição são enviados como JSON ao seu próprio relay ou endpoint de automação."
         },
+        "ad-network": {
+          "title": "Rede de anúncios",
+          "description": "O código global de qualquer rede de anúncios — AdSense, Ezoic, Monetag, Adsterra ou uma campanha direta — carrega nas páginas públicas quando o site está pronto."
+        },
         "data-retention": {
           "title": "Retenção de dados",
           "description": "Quanto tempo a rotina de limpeza guarda os eventos de analytics."
@@ -1044,6 +1101,10 @@
         "ogads": {
           "title": "Ofertas do OGAds",
           "description": "Ofertas CPA do OGAds exibidas como uma tarefa de desbloqueio. As conversões são confirmadas pelo postback do OGAds."
+        },
+        "step-verification": {
+          "title": "Verificação de tarefas",
+          "description": "Autentique visitantes com Google OAuth para curtidas e inscrições do YouTube, GitHub OAuth para ações de seguir e estrelas, ou um check-in no bot privado do Telegram para participação em canais e grupos. As demais ações sociais continuam sem verificação."
         }
       },
       "fields": {
@@ -1102,6 +1163,34 @@
           "label": "Uploads por hora (por usuário)",
           "placeholder": "30"
         },
+        "verification_enabled": {
+          "label": "Exigir verificações de conta configuradas",
+          "hint": "Ativado por padrão. Só verificações configuradas do YouTube, GitHub e Telegram exigem autenticação e confirmação. Provedor indisponível ou consentimento negado deixam a etapa pendente para nova tentativa. Verificações não compatíveis, não configuradas ou desativadas usam um clique sem verificação; este interruptor sozinho não autentica nada."
+        },
+        "verification_oauthRedirectUrl": {
+          "label": "URL de retorno da conexão de conta",
+          "hint": "Cadastre esta URL de retorno exata nos aplicativos OAuth do Google e GitHub. Os visitantes voltam ao link após autorizar a verificação de conta."
+        },
+        "verification_googleClientId": {
+          "label": "Id de cliente OAuth do Google",
+          "hint": "Em console.cloud.google.com, ative YouTube Data API v3 e crie um cliente OAuth do tipo Aplicativo da Web. Verifica curtidas e inscrições do YouTube na conta autorizada pelo visitante, não comentários."
+        },
+        "verification_googleClientSecret": {
+          "label": "Segredo de cliente OAuth do Google",
+          "hint": "O segredo OAuth correspondente, mantido no servidor. A permissão de leitura do Google pode abranger mais dados, mas esta implementação só lê a ação correspondente, nunca publica nem guarda tokens de acesso dos visitantes."
+        },
+        "verification_githubClientId": {
+          "label": "Id de cliente OAuth do GitHub",
+          "hint": "Cadastre um aplicativo OAuth em github.com/settings/developers. Verifica ações de seguir e estrelas em repositórios. Estrelas são públicas; a autenticação comprova que a conta verificada pertence ao visitante."
+        },
+        "verification_githubClientSecret": {
+          "label": "Segredo de cliente OAuth do GitHub",
+          "hint": "O segredo OAuth correspondente, mantido no servidor. A implementação só lê o necessário para verificar a ação, nunca publica nem altera a conta e não guarda tokens de acesso dos visitantes."
+        },
+        "verification_telegramBotToken": {
+          "label": "Token do bot do Telegram",
+          "hint": "Crie um bot com @BotFather e torne-o administrador do canal ou grupo de destino. Os visitantes tocam em Iniciar em uma conversa privada; o site guarda o id da conta do Telegram, o nome de usuário se fornecido e o resultado da participação. Use o nome público do canal ou grupo como destino. Não configure webhook: os check-ins são lidos da fila de atualizações."
+        },
         "limits_uploadMaxMb": {
           "label": "Tamanho máximo de upload de imagens (MB)",
           "placeholder": "10"
@@ -1149,6 +1238,11 @@
           "label": "URL do webhook",
           "hint": "Vazio significa que os links de redefinição só são registrados. Deve começar com http:// ou https://.",
           "placeholder": "https://relay.example.com/mail"
+        },
+        "ads_headScripts": {
+          "label": "Código global de anúncios",
+          "hint": "Cole o snippet de cabeçalho da rede (carregador, anúncios automáticos, verificação). Roda uma vez por página e nunca carrega na área administrativa nem no painel. Vazio desativa.",
+          "placeholder": "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-…"
         },
         "email_webhookToken": {
           "label": "Token do webhook",
@@ -1201,6 +1295,11 @@
           "label": "URL do postback",
           "hint": "Cole nas configurações de postback do OGAds. Ela contém o segredo, então mantenha-a privada.",
           "placeholder": "Salve um segredo de postback para gerar a URL"
+        },
+        "limits_verifyPerMinute": {
+          "label": "Checagens de verificação por minuto (por sessão)",
+          "hint": "Limita solicitações de verificação de contas: YouTube via Google OAuth, GitHub via OAuth e Telegram via bot privado. Reduza o limite se as cotas ou limites do provedor forem atingidos.",
+          "placeholder": "8"
         }
       },
       "uploadImage": "Enviar imagem",
@@ -1748,7 +1847,10 @@
     "invalidOgadsCtype": "Os tipos de oferta devem ser um número inteiro entre 0 e 15.",
     "invalidOgadsAffiliateId": "O ID de afiliado só pode conter letras, números, hífens e sublinhados.",
     "invalidOgadsApiKey": "Essa chave de API parece curta demais. Cole a chave completa.",
-    "invalidOgadsPostbackSecret": "Use pelo menos 16 caracteres para o segredo do postback."
+    "invalidOgadsPostbackSecret": "Use pelo menos 16 caracteres para o segredo do postback.",
+    "verifyNotDone": "Sua conta autenticada ainda não mostra esta ação. Conclua a ação e verifique novamente.",
+    "telegramCheckinExpired": "Esse check-in expirou. Abra o bot novamente e verifique mais uma vez.",
+    "verifyUnavailable": "Não foi possível confirmar esta etapa. Ela continua pendente; autorize o acesso se solicitado e tente novamente."
   },
   "linkForm": {
     "uploadFailed": "Falha no envio.",
@@ -1936,7 +2038,28 @@
     "FACEBOOK_LIKE": "Curta um post de {name}",
     "TIKTOK_FOLLOW": "Siga {name}",
     "TIKTOK_LIKE": "Curta um vídeo de {name}",
-    "TIKTOK_COMMENT": "Comente um vídeo de {name}"
+    "TIKTOK_COMMENT": "Comente um vídeo de {name}",
+    "X_FOLLOW": "Siga {name}",
+    "X_LIKE": "Curta um post de {name}",
+    "X_REPOST": "Reposte um post de {name}",
+    "TWITCH_FOLLOW": "Siga {name}",
+    "TWITCH_WATCH": "Assista a {name} ao vivo",
+    "TELEGRAM_CHANNEL": "Entre no canal {name}",
+    "TELEGRAM_GROUP": "Entre no grupo {name}",
+    "GITHUB_FOLLOW": "Siga {name}",
+    "GITHUB_STAR": "Dê uma estrela a {name}",
+    "REDDIT_JOIN": "Entre em {name}",
+    "REDDIT_UPVOTE": "Vote a favor de um post em {name}",
+    "BLUESKY_FOLLOW": "Siga {name}",
+    "MASTODON_FOLLOW": "Siga {name}",
+    "STEAM_GROUP": "Entre no grupo {name}",
+    "SOUNDCLOUD_FOLLOW": "Siga {name}",
+    "SOUNDCLOUD_LISTEN": "Ouça {name}",
+    "LINKEDIN_FOLLOW": "Siga {name}",
+    "SNAPCHAT_ADD": "Adicione {name} no Snapchat",
+    "THREADS_FOLLOW": "Siga {name}",
+    "KICK_FOLLOW": "Siga {name}",
+    "PINTEREST_FOLLOW": "Siga {name}"
   },
   "actions": {
     "VISIT": "Visite um site",
@@ -2046,8 +2169,23 @@
     "instagram": "Instagram",
     "facebook": "Facebook",
     "tiktok": "TikTok",
+    "x": "X",
+    "twitch": "Twitch",
     "discord": "Discord",
+    "telegram": "Telegram",
+    "github": "GitHub",
+    "reddit": "Reddit",
+    "bluesky": "Bluesky",
+    "mastodon": "Mastodon",
+    "steam": "Steam",
     "spotify": "Spotify",
+    "soundcloud": "SoundCloud",
+    "linkedin": "LinkedIn",
+    "snapchat": "Snapchat",
+    "threads": "Threads",
+    "kick": "Kick",
+    "pinterest": "Pinterest",
+    "whatsapp": "WhatsApp",
     "none": "Site"
   },
   "uploads": {

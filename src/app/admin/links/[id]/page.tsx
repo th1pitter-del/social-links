@@ -1,12 +1,13 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { getTranslations } from 'next-intl/server'
+import { getLocale, getTranslations } from 'next-intl/server'
 import { Activity, Flag, Mail, MousePointerClick } from 'lucide-react'
 
 import { AdminLinkRowActions } from '@/components/admin/link-row-actions'
 import { EmptyState, Panel, PanelHeader } from '@/components/admin/panel'
 import { PageHeader } from '@/components/admin/page-header'
 import { StatCard } from '@/components/admin/stat-card'
+import { StepEvidence } from '@/components/step-evidence'
 import { Badge } from '@/components/ui/badge'
 import { StatusPill } from '@/components/status-pill'
 import { Timestamp } from '@/components/timestamp'
@@ -33,6 +34,7 @@ export default async function AdminLinkDetailPage({
     getTranslations('actions'),
   ])
   const { id } = await params
+  const locale = await getLocale()
 
   const link = await prisma.link.findUnique({
     where: { id },
@@ -260,6 +262,8 @@ export default async function AdminLinkDetailPage({
           </div>
         )}
       </Panel>
+
+      <StepEvidence linkId={link.id} locale={locale} />
 
       <Panel>
         <PanelHeader title={t('linkDetail.reportsTitle')} />

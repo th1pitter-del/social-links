@@ -3,9 +3,11 @@
 import { useEffect, useRef } from 'react'
 
 /**
- * Renders admin-provided ad markup. Scripts inserted via innerHTML never
- * execute, so every `<script>` node is rebuilt as a real element — that is
- * what makes ad-network snippets work inside this container.
+ * Renders admin-provided ad markup for any network. Scripts inserted via
+ * innerHTML never execute, so every `<script>` node is rebuilt as a real
+ * element — that is what makes ad-network snippets work inside this container.
+ * A loader already present in the document (site-wide code or another unit)
+ * is not loaded twice; inline snippets still run per unit.
  */
 export function AdHtml({ code, className }: { code: string; className?: string }) {
   const hostRef = useRef<HTMLDivElement>(null)
@@ -17,6 +19,11 @@ export function AdHtml({ code, className }: { code: string; className?: string }
     host.innerHTML = code
 
     host.querySelectorAll('script').forEach((stale) => {
+      const src = stale.getAttribute('src')
+      if (src && Array.from(document.scripts).some((s) => s.getAttribute('src') === src)) {
+        stale.remove()
+        return
+      }
       const script = document.createElement('script')
       Array.from(stale.attributes).forEach((attribute) =>
         script.setAttribute(attribute.name, attribute.value),

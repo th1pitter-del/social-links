@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="970" height="250" viewBox="0 0 970 250" role="img" aria-label="Placeholder billboard ad, 970 by 250">
+  <defs>
+    <radialGradient id="glow" cx="82%" cy="18%" r="62%">
+      <stop offset="0" stop-color="#D5FF2F" stop-opacity="0.20"/>
+      <stop offset="1" stop-color="#D5FF2F" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="970" height="250" fill="#0B0D12"/>
+  <rect width="970" height="250" fill="url(#glow)"/>
+  <g fill="none" stroke="#D5FF2F">
+    <circle cx="812" cy="36" r="168" stroke-opacity="0.16"/>
+    <circle cx="812" cy="36" r="118" stroke-opacity="0.12"/>
+    <circle cx="812" cy="36" r="68" stroke-opacity="0.08"/>
+  </g>
+  <text x="56" y="78" fill="#9AA1AD" font-family="Inter, system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="13" letter-spacing="3">PLACEHOLDER AD · 970 × 250</text>
+  <text x="56" y="140" fill="#E7E9EE" font-family="Inter, system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="40" font-weight="600">Your ad could be here.</text>
+  <text x="56" y="174" fill="#9AA1AD" font-family="Inter, system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="17">Sponsor this billboard and reach every visitor on the page.</text>
+  <rect x="56" y="196" width="170" height="40" rx="12" fill="#D5FF2F"/>
+  <text x="141" y="221" fill="#0B0D12" font-family="Inter, system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="15" font-weight="600" text-anchor="middle">Book this slot</text>
+</svg>

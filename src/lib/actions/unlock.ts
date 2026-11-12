@@ -11,6 +11,7 @@ import { actionLabel } from '@/lib/action-label'
 import { consumeBySetting } from '@/lib/rate-limit'
 import { getSession } from '@/lib/session'
 import { signVisitToken } from '@/lib/visit-token'
+import { bindUnlockBrowser } from '@/lib/verification/oauth-state'
 import { createHash } from 'node:crypto'
 import {
   fetchOgadsOffers,
@@ -19,9 +20,29 @@ import {
   readStoredOffers,
 } from '@/lib/ogads'
 import { promoteIfComplete } from '@/lib/unlock-completion'
+import {
+  isUnlockLinkAvailable,
+  isStepSettled,
+  pollTelegramCheckin,
+  settledActionIds,
+  startTelegramCheckin,
+  stepChecks,
+  type StepCheck,
+} from '@/lib/unlock-confirm'
 import type { UnlockStatus } from '@/generated/prisma/enums'
 
 const UNLOCK_SESSION_TTL_MS = 2 * 60 * 60 * 1000
+
+/**
+ * How a step is proven, when this install can prove it at all. Null means the
+ * step is the ordinary single press it always was.
+ */
+export type StepVerificationView = {
+  mode: 'OAUTH' | 'HANDOFF'
+  platformKey: string
+  /** OAUTH: where the visitor grants read access to their own account. */
+  connectUrl: string | null
+}
 
 export type UnlockActionView = {
   id: string
@@ -29,11 +50,29 @@ export type UnlockActionView = {
   label: string
   target: string
   completed: boolean
+  /** The visitor has opened the step, even if its proof is still outstanding. */
+  opened: boolean
   behavior: 'URL' | 'EMAIL'
   icon: string
   platform: string | null
   /** Signed redirect that records a website visit; null for other steps. */
   visitUrl: string | null
+  verification: StepVerificationView | null
+}
+
+function verificationView(
+  check: StepCheck | undefined,
+  sessionId: string,
+): StepVerificationView | null {
+  if (!check) return null
+  return {
+    mode: check.mode,
+    platformKey: check.platformKey,
+    connectUrl:
+      check.mode === 'OAUTH'
+        ? `/api/verify/start?token=${encodeURIComponent(sessionId)}&provider=${encodeURIComponent(check.providerId)}`
+        : null,
+  }
 }
 
 /** One OGAds offer shown as part of the single "complete any offer" step. */
@@ -92,6 +131,9 @@ async function buildState(sessionId: string): Promise<UnlockState | null> {
       link: {
         select: {
           title: true,
+          status: true,
+          expiresAt: true,
+          ownerId: true,
           actions: {
             orderBy: { position: 'asc' },
             select: {
@@ -103,7 +145,7 @@ async function buildState(sessionId: string): Promise<UnlockState | null> {
           },
         },
       },
-      completions: { select: { linkActionId: true } },
+      completions: { select: { linkActionId: true, verified: true, proof: true } },
       ogadsOffers: true,
       ogadsClicks: { select: { offerId: true, status: true } },
     },
@@ -111,17 +153,19 @@ async function buildState(sessionId: string): Promise<UnlockState | null> {
 
   if (!session) return null
 
-  const completed = new Set(session.completions.map((row) => row.linkActionId))
+  const byAction = new Map(session.completions.map((row) => [row.linkActionId, row]))
+  const checks = await stepChecks(session.link.actions)
   const credited = new Set(
     session.ogadsClicks.filter((row) => row.status === 'CREDITED').map((row) => row.offerId),
   )
   const now = Date.now()
-  const expired = session.expiresAt.getTime() <= now
+  const expired = session.expiresAt.getTime() <= now || !(await isUnlockLinkAvailable(session.link))
   const catalog = await getActionOptionMap()
   const actionCopy = await getTranslations('actions')
   const actions: UnlockActionView[] = session.link.actions.map((action) => {
     const option = catalog.get(action.type)
-    const done = completed.has(action.id)
+    const completion = byAction.get(action.id)
+    const check = checks.get(action.id)
 
     return {
       id: action.id,
@@ -130,10 +174,12 @@ async function buildState(sessionId: string): Promise<UnlockState | null> {
         action.label?.trim() ||
         (option ? actionLabel(option, actionCopy) : action.type),
       target: action.target,
-      completed: done,
+      completed: isStepSettled(completion, Boolean(check)),
+      opened: Boolean(completion),
       behavior: option?.behavior ?? 'URL',
       icon: option?.icon ?? 'link',
       platform: option?.platform ?? null,
+      verification: verificationView(check, session.id),
       visitUrl:
         action.type === 'VISIT'
           ? (() => {
@@ -173,6 +219,7 @@ async function buildState(sessionId: string): Promise<UnlockState | null> {
 
 export async function getUnlockState(token: string): Promise<UnlockState | null> {
   if (!token || token.length > 128) return null
+  await promoteIfComplete(token)
   return buildState(token)
 }
 
@@ -271,6 +318,7 @@ export async function startUnlock(
     }
   }
 
+  await bindUnlockBrowser(session.id)
   const state = await buildState(session.id)
   if (!state) {
     return { ok: false, error: t('startSessionFailed') }
@@ -297,7 +345,10 @@ export async function markActionComplete(input: {
       linkId: true,
       status: true,
       expiresAt: true,
-      link: { select: { actions: { select: { id: true, type: true } } } },
+      link: { select: {
+        status: true, expiresAt: true, ownerId: true,
+        actions: { select: { id: true, type: true } },
+      } },
       completions: { select: { linkActionId: true, verified: true } },
     },
   })
@@ -306,6 +357,7 @@ export async function markActionComplete(input: {
     return { ok: false, error: t('sessionExpiredReloadLong') }
   }
 
+  if (!(await isUnlockLinkAvailable(session.link))) return { ok: false, error: t('linkNotAvailable') }
   const action = session.link.actions.find((candidate) => candidate.id === actionId)
   if (!action) return { ok: false, error: t('unknownAction') }
 
@@ -349,6 +401,85 @@ export async function markActionComplete(input: {
   return { ok: true, state }
 }
 
+type StepResult = { ok: true; state: UnlockState } | { ok: false; error: string }
+
+/** The live session and one of its steps, or the reason the check cannot run. */
+async function readStep(token: string, actionId: string) {
+  const t = await getTranslations('errors')
+  const fail = (error: string) => ({ ok: false as const, error })
+  if (!token || token.length > 128) return fail(t('sessionExpiredReload'))
+
+  const session = await prisma.unlockSession.findUnique({
+    where: { id: token },
+    select: {
+      id: true,
+      expiresAt: true,
+      link: { select: {
+        status: true, expiresAt: true, ownerId: true,
+        actions: { select: { id: true, type: true, target: true } },
+      } },
+      completions: { select: { linkActionId: true } },
+    },
+  })
+  if (!session) return fail(t('sessionExpiredReload'))
+  if (session.expiresAt.getTime() <= Date.now()) return fail(t('sessionExpiredReloadLong'))
+  if (!(await isUnlockLinkAvailable(session.link))) return fail(t('linkNotAvailable'))
+
+  const action = session.link.actions.find((candidate) => candidate.id === actionId)
+  if (!action) return fail(t('unknownAction'))
+  // The step is opened first: a check before the visitor has even been to the
+  // platform would only ever refuse them.
+  if (!session.completions.some((row) => row.linkActionId === actionId)) {
+    return fail(t('openStepFirst'))
+  }
+  return { ok: true as const, session, action }
+}
+
+async function stepResult(token: string, result: { ok: boolean; error?: string }): Promise<StepResult> {
+  if (!result.ok) return { ok: false, error: result.error ?? '' }
+  await promoteIfComplete(token)
+  const state = await buildState(token)
+  if (!state) {
+    const t = await getTranslations('errors')
+    return { ok: false, error: t('updateSessionFailed') }
+  }
+  return { ok: true, state }
+}
+
+/** Mints the Telegram check-in link the visitor opens to name their account. */
+export async function beginTelegramCheckin(input: {
+  token: string
+  actionId: string
+}): Promise<{ ok: true; url: string } | { ok: false; error: string }> {
+  const read = await readStep(input.token, input.actionId)
+  if (!read.ok) return { ok: false, error: read.error }
+  return startTelegramCheckin({ sessionId: read.session.id, action: read.action })
+}
+
+/** One look at whether the visitor has opened the bot and joined the chat. */
+export async function pollTelegramStep(input: {
+  token: string
+  actionId: string
+}): Promise<{ ok: true; done: boolean; state: UnlockState } | { ok: false; error: string }> {
+  const read = await readStep(input.token, input.actionId)
+  if (!read.ok) return { ok: false, error: read.error }
+
+  const check = (await stepChecks([read.action])).get(read.action.id)
+  if (!check) {
+    const result = await stepResult(input.token, { ok: true })
+    return result.ok ? { ...result, done: true } : result
+  }
+  if (check.mode !== 'HANDOFF') {
+    const t = await getTranslations('errors')
+    return { ok: false, error: t('unknownAction') }
+  }
+  const polled = await pollTelegramCheckin({ sessionId: read.session.id, actionId: input.actionId })
+  if (!polled.ok) return { ok: false, error: polled.error }
+
+  const result = await stepResult(input.token, { ok: true })
+  if (!result.ok) return result
+  return { ok: true, done: polled.done, state: result.state }
+}
 /**
  * Returns the protected payload when all actions are completed.
  */
@@ -366,9 +497,12 @@ export async function claimContent(
       linkId: true,
       status: true,
       expiresAt: true,
-      completions: { select: { linkActionId: true } },
+      completions: { select: { linkActionId: true, verified: true, proof: true } },
       link: {
         select: {
+          status: true,
+          expiresAt: true,
+          ownerId: true,
           fileId: true,
           contentType: true,
           targetUrl: true,
@@ -383,12 +517,13 @@ export async function claimContent(
   if (session.expiresAt.getTime() <= Date.now()) {
     return { ok: false, error: t('sessionExpiredLong') }
   }
+  if (!(await isUnlockLinkAvailable(session.link))) return { ok: false, error: t('linkNotAvailable') }
   if (session.status !== 'VERIFIED') {
     return { ok: false, error: t('completeAllSteps') }
   }
 
-  const completed = new Set(session.completions.map((row) => row.linkActionId))
-  if (!session.link.actions.every((action) => completed.has(action.id))) {
+  const settled = await settledActionIds(session)
+  if (!session.link.actions.every((action) => settled.has(action.id))) {
     return { ok: false, error: t('completeAllSteps') }
   }
   await prisma.analyticsEvent.create({

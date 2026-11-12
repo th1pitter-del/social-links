@@ -1,5 +1,5 @@
 import type { ComponentType } from 'react'
-import { Database, Gift, Globe, KeyRound, Mail, Palette, Scale, Timer, Upload } from 'lucide-react'
+import { Database, Gift, Globe, KeyRound, Mail, Megaphone, Palette, Scale, ShieldCheck, Timer, Upload } from 'lucide-react'
 
 type IconType = ComponentType<{ className?: string }>
 
@@ -66,6 +66,7 @@ export const SETTINGS_GROUPS: SettingsGroup[] = [
       { key: 'limits.shortLinkCreatePerHour' },
       { key: 'limits.guestLinkCreatePerHour' },
       { key: 'limits.unlockStartPerMinute' },
+      { key: 'limits.verifyPerMinute' },
       { key: 'limits.reportPerHour' },
       { key: 'limits.uploadPerHour' },
     ],
@@ -100,6 +101,24 @@ export const SETTINGS_GROUPS: SettingsGroup[] = [
       { key: 'email.webhookUrl' },
       { key: 'email.webhookToken', secret: true },
       { key: 'email.from' },
+    ],
+  },
+  {
+    id: 'ad-network',
+    icon: Megaphone,
+    fields: [{ key: 'ads.headScripts', multiline: true }],
+  },
+  {
+    id: 'step-verification',
+    icon: ShieldCheck,
+    fields: [
+      { key: 'verification.enabled', toggle: true },
+      { key: 'verification.oauthRedirectUrl', readonly: true },
+      { key: 'verification.googleClientId' },
+      { key: 'verification.googleClientSecret', secret: true },
+      { key: 'verification.githubClientId' },
+      { key: 'verification.githubClientSecret', secret: true },
+      { key: 'verification.telegramBotToken', secret: true },
     ],
   },
   {

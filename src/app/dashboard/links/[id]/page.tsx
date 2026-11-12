@@ -8,6 +8,7 @@ import { BarChart, type BarChartPoint } from '@/components/admin/bar-chart'
 import { CopyButton } from '@/components/copy-button'
 import { FunnelStages } from '@/components/dashboard/funnel-stages'
 import { StatusPill } from '@/components/status-pill'
+import { StepEvidence } from '@/components/step-evidence'
 import { LinkForm, type LinkFormValues } from '@/components/link-form'
 import { LinkRowActions } from '@/components/link-row-actions'
 import { Button } from '@/components/ui/button'
@@ -227,6 +228,8 @@ export default async function EditLinkPage({
       </div>
 
       <LinkForm mode="edit" linkId={link.id} initial={initial} actionTypes={actionTypes} />
+
+      <StepEvidence linkId={link.id} locale={locale} />
 
       {link.actions.some((action) => action.type === 'EMAIL') ? (
         <section className="space-y-3">
