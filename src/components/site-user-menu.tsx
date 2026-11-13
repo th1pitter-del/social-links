@@ -1,7 +1,7 @@
 'use client'
 
 import { useLocale } from 'next-intl'
-import { ChevronDown } from 'lucide-react'
+import { ChevronDown, User } from 'lucide-react'
 
 import { NavRow, type SiteNavItem } from '@/components/site-nav'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
@@ -47,17 +47,13 @@ export function SiteUserMenu({
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
-          className="h-9 gap-2 border border-transparent px-1.5 pe-2 data-[state=open]:border-border data-[state=open]:bg-muted"
+          className="h-9 gap-1.5 border border-transparent px-2 data-[state=open]:border-border data-[state=open]:bg-muted"
           aria-label={menuLabel}
         >
-          <Avatar size="sm">
-            <AvatarFallback className="bg-primary text-[11px] text-primary-foreground">
-              {initials(userLabel)}
-            </AvatarFallback>
-          </Avatar>
-          <span className="hidden max-w-[12rem] truncate text-sm font-medium sm:inline">
-            {userLabel}
-          </span>
+          {/* The closed menu stays identity-free: the name, role and email are
+              inside the panel, so the trigger is one fixed width at every
+              breakpoint and never takes room from the site brand. */}
+          <User className="size-4" aria-hidden="true" />
           <ChevronDown className="size-3.5 text-muted-foreground" aria-hidden="true" />
         </Button>
       </DropdownMenuTrigger>
