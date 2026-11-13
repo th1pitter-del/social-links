@@ -16,7 +16,16 @@ const LOCAL_HOSTS = new Set(['localhost', '127.0.0.1', '::1'])
 /** Remote hosts (cloud MySQL such as TiDB) require TLS; local stays plain. */
 function adapterOptions(url: string) {
   const parsed = new URL(url)
-  if (LOCAL_HOSTS.has(parsed.hostname)) return url
+  if (LOCAL_HOSTS.has(parsed.hostname)) {
+    return {
+      host: parsed.hostname,
+      port: Number(parsed.port || 3306),
+      user: decodeURIComponent(parsed.username),
+      password: decodeURIComponent(parsed.password),
+      database: decodeURIComponent(parsed.pathname.slice(1)),
+      allowPublicKeyRetrieval: true,
+    }
+  }
   return {
     host: parsed.hostname,
     port: Number(parsed.port || 3306),

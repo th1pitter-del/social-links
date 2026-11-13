@@ -17,7 +17,16 @@ const LOCAL_HOSTS = new Set(['localhost', '127.0.0.1', '::1'])
 function adapterOptions(connectionString: string) {
   const parsed = new URL(connectionString)
   if (LOCAL_HOSTS.has(parsed.hostname)) {
-    return connectionString
+    return {
+      host: parsed.hostname,
+      port: Number(parsed.port || 3306),
+      user: decodeURIComponent(parsed.username),
+      password: decodeURIComponent(parsed.password),
+      database: decodeURIComponent(parsed.pathname.slice(1)),
+      // MySQL 8 answers caching_sha2_password logins with a public key when the
+      // connection is not encrypted; local development stays plain TCP.
+      allowPublicKeyRetrieval: true,
+    }
   }
   return {
     host: parsed.hostname,

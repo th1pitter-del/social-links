@@ -28,6 +28,8 @@ export async function promoteIfComplete(sessionId: string): Promise<void> {
     },
   })
   if (!session || session.status === 'VERIFIED') return
+  if (session.expiresAt.getTime() <= Date.now()) return
+  if (!(await isUnlockLinkAvailable(session.link))) return
 
   const settled = await settledActionIds(session)
   const actionsDone = session.link.actions.every((action) => settled.has(action.id))

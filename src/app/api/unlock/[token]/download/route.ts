@@ -35,7 +35,7 @@ export async function GET(
           actions: { select: { id: true, type: true, label: true, target: true } },
         },
       },
-      completions: { select: { linkActionId: true } },
+      completions: { select: { linkActionId: true, verified: true, proof: true } },
     },
   })
 
@@ -48,9 +48,15 @@ export async function GET(
   if (session.status !== 'VERIFIED') {
     return NextResponse.json({ error: t('linkNotAvailable') }, { status: 403 })
   }
+  if (!(await isUnlockLinkAvailable(session.link))) {
+    return NextResponse.json({ error: t('linkNotAvailable') }, { status: 403 })
+  }
 
-  const completed = new Set(session.completions.map((row) => row.linkActionId))
-  const allDone = session.link.actions.every((action) => completed.has(action.id))
+  const settled = await settledActionIds({
+    link: { actions: session.link.actions },
+    completions: session.completions,
+  })
+  const allDone = session.link.actions.every((action) => settled.has(action.id))
   if (!allDone) {
     return NextResponse.json({ error: t('completeAllSteps') }, { status: 403 })
   }
