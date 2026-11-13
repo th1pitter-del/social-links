@@ -1,7 +1,7 @@
 -- Convert LinkAction.type from a fixed enum into a free string key so
 -- administrators can add action types at runtime. Existing enum values are
 -- preserved verbatim as the new keys.
-ALTER TABLE `linkaction` MODIFY `type` VARCHAR(191) NOT NULL;
+ALTER TABLE `LinkAction` MODIFY `type` VARCHAR(191) NOT NULL;
 
 -- CreateTable
 CREATE TABLE `ActionOption` (

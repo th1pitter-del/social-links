@@ -1,2 +1,2 @@
 -- AlterTable
-ALTER TABLE `session` ADD COLUMN `impersonatedBy` VARCHAR(191) NULL;
+ALTER TABLE `Session` ADD COLUMN `impersonatedBy` VARCHAR(191) NULL;

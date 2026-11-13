@@ -1,2 +1,2 @@
 -- AlterTable
-ALTER TABLE `biolink` ADD COLUMN `platform` VARCHAR(191) NULL;
+ALTER TABLE `BioLink` ADD COLUMN `platform` VARCHAR(191) NULL;

@@ -25,7 +25,7 @@ INSERT INTO `Platform` (`id`, `key`, `label`, `icon`, `enabled`, `position`, `sy
     ('plt_none', 'none', 'No platform', 'globe', true, 2, true, NOW(3), NOW(3));
 
 -- AlterTable
-ALTER TABLE `actionoption` ADD COLUMN `platformId` VARCHAR(191) NULL;
+ALTER TABLE `ActionOption` ADD COLUMN `platformId` VARCHAR(191) NULL;
 
 -- Point existing rows at the platform they referenced by label.
 UPDATE `ActionOption` `o`
@@ -39,7 +39,7 @@ SET `o`.`platformId` = `p`.`id`
 WHERE `o`.`platformId` IS NULL;
 
 -- AlterTable
-ALTER TABLE `actionoption` DROP COLUMN `platform`;
+ALTER TABLE `ActionOption` DROP COLUMN `platform`;
 
 -- CreateIndex
 CREATE INDEX `ActionOption_platformId_idx` ON `ActionOption`(`platformId`);

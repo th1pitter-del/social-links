@@ -1,5 +1,5 @@
 -- AlterTable
-ALTER TABLE `link` MODIFY `contentType` ENUM('URL', 'TEXT', 'FILE') NOT NULL;
+ALTER TABLE `Link` MODIFY `contentType` ENUM('URL', 'TEXT', 'FILE') NOT NULL;
 
 -- CreateTable
 CREATE TABLE `LinkFile` (

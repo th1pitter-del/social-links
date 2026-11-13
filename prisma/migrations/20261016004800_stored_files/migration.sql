@@ -5,16 +5,16 @@
 
 */
 -- DropForeignKey
-ALTER TABLE `linkfile` DROP FOREIGN KEY `LinkFile_linkId_fkey`;
+ALTER TABLE `LinkFile` DROP FOREIGN KEY `LinkFile_linkId_fkey`;
 
 -- DropForeignKey
-ALTER TABLE `linkfile` DROP FOREIGN KEY `LinkFile_ownerId_fkey`;
+ALTER TABLE `LinkFile` DROP FOREIGN KEY `LinkFile_ownerId_fkey`;
 
 -- AlterTable
-ALTER TABLE `link` ADD COLUMN `fileId` VARCHAR(191) NULL;
+ALTER TABLE `Link` ADD COLUMN `fileId` VARCHAR(191) NULL;
 
 -- DropTable
-DROP TABLE `linkfile`;
+DROP TABLE `LinkFile`;
 
 -- CreateTable
 CREATE TABLE `StoredFile` (
