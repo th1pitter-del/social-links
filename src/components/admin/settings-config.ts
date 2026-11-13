@@ -1,5 +1,5 @@
 import type { ComponentType } from 'react'
-import { Database, Gift, Globe, Mail, Megaphone, Palette, Scale, Server, ShieldCheck, Timer, Upload } from 'lucide-react'
+import { Database, Gift, Globe, Mail, Megaphone, Palette, Server, ShieldCheck, Timer, Upload } from 'lucide-react'
 
 type IconType = ComponentType<{ className?: string }>
 
@@ -75,14 +75,6 @@ export const SETTINGS_GROUPS: SettingsGroup[] = [
     id: 'upload-limits',
     icon: Upload,
     fields: [{ key: 'limits.uploadMaxMb' }, { key: 'limits.fileMaxMb' }],
-  },
-  {
-    id: 'platform-rules',
-    icon: Scale,
-    fields: [
-      { key: 'rules.socialPlatforms', multiline: true },
-      { key: 'rules.contentPolicy', multiline: true },
-    ],
   },
   {
     id: 'email-delivery',

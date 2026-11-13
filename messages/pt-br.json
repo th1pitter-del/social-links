@@ -1076,7 +1076,8 @@
       "groups": {
         "system-ops": {
           "title": "Operações do sistema",
-          "description": "Como as atualizações são aplicadas e quantos backups são mantidos."
+          "description": "Como as atualizações são aplicadas e quantos backups são mantidos.",
+          "warning": "Altere estes valores apenas se souber como este servidor está configurado. Se o branch, o gerenciador de processos ou o nome do processo não corresponderem ao servidor, uma atualização compilará o código novo, mas nunca o instalará nem o reiniciará."
         },
         "site-content": {
           "title": "Conteúdo do site",
@@ -1093,10 +1094,6 @@
         "upload-limits": {
           "title": "Limites de upload",
           "description": "Aplica-se a imagens de capa e arquivos protegidos enviados pelos proprietários de links."
-        },
-        "platform-rules": {
-          "title": "Regras de plataformas",
-          "description": "Plataformas sociais permitidas e política de conteúdo exibida aos proprietários."
         },
         "email-delivery": {
           "title": "Envio de e-mails",
@@ -1230,15 +1227,6 @@
         "limits_fileMaxMb": {
           "label": "Tamanho máximo de upload de arquivos bloqueados (MB)",
           "placeholder": "50"
-        },
-        "rules_socialPlatforms": {
-          "label": "Plataformas sociais permitidas",
-          "hint": "Separadas por vírgula, ex.: instagram, tiktok, youtube",
-          "placeholder": "instagram, tiktok, youtube, twitter"
-        },
-        "rules_contentPolicy": {
-          "label": "Política de conteúdo",
-          "hint": "Texto simples exibido na página de denúncias e para os moderadores."
         },
         "site_logoUrl": {
           "label": "Logotipo",

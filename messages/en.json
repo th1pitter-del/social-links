@@ -1614,7 +1614,8 @@
       "groups": {
         "system-ops": {
           "title": "System operations",
-          "description": "How updates are applied and how many backups are kept."
+          "description": "How updates are applied and how many backups are kept.",
+          "warning": "Only change these values if you know how this server is set up. If the branch, process manager or process name does not match the server, an update will build the new code but never install or restart it."
         },
         "site-content": {
           "title": "Site content",
@@ -1631,10 +1632,6 @@
         "upload-limits": {
           "title": "Upload limits",
           "description": "Applies to cover images and protected files uploaded by link owners."
-        },
-        "platform-rules": {
-          "title": "Platform rules",
-          "description": "Allowlisted social platforms and content policy shown to owners."
         },
         "email-delivery": {
           "title": "Email delivery",
@@ -1768,15 +1765,6 @@
         "limits_fileMaxMb": {
           "label": "Maximum locked-file upload size (MB)",
           "placeholder": "50"
-        },
-        "rules_socialPlatforms": {
-          "label": "Allowed social platforms",
-          "hint": "Comma-separated, e.g. instagram, tiktok, youtube",
-          "placeholder": "instagram, tiktok, youtube, twitter"
-        },
-        "rules_contentPolicy": {
-          "label": "Content policy",
-          "hint": "Plain text shown on the report page and to moderators reviewing reports."
         },
         "site_logoUrl": {
           "label": "Logo",

@@ -4,7 +4,7 @@ import { useRef, useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import { toast } from 'sonner'
-import { Copy, Loader2, Upload } from 'lucide-react'
+import { Copy, Loader2, ShieldAlert, Upload } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -101,6 +101,12 @@ export function SettingsGroupForm({
   return (
     <section className="rounded-xl border border-border bg-card p-5 shadow-sm">
       <div className="space-y-4">
+        {groupId === 'system-ops' ? (
+          <div className="flex items-start gap-3 rounded-lg border border-warning/40 bg-warning/10 px-3 py-2.5">
+            <ShieldAlert className="mt-0.5 size-4 shrink-0 text-amber-700 dark:text-warning" aria-hidden="true" />
+            <p className="text-sm text-amber-800 dark:text-warning">{t('groups.system-ops.warning')}</p>
+          </div>
+        ) : null}
         {group.fields.map((field) => {
           const fieldKey = settingsFieldKey(field.key)
           const label = t(`fields.${fieldKey}.label`)
