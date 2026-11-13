@@ -55,6 +55,11 @@ docs/
 tmp/
 temp/
 
+# editor/agent tool state
+.kilo/
+.trae/
+.figma/
+
 # env files (can opt-in for committing if needed)
 .env*
 !.env.example
