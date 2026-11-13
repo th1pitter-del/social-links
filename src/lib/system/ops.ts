@@ -754,6 +754,34 @@ async function closeFinishedUpdates() {
         .catch(() => undefined)
     }
   }
+
+  // Safety backups are reserved before their runner starts, so a job that
+  // never ran leaves the row queued forever once its operation is closed.
+  const busy = await prisma.systemOperation.findMany({
+    where: { status: { in: ['PENDING', 'RUNNING'] } },
+    select: { backupId: true, safetyBackupId: true },
+  })
+  const claimed = new Set<string>()
+  for (const operation of busy) {
+    if (operation.backupId) claimed.add(operation.backupId)
+    if (operation.safetyBackupId) claimed.add(operation.safetyBackupId)
+  }
+  const stuck = await prisma.systemBackup.findMany({
+    where: {
+      status: { in: ['PENDING', 'RUNNING'] },
+      startedAt: { lt: new Date(Date.now() - STALE_RUNNER_MS) },
+    },
+    select: { id: true },
+  })
+  for (const backup of stuck) {
+    if (claimed.has(backup.id)) continue
+    await prisma.systemBackup
+      .update({
+        where: { id: backup.id },
+        data: { status: 'FAILED', error: RUNNER_STOPPED, finishedAt: new Date() },
+      })
+      .catch(() => undefined)
+  }
 }
 
 export function backupFilePath(filename: string | null) {

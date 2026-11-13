@@ -530,10 +530,19 @@ async function rollback() {
   }
 }
 
+function processAlive(pid) {
+  try {
+    process.kill(pid, 0)
+    return true
+  } catch (error) {
+    return error.code === 'EPERM'
+  }
+}
+
 async function acquireLock() {
   await fs.mkdir(backupDir, { recursive: true })
   const lockPath = path.join(backupDir, '.ops.lock')
-  for (let attempt = 0; attempt < 2; attempt += 1) {
+  for (let attempt = 0; attempt < 3; attempt += 1) {
     try {
       const handle = await fs.open(lockPath, 'wx')
       await handle.writeFile(String(process.pid))
@@ -541,12 +550,16 @@ async function acquireLock() {
       return lockPath
     } catch (error) {
       if (error.code !== 'EEXIST') throw error
-      const stat = await fs.stat(lockPath).catch(() => null)
-      if (stat && Date.now() - stat.mtimeMs > 2 * 60 * 60 * 1000) {
-        await fs.rm(lockPath, { force: true })
-        continue
+      // A runner killed with the service it restarted leaves the lock behind;
+      // an empty or dead pid means nobody holds it, so take it over at once
+      // instead of blocking every operation for the two-hour fallback.
+      const holder = Number((await fs.readFile(lockPath, 'utf8').catch(() => '')).trim())
+      const info = await fs.stat(lockPath).catch(() => null)
+      const expired = !info || Date.now() - info.mtimeMs > 2 * 60 * 60 * 1000
+      if (!expired && holder && processAlive(holder)) {
+        fail('Another system operation is already running.')
       }
-      fail('Another system operation is already running.')
+      await fs.rm(lockPath, { force: true })
     }
   }
   fail('Could not acquire the operations lock.')
