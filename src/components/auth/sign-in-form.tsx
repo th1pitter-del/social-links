@@ -3,7 +3,7 @@
 import { useActionState, useState } from 'react'
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
-import { Loader2, Sparkles } from 'lucide-react'
+import { Loader2 } from 'lucide-react'
 
 import { AuthNotice, FieldErrorText } from '@/components/auth/auth-messages'
 import { PasswordField } from '@/components/auth/password-field'
@@ -17,22 +17,15 @@ const initialState: AuthFormState = {}
 export function SignInForm({
   redirectTo,
   reset,
-  demo,
 }: {
   redirectTo?: string
   reset?: boolean
-  demo?: { label: string; email: string; password: string } | null
 }) {
   const [state, formAction, pending] = useActionState(signInAction, initialState)
   const t = useTranslations('auth.signIn')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const emailError = state.fieldErrors?.email
-
-  function applyDemoCredential(demoEmail: string, demoPassword: string) {
-    setEmail(demoEmail)
-    setPassword(demoPassword)
-  }
 
   return (
     <form action={formAction} className="space-y-5">
@@ -81,30 +74,6 @@ export function SignInForm({
         {pending ? <Loader2 className="animate-spin" /> : null}
         {t('submit')}
       </Button>
-
-      {demo ? (
-        <div className="rounded-lg border border-dashed p-3">
-          <p className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
-            <Sparkles className="size-3.5" />
-            {t('demoTitle')}
-          </p>
-          <div className="mt-2 flex items-center justify-between gap-3">
-            <div className="min-w-0 text-xs">
-              <p className="truncate font-medium">{demo.label}</p>
-              <p className="truncate text-muted-foreground">{demo.email}</p>
-            </div>
-            <Button
-              type="button"
-              size="sm"
-              variant="outline"
-              onClick={() => applyDemoCredential(demo.email, demo.password)}
-            >
-              {t('demoUse')}
-            </Button>
-          </div>
-          <p className="mt-2 text-[11px] text-muted-foreground">{t('demoHint')}</p>
-        </div>
-      ) : null}
 
       <p className="text-center text-sm text-muted-foreground">
         {t('noAccount')}{' '}

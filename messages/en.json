@@ -676,10 +676,7 @@
       "submit": "Sign in",
       "resetSuccess": "Your password was updated. Sign in with your new password.",
       "noAccount": "New here?",
-      "createAccount": "Create an account",
-      "demoTitle": "Demo access",
-      "demoUse": "Use credentials",
-      "demoHint": "Fills the form instantly. Disable demo access in the admin settings for production."
+      "createAccount": "Create an account"
     },
     "signUp": {
       "title": "Create your account",
@@ -1639,10 +1636,6 @@
           "title": "Platform rules",
           "description": "Allowlisted social platforms and content policy shown to owners."
         },
-        "demo-access": {
-          "title": "Demo access",
-          "description": "Optional one-click demo credentials shown on the sign-in page."
-        },
         "email-delivery": {
           "title": "Email delivery",
           "description": "Password reset mail is POSTed as JSON to your own relay or automation endpoint."
@@ -1794,22 +1787,6 @@
           "label": "Favicon",
           "hint": "Browser tab icon. Upload a square PNG or paste an http(s) URL. Empty = default icon.",
           "placeholder": "https://example.com/favicon.png"
-        },
-        "demo_loginEnabled": {
-          "label": "Show demo credentials on sign-in",
-          "hint": "The password is stored in plain text and shown to every visitor. Keep this off in production."
-        },
-        "demo_label": {
-          "label": "Display label",
-          "placeholder": "Demo admin"
-        },
-        "demo_email": {
-          "label": "Demo email",
-          "placeholder": "admin@example.com"
-        },
-        "demo_password": {
-          "label": "Demo password",
-          "hint": "Stored in plain text. Use a throwaway account."
         },
         "email_webhookUrl": {
           "label": "Webhook URL",

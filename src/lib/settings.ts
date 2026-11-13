@@ -208,10 +208,6 @@ export const getSettingMap = cache(async (): Promise<Record<string, string>> => 
             'site.faviconUrl',
             'rules.socialPlatforms',
             'rules.contentPolicy',
-            'demo.loginEnabled',
-            'demo.label',
-            'demo.email',
-            'demo.password',
             'ads.headScripts',
             ...THEME_KEYS,
             ...CONTENT_PAGES.map((page) => `content.${page}`),
@@ -265,31 +261,6 @@ export function isMediaOrHttpUrl(value: string | undefined | null): boolean {
   const trimmed = value?.trim() ?? ''
   return /^https?:\/\//.test(trimmed) || /^\/api\/media\/[A-Za-z0-9_-]+$/.test(trimmed)
 }
-
-export type DemoLogin = {
-  label: string
-  email: string
-  password: string
-}
-
-/**
- * Demo credentials shown on the sign-in page. Opt-in via the `demo.loginEnabled`
- * setting with both an email and a password configured; null otherwise. The
- * password is stored in plain text on purpose — this is a demo convenience that
- * must be disabled in production.
- */
-export const getDemoLogin = cache(async (): Promise<DemoLogin | null> => {
-  const map = await getSettingMap()
-  if (map['demo.loginEnabled'] !== 'true') return null
-  const email = map['demo.email']?.trim().toLowerCase() ?? ''
-  const password = map['demo.password'] ?? ''
-  if (!email || !password) return null
-  return {
-    label: map['demo.label']?.trim() || email,
-    email,
-    password,
-  }
-})
 
 /** Locale-aware shipped default body for a content page. */
 export const getDefaultContent = cache(async (page: ContentPage): Promise<string> => {

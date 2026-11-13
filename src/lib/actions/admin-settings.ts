@@ -106,9 +106,6 @@ export async function updateSetting(key: string, value: string): Promise<Setting
     }
     value = trimmedValue
   }
-  if (trimmedKey === 'demo.loginEnabled') {
-    value = value === 'true' ? 'true' : 'false'
-  }
   if (trimmedKey.startsWith('verification.')) {
     // The callback address is computed from the site URL, never typed by hand.
     if (trimmedKey === 'verification.oauthRedirectUrl') {

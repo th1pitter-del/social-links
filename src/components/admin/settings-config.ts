@@ -1,5 +1,5 @@
 import type { ComponentType } from 'react'
-import { Database, Gift, Globe, KeyRound, Mail, Megaphone, Palette, Scale, Server, ShieldCheck, Timer, Upload } from 'lucide-react'
+import { Database, Gift, Globe, Mail, Megaphone, Palette, Scale, Server, ShieldCheck, Timer, Upload } from 'lucide-react'
 
 type IconType = ComponentType<{ className?: string }>
 
@@ -82,16 +82,6 @@ export const SETTINGS_GROUPS: SettingsGroup[] = [
     fields: [
       { key: 'rules.socialPlatforms', multiline: true },
       { key: 'rules.contentPolicy', multiline: true },
-    ],
-  },
-  {
-    id: 'demo-access',
-    icon: KeyRound,
-    fields: [
-      { key: 'demo.loginEnabled', toggle: true },
-      { key: 'demo.label' },
-      { key: 'demo.email' },
-      { key: 'demo.password' },
     ],
   },
   {
