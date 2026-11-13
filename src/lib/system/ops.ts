@@ -1,7 +1,7 @@
 import 'server-only'
 
 import { spawn } from 'node:child_process'
-import { access, mkdir, readFile, rm, unlink, writeFile } from 'node:fs/promises'
+import { access, mkdir, readFile, rm, stat, unlink, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 
 import { prisma } from '@/lib/prisma'
@@ -9,6 +9,11 @@ import { prisma } from '@/lib/prisma'
 const ID_RE = /^[a-z0-9]{20,40}$/i
 const BRANCH_RE = /^[A-Za-z0-9._/-]{1,100}$/
 const PROCESS_NAME_RE = /^[A-Za-z0-9._@-]{1,100}$/
+
+// A detached runner writes its status file around every step, so a file that
+// has not moved for this long means the runner is gone, not busy.
+const STALE_RUNNER_MS = 10 * 60 * 1000
+const RUNNER_STOPPED = 'The operations runner stopped without reporting a result.'
 
 export const APP_DIR = process.cwd()
 export const BACKUP_DIR = path.resolve(APP_DIR, process.env.BACKUP_DIR ?? '.backups')
@@ -447,6 +452,52 @@ async function readJobStatus(id: string): Promise<JobStatusFile | null> {
   }
 }
 
+/** Milliseconds since the runner last wrote its status file. */
+async function jobSilenceMs(id: string) {
+  if (!ID_RE.test(id)) return 0
+  const info = await stat(jobStatusFilePath(id)).catch(() => null)
+  return info ? Date.now() - info.mtimeMs : 0
+}
+
+/**
+ * A status file frozen at "running" outlives a runner that was killed together
+ * with the service while restarting it; nothing else would ever close the
+ * operation. Once the file has gone quiet, verify the outcome against the
+ * checkout instead: past the activate phase a matching HEAD means the new code
+ * is already live.
+ */
+async function reconcileSilentRunner(
+  operation: { updateId: string | null },
+  statusFile: JobStatusFile,
+): Promise<JobStatusFile> {
+  const failed: JobStatusFile = {
+    ...statusFile,
+    status: 'failed',
+    phase: 'failed',
+    message: RUNNER_STOPPED,
+    error: RUNNER_STOPPED,
+    finishedAt: new Date().toISOString(),
+  }
+  if (!operation.updateId) return failed
+  const restarted = statusFile.phase === 'activate' || statusFile.phase === 'health'
+  if (!restarted) return failed
+
+  const update = await prisma.systemUpdate.findUnique({
+    where: { id: operation.updateId },
+    select: { toCommit: true },
+  })
+  const git = await getLocalGitInfo()
+  if (!update || !git || git.commit !== update.toCommit) return failed
+  return {
+    ...statusFile,
+    status: 'succeeded',
+    phase: 'done',
+    message: 'The runner stopped reporting after the restart; the checkout matches the target commit.',
+    error: null,
+    finishedAt: new Date().toISOString(),
+  }
+}
+
 export type OperationView = {
   id: string
   type: string
@@ -500,7 +551,7 @@ async function applySafetyResult(safetyBackupId: string | null, safety: JobStatu
  */
 export async function syncOperation(id: string): Promise<OperationView | null> {
   if (!ID_RE.test(id)) return null
-  const statusFile = await readJobStatus(id)
+  let statusFile = await readJobStatus(id)
   const operation = await prisma.systemOperation.findUnique({ where: { id } })
 
   if (!operation) {
@@ -524,19 +575,23 @@ export async function syncOperation(id: string): Promise<OperationView | null> {
   if (terminal && !statusFile) return toView(operation)
   if (!statusFile) {
     // The runner never reported. Only declare failure once it is clearly stale.
-    if (Date.now() - operation.startedAt.getTime() > 10 * 60 * 1000) {
+    if (Date.now() - operation.startedAt.getTime() > STALE_RUNNER_MS) {
       const updated = await prisma.systemOperation.update({
         where: { id },
         data: {
           status: 'FAILED',
           phase: 'failed',
-          message: 'The operations runner stopped without reporting a result.',
+          message: RUNNER_STOPPED,
           finishedAt: new Date(),
         },
       })
       return toView(updated)
     }
     return toView(operation)
+  }
+
+  if (statusFile.status === 'running' && (await jobSilenceMs(id)) > STALE_RUNNER_MS) {
+    statusFile = await reconcileSilentRunner(operation, statusFile)
   }
 
   if (statusFile.status === 'running') {
@@ -651,6 +706,54 @@ export async function syncOpenOperations() {
     take: 20,
   })
   await Promise.all(open.map((operation) => syncOperation(operation.id).catch(() => null)))
+  await closeFinishedUpdates()
+}
+
+/**
+ * Repairs history rows still marked INSTALLING after their operation already
+ * finished — the bookkeeping write can be lost with the process being replaced.
+ */
+async function closeFinishedUpdates() {
+  const open = await prisma.systemUpdate.findMany({
+    where: { status: 'INSTALLING' },
+    select: { id: true, startedAt: true },
+  })
+  for (const update of open) {
+    const operation = await prisma.systemOperation.findFirst({
+      where: { updateId: update.id },
+      orderBy: { startedAt: 'desc' },
+      select: { status: true, message: true, finishedAt: true },
+    })
+    if (!operation) {
+      if (Date.now() - update.startedAt.getTime() <= STALE_RUNNER_MS) continue
+      await prisma.systemUpdate
+        .update({
+          where: { id: update.id },
+          data: { status: 'FAILED', error: RUNNER_STOPPED, finishedAt: new Date() },
+        })
+        .catch(() => undefined)
+      continue
+    }
+    if (operation.status === 'SUCCEEDED') {
+      await prisma.systemUpdate
+        .update({
+          where: { id: update.id },
+          data: { status: 'INSTALLED', error: null, finishedAt: operation.finishedAt ?? new Date() },
+        })
+        .catch(() => undefined)
+    } else if (operation.status === 'FAILED') {
+      await prisma.systemUpdate
+        .update({
+          where: { id: update.id },
+          data: {
+            status: 'FAILED',
+            error: operation.message ?? 'The update did not complete.',
+            finishedAt: operation.finishedAt ?? new Date(),
+          },
+        })
+        .catch(() => undefined)
+    }
+  }
 }
 
 export function backupFilePath(filename: string | null) {
