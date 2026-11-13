@@ -1163,7 +1163,10 @@
         },
         "system": {
           "update": "Installed a system update",
-          "rollback": "Rolled back a system update"
+          "rollback": "Rolled back a system update",
+          "archivedUpdate": {
+            "delete": "Deleted an archived update"
+          }
         },
         "user": {
           "ban": "Banned user",
@@ -2122,6 +2125,13 @@
       "unarchive": "Restore",
       "archivedToast": "Update archived",
       "unarchivedToast": "Update restored",
+      "delete": "Delete",
+      "deleteTitle": "Delete this archived update?",
+      "deleteDescription": "The entry is removed from the update history. The code and data on the server are not touched.",
+      "deleteConfirm": "Delete",
+      "deleting": "Deleting…",
+      "deletedToast": "Archived update deleted",
+      "deleteFailed": "Delete failed",
       "showError": "Show full error",
       "hideError": "Hide error",
       "colChange": "Change",

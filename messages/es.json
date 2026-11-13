@@ -625,7 +625,10 @@
         },
         "system": {
           "update": "Instaló una actualización del sistema",
-          "rollback": "Revirtió una actualización del sistema"
+          "rollback": "Revirtió una actualización del sistema",
+          "archivedUpdate": {
+            "delete": "Eliminó una actualización archivada"
+          }
         },
         "user": {
           "ban": "Suspendió a un usuario",
@@ -1584,6 +1587,13 @@
       "unarchive": "Restaurar",
       "archivedToast": "Actualización archivada",
       "unarchivedToast": "Actualización restaurada",
+      "delete": "Eliminar",
+      "deleteTitle": "¿Eliminar esta actualización archivada?",
+      "deleteDescription": "El registro se elimina del historial de actualizaciones. El código y los datos del servidor no se modifican.",
+      "deleteConfirm": "Eliminar",
+      "deleting": "Eliminando…",
+      "deletedToast": "Actualización archivada eliminada",
+      "deleteFailed": "No se pudo eliminar",
       "showError": "Ver error completo",
       "hideError": "Ocultar error",
       "colChange": "Cambio",

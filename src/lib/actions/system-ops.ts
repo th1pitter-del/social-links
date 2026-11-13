@@ -341,6 +341,37 @@ export async function setSystemUpdateArchived(
   return { ok: true }
 }
 
+export async function deleteSystemUpdate(
+  updateId: string,
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  await requireAdmin()
+  const t = await getTranslations('errors')
+  if (!/^[a-z0-9]{20,40}$/i.test(updateId)) return { ok: false, error: t('invalidRequest') }
+
+  const update = await prisma.systemUpdate.findUnique({
+    where: { id: updateId },
+    select: { id: true, status: true, archivedAt: true },
+  })
+  if (!update) return { ok: false, error: t('updateNotFound') }
+  // Only an archived entry is a record: an active one may still be rolled back.
+  if (!update.archivedAt) return { ok: false, error: t('invalidRequest') }
+  if (update.status === 'INSTALLING') return { ok: false, error: t('operationRunning') }
+
+  const reference = await prisma.systemOperation.count({
+    where: { updateId: update.id, status: { in: ['PENDING', 'RUNNING'] } },
+  })
+  if (reference > 0) return { ok: false, error: t('operationRunning') }
+
+  await prisma.systemUpdate.delete({ where: { id: update.id } })
+  await writeAudit({
+    action: 'system.archivedUpdate.delete',
+    targetType: 'update',
+    targetId: update.id,
+  })
+  revalidatePath('/admin/updates')
+  return { ok: true }
+}
+
 export async function rollbackSystemUpdate(
   updateId: string,
   confirmation: string,

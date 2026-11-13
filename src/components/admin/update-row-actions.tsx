@@ -3,7 +3,7 @@
 import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { useTranslations } from 'next-intl'
-import { Archive, ArchiveRestore, Undo2 } from 'lucide-react'
+import { Archive, ArchiveRestore, Trash2, Undo2 } from 'lucide-react'
 import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
@@ -17,7 +17,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
-import { rollbackSystemUpdate, setSystemUpdateArchived } from '@/lib/actions/system-ops'
+import { deleteSystemUpdate, rollbackSystemUpdate, setSystemUpdateArchived } from '@/lib/actions/system-ops'
 import { OperationProgress } from './operation-progress'
 
 export function UpdateRowActions({
@@ -40,6 +40,9 @@ export function UpdateRowActions({
   const [error, setError] = useState<string | null>(null)
   const [pending, setPending] = useState(false)
   const [archivePending, startArchive] = useTransition()
+  const [deleteOpen, setDeleteOpen] = useState(false)
+  const [deleteError, setDeleteError] = useState<string | null>(null)
+  const [deletePending, startDelete] = useTransition()
 
   async function rollback() {
     setPending(true)
@@ -61,6 +64,27 @@ export function UpdateRowActions({
         return
       }
       toast.success(t(archived ? 'unarchivedToast' : 'archivedToast'))
+      router.refresh()
+    })
+  }
+
+  function remove() {
+    setDeleteError(null)
+    startDelete(async () => {
+      try {
+        const result = await deleteSystemUpdate(updateId)
+        if (!result.ok) {
+          setDeleteError(result.error)
+          return
+        }
+      } catch {
+        // Without this the transition would end in silence and the dialog
+        // would stay open looking like the button did nothing.
+        setDeleteError(t('deleteFailed'))
+        return
+      }
+      setDeleteOpen(false)
+      toast.success(t('deletedToast'))
       router.refresh()
     })
   }
@@ -93,6 +117,21 @@ export function UpdateRowActions({
       >
         {archived ? <ArchiveRestore /> : <Archive />}
       </Button>
+      {archived ? (
+        <Button
+          variant="ghost"
+          size="sm"
+          disabled={deletePending}
+          onClick={() => {
+            setDeleteError(null)
+            setDeleteOpen(true)
+          }}
+          aria-label={t('delete')}
+          title={t('delete')}
+        >
+          <Trash2 />
+        </Button>
+      ) : null}
 
       <Dialog
         open={open}
@@ -146,6 +185,34 @@ export function UpdateRowActions({
                 {pending ? t('rollingBack') : t('rollbackConfirm')}
               </Button>
             )}
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog
+        open={deleteOpen}
+        onOpenChange={(next) => {
+          if (!deletePending) {
+            setDeleteOpen(next)
+            if (!next) setDeleteError(null)
+          }
+        }}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{t('deleteTitle')}</DialogTitle>
+            <DialogDescription>{t('deleteDescription')}</DialogDescription>
+          </DialogHeader>
+          {deleteError ? <p className="text-sm text-error">{deleteError}</p> : null}
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button variant="outline" disabled={deletePending}>
+                {tc('cancel')}
+              </Button>
+            </DialogClose>
+            <Button variant="destructive" disabled={deletePending} onClick={remove}>
+              {deletePending ? t('deleting') : t('deleteConfirm')}
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

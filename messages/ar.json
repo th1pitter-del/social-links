@@ -625,7 +625,10 @@
         },
         "system": {
           "update": "ثبّت تحديثًا للنظام",
-          "rollback": "تراجع عن تحديث للنظام"
+          "rollback": "تراجع عن تحديث للنظام",
+          "archivedUpdate": {
+            "delete": "حذف تحديثًا مؤرشفًا"
+          }
         },
         "user": {
           "ban": "حظر مستخدمًا",
@@ -1584,6 +1587,13 @@
       "unarchive": "استعادة",
       "archivedToast": "تمت أرشفة التحديث",
       "unarchivedToast": "تمت استعادة التحديث",
+      "delete": "حذف",
+      "deleteTitle": "حذف هذا التحديث المؤرشف؟",
+      "deleteDescription": "يُزال السجل من سجل التحديثات. لا يتأثر الكود أو البيانات على الخادم.",
+      "deleteConfirm": "حذف",
+      "deleting": "جارٍ الحذف…",
+      "deletedToast": "تم حذف التحديث المؤرشف",
+      "deleteFailed": "تعذّر الحذف",
       "showError": "عرض الخطأ كاملًا",
       "hideError": "إخفاء الخطأ",
       "colChange": "التغيير",
