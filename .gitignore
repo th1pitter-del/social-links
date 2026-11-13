@@ -36,6 +36,24 @@ yarn-error.log*
 *.backup
 *.orig
 *.new
+*.rej
+*.swp
+*~
+
+# documentation and notes (kept on the machine, never tracked)
+*.md
+*.txt
+*.pdf
+*.doc
+*.docx
+docs/
+
+# scratch and temporary files
+*.tmp
+*.temp
+.tmp-*
+tmp/
+temp/
 
 # env files (can opt-in for committing if needed)
 .env*
