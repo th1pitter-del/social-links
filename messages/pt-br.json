@@ -2367,7 +2367,7 @@
       "rateLimited": "Envios demais. Tente novamente mais tarde.",
       "invalidBody": "Dados de envio inválidos.",
       "noFile": "Nenhum arquivo selecionado.",
-      "unsupportedType": "Tipo de arquivo não suportado. Permitidos: PNG, JPEG, WEBP, GIF.",
+      "unsupportedType": "Tipo de arquivo não suportado. Permitidos: PNG, JPEG, WEBP, GIF, SVG.",
       "unsupportedFileType": "Tipo de arquivo não suportado.",
       "tooLarge": "Arquivo grande demais. O tamanho máximo é {maxMb} MB."
     }

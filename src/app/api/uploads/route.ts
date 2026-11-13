@@ -51,7 +51,7 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         code: 'unsupportedType',
-        error: 'Unsupported file type. Allowed: PNG, JPEG, WEBP, GIF.',
+        error: 'Unsupported file type. Allowed: PNG, JPEG, WEBP, GIF, SVG.',
       },
       { status: 415 },
     )
@@ -73,6 +73,12 @@ export async function POST(request: Request) {
     mimeType: file.type,
     bytes,
   })
+  if (!id) {
+    return NextResponse.json(
+      { code: 'unsupportedType', error: 'Unsupported file type. Allowed: PNG, JPEG, WEBP, GIF, SVG.' },
+      { status: 415 },
+    )
+  }
 
   return NextResponse.json({ id, url: `/api/media/${id}` }, { status: 201 })
 }

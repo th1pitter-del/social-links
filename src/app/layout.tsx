@@ -36,9 +36,17 @@ export async function generateMetadata(): Promise<Metadata> {
     description,
     applicationName: site.name,
     // Single source of truth for the tab icon: the admin upload when set, the
-    // shipped `public/favicon.ico` otherwise. Keeping it in metadata avoids a
-    // second file-convention `<link rel="icon">` outranking the admin value.
-    icons: { icon: [{ url: site.faviconUrl || '/favicon.ico' }] },
+    // shipped SVG (SVG first, ICO fallback for older tabs) otherwise. Keeping it
+    // in metadata avoids a second file-convention `<link rel="icon">` outranking
+    // the admin value.
+    icons: {
+      icon: site.faviconUrl
+        ? [{ url: site.faviconUrl }]
+        : [
+            { url: '/brand/link-unlocker-favicon.svg', type: 'image/svg+xml' },
+            { url: '/favicon.ico', sizes: '16x16 24x24 32x32 48x48' },
+          ],
+    },
     openGraph: {
       type: 'website',
       title: `${site.name} — ${t('title')}`,
@@ -70,7 +78,7 @@ export default async function RootLayout({ children }: LayoutProps<'/'>) {
         '@id': `${SITE_URL}/#organization`,
         name: site.name,
         url: SITE_URL,
-        logo: absoluteUrl(site.logoUrl || site.faviconUrl || '/favicon.ico'),
+        logo: absoluteUrl(site.logoUrl || site.faviconUrl || '/brand/link-unlocker-mark.svg'),
       },
       {
         '@type': 'WebSite',

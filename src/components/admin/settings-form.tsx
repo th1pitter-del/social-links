@@ -210,7 +210,7 @@ export function SettingsGroupForm({
                         fileInputs.current[field.key] = el
                       }}
                       type="file"
-                      accept="image/png,image/jpeg,image/webp,image/gif"
+                      accept="image/png,image/jpeg,image/webp,image/gif,image/svg+xml,.svg"
                       className="hidden"
                       onChange={(e) => {
                         const file = e.target.files?.[0]

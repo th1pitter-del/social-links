@@ -2367,7 +2367,7 @@
       "rateLimited": "عمليات رفع كثيرة جدًا. حاول مرة أخرى لاحقًا.",
       "invalidBody": "بيانات الرفع غير صالحة.",
       "noFile": "لم يتم اختيار ملف.",
-      "unsupportedType": "نوع الملف غير مدعوم. المسموح: PNG وJPEG وWEBP وGIF.",
+      "unsupportedType": "نوع الملف غير مدعوم. المسموح: PNG وJPEG وWEBP وGIF وSVG.",
       "unsupportedFileType": "نوع الملف غير مدعوم.",
       "tooLarge": "الملف كبير جدًا. الحجم الأقصى {maxMb} م.ب."
     }

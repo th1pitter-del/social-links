@@ -233,7 +233,7 @@ export type SiteSettings = {
   hasCustomTagline: boolean
   /** Admin-managed custom logo (`/api/media/<id>` or http(s) URL); '' = built-in mark. */
   logoUrl: string
-  /** Admin-managed favicon URL; '' = the shipped favicon.ico. */
+  /** Admin-managed favicon URL; '' = the shipped brand favicon. */
   faviconUrl: string
   allowedPlatforms: string[]
   contentPolicy: string

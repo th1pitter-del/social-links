@@ -22,6 +22,11 @@ export async function GET(
     return NextResponse.json({ error: t('fileNotFound') }, { status: 404 })
   }
 
+  // An SVG opened directly is a document, not a picture. The uploader already
+  // strips active markup; this header makes sure anything missed still cannot
+  // run or reach the network.
+  const isSvg = asset.mimeType === 'image/svg+xml'
+
   return new Response(new Blob([data as unknown as BlobPart], { type: asset.mimeType }), {
     headers: {
       'Content-Type': asset.mimeType,
@@ -29,6 +34,9 @@ export async function GET(
       'Cache-Control': 'public, max-age=31536000, immutable',
       'X-Content-Type-Options': 'nosniff',
       'Content-Disposition': 'inline',
+      ...(isSvg
+        ? { 'Content-Security-Policy': "sandbox; default-src 'none'; style-src 'unsafe-inline'" }
+        : {}),
     },
   })
 }

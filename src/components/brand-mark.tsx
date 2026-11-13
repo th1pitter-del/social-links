@@ -37,9 +37,17 @@ export function BrandMark({
       }}
       aria-hidden
     >
-      <svg viewBox="0 0 24 24" className="size-3.5" fill="none" stroke="currentColor" strokeWidth="3">
-        <path d="M8 12h8" strokeLinecap="round" />
-        <path d="M12 8v8" strokeLinecap="round" />
+      <svg
+        viewBox="0 0 32 32"
+        className="size-full"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="4.2"
+        strokeLinecap="round"
+        aria-hidden
+      >
+        <rect x="6.2" y="17" width="19.6" height="10" rx="5" />
+        <path d="M10.8 17v-6.6a5.2 5.2 0 0 1 10.4 0" />
       </svg>
     </span>
   )

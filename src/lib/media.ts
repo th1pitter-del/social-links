@@ -5,12 +5,14 @@ import { mkdir, readFile, unlink, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 
 import { prisma } from '@/lib/prisma'
+import { sanitizeSvg } from '@/lib/svg'
 
 export const MEDIA_MIME_TYPES = [
   'image/png',
   'image/jpeg',
   'image/webp',
   'image/gif',
+  'image/svg+xml',
 ] as const
 
 export const DEFAULT_UPLOAD_MAX_MB = 10
@@ -48,17 +50,22 @@ export async function saveMedia(input: {
   mimeType: string
   bytes: Uint8Array
 }) {
+  // Uploaded SVGs are stored only after they pass the inert-markup check; the
+  // caller reports a rejected file as unsupported rather than saving it.
+  const bytes = input.mimeType === 'image/svg+xml' ? sanitizeSvg(input.bytes) : input.bytes
+  if (!bytes) return null
+
   const dir = await ensureDir()
   const asset = await prisma.mediaAsset.create({
     data: {
       ownerId: input.ownerId,
       filename: input.filename.slice(0, 200),
       mimeType: input.mimeType,
-      size: input.bytes.byteLength,
+      size: bytes.byteLength,
     },
     select: { id: true },
   })
-  await writeFile(path.join(dir, asset.id), input.bytes)
+  await writeFile(path.join(dir, asset.id), bytes)
   return asset.id
 }
 

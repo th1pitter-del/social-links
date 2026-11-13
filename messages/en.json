@@ -2368,7 +2368,7 @@
       "rateLimited": "Too many uploads. Please try again later.",
       "invalidBody": "Invalid upload body.",
       "noFile": "No file provided.",
-      "unsupportedType": "Unsupported file type. Allowed: PNG, JPEG, WEBP, GIF.",
+      "unsupportedType": "Unsupported file type. Allowed: PNG, JPEG, WEBP, GIF, SVG.",
       "unsupportedFileType": "Unsupported file type.",
       "tooLarge": "File is too large. Maximum size is {maxMb} MB."
     }
