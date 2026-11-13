@@ -1,9 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { useTranslations } from 'next-intl'
-import { Undo2 } from 'lucide-react'
+import { Archive, ArchiveRestore, Undo2 } from 'lucide-react'
+import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -16,15 +17,19 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
-import { rollbackSystemUpdate } from '@/lib/actions/system-ops'
+import { rollbackSystemUpdate, setSystemUpdateArchived } from '@/lib/actions/system-ops'
 import { OperationProgress } from './operation-progress'
 
 export function UpdateRowActions({
   updateId,
   disabled,
+  archived,
+  canRollback,
 }: {
   updateId: string
   disabled: boolean
+  archived: boolean
+  canRollback: boolean
 }) {
   const t = useTranslations('admin.updates')
   const tc = useTranslations('admin.common')
@@ -34,6 +39,7 @@ export function UpdateRowActions({
   const [operationId, setOperationId] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [pending, setPending] = useState(false)
+  const [archivePending, startArchive] = useTransition()
 
   async function rollback() {
     setPending(true)
@@ -47,21 +53,45 @@ export function UpdateRowActions({
     setOperationId(result.operationId)
   }
 
+  function toggleArchived() {
+    startArchive(async () => {
+      const result = await setSystemUpdateArchived(updateId, !archived)
+      if (!result.ok) {
+        toast.error(result.error)
+        return
+      }
+      toast.success(t(archived ? 'unarchivedToast' : 'archivedToast'))
+      router.refresh()
+    })
+  }
+
   return (
-    <>
+    <div className="flex flex-wrap items-center justify-end gap-1.5">
+      {canRollback ? (
+        <Button
+          variant="outline"
+          size="sm"
+          disabled={disabled}
+          onClick={() => {
+            setConfirmation('')
+            setOperationId(null)
+            setError(null)
+            setOpen(true)
+          }}
+        >
+          <Undo2 />
+          {t('rollback')}
+        </Button>
+      ) : null}
       <Button
-        variant="outline"
+        variant="ghost"
         size="sm"
-        disabled={disabled}
-        onClick={() => {
-          setConfirmation('')
-          setOperationId(null)
-          setError(null)
-          setOpen(true)
-        }}
+        disabled={archivePending}
+        onClick={toggleArchived}
+        aria-label={t(archived ? 'unarchive' : 'archive')}
+        title={t(archived ? 'unarchive' : 'archive')}
       >
-        <Undo2 />
-        {t('rollback')}
+        {archived ? <ArchiveRestore /> : <Archive />}
       </Button>
 
       <Dialog
@@ -119,6 +149,6 @@ export function UpdateRowActions({
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </>
+    </div>
   )
 }

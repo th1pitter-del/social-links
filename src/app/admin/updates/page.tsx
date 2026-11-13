@@ -2,6 +2,7 @@ import { GitBranch, ShieldAlert } from 'lucide-react'
 import { getTranslations } from 'next-intl/server'
 
 import { EmptyState, Panel, PanelContent, PanelHeader } from '@/components/admin/panel'
+import { FilterTabs } from '@/components/admin/filter-tabs'
 import { PageHeader } from '@/components/admin/page-header'
 import { UpdateCheckPanel } from '@/components/admin/update-check-panel'
 import { UpdateRowActions } from '@/components/admin/update-row-actions'
@@ -30,17 +31,32 @@ const STATUS_VARIANT = {
   ROLLED_BACK: 'outline',
 } as const
 
-export default async function AdminUpdatesPage() {
+export default async function AdminUpdatesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ view?: string }>
+}) {
   await requireAdmin()
   await syncOpenOperations()
 
-  const [capabilities, git, settings, history, t] = await Promise.all([
-    getOpsCapabilities(),
-    getLocalGitInfo(),
-    getOpsSettings(),
-    prisma.systemUpdate.findMany({ orderBy: { startedAt: 'desc' }, take: 50 }),
-    getTranslations('admin.updates'),
-  ])
+  const { view } = await searchParams
+  const showArchived = view === 'archived'
+
+  const [capabilities, git, settings, history, activeCount, archivedCount, installing, t] =
+    await Promise.all([
+      getOpsCapabilities(),
+      getLocalGitInfo(),
+      getOpsSettings(),
+      prisma.systemUpdate.findMany({
+        where: { archivedAt: showArchived ? { not: null } : null },
+        orderBy: { startedAt: 'desc' },
+        take: 50,
+      }),
+      prisma.systemUpdate.count({ where: { archivedAt: null } }),
+      prisma.systemUpdate.count({ where: { archivedAt: { not: null } } }),
+      prisma.systemUpdate.count({ where: { status: 'INSTALLING' } }),
+      getTranslations('admin.updates'),
+    ])
 
   const unavailableReason =
     capabilities.reason === 'managed-host'
@@ -49,7 +65,7 @@ export default async function AdminUpdatesPage() {
         ? t('unavailableDisabled')
         : t('unavailableEnvironment')
 
-  const busy = history.some((update) => update.status === 'INSTALLING')
+  const busy = installing > 0
 
   return (
     <div className="space-y-6">
@@ -121,11 +137,32 @@ export default async function AdminUpdatesPage() {
         </Panel>
       ) : null}
 
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <FilterTabs
+          items={[
+            {
+              label: t('tabActive'),
+              href: '/admin/updates',
+              active: !showArchived,
+              count: activeCount,
+            },
+            {
+              label: t('tabArchived'),
+              href: '/admin/updates?view=archived',
+              active: showArchived,
+              count: archivedCount,
+            },
+          ]}
+        />
+      </div>
+
       <Panel>
         <PanelHeader title={t('historyTitle')} description={t('historyDescription')} />
         {history.length === 0 ? (
           <PanelContent>
-            <EmptyState>{t('historyEmpty')}</EmptyState>
+            <EmptyState>
+              {t(showArchived ? 'historyEmptyArchived' : 'historyEmpty')}
+            </EmptyState>
           </PanelContent>
         ) : (
           <div className="overflow-x-auto">
@@ -142,7 +179,7 @@ export default async function AdminUpdatesPage() {
               <tbody className="divide-y divide-border">
                 {history.map((update) => (
                   <tr key={update.id} className="hover:bg-muted/40">
-                    <td className="px-5 py-3">
+                    <td className="px-5 py-3 align-top">
                       <p className="flex items-center gap-2 font-mono text-xs">
                         <span>{update.fromCommit.slice(0, 7)}</span>
                         <span aria-hidden>→</span>
@@ -157,31 +194,42 @@ export default async function AdminUpdatesPage() {
                         </p>
                       ) : null}
                       {update.error ? (
-                        <p className="mt-1 max-w-md text-xs text-error">{update.error}</p>
+                        <details className="group mt-1 max-w-md">
+                          <summary className="cursor-pointer list-none">
+                            <span className="line-clamp-2 text-xs break-words text-error">
+                              {update.error}
+                            </span>
+                            <span className="mt-0.5 block text-[11px] text-muted-foreground group-open:hidden">
+                              {t('showError')}
+                            </span>
+                            <span className="mt-0.5 hidden text-[11px] text-muted-foreground group-open:block">
+                              {t('hideError')}
+                            </span>
+                          </summary>
+                          <pre className="mt-2 max-h-48 overflow-auto rounded-md border border-border bg-muted/40 p-2 font-mono text-[11px] leading-relaxed whitespace-pre-wrap break-words text-foreground">
+                            {update.error}
+                          </pre>
+                        </details>
                       ) : null}
                     </td>
-                    <td className="px-5 py-3">
+                    <td className="px-5 py-3 align-top">
                       <Badge variant={STATUS_VARIANT[update.status]}>
                         {t(`status.${update.status}`)}
                       </Badge>
                     </td>
-                    <td className="hidden px-5 py-3 text-muted-foreground sm:table-cell">
+                    <td className="hidden px-5 py-3 align-top text-muted-foreground sm:table-cell">
                       {update.actorEmail ?? '—'}
                     </td>
-                    <td className="hidden px-5 py-3 text-muted-foreground md:table-cell">
+                    <td className="hidden px-5 py-3 align-top text-muted-foreground md:table-cell">
                       <Timestamp value={update.startedAt} />
                     </td>
-                    <td className="px-5 py-3">
-                      {update.status === 'INSTALLED' ? (
-                        <div className="flex justify-end">
-                          <UpdateRowActions
-                            updateId={update.id}
-                            disabled={!capabilities.updatesAvailable || busy || (git?.dirty ?? true)}
-                          />
-                        </div>
-                      ) : (
-                        <p className="text-end text-xs text-muted-foreground">—</p>
-                      )}
+                    <td className="px-5 py-3 align-top">
+                      <UpdateRowActions
+                        updateId={update.id}
+                        archived={showArchived}
+                        canRollback={!showArchived && update.status === 'INSTALLED'}
+                        disabled={!capabilities.updatesAvailable || busy || (git?.dirty ?? true)}
+                      />
                     </td>
                   </tr>
                 ))}

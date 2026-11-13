@@ -313,6 +313,34 @@ export async function installSystemUpdate(
   return { ok: true, operationId: operation.id }
 }
 
+export async function setSystemUpdateArchived(
+  updateId: string,
+  archived: boolean,
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  await requireAdmin()
+  const t = await getTranslations('errors')
+  if (!/^[a-z0-9]{20,40}$/i.test(updateId)) return { ok: false, error: t('invalidRequest') }
+
+  const update = await prisma.systemUpdate.findUnique({
+    where: { id: updateId },
+    select: { id: true, status: true },
+  })
+  if (!update) return { ok: false, error: t('updateNotFound') }
+  if (update.status === 'INSTALLING') return { ok: false, error: t('operationRunning') }
+
+  await prisma.systemUpdate.update({
+    where: { id: update.id },
+    data: { archivedAt: archived ? new Date() : null },
+  })
+  await writeAudit({
+    action: archived ? 'system.update.archive' : 'system.update.unarchive',
+    targetType: 'update',
+    targetId: update.id,
+  })
+  revalidatePath('/admin/updates')
+  return { ok: true }
+}
+
 export async function rollbackSystemUpdate(
   updateId: string,
   confirmation: string,

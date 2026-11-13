@@ -37,6 +37,7 @@ export type SystemUpdateMinAggregateOutputType = {
   startedAt: Date | null
   finishedAt: Date | null
   restoredAt: Date | null
+  archivedAt: Date | null
 }
 
 export type SystemUpdateMaxAggregateOutputType = {
@@ -52,6 +53,7 @@ export type SystemUpdateMaxAggregateOutputType = {
   startedAt: Date | null
   finishedAt: Date | null
   restoredAt: Date | null
+  archivedAt: Date | null
 }
 
 export type SystemUpdateCountAggregateOutputType = {
@@ -67,6 +69,7 @@ export type SystemUpdateCountAggregateOutputType = {
   startedAt: number
   finishedAt: number
   restoredAt: number
+  archivedAt: number
   _all: number
 }
 
@@ -84,6 +87,7 @@ export type SystemUpdateMinAggregateInputType = {
   startedAt?: true
   finishedAt?: true
   restoredAt?: true
+  archivedAt?: true
 }
 
 export type SystemUpdateMaxAggregateInputType = {
@@ -99,6 +103,7 @@ export type SystemUpdateMaxAggregateInputType = {
   startedAt?: true
   finishedAt?: true
   restoredAt?: true
+  archivedAt?: true
 }
 
 export type SystemUpdateCountAggregateInputType = {
@@ -114,6 +119,7 @@ export type SystemUpdateCountAggregateInputType = {
   startedAt?: true
   finishedAt?: true
   restoredAt?: true
+  archivedAt?: true
   _all?: true
 }
 
@@ -202,6 +208,7 @@ export type SystemUpdateGroupByOutputType = {
   startedAt: Date
   finishedAt: Date | null
   restoredAt: Date | null
+  archivedAt: Date | null
   _count: SystemUpdateCountAggregateOutputType | null
   _min: SystemUpdateMinAggregateOutputType | null
   _max: SystemUpdateMaxAggregateOutputType | null
@@ -238,6 +245,7 @@ export type SystemUpdateWhereInput = {
   startedAt?: Prisma.DateTimeFilter<"SystemUpdate"> | Date | string
   finishedAt?: Prisma.DateTimeNullableFilter<"SystemUpdate"> | Date | string | null
   restoredAt?: Prisma.DateTimeNullableFilter<"SystemUpdate"> | Date | string | null
+  archivedAt?: Prisma.DateTimeNullableFilter<"SystemUpdate"> | Date | string | null
 }
 
 export type SystemUpdateOrderByWithRelationInput = {
@@ -253,6 +261,7 @@ export type SystemUpdateOrderByWithRelationInput = {
   startedAt?: Prisma.SortOrder
   finishedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   restoredAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  archivedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   _relevance?: Prisma.SystemUpdateOrderByRelevanceInput
 }
 
@@ -272,6 +281,7 @@ export type SystemUpdateWhereUniqueInput = Prisma.AtLeast<{
   startedAt?: Prisma.DateTimeFilter<"SystemUpdate"> | Date | string
   finishedAt?: Prisma.DateTimeNullableFilter<"SystemUpdate"> | Date | string | null
   restoredAt?: Prisma.DateTimeNullableFilter<"SystemUpdate"> | Date | string | null
+  archivedAt?: Prisma.DateTimeNullableFilter<"SystemUpdate"> | Date | string | null
 }, "id">
 
 export type SystemUpdateOrderByWithAggregationInput = {
@@ -287,6 +297,7 @@ export type SystemUpdateOrderByWithAggregationInput = {
   startedAt?: Prisma.SortOrder
   finishedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   restoredAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  archivedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.SystemUpdateCountOrderByAggregateInput
   _max?: Prisma.SystemUpdateMaxOrderByAggregateInput
   _min?: Prisma.SystemUpdateMinOrderByAggregateInput
@@ -308,6 +319,7 @@ export type SystemUpdateScalarWhereWithAggregatesInput = {
   startedAt?: Prisma.DateTimeWithAggregatesFilter<"SystemUpdate"> | Date | string
   finishedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"SystemUpdate"> | Date | string | null
   restoredAt?: Prisma.DateTimeNullableWithAggregatesFilter<"SystemUpdate"> | Date | string | null
+  archivedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"SystemUpdate"> | Date | string | null
 }
 
 export type SystemUpdateCreateInput = {
@@ -323,6 +335,7 @@ export type SystemUpdateCreateInput = {
   startedAt?: Date | string
   finishedAt?: Date | string | null
   restoredAt?: Date | string | null
+  archivedAt?: Date | string | null
 }
 
 export type SystemUpdateUncheckedCreateInput = {
@@ -338,6 +351,7 @@ export type SystemUpdateUncheckedCreateInput = {
   startedAt?: Date | string
   finishedAt?: Date | string | null
   restoredAt?: Date | string | null
+  archivedAt?: Date | string | null
 }
 
 export type SystemUpdateUpdateInput = {
@@ -353,6 +367,7 @@ export type SystemUpdateUpdateInput = {
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   finishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   restoredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type SystemUpdateUncheckedUpdateInput = {
@@ -368,6 +383,7 @@ export type SystemUpdateUncheckedUpdateInput = {
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   finishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   restoredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type SystemUpdateCreateManyInput = {
@@ -383,6 +399,7 @@ export type SystemUpdateCreateManyInput = {
   startedAt?: Date | string
   finishedAt?: Date | string | null
   restoredAt?: Date | string | null
+  archivedAt?: Date | string | null
 }
 
 export type SystemUpdateUpdateManyMutationInput = {
@@ -398,6 +415,7 @@ export type SystemUpdateUpdateManyMutationInput = {
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   finishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   restoredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type SystemUpdateUncheckedUpdateManyInput = {
@@ -413,6 +431,7 @@ export type SystemUpdateUncheckedUpdateManyInput = {
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   finishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   restoredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type SystemUpdateOrderByRelevanceInput = {
@@ -434,6 +453,7 @@ export type SystemUpdateCountOrderByAggregateInput = {
   startedAt?: Prisma.SortOrder
   finishedAt?: Prisma.SortOrder
   restoredAt?: Prisma.SortOrder
+  archivedAt?: Prisma.SortOrder
 }
 
 export type SystemUpdateMaxOrderByAggregateInput = {
@@ -449,6 +469,7 @@ export type SystemUpdateMaxOrderByAggregateInput = {
   startedAt?: Prisma.SortOrder
   finishedAt?: Prisma.SortOrder
   restoredAt?: Prisma.SortOrder
+  archivedAt?: Prisma.SortOrder
 }
 
 export type SystemUpdateMinOrderByAggregateInput = {
@@ -464,6 +485,7 @@ export type SystemUpdateMinOrderByAggregateInput = {
   startedAt?: Prisma.SortOrder
   finishedAt?: Prisma.SortOrder
   restoredAt?: Prisma.SortOrder
+  archivedAt?: Prisma.SortOrder
 }
 
 export type EnumUpdateStatusFieldUpdateOperationsInput = {
@@ -485,6 +507,7 @@ export type SystemUpdateSelect<ExtArgs extends runtime.Types.Extensions.Internal
   startedAt?: boolean
   finishedAt?: boolean
   restoredAt?: boolean
+  archivedAt?: boolean
 }, ExtArgs["result"]["systemUpdate"]>
 
 
@@ -502,9 +525,10 @@ export type SystemUpdateSelectScalar = {
   startedAt?: boolean
   finishedAt?: boolean
   restoredAt?: boolean
+  archivedAt?: boolean
 }
 
-export type SystemUpdateOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "isRollback" | "fromCommit" | "toCommit" | "status" | "changelog" | "backupId" | "actorEmail" | "error" | "startedAt" | "finishedAt" | "restoredAt", ExtArgs["result"]["systemUpdate"]>
+export type SystemUpdateOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "isRollback" | "fromCommit" | "toCommit" | "status" | "changelog" | "backupId" | "actorEmail" | "error" | "startedAt" | "finishedAt" | "restoredAt" | "archivedAt", ExtArgs["result"]["systemUpdate"]>
 
 export type $SystemUpdatePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "SystemUpdate"
@@ -525,6 +549,10 @@ export type $SystemUpdatePayload<ExtArgs extends runtime.Types.Extensions.Intern
     startedAt: Date
     finishedAt: Date | null
     restoredAt: Date | null
+    /**
+     * * Set by an admin to hide a finished entry from the update history.
+     */
+    archivedAt: Date | null
   }, ExtArgs["result"]["systemUpdate"]>
   composites: {}
 }
@@ -906,6 +934,7 @@ export interface SystemUpdateFieldRefs {
   readonly startedAt: Prisma.FieldRef<"SystemUpdate", 'DateTime'>
   readonly finishedAt: Prisma.FieldRef<"SystemUpdate", 'DateTime'>
   readonly restoredAt: Prisma.FieldRef<"SystemUpdate", 'DateTime'>
+  readonly archivedAt: Prisma.FieldRef<"SystemUpdate", 'DateTime'>
 }
     
 

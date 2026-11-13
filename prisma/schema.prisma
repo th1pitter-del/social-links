@@ -676,6 +676,8 @@ model SystemUpdate {
   startedAt  DateTime     @default(now())
   finishedAt DateTime?
   restoredAt DateTime?
+  /** Set by an admin to hide a finished entry from the update history. */
+  archivedAt DateTime?
 
   @@index([status, startedAt])
 }

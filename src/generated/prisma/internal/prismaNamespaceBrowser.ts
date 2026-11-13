@@ -567,7 +567,8 @@ export const SystemUpdateScalarFieldEnum = {
   error: 'error',
   startedAt: 'startedAt',
   finishedAt: 'finishedAt',
-  restoredAt: 'restoredAt'
+  restoredAt: 'restoredAt',
+  archivedAt: 'archivedAt'
 } as const
 
 export type SystemUpdateScalarFieldEnum = (typeof SystemUpdateScalarFieldEnum)[keyof typeof SystemUpdateScalarFieldEnum]
