@@ -12,7 +12,7 @@ const PROCESS_NAME_RE = /^[A-Za-z0-9._@-]{1,100}$/
 
 // A detached runner writes its status file around every step, so a file that
 // has not moved for this long means the runner is gone, not busy.
-const STALE_RUNNER_MS = 10 * 60 * 1000
+export const STALE_RUNNER_MS = 10 * 60 * 1000
 const RUNNER_STOPPED = 'The operations runner stopped without reporting a result.'
 
 export const APP_DIR = process.cwd()

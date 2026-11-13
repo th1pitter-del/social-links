@@ -25,11 +25,14 @@ export function BackupRowActions({
   filename,
   ready,
   disabled,
+  deletable,
 }: {
   backupId: string
   filename: string | null
   ready: boolean
   disabled: boolean
+  /** False while this backup is genuinely being written; stale rows stay deletable. */
+  deletable: boolean
 }) {
   const t = useTranslations('admin.backups')
   const tc = useTranslations('admin.common')
@@ -56,9 +59,16 @@ export function BackupRowActions({
   function remove() {
     setError(null)
     startTransition(async () => {
-      const result = await deleteSystemBackup(backupId)
-      if (!result.ok) {
-        setError(result.error)
+      try {
+        const result = await deleteSystemBackup(backupId)
+        if (!result.ok) {
+          setError(result.error)
+          return
+        }
+      } catch {
+        // Without this the transition would end in silence and the dialog
+        // would stay open looking like the button did nothing.
+        setError(t('deleteFailed'))
         return
       }
       setDeleteOpen(false)
@@ -94,7 +104,7 @@ export function BackupRowActions({
       <Button
         variant="ghost"
         size="sm"
-        disabled={disabled}
+        disabled={!deletable}
         onClick={() => {
           setError(null)
           setDeleteOpen(true)

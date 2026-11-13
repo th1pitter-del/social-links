@@ -1516,7 +1516,8 @@
       "deleteDescription": "El archivo se elimina del disco y no se puede recuperar.",
       "deleteConfirm": "Eliminar copia",
       "deleting": "Eliminando…",
-      "deletedToast": "Copia eliminada."
+      "deletedToast": "Copia eliminada.",
+      "deleteFailed": "No se pudo eliminar la copia de seguridad. Inténtalo de nuevo o revisa los registros del servidor."
     },
     "updates": {
       "title": "Actualizaciones del sistema",

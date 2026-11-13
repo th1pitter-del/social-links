@@ -1516,7 +1516,8 @@
       "deleteDescription": "O arquivo é removido do disco e não pode ser recuperado.",
       "deleteConfirm": "Excluir backup",
       "deleting": "Excluindo…",
-      "deletedToast": "Backup excluído."
+      "deletedToast": "Backup excluído.",
+      "deleteFailed": "Não foi possível excluir o backup. Tente novamente ou verifique os logs do servidor."
     },
     "updates": {
       "title": "Atualizações do sistema",

@@ -11,7 +11,7 @@ import { Badge } from '@/components/ui/badge'
 import { formatBytes } from '@/lib/format'
 import { prisma } from '@/lib/prisma'
 import { requireAdmin } from '@/lib/session'
-import { getOpsCapabilities, getOpsSettings, syncOpenOperations } from '@/lib/system/ops'
+import { getOpsCapabilities, getOpsSettings, STALE_RUNNER_MS, syncOpenOperations } from '@/lib/system/ops'
 
 export const dynamic = 'force-dynamic'
 
@@ -134,6 +134,12 @@ export default async function AdminBackupsPage() {
               <tbody className="divide-y divide-border">
                 {backups.map((backup) => {
                   const readyBackup = backup.status === 'READY' && Boolean(backup.filename)
+                  // A job killed mid-run leaves its row in RUNNING forever; only a
+                  // recent row can still be writing, so stale ones stay deletable.
+                  const deletable =
+                    backup.status !== 'RUNNING' && backup.status !== 'PENDING'
+                      ? true
+                      : backup.startedAt < new Date(Date.now() - STALE_RUNNER_MS)
                   return (
                     <tr key={backup.id} className="hover:bg-muted/40">
                       <td className="px-5 py-3">
@@ -166,6 +172,7 @@ export default async function AdminBackupsPage() {
                           filename={backup.filename}
                           ready={readyBackup}
                           disabled={!capabilities.backupsAvailable || busy}
+                          deletable={deletable}
                         />
                       </td>
                     </tr>
