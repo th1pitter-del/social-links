@@ -450,7 +450,10 @@ async function installCode(commit) {
   await step('install', `Checking out ${commit.slice(0, 7)}`)
   await run('git', ['checkout', '--detach', commit])
   await step('install', 'Installing dependencies')
-  await runNpm(['ci', '--no-audit', '--no-fund'])
+  // The job inherits the service's environment, which usually carries
+  // NODE_ENV=production; without --include=dev npm would skip the build-only
+  // packages (Tailwind, TypeScript) and `next build` would fail.
+  await runNpm(['ci', '--include=dev', '--no-audit', '--no-fund'])
   await step('install', 'Generating the Prisma client')
   await runNpm(['run', 'db:generate'])
   await step('migrate', 'Applying database migrations')
