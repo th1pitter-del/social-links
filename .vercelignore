@@ -9,3 +9,5 @@ dist
 .uploads
 .kilo
 .env
+.env*
+*.env
