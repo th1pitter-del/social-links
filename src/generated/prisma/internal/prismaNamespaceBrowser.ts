@@ -79,7 +79,10 @@ export const ModelName = {
   Profile: 'Profile',
   BioLink: 'BioLink',
   TelegramCheckin: 'TelegramCheckin',
-  ShortLink: 'ShortLink'
+  ShortLink: 'ShortLink',
+  SystemBackup: 'SystemBackup',
+  SystemUpdate: 'SystemUpdate',
+  SystemOperation: 'SystemOperation'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -532,6 +535,61 @@ export const ShortLinkScalarFieldEnum = {
 export type ShortLinkScalarFieldEnum = (typeof ShortLinkScalarFieldEnum)[keyof typeof ShortLinkScalarFieldEnum]
 
 
+export const SystemBackupScalarFieldEnum = {
+  id: 'id',
+  kind: 'kind',
+  status: 'status',
+  filename: 'filename',
+  sizeBytes: 'sizeBytes',
+  checksum: 'checksum',
+  appCommit: 'appCommit',
+  createdById: 'createdById',
+  createdByName: 'createdByName',
+  createdByEmail: 'createdByEmail',
+  error: 'error',
+  startedAt: 'startedAt',
+  finishedAt: 'finishedAt',
+  restoredAt: 'restoredAt'
+} as const
+
+export type SystemBackupScalarFieldEnum = (typeof SystemBackupScalarFieldEnum)[keyof typeof SystemBackupScalarFieldEnum]
+
+
+export const SystemUpdateScalarFieldEnum = {
+  id: 'id',
+  isRollback: 'isRollback',
+  fromCommit: 'fromCommit',
+  toCommit: 'toCommit',
+  status: 'status',
+  changelog: 'changelog',
+  backupId: 'backupId',
+  actorEmail: 'actorEmail',
+  error: 'error',
+  startedAt: 'startedAt',
+  finishedAt: 'finishedAt',
+  restoredAt: 'restoredAt'
+} as const
+
+export type SystemUpdateScalarFieldEnum = (typeof SystemUpdateScalarFieldEnum)[keyof typeof SystemUpdateScalarFieldEnum]
+
+
+export const SystemOperationScalarFieldEnum = {
+  id: 'id',
+  type: 'type',
+  status: 'status',
+  backupId: 'backupId',
+  safetyBackupId: 'safetyBackupId',
+  updateId: 'updateId',
+  phase: 'phase',
+  message: 'message',
+  actorEmail: 'actorEmail',
+  startedAt: 'startedAt',
+  finishedAt: 'finishedAt'
+} as const
+
+export type SystemOperationScalarFieldEnum = (typeof SystemOperationScalarFieldEnum)[keyof typeof SystemOperationScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -900,4 +958,44 @@ export const ShortLinkOrderByRelevanceFieldEnum = {
 } as const
 
 export type ShortLinkOrderByRelevanceFieldEnum = (typeof ShortLinkOrderByRelevanceFieldEnum)[keyof typeof ShortLinkOrderByRelevanceFieldEnum]
+
+
+export const SystemBackupOrderByRelevanceFieldEnum = {
+  id: 'id',
+  filename: 'filename',
+  checksum: 'checksum',
+  appCommit: 'appCommit',
+  createdById: 'createdById',
+  createdByName: 'createdByName',
+  createdByEmail: 'createdByEmail',
+  error: 'error'
+} as const
+
+export type SystemBackupOrderByRelevanceFieldEnum = (typeof SystemBackupOrderByRelevanceFieldEnum)[keyof typeof SystemBackupOrderByRelevanceFieldEnum]
+
+
+export const SystemUpdateOrderByRelevanceFieldEnum = {
+  id: 'id',
+  fromCommit: 'fromCommit',
+  toCommit: 'toCommit',
+  changelog: 'changelog',
+  backupId: 'backupId',
+  actorEmail: 'actorEmail',
+  error: 'error'
+} as const
+
+export type SystemUpdateOrderByRelevanceFieldEnum = (typeof SystemUpdateOrderByRelevanceFieldEnum)[keyof typeof SystemUpdateOrderByRelevanceFieldEnum]
+
+
+export const SystemOperationOrderByRelevanceFieldEnum = {
+  id: 'id',
+  backupId: 'backupId',
+  safetyBackupId: 'safetyBackupId',
+  updateId: 'updateId',
+  phase: 'phase',
+  message: 'message',
+  actorEmail: 'actorEmail'
+} as const
+
+export type SystemOperationOrderByRelevanceFieldEnum = (typeof SystemOperationOrderByRelevanceFieldEnum)[keyof typeof SystemOperationOrderByRelevanceFieldEnum]
 

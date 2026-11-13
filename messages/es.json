@@ -37,7 +37,9 @@
       "auditLog": "Registro de auditoría",
       "bioPages": "Páginas bio",
       "contentPages": "Páginas de contenido",
-      "customMenus": "Menús laterales"
+      "customMenus": "Menús laterales",
+      "backups": "Copias",
+      "updates": "Actualizaciones"
     },
     "navHints": {
       "usersOnly": "Solo para usuarios"
@@ -490,7 +492,9 @@
       "headerLinks": "Enlaces del menú del encabezado",
       "bioPages": "Páginas bio",
       "contentPages": "Páginas de contenido",
-      "customMenus": "Menús laterales personalizados"
+      "customMenus": "Menús laterales personalizados",
+      "backups": "Copias de seguridad",
+      "updates": "Actualizaciones del sistema"
     },
     "status": {
       "active": "activo",
@@ -617,6 +621,15 @@
       "colAction": "Acción",
       "colTarget": "Destino",
       "actionLabels": {
+        "backup": {
+          "create": "Creó una copia de seguridad",
+          "restore": "Restauró una copia de seguridad",
+          "delete": "Eliminó una copia de seguridad"
+        },
+        "system": {
+          "update": "Instaló una actualización del sistema",
+          "rollback": "Revirtió una actualización del sistema"
+        },
         "user": {
           "ban": "Suspendió a un usuario",
           "unban": "Reactivó a un usuario",
@@ -685,6 +698,8 @@
         "setting": "Configuración",
         "abuseReport": "Reporte",
         "adUnit": "Anuncio",
+        "backup": "Copia de seguridad",
+        "update": "Actualización",
         "headerLink": "Enlace de cabecera"
       }
     },
@@ -1062,6 +1077,10 @@
       "navAria": "Secciones de ajustes",
       "savedToast": "Guardado.",
       "groups": {
+        "system-ops": {
+          "title": "Operaciones del sistema",
+          "description": "Cómo se aplican las actualizaciones y cuántas copias se conservan."
+        },
         "site-content": {
           "title": "Contenido del sitio",
           "description": "Mostrado en todo el sitio público."
@@ -1186,6 +1205,26 @@
         "verification_githubClientSecret": {
           "label": "Secreto de cliente OAuth de GitHub",
           "hint": "El secreto OAuth correspondiente, guardado en el servidor. La implementación solo lee lo necesario para comprobar la acción, nunca publica ni modifica la cuenta y no guarda tokens de acceso de visitantes."
+        },
+        "ops_gitBranch": {
+          "label": "Rama de actualización",
+          "hint": "La rama que sigue el comprobador de actualizaciones.",
+          "placeholder": "master"
+        },
+        "ops_backupRetention": {
+          "label": "Copias a conservar",
+          "hint": "Las copias antiguas se eliminan tras cada copia nueva correcta.",
+          "placeholder": "10"
+        },
+        "ops_processManager": {
+          "label": "Gestor de procesos",
+          "hint": "Cómo se reinicia la aplicación tras una actualización: pm2, systemctl o none.",
+          "placeholder": "none"
+        },
+        "ops_processName": {
+          "label": "Nombre del proceso",
+          "hint": "El proceso PM2 o la unidad systemd que se reinicia.",
+          "placeholder": "social-links"
         },
         "verification_telegramBotToken": {
           "label": "Token del bot de Telegram",
@@ -1453,6 +1492,144 @@
         "deleted": "Elemento eliminado."
       },
       "titleRequired": "Añade un título para el elemento del menú."
+    },
+    "backups": {
+      "title": "Copias de seguridad",
+      "description": "Crea instantáneas de la base de datos y los archivos subidos, y restáuralas si algo falla.",
+      "unavailableTitle": "Este alojamiento gestiona las copias",
+      "unavailableManaged": "Esta implementación se ejecuta en una plataforma gestionada con un sistema de archivos efímero, así que la aplicación no puede crear ni restaurar copias aquí. Usa las copias del proveedor de la base de datos o ejecuta la aplicación en un servidor con almacenamiento persistente.",
+      "unavailableDisabled": "Las operaciones del sistema están desactivadas por la variable SYSTEM_OPS_DISABLED.",
+      "unavailableEnvironment": "La carpeta de copias no tiene permiso de escritura o faltan las herramientas necesarias (mysqldump, mysql, tar) en este servidor.",
+      "storagePath": "Carpeta de copias",
+      "kind": {
+        "database": "Base de datos",
+        "files": "Archivos",
+        "full": "Completa"
+      },
+      "create": {
+        "title": "Crear una copia de seguridad",
+        "description": "Cada copia se ejecuta en segundo plano y continúa si sales de esta página.",
+        "database": "Base de datos",
+        "databaseHint": "Contenido, usuarios y ajustes.",
+        "files": "Archivos",
+        "filesHint": "Imágenes y archivos subidos.",
+        "full": "Completa",
+        "fullHint": "Base de datos y archivos juntos."
+      },
+      "stats": {
+        "ready": "Copias listas",
+        "size": "Espacio usado",
+        "last": "Última copia",
+        "none": "Ninguna aún",
+        "retention": "Se conservan las {count} más recientes"
+      },
+      "panelTitle": "Historial de copias",
+      "panelDescription": "Las más recientes primero. Restaurar sobrescribe los datos activos, así que antes se crea una copia de seguridad.",
+      "empty": "Aún no hay copias.",
+      "colBackup": "Copia",
+      "colStatus": "Estado",
+      "colSize": "Tamaño",
+      "colCreated": "Creada",
+      "colActions": "Acciones",
+      "status": {
+        "PENDING": "En cola",
+        "RUNNING": "En curso",
+        "READY": "Lista",
+        "FAILED": "Fallida"
+      },
+      "restored": "Restaurada",
+      "download": "Descargar",
+      "restore": "Restaurar",
+      "delete": "Eliminar",
+      "restoreTitle": "¿Restaurar esta copia?",
+      "restoreDescription": "Sustituye los datos activos por la instantánea. Antes de cambiar nada se crea una copia completa de seguridad.",
+      "restoreWarning": "Los visitantes pueden ver errores mientras dura la restauración. Restaurar la base de datos no revierte migraciones más recientes; guarda una copia de los datos que necesites conservar.",
+      "restoreConfirmLabel": "Escribe RESTORE para confirmar",
+      "restoreButton": "Restaurar copia",
+      "restoring": "Iniciando…",
+      "deleteTitle": "¿Eliminar esta copia?",
+      "deleteDescription": "El archivo se elimina del disco y no se puede recuperar.",
+      "deleteConfirm": "Eliminar copia",
+      "deleting": "Eliminando…",
+      "deletedToast": "Copia eliminada."
+    },
+    "updates": {
+      "title": "Actualizaciones del sistema",
+      "description": "Comprueba la rama configurada en busca de commits nuevos, revisa los cambios e instálalos con una copia de seguridad y reversión automática.",
+      "unavailableTitle": "Este alojamiento gestiona las actualizaciones",
+      "unavailableManaged": "Esta implementación se compila desde Git en una plataforma gestionada. Despliega un commit nuevo desde la plataforma; la aplicación no puede reconstruirse aquí.",
+      "unavailableDisabled": "Las operaciones del sistema están desactivadas por la variable SYSTEM_OPS_DISABLED.",
+      "unavailableEnvironment": "Esta instalación no es un repositorio Git, o Git/npm no están disponibles en este servidor.",
+      "currentTitle": "Versión instalada",
+      "currentDescription": "El commit que sirve este sitio ahora.",
+      "currentCommit": "Commit",
+      "branch": "Rama",
+      "remote": "Remoto",
+      "workingTree": "Árbol de trabajo",
+      "dirty": "Cambios locales",
+      "clean": "Limpio",
+      "restartNote": "No hay gestor de procesos configurado, así que la actualización compilará el código nuevo pero deberás reiniciar el servicio manualmente para activarlo. Configúralo en Ajustes → Operaciones del sistema.",
+      "processManagerNote": "La actualización reinicia {name} mediante {manager} y luego verifica /api/health.",
+      "checkTitle": "Buscar actualizaciones",
+      "checkDescription": "Obtiene la rama configurada y lista los commits que aún no están instalados.",
+      "checking": "Comprobando la rama remota…",
+      "checkedAgainst": "Comparado con {branch}",
+      "checkButton": "Comprobar de nuevo",
+      "checkFailed": "No se pudieron comprobar las actualizaciones",
+      "upToDate": "Todo lo de esta rama está instalado.",
+      "aheadNote": "Esta copia está {count} commits por delante del remoto.",
+      "behindTitle": "Hay {count} commits nuevos disponibles",
+      "installButton": "Instalar actualización",
+      "installTitle": "¿Instalar esta actualización?",
+      "installDescription": "El servidor obtendrá la rama, instalará dependencias, aplicará migraciones, compilará y reiniciará.",
+      "installWarning": "El sitio puede no estar disponible unos minutos. Antes se crea una copia completa de seguridad y el código se revierte automáticamente si falla la compilación o la verificación.",
+      "installConfirmLabel": "Escribe UPDATE para confirmar",
+      "installConfirm": "Instalar",
+      "installing": "Iniciando…",
+      "safetyBackupNote": "Antes de instalar se crea una copia completa automáticamente.",
+      "dirtyBlocked": "Confirma o guarda los cambios locales antes de actualizar; el instalador no toca un árbol de trabajo sucio.",
+      "rollback": "Revertir",
+      "rollbackTitle": "¿Revertir esta actualización?",
+      "rollbackDescription": "El código vuelve al commit que se ejecutaba antes de esta actualización. Los datos no se revierten.",
+      "rollbackWarning": "Antes se crea una copia de seguridad. Las migraciones aplicadas por la versión nueva no se deshacen.",
+      "rollbackConfirmLabel": "Escribe ROLLBACK para confirmar",
+      "rollbackConfirm": "Revertir",
+      "rollingBack": "Iniciando…",
+      "rollbackBadge": "Reversión",
+      "historyTitle": "Historial de actualizaciones",
+      "historyDescription": "Cada intento de instalación y reversión, lo más reciente primero.",
+      "historyEmpty": "Aún no se ha instalado ninguna actualización desde esta consola.",
+      "colChange": "Cambio",
+      "colStatus": "Estado",
+      "colActor": "Iniciada por",
+      "colStarted": "Inicio",
+      "colActions": "Acciones",
+      "status": {
+        "INSTALLING": "Instalando",
+        "INSTALLED": "Instalada",
+        "FAILED": "Fallida",
+        "ROLLED_BACK": "Revertida"
+      }
+    },
+    "ops": {
+      "starting": "Iniciando…",
+      "succeeded": "Finalizado",
+      "failed": "Fallido",
+      "keepOpen": "Puedes cerrar este panel; la operación continúa.",
+      "phase": {
+        "starting": "Inicio",
+        "backup": "Copia de seguridad",
+        "restore": "Restauración",
+        "fetch": "Obteniendo commits",
+        "install": "Instalando dependencias",
+        "migrate": "Aplicando migraciones",
+        "build": "Compilación",
+        "activate": "Reiniciando el servicio",
+        "health": "Verificación de salud",
+        "rollback": "Revirtiendo",
+        "done": "Hecho",
+        "failed": "Fallido"
+      }
     },
     "richText": {
       "blockLabel": "Estilo de texto",
@@ -1722,6 +1899,25 @@
     }
   },
   "errors": {
+    "invalidGitBranch": "Introduce una rama sin espacios, '..' ni guion inicial.",
+    "invalidBackupRetention": "Introduce un número entero entre 1 y 100.",
+    "invalidProcessManager": "Elige pm2, systemctl o none.",
+    "invalidProcessName": "Usa letras, números, puntos, guiones bajos, @ o guiones.",
+    "opsUnavailable": "Las operaciones del sistema no están disponibles en este servidor.",
+    "operationRunning": "Ya hay una copia o actualización en curso. Espera a que termine.",
+    "operationFailedToStart": "No se pudo iniciar el ejecutor de operaciones. Revisa los registros del servidor.",
+    "operationNotFound": "Esa operación ya no existe.",
+    "confirmationMismatch": "El texto de confirmación no coincide.",
+    "backupNotFound": "Esa copia de seguridad no existe.",
+    "backupNotReady": "Solo se puede restaurar una copia terminada.",
+    "backupFileMissing": "Falta el archivo de la copia en la carpeta de copias.",
+    "updateDirty": "El árbol de trabajo tiene cambios locales. Confírmalos o guárdalos antes de actualizar.",
+    "updateCheckFailed": "No se pudo leer la rama remota. Revisa el acceso del servidor a Git.",
+    "updateTargetChanged": "La rama cambió desde la comprobación. Comprueba de nuevo antes de instalar.",
+    "updateNotAvailable": "No hay nada nuevo que instalar.",
+    "updateNotFound": "Ese registro de actualización no existe.",
+    "rollbackUnavailable": "Solo se puede revertir una actualización instalada correctamente.",
+    "invalidRequest": "La solicitud no es válida.",
     "invalidUrl": "Introduce una URL válida",
     "onlyHttpHttps": "Solo se permiten URLs http y https",
     "invalidCoverImage": "Introduce una URL http(s) o sube una imagen",

@@ -1,5 +1,5 @@
 import type { ComponentType } from 'react'
-import { Database, Gift, Globe, KeyRound, Mail, Megaphone, Palette, Scale, ShieldCheck, Timer, Upload } from 'lucide-react'
+import { Database, Gift, Globe, KeyRound, Mail, Megaphone, Palette, Scale, Server, ShieldCheck, Timer, Upload } from 'lucide-react'
 
 type IconType = ComponentType<{ className?: string }>
 
@@ -125,6 +125,16 @@ export const SETTINGS_GROUPS: SettingsGroup[] = [
     id: 'data-retention',
     icon: Database,
     fields: [{ key: 'retention.analyticsDays' }],
+  },
+  {
+    id: 'system-ops',
+    icon: Server,
+    fields: [
+      { key: 'ops.gitBranch' },
+      { key: 'ops.backupRetention' },
+      { key: 'ops.processManager' },
+      { key: 'ops.processName' },
+    ],
   },
   {
     id: 'ogads',

@@ -7,10 +7,12 @@ import { useTranslations } from 'next-intl'
 import {
   AtSign,
   ChevronRight,
+  DatabaseBackup,
   ExternalLink,
   FileText,
   FileLock2,
   Flag,
+  GitBranch,
   Globe,
   Images,
   Layers,
@@ -140,8 +142,9 @@ export function AdminShell({
     {
       title: t('groups.system'),
       items: [
-
         { href: '/admin/settings', label: t('nav.settings'), icon: Settings },
+        { href: '/admin/backups', label: t('nav.backups'), icon: DatabaseBackup },
+        { href: '/admin/updates', label: t('nav.updates'), icon: GitBranch },
         { href: '/admin/audit', label: t('nav.auditLog'), icon: ScrollText },
       ],
     },

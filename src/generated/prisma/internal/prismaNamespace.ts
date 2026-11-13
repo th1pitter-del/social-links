@@ -425,7 +425,10 @@ export const ModelName = {
   Profile: 'Profile',
   BioLink: 'BioLink',
   TelegramCheckin: 'TelegramCheckin',
-  ShortLink: 'ShortLink'
+  ShortLink: 'ShortLink',
+  SystemBackup: 'SystemBackup',
+  SystemUpdate: 'SystemUpdate',
+  SystemOperation: 'SystemOperation'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -441,7 +444,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "session" | "account" | "verification" | "link" | "linkAction" | "unlockSession" | "ogadsOfferClick" | "unlockActionStart" | "unlockActionCompletion" | "analyticsEvent" | "emailLead" | "rateLimitBucket" | "abuseReport" | "setting" | "adUnit" | "headerLink" | "customPage" | "customMenuItem" | "auditLog" | "platform" | "actionOption" | "mediaAsset" | "storedFile" | "userUnlock" | "profile" | "bioLink" | "telegramCheckin" | "shortLink"
+    modelProps: "user" | "session" | "account" | "verification" | "link" | "linkAction" | "unlockSession" | "ogadsOfferClick" | "unlockActionStart" | "unlockActionCompletion" | "analyticsEvent" | "emailLead" | "rateLimitBucket" | "abuseReport" | "setting" | "adUnit" | "headerLink" | "customPage" | "customMenuItem" | "auditLog" | "platform" | "actionOption" | "mediaAsset" | "storedFile" | "userUnlock" | "profile" | "bioLink" | "telegramCheckin" | "shortLink" | "systemBackup" | "systemUpdate" | "systemOperation"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2359,6 +2362,204 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    SystemBackup: {
+      payload: Prisma.$SystemBackupPayload<ExtArgs>
+      fields: Prisma.SystemBackupFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SystemBackupFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemBackupPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SystemBackupFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemBackupPayload>
+        }
+        findFirst: {
+          args: Prisma.SystemBackupFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemBackupPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SystemBackupFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemBackupPayload>
+        }
+        findMany: {
+          args: Prisma.SystemBackupFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemBackupPayload>[]
+        }
+        create: {
+          args: Prisma.SystemBackupCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemBackupPayload>
+        }
+        createMany: {
+          args: Prisma.SystemBackupCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.SystemBackupDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemBackupPayload>
+        }
+        update: {
+          args: Prisma.SystemBackupUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemBackupPayload>
+        }
+        deleteMany: {
+          args: Prisma.SystemBackupDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SystemBackupUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.SystemBackupUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemBackupPayload>
+        }
+        aggregate: {
+          args: Prisma.SystemBackupAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSystemBackup>
+        }
+        groupBy: {
+          args: Prisma.SystemBackupGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SystemBackupGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SystemBackupCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SystemBackupCountAggregateOutputType> | number
+        }
+      }
+    }
+    SystemUpdate: {
+      payload: Prisma.$SystemUpdatePayload<ExtArgs>
+      fields: Prisma.SystemUpdateFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SystemUpdateFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemUpdatePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SystemUpdateFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemUpdatePayload>
+        }
+        findFirst: {
+          args: Prisma.SystemUpdateFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemUpdatePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SystemUpdateFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemUpdatePayload>
+        }
+        findMany: {
+          args: Prisma.SystemUpdateFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemUpdatePayload>[]
+        }
+        create: {
+          args: Prisma.SystemUpdateCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemUpdatePayload>
+        }
+        createMany: {
+          args: Prisma.SystemUpdateCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.SystemUpdateDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemUpdatePayload>
+        }
+        update: {
+          args: Prisma.SystemUpdateUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemUpdatePayload>
+        }
+        deleteMany: {
+          args: Prisma.SystemUpdateDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SystemUpdateUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.SystemUpdateUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemUpdatePayload>
+        }
+        aggregate: {
+          args: Prisma.SystemUpdateAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSystemUpdate>
+        }
+        groupBy: {
+          args: Prisma.SystemUpdateGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SystemUpdateGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SystemUpdateCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SystemUpdateCountAggregateOutputType> | number
+        }
+      }
+    }
+    SystemOperation: {
+      payload: Prisma.$SystemOperationPayload<ExtArgs>
+      fields: Prisma.SystemOperationFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SystemOperationFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemOperationPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SystemOperationFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemOperationPayload>
+        }
+        findFirst: {
+          args: Prisma.SystemOperationFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemOperationPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SystemOperationFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemOperationPayload>
+        }
+        findMany: {
+          args: Prisma.SystemOperationFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemOperationPayload>[]
+        }
+        create: {
+          args: Prisma.SystemOperationCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemOperationPayload>
+        }
+        createMany: {
+          args: Prisma.SystemOperationCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.SystemOperationDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemOperationPayload>
+        }
+        update: {
+          args: Prisma.SystemOperationUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemOperationPayload>
+        }
+        deleteMany: {
+          args: Prisma.SystemOperationDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SystemOperationUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.SystemOperationUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemOperationPayload>
+        }
+        aggregate: {
+          args: Prisma.SystemOperationAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSystemOperation>
+        }
+        groupBy: {
+          args: Prisma.SystemOperationGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SystemOperationGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SystemOperationCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SystemOperationCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -2832,6 +3033,61 @@ export const ShortLinkScalarFieldEnum = {
 export type ShortLinkScalarFieldEnum = (typeof ShortLinkScalarFieldEnum)[keyof typeof ShortLinkScalarFieldEnum]
 
 
+export const SystemBackupScalarFieldEnum = {
+  id: 'id',
+  kind: 'kind',
+  status: 'status',
+  filename: 'filename',
+  sizeBytes: 'sizeBytes',
+  checksum: 'checksum',
+  appCommit: 'appCommit',
+  createdById: 'createdById',
+  createdByName: 'createdByName',
+  createdByEmail: 'createdByEmail',
+  error: 'error',
+  startedAt: 'startedAt',
+  finishedAt: 'finishedAt',
+  restoredAt: 'restoredAt'
+} as const
+
+export type SystemBackupScalarFieldEnum = (typeof SystemBackupScalarFieldEnum)[keyof typeof SystemBackupScalarFieldEnum]
+
+
+export const SystemUpdateScalarFieldEnum = {
+  id: 'id',
+  isRollback: 'isRollback',
+  fromCommit: 'fromCommit',
+  toCommit: 'toCommit',
+  status: 'status',
+  changelog: 'changelog',
+  backupId: 'backupId',
+  actorEmail: 'actorEmail',
+  error: 'error',
+  startedAt: 'startedAt',
+  finishedAt: 'finishedAt',
+  restoredAt: 'restoredAt'
+} as const
+
+export type SystemUpdateScalarFieldEnum = (typeof SystemUpdateScalarFieldEnum)[keyof typeof SystemUpdateScalarFieldEnum]
+
+
+export const SystemOperationScalarFieldEnum = {
+  id: 'id',
+  type: 'type',
+  status: 'status',
+  backupId: 'backupId',
+  safetyBackupId: 'safetyBackupId',
+  updateId: 'updateId',
+  phase: 'phase',
+  message: 'message',
+  actorEmail: 'actorEmail',
+  startedAt: 'startedAt',
+  finishedAt: 'finishedAt'
+} as const
+
+export type SystemOperationScalarFieldEnum = (typeof SystemOperationScalarFieldEnum)[keyof typeof SystemOperationScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -3202,6 +3458,46 @@ export const ShortLinkOrderByRelevanceFieldEnum = {
 export type ShortLinkOrderByRelevanceFieldEnum = (typeof ShortLinkOrderByRelevanceFieldEnum)[keyof typeof ShortLinkOrderByRelevanceFieldEnum]
 
 
+export const SystemBackupOrderByRelevanceFieldEnum = {
+  id: 'id',
+  filename: 'filename',
+  checksum: 'checksum',
+  appCommit: 'appCommit',
+  createdById: 'createdById',
+  createdByName: 'createdByName',
+  createdByEmail: 'createdByEmail',
+  error: 'error'
+} as const
+
+export type SystemBackupOrderByRelevanceFieldEnum = (typeof SystemBackupOrderByRelevanceFieldEnum)[keyof typeof SystemBackupOrderByRelevanceFieldEnum]
+
+
+export const SystemUpdateOrderByRelevanceFieldEnum = {
+  id: 'id',
+  fromCommit: 'fromCommit',
+  toCommit: 'toCommit',
+  changelog: 'changelog',
+  backupId: 'backupId',
+  actorEmail: 'actorEmail',
+  error: 'error'
+} as const
+
+export type SystemUpdateOrderByRelevanceFieldEnum = (typeof SystemUpdateOrderByRelevanceFieldEnum)[keyof typeof SystemUpdateOrderByRelevanceFieldEnum]
+
+
+export const SystemOperationOrderByRelevanceFieldEnum = {
+  id: 'id',
+  backupId: 'backupId',
+  safetyBackupId: 'safetyBackupId',
+  updateId: 'updateId',
+  phase: 'phase',
+  message: 'message',
+  actorEmail: 'actorEmail'
+} as const
+
+export type SystemOperationOrderByRelevanceFieldEnum = (typeof SystemOperationOrderByRelevanceFieldEnum)[keyof typeof SystemOperationOrderByRelevanceFieldEnum]
+
+
 
 /**
  * Field references
@@ -3338,6 +3634,48 @@ export type EnumActionBehaviorFieldRefInput<$PrismaModel> = FieldRefInputType<$P
  * Reference to a field of type 'ShortLinkStatus'
  */
 export type EnumShortLinkStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ShortLinkStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'BackupKind'
+ */
+export type EnumBackupKindFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BackupKind'>
+    
+
+
+/**
+ * Reference to a field of type 'BackupStatus'
+ */
+export type EnumBackupStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BackupStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'BigInt'
+ */
+export type BigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BigInt'>
+    
+
+
+/**
+ * Reference to a field of type 'UpdateStatus'
+ */
+export type EnumUpdateStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UpdateStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'OperationType'
+ */
+export type EnumOperationTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OperationType'>
+    
+
+
+/**
+ * Reference to a field of type 'OperationStatus'
+ */
+export type EnumOperationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OperationStatus'>
     
 
 
@@ -3527,6 +3865,9 @@ export type GlobalOmitConfig = {
   bioLink?: Prisma.BioLinkOmit
   telegramCheckin?: Prisma.TelegramCheckinOmit
   shortLink?: Prisma.ShortLinkOmit
+  systemBackup?: Prisma.SystemBackupOmit
+  systemUpdate?: Prisma.SystemUpdateOmit
+  systemOperation?: Prisma.SystemOperationOmit
 }
 
 /* Types for Logging */

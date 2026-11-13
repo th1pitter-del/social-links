@@ -79,7 +79,7 @@ npm run build          # next build
 npm run start          # next start  (default port 3000; use PORT= to change)
 ```
 
-Health check: any route, e.g. `GET /` returns 200. Redirect `/u/:slug*` → `/link/:slug*` is permanent (301) at the app level — keep it in mind if a reverse proxy also rewrites.
+Health check: `GET /api/health` returns `{ "ok": true, "db": "up", ... }` (503 when the database is unreachable). Any public route returning 200 also works. Redirect `/u/:slug*` → `/link/:slug*` is permanent (301) at the app level — keep it in mind if a reverse proxy also rewrites.
 
 ## 6. VPS Target Environment
 
@@ -131,3 +131,25 @@ pm2 restart social-links   # or systemctl restart <cloudpanel-node-service>
 - Differences are purely environmental: Vercel uses its own managed DB/env; VPS uses local MariaDB + `.env` file.
 - `NEXT_PUBLIC_APP_URL` differs per environment — it is not committed, so both builds stay correct.
 - Optional hardening later: enable `output: "standalone"` for a slimmer VPS image (does not affect Vercel).
+
+## 10. Admin Backups & GitHub Updates
+
+The admin console has **System → Backups** and **System → System updates**. Both run through a detached runner (`scripts/system-ops.mjs`), so a restart or a closed browser tab does not interrupt an operation.
+
+Requirements on the host:
+
+| Requirement | Why |
+|---|---|
+| `mysqldump`, `mysql`, `tar`, `git`, `npm` on `PATH` | Database dumps, archives, and update installs |
+| Writable `BACKUP_DIR` (default `.backups`, relative to the project root) | Archives and job status files. It must stay outside `public/` and `.next/` |
+| Git checkout with an `origin` remote | Update check/install; a tarball deployment shows updates as unavailable |
+| Process manager running the app | Configure under **Settings → System operations** (`pm2` + process name, or `systemctl` + unit name). With `none`, the update builds but you restart the service yourself |
+
+Behaviour worth knowing before enabling it:
+
+- A **FULL** safety backup is taken automatically before every restore, update, and rollback. Database restore never touches migration history; files restore swaps `.uploads` and keeps the previous directory as `.uploads.pre-restore-<stamp>`.
+- Updates refuse to start on a dirty working tree. The runner checks out the target commit detached, runs `npm ci`, `db:generate`, `db:deploy`, `build`, restarts the configured process, then polls `/api/health`. A failed build or health check rolls the **code** back to the previous commit automatically — the database is never restored automatically.
+- `npm ci` rewrites `node_modules` in place, so the app directory must be the one the process manager serves.
+- On Vercel (or with `SYSTEM_OPS_DISABLED=true`) the pages explain that the host manages backups instead of offering the actions. TiDB databases are refused: use the provider's backup tooling.
+- Archives are pruned to **Settings → System operations → backup retention** (default 10).
+

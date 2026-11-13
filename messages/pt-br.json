@@ -37,7 +37,9 @@
       "auditLog": "Registro de auditoria",
       "bioPages": "Páginas bio",
       "contentPages": "Páginas de conteúdo",
-      "customMenus": "Menus laterais"
+      "customMenus": "Menus laterais",
+      "backups": "Backups",
+      "updates": "Atualizações"
     },
     "navHints": {
       "usersOnly": "Somente para usuários"
@@ -490,7 +492,9 @@
       "headerLinks": "Links do menu do cabeçalho",
       "bioPages": "Páginas bio",
       "contentPages": "Páginas de conteúdo",
-      "customMenus": "Menus laterais personalizados"
+      "customMenus": "Menus laterais personalizados",
+      "backups": "Backups",
+      "updates": "Atualizações do sistema"
     },
     "status": {
       "active": "ativo",
@@ -617,6 +621,15 @@
       "colAction": "Ação",
       "colTarget": "Destino",
       "actionLabels": {
+        "backup": {
+          "create": "Criou um backup",
+          "restore": "Restaurou um backup",
+          "delete": "Excluiu um backup"
+        },
+        "system": {
+          "update": "Instalou uma atualização do sistema",
+          "rollback": "Reverteu uma atualização do sistema"
+        },
         "user": {
           "ban": "Baniu um usuário",
           "unban": "Desbaniu um usuário",
@@ -685,6 +698,8 @@
         "setting": "Configuração",
         "abuseReport": "Denúncia",
         "adUnit": "Anúncio",
+        "backup": "Backup",
+        "update": "Atualização",
         "headerLink": "Link de cabeçalho"
       }
     },
@@ -1062,6 +1077,10 @@
       "navAria": "Seções de configurações",
       "savedToast": "Salvo.",
       "groups": {
+        "system-ops": {
+          "title": "Operações do sistema",
+          "description": "Como as atualizações são aplicadas e quantos backups são mantidos."
+        },
         "site-content": {
           "title": "Conteúdo do site",
           "description": "Exibido em todo o site público."
@@ -1186,6 +1205,26 @@
         "verification_githubClientSecret": {
           "label": "Segredo de cliente OAuth do GitHub",
           "hint": "O segredo OAuth correspondente, mantido no servidor. A implementação só lê o necessário para verificar a ação, nunca publica nem altera a conta e não guarda tokens de acesso dos visitantes."
+        },
+        "ops_gitBranch": {
+          "label": "Branch de atualização",
+          "hint": "A branch que o verificador de atualizações acompanha.",
+          "placeholder": "master"
+        },
+        "ops_backupRetention": {
+          "label": "Backups a manter",
+          "hint": "Backups mais antigos são excluídos após cada backup novo bem-sucedido.",
+          "placeholder": "10"
+        },
+        "ops_processManager": {
+          "label": "Gerenciador de processos",
+          "hint": "Como o aplicativo é reiniciado após uma atualização: pm2, systemctl ou none.",
+          "placeholder": "none"
+        },
+        "ops_processName": {
+          "label": "Nome do processo",
+          "hint": "O processo PM2 ou unidade systemd a reiniciar.",
+          "placeholder": "social-links"
         },
         "verification_telegramBotToken": {
           "label": "Token do bot do Telegram",
@@ -1453,6 +1492,144 @@
         "deleted": "Item excluído."
       },
       "titleRequired": "Adicione um título para o item do menu."
+    },
+    "backups": {
+      "title": "Backups",
+      "description": "Crie snapshots do banco de dados e dos arquivos enviados, e restaure quando algo falhar.",
+      "unavailableTitle": "O backup é gerenciado por este host",
+      "unavailableManaged": "Esta implantação roda em uma plataforma gerenciada com sistema de arquivos efêmero, então o aplicativo não pode criar nem restaurar backups aqui. Use as ferramentas de backup do provedor do banco ou rode o aplicativo em um servidor com armazenamento persistente.",
+      "unavailableDisabled": "As operações do sistema foram desativadas pela variável SYSTEM_OPS_DISABLED.",
+      "unavailableEnvironment": "A pasta de backups não tem permissão de escrita ou faltam as ferramentas necessárias (mysqldump, mysql, tar) neste host.",
+      "storagePath": "Pasta de backups",
+      "kind": {
+        "database": "Banco de dados",
+        "files": "Arquivos",
+        "full": "Completo"
+      },
+      "create": {
+        "title": "Criar um backup",
+        "description": "Cada backup roda em segundo plano e continua mesmo se você sair desta página.",
+        "database": "Banco de dados",
+        "databaseHint": "Conteúdo, usuários e configurações.",
+        "files": "Arquivos",
+        "filesHint": "Imagens e arquivos enviados.",
+        "full": "Completo",
+        "fullHint": "Banco de dados e arquivos juntos."
+      },
+      "stats": {
+        "ready": "Backups prontos",
+        "size": "Espaço usado",
+        "last": "Último backup",
+        "none": "Nenhum ainda",
+        "retention": "Mantendo os {count} mais recentes"
+      },
+      "panelTitle": "Histórico de backups",
+      "panelDescription": "Mais recentes primeiro. Restaurar sobrescreve os dados ativos, então um backup de segurança é criado antes.",
+      "empty": "Ainda não há backups.",
+      "colBackup": "Backup",
+      "colStatus": "Status",
+      "colSize": "Tamanho",
+      "colCreated": "Criado",
+      "colActions": "Ações",
+      "status": {
+        "PENDING": "Na fila",
+        "RUNNING": "Em execução",
+        "READY": "Pronto",
+        "FAILED": "Falhou"
+      },
+      "restored": "Restaurado",
+      "download": "Baixar",
+      "restore": "Restaurar",
+      "delete": "Excluir",
+      "restoreTitle": "Restaurar este backup?",
+      "restoreDescription": "Isso substitui os dados ativos pelo snapshot. Um backup completo de segurança é criado antes de qualquer alteração.",
+      "restoreWarning": "Visitantes podem ver erros durante a restauração. Restaurar o banco não desfaz migrações mais recentes; guarde uma cópia dos dados que precisar manter.",
+      "restoreConfirmLabel": "Digite RESTORE para confirmar",
+      "restoreButton": "Restaurar backup",
+      "restoring": "Iniciando…",
+      "deleteTitle": "Excluir este backup?",
+      "deleteDescription": "O arquivo é removido do disco e não pode ser recuperado.",
+      "deleteConfirm": "Excluir backup",
+      "deleting": "Excluindo…",
+      "deletedToast": "Backup excluído."
+    },
+    "updates": {
+      "title": "Atualizações do sistema",
+      "description": "Verifique a branch configurada em busca de commits novos, revise as mudanças e instale com backup de segurança e reversão automática.",
+      "unavailableTitle": "As atualizações são gerenciadas por este host",
+      "unavailableManaged": "Esta implantação é compilada a partir do Git em uma plataforma gerenciada. Implante um commit novo pela plataforma; o aplicativo não pode se recompilar aqui.",
+      "unavailableDisabled": "As operações do sistema foram desativadas pela variável SYSTEM_OPS_DISABLED.",
+      "unavailableEnvironment": "Esta instalação não é um checkout Git, ou Git/npm não estão disponíveis neste host.",
+      "currentTitle": "Versão instalada",
+      "currentDescription": "O commit que está servindo este site agora.",
+      "currentCommit": "Commit",
+      "branch": "Branch",
+      "remote": "Remoto",
+      "workingTree": "Árvore de trabalho",
+      "dirty": "Alterações locais",
+      "clean": "Limpa",
+      "restartNote": "Nenhum gerenciador de processos está configurado, então a atualização compilará o código novo, mas você precisa reiniciar o serviço manualmente para ativá-lo. Configure em Configurações → Operações do sistema.",
+      "processManagerNote": "A atualização reinicia {name} via {manager} e depois verifica /api/health.",
+      "checkTitle": "Verificar atualizações",
+      "checkDescription": "Busca a branch configurada e lista commits que ainda não foram instalados.",
+      "checking": "Verificando a branch remota…",
+      "checkedAgainst": "Comparado com {branch}",
+      "checkButton": "Verificar novamente",
+      "checkFailed": "Não foi possível verificar atualizações",
+      "upToDate": "Tudo nesta branch está instalado.",
+      "aheadNote": "Este checkout está {count} commits à frente do remoto.",
+      "behindTitle": "{count} commits novos disponíveis",
+      "installButton": "Instalar atualização",
+      "installTitle": "Instalar esta atualização?",
+      "installDescription": "O servidor buscará a branch, instalará dependências, aplicará migrações, compilará e reiniciará.",
+      "installWarning": "O site pode ficar indisponível por alguns minutos. Um backup completo é criado antes e o código é revertido automaticamente se a compilação ou a verificação falhar.",
+      "installConfirmLabel": "Digite UPDATE para confirmar",
+      "installConfirm": "Instalar",
+      "installing": "Iniciando…",
+      "safetyBackupNote": "Um backup completo é criado automaticamente antes da instalação.",
+      "dirtyBlocked": "Faça commit ou guarde as alterações locais antes de atualizar; o instalador recusa uma árvore de trabalho suja.",
+      "rollback": "Reverter",
+      "rollbackTitle": "Reverter esta atualização?",
+      "rollbackDescription": "O código volta ao commit que estava rodando antes desta atualização. Os dados não são revertidos.",
+      "rollbackWarning": "Um backup de segurança é criado antes. Migrações aplicadas pela versão mais nova não são desfeitas.",
+      "rollbackConfirmLabel": "Digite ROLLBACK para confirmar",
+      "rollbackConfirm": "Reverter",
+      "rollingBack": "Iniciando…",
+      "rollbackBadge": "Reversão",
+      "historyTitle": "Histórico de atualizações",
+      "historyDescription": "Cada tentativa de instalação e reversão, mais recentes primeiro.",
+      "historyEmpty": "Nenhuma atualização foi instalada por este console ainda.",
+      "colChange": "Mudança",
+      "colStatus": "Status",
+      "colActor": "Iniciada por",
+      "colStarted": "Início",
+      "colActions": "Ações",
+      "status": {
+        "INSTALLING": "Instalando",
+        "INSTALLED": "Instalada",
+        "FAILED": "Falhou",
+        "ROLLED_BACK": "Revertida"
+      }
+    },
+    "ops": {
+      "starting": "Iniciando…",
+      "succeeded": "Concluído",
+      "failed": "Falhou",
+      "keepOpen": "Você pode fechar este painel; a operação continua.",
+      "phase": {
+        "starting": "Início",
+        "backup": "Backup",
+        "restore": "Restauração",
+        "fetch": "Buscando commits",
+        "install": "Instalando dependências",
+        "migrate": "Aplicando migrações",
+        "build": "Compilação",
+        "activate": "Reiniciando o serviço",
+        "health": "Verificação de saúde",
+        "rollback": "Revertendo",
+        "done": "Concluído",
+        "failed": "Falhou"
+      }
     },
     "richText": {
       "blockLabel": "Estilo do texto",
@@ -1722,6 +1899,25 @@
     }
   },
   "errors": {
+    "invalidGitBranch": "Informe um nome de branch sem espaços, '..' ou hífen no início.",
+    "invalidBackupRetention": "Informe um número inteiro entre 1 e 100.",
+    "invalidProcessManager": "Escolha pm2, systemctl ou none.",
+    "invalidProcessName": "Use letras, números, pontos, sublinhados, @ ou hífens.",
+    "opsUnavailable": "As operações do sistema não estão disponíveis neste host.",
+    "operationRunning": "Já existe um backup ou atualização em execução. Aguarde terminar.",
+    "operationFailedToStart": "Não foi possível iniciar o executor de operações. Verifique os logs do servidor.",
+    "operationNotFound": "Essa operação não existe mais.",
+    "confirmationMismatch": "O texto de confirmação não corresponde.",
+    "backupNotFound": "Esse backup não existe.",
+    "backupNotReady": "Só um backup concluído pode ser restaurado.",
+    "backupFileMissing": "O arquivo do backup está faltando na pasta de backups.",
+    "updateDirty": "A árvore de trabalho tem alterações locais. Faça commit ou guarde antes de atualizar.",
+    "updateCheckFailed": "Não foi possível ler a branch remota. Verifique o acesso do servidor ao Git.",
+    "updateTargetChanged": "A branch mudou desde a verificação. Verifique novamente antes de instalar.",
+    "updateNotAvailable": "Não há nada novo para instalar.",
+    "updateNotFound": "Esse registro de atualização não existe.",
+    "rollbackUnavailable": "Só uma atualização instalada com sucesso pode ser revertida.",
+    "invalidRequest": "A solicitação não é válida.",
     "invalidUrl": "Informe uma URL válida",
     "onlyHttpHttps": "Somente URLs http e https são permitidas",
     "invalidCoverImage": "Informe uma URL http(s) ou envie uma imagem",

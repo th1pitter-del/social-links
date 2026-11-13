@@ -200,3 +200,21 @@ export type TelegramCheckin = Prisma.TelegramCheckinModel
  *  * sessions and no analytics beyond a click counter.
  */
 export type ShortLink = Prisma.ShortLinkModel
+/**
+ * Model SystemBackup
+ * * A backup archive produced by the system operations runner.
+ */
+export type SystemBackup = Prisma.SystemBackupModel
+/**
+ * Model SystemUpdate
+ * * One attempted code update (or rollback) with its outcome.
+ */
+export type SystemUpdate = Prisma.SystemUpdateModel
+/**
+ * Model SystemOperation
+ * *
+ *  * The durable record of a long-running operation. The archive work itself is
+ *  * performed by a detached runner so a deploy/restart cannot cut it short; the
+ *  * runner writes progress to a status file that this row is reconciled from.
+ */
+export type SystemOperation = Prisma.SystemOperationModel

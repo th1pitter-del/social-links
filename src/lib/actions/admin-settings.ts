@@ -68,6 +68,28 @@ export async function updateSetting(key: string, value: string): Promise<Setting
       }
     }
   }
+  if (trimmedKey.startsWith('ops.')) {
+    value = value.trim()
+    if (trimmedKey === 'ops.gitBranch') {
+      if (!/^[A-Za-z0-9._/-]{1,100}$/.test(value) || value.includes('..') || value.startsWith('-')) {
+        return { ok: false, error: t('invalidGitBranch') }
+      }
+    } else if (trimmedKey === 'ops.backupRetention') {
+      const parsed = Number(value)
+      if (!Number.isInteger(parsed) || parsed < 1 || parsed > 100) {
+        return { ok: false, error: t('invalidBackupRetention') }
+      }
+      value = String(parsed)
+    } else if (trimmedKey === 'ops.processManager') {
+      if (value !== 'pm2' && value !== 'systemctl' && value !== 'none') {
+        return { ok: false, error: t('invalidProcessManager') }
+      }
+    } else if (trimmedKey === 'ops.processName') {
+      if (!/^[A-Za-z0-9._@-]{1,100}$/.test(value)) {
+        return { ok: false, error: t('invalidProcessName') }
+      }
+    }
+  }
   if (trimmedKey.startsWith('theme.')) {
     const trimmedValue = value.trim()
     // Empty value = reset to the built-in default; otherwise it must be hex.

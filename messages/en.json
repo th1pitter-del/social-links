@@ -37,7 +37,9 @@
       "auditLog": "Audit log",
       "bioPages": "Bio pages",
       "contentPages": "Content pages",
-      "customMenus": "Sidebar menus"
+      "customMenus": "Sidebar menus",
+      "backups": "Backups",
+      "updates": "System updates"
     },
     "navHints": {
       "usersOnly": "Users only"
@@ -315,6 +317,25 @@
     }
   },
   "errors": {
+    "invalidGitBranch": "Enter a branch name without spaces, '..' or a leading dash.",
+    "invalidBackupRetention": "Enter a whole number between 1 and 100.",
+    "invalidProcessManager": "Choose pm2, systemctl or none.",
+    "invalidProcessName": "Use letters, numbers, dots, underscores, @ or dashes.",
+    "opsUnavailable": "System operations are not available on this host.",
+    "operationRunning": "Another backup or update is already running. Wait for it to finish.",
+    "operationFailedToStart": "The operations runner could not be started. Check the server logs.",
+    "operationNotFound": "That operation no longer exists.",
+    "confirmationMismatch": "The confirmation text did not match.",
+    "backupNotFound": "That backup does not exist.",
+    "backupNotReady": "Only a finished backup can be restored.",
+    "backupFileMissing": "The backup archive is missing from the backup folder.",
+    "updateDirty": "The working tree has local changes. Commit or stash them before updating.",
+    "updateCheckFailed": "Could not read the remote branch. Check the server's Git access.",
+    "updateTargetChanged": "The branch changed since the check. Check again before installing.",
+    "updateNotAvailable": "There is nothing new to install.",
+    "updateNotFound": "That update record does not exist.",
+    "rollbackUnavailable": "Only a successfully installed update can be rolled back.",
+    "invalidRequest": "The request was not valid.",
     "invalidUrl": "Enter a valid URL",
     "onlyHttpHttps": "Only http and https URLs are allowed",
     "invalidCoverImage": "Enter an http(s) URL or upload an image",
@@ -1009,7 +1030,9 @@
       "headerLinks": "Site header menu links",
       "bioPages": "Bio pages",
       "contentPages": "Content pages",
-      "customMenus": "Custom sidebar menus"
+      "customMenus": "Custom sidebar menus",
+      "backups": "Backups",
+      "updates": "System updates"
     },
     "status": {
       "active": "active",
@@ -1136,6 +1159,15 @@
       "colAction": "Action",
       "colTarget": "Target",
       "actionLabels": {
+        "backup": {
+          "create": "Created a backup",
+          "restore": "Restored a backup",
+          "delete": "Deleted a backup"
+        },
+        "system": {
+          "update": "Installed a system update",
+          "rollback": "Rolled back a system update"
+        },
         "user": {
           "ban": "Banned user",
           "unban": "Unbanned user",
@@ -1204,6 +1236,8 @@
         "setting": "Setting",
         "abuseReport": "Report",
         "adUnit": "Ad",
+        "backup": "Backup",
+        "update": "Update",
         "headerLink": "Header link"
       }
     },
@@ -1581,6 +1615,10 @@
       "navAria": "Settings sections",
       "savedToast": "Saved.",
       "groups": {
+        "system-ops": {
+          "title": "System operations",
+          "description": "How updates are applied and how many backups are kept."
+        },
         "site-content": {
           "title": "Site content",
           "description": "Displayed across the public site."
@@ -1705,6 +1743,26 @@
         "verification_githubClientSecret": {
           "label": "GitHub OAuth client secret",
           "hint": "The matching server-side OAuth secret. The implementation reads only what the action check needs, never posts or changes the account, and does not persist visitor access tokens."
+        },
+        "ops_gitBranch": {
+          "label": "Update branch",
+          "hint": "The branch the update checker follows.",
+          "placeholder": "master"
+        },
+        "ops_backupRetention": {
+          "label": "Backups to keep",
+          "hint": "Older backups are deleted after each new successful backup.",
+          "placeholder": "10"
+        },
+        "ops_processManager": {
+          "label": "Process manager",
+          "hint": "How the app is restarted after an update: pm2, systemctl or none.",
+          "placeholder": "none"
+        },
+        "ops_processName": {
+          "label": "Process name",
+          "hint": "The PM2 process or systemd unit to restart.",
+          "placeholder": "social-links"
         },
         "verification_telegramBotToken": {
           "label": "Telegram bot token",
@@ -1972,6 +2030,144 @@
         "deleted": "Menu item deleted."
       },
       "titleRequired": "Add a title for the menu item."
+    },
+    "backups": {
+      "title": "Backups",
+      "description": "Snapshot the database and uploaded files, and restore a snapshot when something goes wrong.",
+      "unavailableTitle": "Backups are managed by this host",
+      "unavailableManaged": "This deployment runs on a managed platform with an ephemeral filesystem, so the app cannot take or restore backups here. Use the database provider's backup tooling, or run the app on a server with persistent storage.",
+      "unavailableDisabled": "System operations have been disabled by the SYSTEM_OPS_DISABLED environment variable.",
+      "unavailableEnvironment": "The backup folder is not writable, or the required tools (mysqldump, mysql, tar) are missing on this host.",
+      "storagePath": "Backup folder",
+      "kind": {
+        "database": "Database",
+        "files": "Files",
+        "full": "Full"
+      },
+      "create": {
+        "title": "Create a backup",
+        "description": "Each backup runs in the background and keeps working if you leave this page.",
+        "database": "Database",
+        "databaseHint": "Content, users and settings.",
+        "files": "Files",
+        "filesHint": "Uploaded images and locked files.",
+        "full": "Full",
+        "fullHint": "Database and files together."
+      },
+      "stats": {
+        "ready": "Ready backups",
+        "size": "Storage used",
+        "last": "Latest backup",
+        "none": "None yet",
+        "retention": "Keeping the newest {count}"
+      },
+      "panelTitle": "Backup history",
+      "panelDescription": "Newest first. Restoring overwrites live data, so a safety backup is taken first.",
+      "empty": "No backups yet.",
+      "colBackup": "Backup",
+      "colStatus": "Status",
+      "colSize": "Size",
+      "colCreated": "Created",
+      "colActions": "Actions",
+      "status": {
+        "PENDING": "Queued",
+        "RUNNING": "Running",
+        "READY": "Ready",
+        "FAILED": "Failed"
+      },
+      "restored": "Restored",
+      "download": "Download",
+      "restore": "Restore",
+      "delete": "Delete",
+      "restoreTitle": "Restore this backup?",
+      "restoreDescription": "This replaces live data with the snapshot. A full safety backup is taken before anything is changed.",
+      "restoreWarning": "Visitors may see errors while the restore runs. Restoring the database does not remove newer migrations; take a copy of any data you need to keep.",
+      "restoreConfirmLabel": "Type RESTORE to confirm",
+      "restoreButton": "Restore backup",
+      "restoring": "Starting…",
+      "deleteTitle": "Delete this backup?",
+      "deleteDescription": "The archive is removed from disk and cannot be recovered.",
+      "deleteConfirm": "Delete backup",
+      "deleting": "Deleting…",
+      "deletedToast": "Backup deleted."
+    },
+    "updates": {
+      "title": "System updates",
+      "description": "Check the configured branch for new commits, review the changes, and install them with a safety backup and automatic rollback.",
+      "unavailableTitle": "Updates are managed by this host",
+      "unavailableManaged": "This deployment builds from Git on a managed platform. Deploy a new commit through the platform instead; the app cannot rebuild itself here.",
+      "unavailableDisabled": "System operations have been disabled by the SYSTEM_OPS_DISABLED environment variable.",
+      "unavailableEnvironment": "This installation is not a Git checkout, or Git/npm are unavailable on this host.",
+      "currentTitle": "Installed version",
+      "currentDescription": "The commit currently serving this site.",
+      "currentCommit": "Commit",
+      "branch": "Branch",
+      "remote": "Remote",
+      "workingTree": "Working tree",
+      "dirty": "Local changes",
+      "clean": "Clean",
+      "restartNote": "No process manager is configured, so an update will build the new code but you must restart the service yourself to activate it. Set this under Settings → System operations.",
+      "processManagerNote": "Updates restart {name} through {manager} and verify /api/health afterwards.",
+      "checkTitle": "Check for updates",
+      "checkDescription": "Fetches the configured branch and lists commits that are not installed yet.",
+      "checking": "Checking the remote branch…",
+      "checkedAgainst": "Compared with {branch}",
+      "checkButton": "Check again",
+      "checkFailed": "Could not check for updates",
+      "upToDate": "Everything on this branch is installed.",
+      "aheadNote": "This checkout is {count} commits ahead of the remote branch.",
+      "behindTitle": "{count} new commits are available",
+      "installButton": "Install update",
+      "installTitle": "Install this update?",
+      "installDescription": "The server will fetch the branch, install dependencies, apply migrations, build and restart.",
+      "installWarning": "The site may be unavailable for a few minutes. A full safety backup is taken first, and the code is rolled back automatically if the build or health check fails.",
+      "installConfirmLabel": "Type UPDATE to confirm",
+      "installConfirm": "Install",
+      "installing": "Starting…",
+      "safetyBackupNote": "A full backup is taken automatically before installing.",
+      "dirtyBlocked": "Commit or stash local changes before updating; the installer refuses to touch a dirty working tree.",
+      "rollback": "Roll back",
+      "rollbackTitle": "Roll back this update?",
+      "rollbackDescription": "The code returns to the commit that was running before this update. Data is not rolled back.",
+      "rollbackWarning": "A safety backup is taken first. Migrations applied by the newer version are not undone.",
+      "rollbackConfirmLabel": "Type ROLLBACK to confirm",
+      "rollbackConfirm": "Roll back",
+      "rollingBack": "Starting…",
+      "rollbackBadge": "Rollback",
+      "historyTitle": "Update history",
+      "historyDescription": "Every install attempt and rollback, newest first.",
+      "historyEmpty": "No updates have been installed from this console yet.",
+      "colChange": "Change",
+      "colStatus": "Status",
+      "colActor": "Started by",
+      "colStarted": "Started",
+      "colActions": "Actions",
+      "status": {
+        "INSTALLING": "Installing",
+        "INSTALLED": "Installed",
+        "FAILED": "Failed",
+        "ROLLED_BACK": "Rolled back"
+      }
+    },
+    "ops": {
+      "starting": "Starting…",
+      "succeeded": "Finished",
+      "failed": "Failed",
+      "keepOpen": "You can close this panel; the operation keeps running.",
+      "phase": {
+        "starting": "Starting",
+        "backup": "Backing up",
+        "restore": "Restoring",
+        "fetch": "Fetching commits",
+        "install": "Installing dependencies",
+        "migrate": "Applying migrations",
+        "build": "Building",
+        "activate": "Restarting the service",
+        "health": "Health check",
+        "rollback": "Rolling back",
+        "done": "Done",
+        "failed": "Failed"
+      }
     },
     "richText": {
       "blockLabel": "Text style",

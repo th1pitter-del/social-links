@@ -115,3 +115,52 @@ export const ShortLinkStatus = {
 } as const
 
 export type ShortLinkStatus = (typeof ShortLinkStatus)[keyof typeof ShortLinkStatus]
+
+
+export const BackupKind = {
+  DATABASE: 'DATABASE',
+  FILES: 'FILES',
+  FULL: 'FULL'
+} as const
+
+export type BackupKind = (typeof BackupKind)[keyof typeof BackupKind]
+
+
+export const BackupStatus = {
+  PENDING: 'PENDING',
+  RUNNING: 'RUNNING',
+  READY: 'READY',
+  FAILED: 'FAILED'
+} as const
+
+export type BackupStatus = (typeof BackupStatus)[keyof typeof BackupStatus]
+
+
+export const UpdateStatus = {
+  INSTALLING: 'INSTALLING',
+  INSTALLED: 'INSTALLED',
+  FAILED: 'FAILED',
+  ROLLED_BACK: 'ROLLED_BACK'
+} as const
+
+export type UpdateStatus = (typeof UpdateStatus)[keyof typeof UpdateStatus]
+
+
+export const OperationType = {
+  BACKUP: 'BACKUP',
+  RESTORE: 'RESTORE',
+  UPDATE: 'UPDATE',
+  ROLLBACK: 'ROLLBACK'
+} as const
+
+export type OperationType = (typeof OperationType)[keyof typeof OperationType]
+
+
+export const OperationStatus = {
+  PENDING: 'PENDING',
+  RUNNING: 'RUNNING',
+  SUCCEEDED: 'SUCCEEDED',
+  FAILED: 'FAILED'
+} as const
+
+export type OperationStatus = (typeof OperationStatus)[keyof typeof OperationStatus]
