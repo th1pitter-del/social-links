@@ -25,6 +25,10 @@ export type SettingsField = {
 export type SettingsGroup = {
   id: string
   icon: IconType
+  /** Shows the `groups.<id>.notice` copy above the fields. */
+  notice?: boolean
+  /** Keeps the field definitions but hides them until the feature is in use. */
+  fieldsHidden?: boolean
   fields: SettingsField[]
 }
 
@@ -79,6 +83,7 @@ export const SETTINGS_GROUPS: SettingsGroup[] = [
   {
     id: 'email-delivery',
     icon: Mail,
+    notice: true,
     fields: [
       { key: 'email.webhookUrl' },
       { key: 'email.webhookToken', secret: true },
@@ -93,6 +98,8 @@ export const SETTINGS_GROUPS: SettingsGroup[] = [
   {
     id: 'step-verification',
     icon: ShieldCheck,
+    notice: true,
+    fieldsHidden: true,
     fields: [
       { key: 'verification.enabled', toggle: true },
       { key: 'verification.oauthRedirectUrl', readonly: true },

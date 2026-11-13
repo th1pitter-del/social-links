@@ -1073,6 +1073,10 @@
       "navLabel": "Configurações",
       "navAria": "Seções de configurações",
       "savedToast": "Salvo.",
+      "unsavedChanges": "{count, plural, one {# alteração não salva} other {# alterações não salvas}}",
+      "allSaved": "Todas as alterações salvas.",
+      "secretWillRemove": "Será removido ao salvar",
+      "secretKeep": "Manter",
       "groups": {
         "system-ops": {
           "title": "Operações do sistema",
@@ -1097,7 +1101,11 @@
         },
         "email-delivery": {
           "title": "Envio de e-mails",
-          "description": "Os e-mails de redefinição são enviados como JSON ao seu próprio relay ou endpoint de automação."
+          "description": "Os e-mails de redefinição são enviados como JSON ao seu próprio relay ou endpoint de automação.",
+          "notice": {
+            "title": "O e-mail ainda não está configurado",
+            "body": "Nenhum webhook está configurado, então os e-mails de redefinição de senha não são enviados e as solicitações só aparecem no log do servidor. O restante do site funciona sem e-mail. Preencha os campos abaixo quando tiver um relay ou endpoint de automação pronto e o envio começará na hora."
+          }
         },
         "ad-network": {
           "title": "Rede de anúncios",
@@ -1113,7 +1121,11 @@
         },
         "step-verification": {
           "title": "Verificação de tarefas",
-          "description": "Autentique visitantes com Google OAuth para curtidas e inscrições do YouTube, GitHub OAuth para ações de seguir e estrelas, ou um check-in no bot privado do Telegram para participação em canais e grupos. As demais ações sociais continuam sem verificação."
+          "description": "Como as tarefas concluídas são aceitas. Nenhuma verificação de conta está em uso, então os campos de credenciais estão ocultos.",
+          "notice": {
+            "title": "Como as tarefas são confirmadas",
+            "body": "Nenhuma plataforma é consultada para verificar se uma tarefa foi realmente feita, então ainda não há credenciais a preencher — estes campos estão ocultos por enquanto. O visitante toca na tarefa, ela abre na plataforma em uma nova aba e esse mesmo toque marca a etapa como concluída. É a confirmação com um clique que o Rekonise usa. As etapas de site são concluídas pelo nosso próprio redirecionamento, e as ofertas do OGAds são confirmadas pelo postback do OGAds."
+          }
         }
       },
       "fields": {

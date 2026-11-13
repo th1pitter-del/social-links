@@ -1073,6 +1073,10 @@
       "navLabel": "Ajustes",
       "navAria": "Secciones de ajustes",
       "savedToast": "Guardado.",
+      "unsavedChanges": "{count, plural, one {# cambio sin guardar} other {# cambios sin guardar}}",
+      "allSaved": "Todos los cambios guardados.",
+      "secretWillRemove": "Se quitará al guardar",
+      "secretKeep": "Conservar",
       "groups": {
         "system-ops": {
           "title": "Operaciones del sistema",
@@ -1097,7 +1101,11 @@
         },
         "email-delivery": {
           "title": "Envío de correos",
-          "description": "Los correos de restablecimiento se envían como JSON a tu propio relay o endpoint de automatización."
+          "description": "Los correos de restablecimiento se envían como JSON a tu propio relay o endpoint de automatización.",
+          "notice": {
+            "title": "El correo aún no está configurado",
+            "body": "No hay ningún webhook configurado, así que los correos de restablecimiento de contraseña no se envían y las solicitudes solo aparecen en el registro del servidor. El resto del sitio funciona sin correo. Rellena los campos de abajo cuando tengas listo un relay o un endpoint de automatización y el envío empezará de inmediato."
+          }
         },
         "ad-network": {
           "title": "Red de anuncios",
@@ -1113,7 +1121,11 @@
         },
         "step-verification": {
           "title": "Verificación de tareas",
-          "description": "Autentica visitantes con Google OAuth para me gusta y suscripciones de YouTube, GitHub OAuth para seguimientos y estrellas, o un registro en el bot privado de Telegram para pertenencia a canales y grupos. Las demás acciones sociales siguen sin verificar."
+          "description": "Cómo se aceptan las tareas completadas. No se usa ninguna comprobación de cuenta, así que los campos de credenciales están ocultos.",
+          "notice": {
+            "title": "Cómo se confirman las tareas",
+            "body": "No contactamos a ninguna plataforma para comprobar si una tarea se hizo de verdad, así que no hay credenciales que rellenar: estos campos están ocultos por ahora. El visitante pulsa una tarea, se abre en la plataforma en una pestaña nueva y ese mismo clic marca el paso como hecho. Es la confirmación con un clic que usa Rekonise. Los pasos de sitios web se completan con nuestra propia redirección y las ofertas de OGAds se confirman con el postback de OGAds."
+          }
         }
       },
       "fields": {

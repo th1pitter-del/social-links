@@ -25,14 +25,11 @@ export function BackupRowActions({
   filename,
   ready,
   disabled,
-  deletable,
 }: {
   backupId: string
   filename: string | null
   ready: boolean
   disabled: boolean
-  /** False while this backup is genuinely being written; stale rows stay deletable. */
-  deletable: boolean
 }) {
   const t = useTranslations('admin.backups')
   const tc = useTranslations('admin.common')
@@ -104,7 +101,7 @@ export function BackupRowActions({
       <Button
         variant="ghost"
         size="sm"
-        disabled={!deletable}
+        disabled={disabled}
         onClick={() => {
           setError(null)
           setDeleteOpen(true)

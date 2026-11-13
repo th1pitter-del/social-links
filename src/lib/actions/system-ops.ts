@@ -17,7 +17,6 @@ import {
   opsHealthUrl,
   pruneBackups,
   startOpsJob,
-  STALE_RUNNER_MS,
   syncOperation,
   type BackupKindName,
   type OperationView,
@@ -196,13 +195,9 @@ export async function deleteSystemBackup(backupId: string): Promise<{ ok: true }
   await requireAdmin()
   const t = await getTranslations('errors')
 
-  // Only a live job owns its backup. A runner killed mid-job leaves its
-  // operation open forever, and blocking on that row made the archive
-  // undeletable until the reconciler happened to run.
   const reference = await prisma.systemOperation.count({
     where: {
       status: { in: ['PENDING', 'RUNNING'] },
-      startedAt: { gte: new Date(Date.now() - STALE_RUNNER_MS) },
       OR: [{ backupId }, { safetyBackupId: backupId }],
     },
   })
@@ -210,13 +205,10 @@ export async function deleteSystemBackup(backupId: string): Promise<{ ok: true }
 
   const backup = await prisma.systemBackup.findUnique({
     where: { id: backupId },
-    select: { id: true, filename: true, status: true, startedAt: true },
+    select: { id: true, filename: true, status: true },
   })
   if (!backup) return { ok: false, error: t('backupNotFound') }
-  const active =
-    (backup.status === 'RUNNING' || backup.status === 'PENDING') &&
-    backup.startedAt >= new Date(Date.now() - STALE_RUNNER_MS)
-  if (active) {
+  if (backup.status === 'RUNNING' || backup.status === 'PENDING') {
     return { ok: false, error: t('operationRunning') }
   }
 

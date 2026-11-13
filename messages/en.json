@@ -1611,6 +1611,10 @@
       "navLabel": "Settings",
       "navAria": "Settings sections",
       "savedToast": "Saved.",
+      "unsavedChanges": "{count, plural, one {# unsaved change} other {# unsaved changes}}",
+      "allSaved": "All changes saved.",
+      "secretWillRemove": "Removed when you save",
+      "secretKeep": "Keep",
       "groups": {
         "system-ops": {
           "title": "System operations",
@@ -1635,7 +1639,11 @@
         },
         "email-delivery": {
           "title": "Email delivery",
-          "description": "Password reset mail is POSTed as JSON to your own relay or automation endpoint."
+          "description": "Password reset mail is POSTed as JSON to your own relay or automation endpoint.",
+          "notice": {
+            "title": "Email is not set up yet",
+            "body": "No webhook is configured, so password reset emails are not sent and reset requests only appear in the server log. The rest of the site works without email. Fill in the fields below once you have a relay or automation endpoint ready and delivery starts immediately."
+          }
         },
         "ad-network": {
           "title": "Ad network",
@@ -1651,7 +1659,11 @@
         },
         "step-verification": {
           "title": "Task verification",
-          "description": "Authenticate visitors with Google OAuth for YouTube likes and subscriptions, GitHub OAuth for follows and stars, or a private Telegram bot check-in for channel and group membership. Other social actions remain unverified."
+          "description": "How completed tasks are accepted. No account check is in use, so the credential fields are hidden.",
+          "notice": {
+            "title": "How tasks are confirmed",
+            "body": "No platform is contacted to check whether a task was really done, so there are no credentials to fill in — these fields are hidden for now. The visitor presses a task, it opens on the platform in a new tab, and that same press marks the step done. This is the one-click confirmation Rekonise uses. Website steps complete through our own redirect, and OGAds offers are confirmed by the OGAds postback."
+          }
         }
       },
       "fields": {

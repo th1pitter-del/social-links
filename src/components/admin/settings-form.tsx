@@ -4,7 +4,7 @@ import { useRef, useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import { toast } from 'sonner'
-import { Copy, Loader2, ShieldAlert, Upload } from 'lucide-react'
+import { Copy, Info, Loader2, ShieldAlert, Upload } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -12,8 +12,8 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
 import { Textarea } from '@/components/ui/textarea'
-import { updateSetting } from '@/lib/actions/admin-settings'
-import { getSettingsGroup, settingsFieldKey } from './settings-config'
+import { updateSettings } from '@/lib/actions/admin-settings'
+import { getSettingsGroup, settingsFieldKey, type SettingsField } from './settings-config'
 
 export function SettingsGroupForm({
   groupId,
@@ -29,31 +29,73 @@ export function SettingsGroupForm({
   const tc = useTranslations('admin.common')
   const uploadT = useTranslations('uploads.errors')
   const [values, setValues] = useState<Record<string, string>>(settings)
-  const [pendingKey, setPendingKey] = useState<string | null>(null)
+  // The last persisted state; a field is dirty while it differs from this.
+  const [saved, setSaved] = useState<Record<string, string>>(settings)
+  const [configuredKeys, setConfiguredKeys] = useState<Record<string, boolean>>(configured)
+  // A stored secret is never prefilled, so clearing it needs an explicit mark.
+  const [removeSecrets, setRemoveSecrets] = useState<string[]>([])
   const [uploadingKey, setUploadingKey] = useState<string | null>(null)
-  const [, startTransition] = useTransition()
+  const [pending, startTransition] = useTransition()
   const fileInputs = useRef<Record<string, HTMLInputElement | null>>({})
 
   const group = getSettingsGroup(groupId)
   if (!group) return null
 
-  function save(key: string, value = values[key] ?? '') {
-    setPendingKey(key)
+  const fields = group.fieldsHidden ? [] : group.fields
+  const dirty = fields.filter((field) => isDirty(field, values, saved, removeSecrets))
+
+  function saveAll() {
+    const changes = dirty.map((field) => ({
+      key: field.key,
+      value: field.secret && removeSecrets.includes(field.key) ? '' : values[field.key] ?? '',
+    }))
+    if (changes.length === 0) return
     startTransition(async () => {
-      const result = await updateSetting(key, value)
-      setPendingKey(null)
+      const result = await updateSettings(changes)
       if (!result.ok) {
         toast.error(result.error)
+        const target = result.key ? document.getElementById(result.key) : null
+        target?.focus()
+        target?.scrollIntoView({ block: 'center', behavior: 'smooth' })
         return
       }
-      // A credential is never echoed back, so drop the typed value from local
-      // state once the server has it instead of leaving it on screen.
-      if (group?.fields.some((field) => field.key === key && field.secret)) {
-        setValues((v) => ({ ...v, [key]: '' }))
+      const nextSaved = { ...saved }
+      const nextConfigured = { ...configuredKeys }
+      const writeOnly: string[] = []
+      for (const change of changes) {
+        const field = dirty.find((item) => item.key === change.key)
+        if (field?.secret) {
+          // Write-only: record whether one exists, never keep what was typed.
+          nextSaved[change.key] = ''
+          nextConfigured[change.key] = Boolean(change.value.trim())
+          writeOnly.push(change.key)
+        } else {
+          nextSaved[change.key] = change.value
+        }
       }
+      setSaved(nextSaved)
+      setConfiguredKeys(nextConfigured)
+      setRemoveSecrets([])
+      setValues((current) => {
+        const next = { ...current }
+        for (const key of writeOnly) next[key] = ''
+        return next
+      })
       toast.success(t('savedToast'))
       router.refresh()
     })
+  }
+
+  function discard() {
+    setValues(saved)
+    setRemoveSecrets([])
+  }
+
+  function toggleRemoveSecret(key: string) {
+    setRemoveSecrets((current) =>
+      current.includes(key) ? current.filter((item) => item !== key) : [...current, key],
+    )
+    setValues((current) => ({ ...current, [key]: '' }))
   }
 
   // Upload failures arrive as a stable code plus legacy English text; the code
@@ -65,7 +107,8 @@ export function SettingsGroupForm({
     return t('imageUploadFailed')
   }
 
-  async function uploadImage(key: string, file: File) {    setUploadingKey(key)
+  async function uploadImage(key: string, file: File) {
+    setUploadingKey(key)
     try {
       const body = new FormData()
       body.append('file', file)
@@ -101,18 +144,28 @@ export function SettingsGroupForm({
   return (
     <section className="rounded-xl border border-border bg-card p-5 shadow-sm">
       <div className="space-y-4">
+        {group.notice ? (
+          <div className="flex items-start gap-3 rounded-lg border border-primary/40 bg-primary/10 px-3 py-2.5">
+            <Info className="mt-0.5 size-4 shrink-0 text-accent-text" aria-hidden="true" />
+            <div className="space-y-1 text-sm">
+              <p className="font-medium text-foreground">{t(`groups.${groupId}.notice.title`)}</p>
+              <p className="text-foreground/85">{t(`groups.${groupId}.notice.body`)}</p>
+            </div>
+          </div>
+        ) : null}
         {groupId === 'system-ops' ? (
           <div className="flex items-start gap-3 rounded-lg border border-warning/40 bg-warning/10 px-3 py-2.5">
             <ShieldAlert className="mt-0.5 size-4 shrink-0 text-amber-700 dark:text-warning" aria-hidden="true" />
             <p className="text-sm text-amber-800 dark:text-warning">{t('groups.system-ops.warning')}</p>
           </div>
         ) : null}
-        {group.fields.map((field) => {
+        {fields.map((field) => {
           const fieldKey = settingsFieldKey(field.key)
           const label = t(`fields.${fieldKey}.label`)
           const hasHint = t.has(`fields.${fieldKey}.hint`)
           const hasPlaceholder = t.has(`fields.${fieldKey}.placeholder`)
-          const isConfigured = field.secret ? Boolean(configured[field.key]) : false
+          const isConfigured = field.secret ? Boolean(configuredKeys[field.key]) : false
+          const removing = field.secret && removeSecrets.includes(field.key)
           return (
             <div key={field.key} className="space-y-1.5">
               <Label htmlFor={field.key}>{label}</Label>
@@ -180,17 +233,24 @@ export function SettingsGroupForm({
                     spellCheck={false}
                     value={values[field.key] ?? ''}
                     placeholder={
-                      isConfigured
+                      isConfigured && !removing
                         ? t('secretReplacePlaceholder')
                         : hasPlaceholder
                           ? t(`fields.${fieldKey}.placeholder`)
                           : undefined
                     }
-                    onChange={(e) => setValues((v) => ({ ...v, [field.key]: e.target.value }))}
+                    onChange={(e) => {
+                      setValues((v) => ({ ...v, [field.key]: e.target.value }))
+                      setRemoveSecrets((current) => current.filter((item) => item !== field.key))
+                    }}
                     className="flex-1 font-mono"
                   />
-                  <Badge variant={isConfigured ? 'secondary' : 'outline'}>
-                    {isConfigured ? t('secretConfigured') : t('secretNotConfigured')}
+                  <Badge variant={removing ? 'outline' : isConfigured ? 'secondary' : 'outline'}>
+                    {removing
+                      ? t('secretWillRemove')
+                      : isConfigured
+                        ? t('secretConfigured')
+                        : t('secretNotConfigured')}
                   </Badge>
                 </div>
               ) : field.image ? (
@@ -261,37 +321,62 @@ export function SettingsGroupForm({
               {hasHint ? (
                 <p className="text-xs text-muted-foreground">{t(`fields.${fieldKey}.hint`)}</p>
               ) : null}
-              {field.readonly ? null : (
-                <div className="flex items-center justify-end gap-2 pt-1">
-                  {field.secret && isConfigured ? (
-                    <Button
-                      type="button"
-                      size="sm"
-                      variant="ghost"
-                      disabled={pendingKey === field.key}
-                      onClick={() => save(field.key, '')}
-                    >
-                      {t('secretRemove')}
-                    </Button>
-                  ) : null}
+              {field.secret && isConfigured ? (
+                <div className="flex justify-end">
                   <Button
                     type="button"
                     size="sm"
-                    variant="outline"
-                    disabled={
-                      pendingKey === field.key ||
-                      (field.secret ? !(values[field.key] ?? '').trim() : false)
-                    }
-                    onClick={() => save(field.key)}
+                    variant="ghost"
+                    disabled={pending}
+                    onClick={() => toggleRemoveSecret(field.key)}
                   >
-                    {pendingKey === field.key ? tc('saving') : tc('save')}
+                    {removing ? t('secretKeep') : t('secretRemove')}
                   </Button>
                 </div>
-              )}
+              ) : null}
             </div>
           )
         })}
       </div>
+      {fields.length > 0 ? (
+        <div className="sticky bottom-0 z-20 -mx-5 -mb-5 mt-4 rounded-b-xl border-t border-border bg-card/95 px-5 py-3 shadow-[0_-8px_24px_-16px_rgba(0,0,0,0.4)] backdrop-blur">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <p className="text-sm text-muted-foreground">
+              {dirty.length > 0 ? t('unsavedChanges', { count: dirty.length }) : t('allSaved')}
+            </p>
+            <div className="ms-auto flex items-center gap-2">
+              <Button
+                type="button"
+                size="sm"
+                variant="ghost"
+                disabled={pending || dirty.length === 0}
+                onClick={discard}
+              >
+                {tc('cancel')}
+              </Button>
+              <Button
+                type="button"
+                size="sm"
+                disabled={pending || dirty.length === 0}
+                onClick={saveAll}
+              >
+                {pending ? tc('saving') : tc('save')}
+              </Button>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </section>
   )
+}
+
+function isDirty(
+  field: SettingsField,
+  values: Record<string, string>,
+  saved: Record<string, string>,
+  removeSecrets: string[],
+) {
+  if (field.readonly) return false
+  if (field.secret && removeSecrets.includes(field.key)) return true
+  return (values[field.key] ?? '') !== (saved[field.key] ?? '')
 }
