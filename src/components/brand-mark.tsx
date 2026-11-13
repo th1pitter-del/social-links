@@ -30,7 +30,7 @@ export function BrandMark({
 
   return (
     <span
-      className={cn('inline-flex items-center justify-center rounded-md', className)}
+      className={cn('inline-flex items-center justify-center rounded-full', className)}
       style={{
         backgroundColor: 'var(--brand-mark-bg, #D5FF2F)',
         color: 'var(--brand-mark-fg, #050505)',
@@ -42,12 +42,14 @@ export function BrandMark({
         className="size-full"
         fill="none"
         stroke="currentColor"
-        strokeWidth="4.2"
+        strokeWidth="3.2"
         strokeLinecap="round"
         aria-hidden
       >
-        <rect x="6.2" y="17" width="19.6" height="10" rx="5" />
-        <path d="M10.8 17v-6.6a5.2 5.2 0 0 1 10.4 0" />
+        <g transform="rotate(-45 16 16)">
+          <rect x="3.6" y="11.4" width="13" height="9.2" rx="4.6" />
+          <rect x="15.4" y="11.4" width="13" height="9.2" rx="4.6" />
+        </g>
       </svg>
     </span>
   )
