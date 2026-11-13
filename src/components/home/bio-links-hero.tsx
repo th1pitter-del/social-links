@@ -73,17 +73,6 @@ function BioCard({ themeId, copy }: { themeId: string; copy: CardCopy }) {
           }}
         >
           <span
-            className="absolute top-[4cqw] left-[4cqw] flex items-center gap-[1.6cqw] rounded-full border px-[2.2cqw] py-[1.2cqw]"
-            style={{
-              backgroundColor: palette.surface,
-              borderColor: palette.border,
-              color: palette.text,
-            }}
-          >
-            <BrandIcon platform="youtube" neutral className="size-[3.2cqw]" />
-            <BrandIcon platform="instagram" neutral className="size-[3.2cqw]" />
-          </span>
-          <span
             className="absolute bottom-0 left-1/2 grid size-[20cqw] -translate-x-1/2 translate-y-1/2 place-items-center rounded-full text-[7.4cqw] font-bold"
             style={{
               backgroundColor: palette.accent,
@@ -236,31 +225,6 @@ export function BioLinksHero({ href }: { href: string }) {
                 })}
               </div>
 
-              <div className="mt-5 flex items-center justify-center gap-1.5">
-                {THEMES.map((themeId, index) => {
-                  const active = index === rotator.active
-                  return (
-                    <button
-                      key={themeId}
-                      type="button"
-                      onClick={() => rotator.goTo(index)}
-                      aria-label={resolveBioTheme(themeId).label}
-                      aria-current={active ? 'true' : undefined}
-                      className="flex size-5 cursor-pointer items-center justify-center rounded-full focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-ring"
-                    >
-                      <span
-                        aria-hidden
-                        className={cn(
-                          'block h-1.5 rounded-full transition-[width,background-color] duration-300',
-                          active
-                            ? 'w-5 bg-primary'
-                            : 'w-1.5 bg-border hover:bg-muted-foreground/50',
-                        )}
-                      />
-                    </button>
-                  )
-                })}
-              </div>
             </div>
 
             <div className="max-w-lg lg:col-start-1 lg:row-start-2 lg:self-start">
