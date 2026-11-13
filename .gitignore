@@ -40,9 +40,14 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env*
 !.env.example
+# editor/OS copies of .env (" - Copy.env") end in .env but not .env*
+*.env
 
 # uploaded media
 /.uploads
+
+# admin backups (database dumps, file archives and job state)
+/.backups
 
 # vercel
 .vercel

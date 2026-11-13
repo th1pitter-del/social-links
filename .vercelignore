@@ -7,6 +7,7 @@ dist
 .figma
 .next
 .uploads
+.backups
 .kilo
 .env
 .env*
