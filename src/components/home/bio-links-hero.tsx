@@ -164,7 +164,7 @@ function BioCard({ themeId, copy }: { themeId: string; copy: CardCopy }) {
  */
 export function BioLinksHero({ href }: { href: string }) {
   const t = useTranslations('home.bioSection')
-  const rotator = useRotator(THEMES.length, 4800)
+  const rotator = useRotator(THEMES.length, 3400)
   const copy: CardCopy = {
     bio: t('cardBio'),
     video: t('cardVideo'),
@@ -213,7 +213,7 @@ export function BioLinksHero({ href }: { href: string }) {
                       key={themeId}
                       aria-hidden={!active}
                       className={cn(
-                        'col-start-1 row-start-1 transition-[opacity,transform] duration-[900ms] ease-out motion-reduce:transition-none',
+                        'col-start-1 row-start-1 transition-[opacity,transform] duration-700 ease-out motion-reduce:transition-none',
                         active
                           ? 'translate-y-0 scale-100 opacity-100'
                           : 'pointer-events-none translate-y-2 scale-[0.97] opacity-0',
