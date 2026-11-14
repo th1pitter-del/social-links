@@ -5,7 +5,7 @@ import { ResetPasswordForm } from '@/components/auth/reset-password-form'
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('auth.reset')
-  return { title: t('title') }
+  return { title: t('title'), robots: { index: false, follow: false } }
 }
 
 export default async function ResetPasswordPage({

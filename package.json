@@ -15,6 +15,7 @@
     "db:seed": "tsx prisma/seed.ts",
     "db:seed:demo": "tsx prisma/seed-demo-content.ts",
     "db:seed:ads": "tsx prisma/seed-demo-ads.ts",
+    "db:seed:blog": "tsx prisma/seed-demo-blog.ts",
     "db:cleanup": "tsx scripts/cleanup.ts"
   },
   "prisma": {

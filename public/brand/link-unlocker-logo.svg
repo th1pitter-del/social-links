@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" role="img" aria-label="Link Unlocker">
+  <!-- bold lime ring, open at the top-right badge -->
+  <path d="M 916 327 A 450 450 0 1 1 674 93" fill="none" stroke="#D5FF2F" stroke-width="38" stroke-linecap="butt"/>
+  <!-- open shackle: lime keyline behind black so it reads on dark surfaces -->
+  <path d="M 435 560 L 435 405 A 125 125 0 0 1 685 405 L 685 480" fill="none" stroke="#D5FF2F" stroke-width="52" stroke-linecap="round"/>
+  <path d="M 435 560 L 435 405 A 125 125 0 0 1 685 405 L 685 480" fill="none" stroke="#050505" stroke-width="30" stroke-linecap="round"/>
+  <!-- lock body: lime keyline behind black -->
+  <circle cx="505" cy="580" r="177" fill="#D5FF2F"/>
+  <path fill="#050505" fill-rule="evenodd" d="M 350 580 a 155 155 0 1 0 310 0 a 155 155 0 1 0 -310 0 Z M 467 565 a 38 38 0 1 0 76 0 a 38 38 0 1 0 -76 0 Z M 490 575 L 490 618 A 15 15 0 0 0 520 618 L 520 575 Z"/>
+  <!-- verified badge -->
+  <circle cx="780" cy="250" r="120" fill="#D5FF2F"/>
+  <path d="M 717 253 L 749 287 L 820 207" fill="none" stroke="#050505" stroke-width="30" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

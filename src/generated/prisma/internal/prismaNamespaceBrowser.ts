@@ -82,7 +82,10 @@ export const ModelName = {
   ShortLink: 'ShortLink',
   SystemBackup: 'SystemBackup',
   SystemUpdate: 'SystemUpdate',
-  SystemOperation: 'SystemOperation'
+  SystemOperation: 'SystemOperation',
+  BlogPost: 'BlogPost',
+  BlogCategory: 'BlogCategory',
+  BlogTag: 'BlogTag'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -591,6 +594,57 @@ export const SystemOperationScalarFieldEnum = {
 export type SystemOperationScalarFieldEnum = (typeof SystemOperationScalarFieldEnum)[keyof typeof SystemOperationScalarFieldEnum]
 
 
+export const BlogPostScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  slug: 'slug',
+  excerpt: 'excerpt',
+  content: 'content',
+  coverImage: 'coverImage',
+  coverAlt: 'coverAlt',
+  status: 'status',
+  featured: 'featured',
+  viewCount: 'viewCount',
+  publishedAt: 'publishedAt',
+  translations: 'translations',
+  seoTitle: 'seoTitle',
+  seoDescription: 'seoDescription',
+  canonicalUrl: 'canonicalUrl',
+  ogImage: 'ogImage',
+  authorId: 'authorId',
+  categoryId: 'categoryId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BlogPostScalarFieldEnum = (typeof BlogPostScalarFieldEnum)[keyof typeof BlogPostScalarFieldEnum]
+
+
+export const BlogCategoryScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  slug: 'slug',
+  description: 'description',
+  translations: 'translations',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BlogCategoryScalarFieldEnum = (typeof BlogCategoryScalarFieldEnum)[keyof typeof BlogCategoryScalarFieldEnum]
+
+
+export const BlogTagScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  slug: 'slug',
+  translations: 'translations',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BlogTagScalarFieldEnum = (typeof BlogTagScalarFieldEnum)[keyof typeof BlogTagScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -999,4 +1053,42 @@ export const SystemOperationOrderByRelevanceFieldEnum = {
 } as const
 
 export type SystemOperationOrderByRelevanceFieldEnum = (typeof SystemOperationOrderByRelevanceFieldEnum)[keyof typeof SystemOperationOrderByRelevanceFieldEnum]
+
+
+export const BlogPostOrderByRelevanceFieldEnum = {
+  id: 'id',
+  title: 'title',
+  slug: 'slug',
+  excerpt: 'excerpt',
+  content: 'content',
+  coverImage: 'coverImage',
+  coverAlt: 'coverAlt',
+  seoTitle: 'seoTitle',
+  seoDescription: 'seoDescription',
+  canonicalUrl: 'canonicalUrl',
+  ogImage: 'ogImage',
+  authorId: 'authorId',
+  categoryId: 'categoryId'
+} as const
+
+export type BlogPostOrderByRelevanceFieldEnum = (typeof BlogPostOrderByRelevanceFieldEnum)[keyof typeof BlogPostOrderByRelevanceFieldEnum]
+
+
+export const BlogCategoryOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  slug: 'slug',
+  description: 'description'
+} as const
+
+export type BlogCategoryOrderByRelevanceFieldEnum = (typeof BlogCategoryOrderByRelevanceFieldEnum)[keyof typeof BlogCategoryOrderByRelevanceFieldEnum]
+
+
+export const BlogTagOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  slug: 'slug'
+} as const
+
+export type BlogTagOrderByRelevanceFieldEnum = (typeof BlogTagOrderByRelevanceFieldEnum)[keyof typeof BlogTagOrderByRelevanceFieldEnum]
 

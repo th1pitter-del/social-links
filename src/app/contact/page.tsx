@@ -5,11 +5,16 @@ import { Markdown } from '@/components/markdown'
 import { SiteFooter } from '@/components/site-footer'
 import { SiteHeader } from '@/components/site-header'
 import { AdSlot } from '@/components/ads/ad-slot'
+import { pageMetadata } from '@/lib/seo'
 import { getPageContent } from '@/lib/settings'
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('pages.contact')
-  return { title: t('metaTitle'), alternates: { canonical: '/contact' } }
+  return pageMetadata({
+    title: t('metaTitle'),
+    description: t('metaDescription'),
+    path: '/contact',
+  })
 }
 
 export default async function ContactPage() {

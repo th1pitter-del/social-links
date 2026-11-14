@@ -5,16 +5,12 @@ import { ContentPage, parseSections } from '@/components/content-page'
 import { JsonLd } from '@/components/json-ld'
 import { SiteFooter } from '@/components/site-footer'
 import { SiteHeader } from '@/components/site-header'
-import { markdownToText } from '@/lib/seo'
+import { markdownToText, pageMetadata } from '@/lib/seo'
 import { getPageContent } from '@/lib/settings'
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('pages.faq')
-  return {
-    title: t('metaTitle'),
-    description: t('intro'),
-    alternates: { canonical: '/faq' },
-  }
+  return pageMetadata({ title: t('metaTitle'), description: t('intro'), path: '/faq' })
 }
 
 export default async function FaqPage() {

@@ -596,6 +596,23 @@ export type EnumOperationStatusWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumOperationStatusFilter<$PrismaModel>
 }
 
+export type EnumBlogPostStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.BlogPostStatus | Prisma.EnumBlogPostStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.BlogPostStatus[]
+  notIn?: $Enums.BlogPostStatus[]
+  not?: Prisma.NestedEnumBlogPostStatusFilter<$PrismaModel> | $Enums.BlogPostStatus
+}
+
+export type EnumBlogPostStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.BlogPostStatus | Prisma.EnumBlogPostStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.BlogPostStatus[]
+  notIn?: $Enums.BlogPostStatus[]
+  not?: Prisma.NestedEnumBlogPostStatusWithAggregatesFilter<$PrismaModel> | $Enums.BlogPostStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumBlogPostStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumBlogPostStatusFilter<$PrismaModel>
+}
+
 export type NestedStringFilter<$PrismaModel = never> = {
   equals?: string | Prisma.StringFieldRefInput<$PrismaModel>
   in?: string[]
@@ -1166,6 +1183,23 @@ export type NestedEnumOperationStatusWithAggregatesFilter<$PrismaModel = never> 
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumOperationStatusFilter<$PrismaModel>
   _max?: Prisma.NestedEnumOperationStatusFilter<$PrismaModel>
+}
+
+export type NestedEnumBlogPostStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.BlogPostStatus | Prisma.EnumBlogPostStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.BlogPostStatus[]
+  notIn?: $Enums.BlogPostStatus[]
+  not?: Prisma.NestedEnumBlogPostStatusFilter<$PrismaModel> | $Enums.BlogPostStatus
+}
+
+export type NestedEnumBlogPostStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.BlogPostStatus | Prisma.EnumBlogPostStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.BlogPostStatus[]
+  notIn?: $Enums.BlogPostStatus[]
+  not?: Prisma.NestedEnumBlogPostStatusWithAggregatesFilter<$PrismaModel> | $Enums.BlogPostStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumBlogPostStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumBlogPostStatusFilter<$PrismaModel>
 }
 
 

@@ -238,6 +238,7 @@ export type UserWhereInput = {
   unlocks?: Prisma.UserUnlockListRelationFilter
   profile?: Prisma.XOR<Prisma.ProfileNullableScalarRelationFilter, Prisma.ProfileWhereInput> | null
   shortLinks?: Prisma.ShortLinkListRelationFilter
+  blogPosts?: Prisma.BlogPostListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -260,6 +261,7 @@ export type UserOrderByWithRelationInput = {
   unlocks?: Prisma.UserUnlockOrderByRelationAggregateInput
   profile?: Prisma.ProfileOrderByWithRelationInput
   shortLinks?: Prisma.ShortLinkOrderByRelationAggregateInput
+  blogPosts?: Prisma.BlogPostOrderByRelationAggregateInput
   _relevance?: Prisma.UserOrderByRelevanceInput
 }
 
@@ -286,6 +288,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   unlocks?: Prisma.UserUnlockListRelationFilter
   profile?: Prisma.XOR<Prisma.ProfileNullableScalarRelationFilter, Prisma.ProfileWhereInput> | null
   shortLinks?: Prisma.ShortLinkListRelationFilter
+  blogPosts?: Prisma.BlogPostListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -342,6 +345,7 @@ export type UserCreateInput = {
   unlocks?: Prisma.UserUnlockCreateNestedManyWithoutUserInput
   profile?: Prisma.ProfileCreateNestedOneWithoutUserInput
   shortLinks?: Prisma.ShortLinkCreateNestedManyWithoutOwnerInput
+  blogPosts?: Prisma.BlogPostCreateNestedManyWithoutAuthorInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -364,6 +368,7 @@ export type UserUncheckedCreateInput = {
   unlocks?: Prisma.UserUnlockUncheckedCreateNestedManyWithoutUserInput
   profile?: Prisma.ProfileUncheckedCreateNestedOneWithoutUserInput
   shortLinks?: Prisma.ShortLinkUncheckedCreateNestedManyWithoutOwnerInput
+  blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutAuthorInput
 }
 
 export type UserUpdateInput = {
@@ -386,6 +391,7 @@ export type UserUpdateInput = {
   unlocks?: Prisma.UserUnlockUpdateManyWithoutUserNestedInput
   profile?: Prisma.ProfileUpdateOneWithoutUserNestedInput
   shortLinks?: Prisma.ShortLinkUpdateManyWithoutOwnerNestedInput
+  blogPosts?: Prisma.BlogPostUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -408,6 +414,7 @@ export type UserUncheckedUpdateInput = {
   unlocks?: Prisma.UserUnlockUncheckedUpdateManyWithoutUserNestedInput
   profile?: Prisma.ProfileUncheckedUpdateOneWithoutUserNestedInput
   shortLinks?: Prisma.ShortLinkUncheckedUpdateManyWithoutOwnerNestedInput
+  blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -648,6 +655,22 @@ export type UserUpdateOneRequiredWithoutShortLinksNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutShortLinksInput, Prisma.UserUpdateWithoutShortLinksInput>, Prisma.UserUncheckedUpdateWithoutShortLinksInput>
 }
 
+export type UserCreateNestedOneWithoutBlogPostsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutBlogPostsInput, Prisma.UserUncheckedCreateWithoutBlogPostsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutBlogPostsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutBlogPostsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutBlogPostsInput, Prisma.UserUncheckedCreateWithoutBlogPostsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutBlogPostsInput
+  upsert?: Prisma.UserUpsertWithoutBlogPostsInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutBlogPostsInput, Prisma.UserUpdateWithoutBlogPostsInput>, Prisma.UserUncheckedUpdateWithoutBlogPostsInput>
+}
+
 export type UserCreateWithoutSessionsInput = {
   id?: string
   name: string
@@ -667,6 +690,7 @@ export type UserCreateWithoutSessionsInput = {
   unlocks?: Prisma.UserUnlockCreateNestedManyWithoutUserInput
   profile?: Prisma.ProfileCreateNestedOneWithoutUserInput
   shortLinks?: Prisma.ShortLinkCreateNestedManyWithoutOwnerInput
+  blogPosts?: Prisma.BlogPostCreateNestedManyWithoutAuthorInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -688,6 +712,7 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   unlocks?: Prisma.UserUnlockUncheckedCreateNestedManyWithoutUserInput
   profile?: Prisma.ProfileUncheckedCreateNestedOneWithoutUserInput
   shortLinks?: Prisma.ShortLinkUncheckedCreateNestedManyWithoutOwnerInput
+  blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutAuthorInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -725,6 +750,7 @@ export type UserUpdateWithoutSessionsInput = {
   unlocks?: Prisma.UserUnlockUpdateManyWithoutUserNestedInput
   profile?: Prisma.ProfileUpdateOneWithoutUserNestedInput
   shortLinks?: Prisma.ShortLinkUpdateManyWithoutOwnerNestedInput
+  blogPosts?: Prisma.BlogPostUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -746,6 +772,7 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   unlocks?: Prisma.UserUnlockUncheckedUpdateManyWithoutUserNestedInput
   profile?: Prisma.ProfileUncheckedUpdateOneWithoutUserNestedInput
   shortLinks?: Prisma.ShortLinkUncheckedUpdateManyWithoutOwnerNestedInput
+  blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserCreateWithoutAccountsInput = {
@@ -767,6 +794,7 @@ export type UserCreateWithoutAccountsInput = {
   unlocks?: Prisma.UserUnlockCreateNestedManyWithoutUserInput
   profile?: Prisma.ProfileCreateNestedOneWithoutUserInput
   shortLinks?: Prisma.ShortLinkCreateNestedManyWithoutOwnerInput
+  blogPosts?: Prisma.BlogPostCreateNestedManyWithoutAuthorInput
 }
 
 export type UserUncheckedCreateWithoutAccountsInput = {
@@ -788,6 +816,7 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   unlocks?: Prisma.UserUnlockUncheckedCreateNestedManyWithoutUserInput
   profile?: Prisma.ProfileUncheckedCreateNestedOneWithoutUserInput
   shortLinks?: Prisma.ShortLinkUncheckedCreateNestedManyWithoutOwnerInput
+  blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutAuthorInput
 }
 
 export type UserCreateOrConnectWithoutAccountsInput = {
@@ -825,6 +854,7 @@ export type UserUpdateWithoutAccountsInput = {
   unlocks?: Prisma.UserUnlockUpdateManyWithoutUserNestedInput
   profile?: Prisma.ProfileUpdateOneWithoutUserNestedInput
   shortLinks?: Prisma.ShortLinkUpdateManyWithoutOwnerNestedInput
+  blogPosts?: Prisma.BlogPostUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -846,6 +876,7 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   unlocks?: Prisma.UserUnlockUncheckedUpdateManyWithoutUserNestedInput
   profile?: Prisma.ProfileUncheckedUpdateOneWithoutUserNestedInput
   shortLinks?: Prisma.ShortLinkUncheckedUpdateManyWithoutOwnerNestedInput
+  blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserCreateWithoutLinksInput = {
@@ -867,6 +898,7 @@ export type UserCreateWithoutLinksInput = {
   unlocks?: Prisma.UserUnlockCreateNestedManyWithoutUserInput
   profile?: Prisma.ProfileCreateNestedOneWithoutUserInput
   shortLinks?: Prisma.ShortLinkCreateNestedManyWithoutOwnerInput
+  blogPosts?: Prisma.BlogPostCreateNestedManyWithoutAuthorInput
 }
 
 export type UserUncheckedCreateWithoutLinksInput = {
@@ -888,6 +920,7 @@ export type UserUncheckedCreateWithoutLinksInput = {
   unlocks?: Prisma.UserUnlockUncheckedCreateNestedManyWithoutUserInput
   profile?: Prisma.ProfileUncheckedCreateNestedOneWithoutUserInput
   shortLinks?: Prisma.ShortLinkUncheckedCreateNestedManyWithoutOwnerInput
+  blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutAuthorInput
 }
 
 export type UserCreateOrConnectWithoutLinksInput = {
@@ -925,6 +958,7 @@ export type UserUpdateWithoutLinksInput = {
   unlocks?: Prisma.UserUnlockUpdateManyWithoutUserNestedInput
   profile?: Prisma.ProfileUpdateOneWithoutUserNestedInput
   shortLinks?: Prisma.ShortLinkUpdateManyWithoutOwnerNestedInput
+  blogPosts?: Prisma.BlogPostUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutLinksInput = {
@@ -946,6 +980,7 @@ export type UserUncheckedUpdateWithoutLinksInput = {
   unlocks?: Prisma.UserUnlockUncheckedUpdateManyWithoutUserNestedInput
   profile?: Prisma.ProfileUncheckedUpdateOneWithoutUserNestedInput
   shortLinks?: Prisma.ShortLinkUncheckedUpdateManyWithoutOwnerNestedInput
+  blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserCreateWithoutMediaInput = {
@@ -967,6 +1002,7 @@ export type UserCreateWithoutMediaInput = {
   unlocks?: Prisma.UserUnlockCreateNestedManyWithoutUserInput
   profile?: Prisma.ProfileCreateNestedOneWithoutUserInput
   shortLinks?: Prisma.ShortLinkCreateNestedManyWithoutOwnerInput
+  blogPosts?: Prisma.BlogPostCreateNestedManyWithoutAuthorInput
 }
 
 export type UserUncheckedCreateWithoutMediaInput = {
@@ -988,6 +1024,7 @@ export type UserUncheckedCreateWithoutMediaInput = {
   unlocks?: Prisma.UserUnlockUncheckedCreateNestedManyWithoutUserInput
   profile?: Prisma.ProfileUncheckedCreateNestedOneWithoutUserInput
   shortLinks?: Prisma.ShortLinkUncheckedCreateNestedManyWithoutOwnerInput
+  blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutAuthorInput
 }
 
 export type UserCreateOrConnectWithoutMediaInput = {
@@ -1025,6 +1062,7 @@ export type UserUpdateWithoutMediaInput = {
   unlocks?: Prisma.UserUnlockUpdateManyWithoutUserNestedInput
   profile?: Prisma.ProfileUpdateOneWithoutUserNestedInput
   shortLinks?: Prisma.ShortLinkUpdateManyWithoutOwnerNestedInput
+  blogPosts?: Prisma.BlogPostUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutMediaInput = {
@@ -1046,6 +1084,7 @@ export type UserUncheckedUpdateWithoutMediaInput = {
   unlocks?: Prisma.UserUnlockUncheckedUpdateManyWithoutUserNestedInput
   profile?: Prisma.ProfileUncheckedUpdateOneWithoutUserNestedInput
   shortLinks?: Prisma.ShortLinkUncheckedUpdateManyWithoutOwnerNestedInput
+  blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserCreateWithoutFilesInput = {
@@ -1067,6 +1106,7 @@ export type UserCreateWithoutFilesInput = {
   unlocks?: Prisma.UserUnlockCreateNestedManyWithoutUserInput
   profile?: Prisma.ProfileCreateNestedOneWithoutUserInput
   shortLinks?: Prisma.ShortLinkCreateNestedManyWithoutOwnerInput
+  blogPosts?: Prisma.BlogPostCreateNestedManyWithoutAuthorInput
 }
 
 export type UserUncheckedCreateWithoutFilesInput = {
@@ -1088,6 +1128,7 @@ export type UserUncheckedCreateWithoutFilesInput = {
   unlocks?: Prisma.UserUnlockUncheckedCreateNestedManyWithoutUserInput
   profile?: Prisma.ProfileUncheckedCreateNestedOneWithoutUserInput
   shortLinks?: Prisma.ShortLinkUncheckedCreateNestedManyWithoutOwnerInput
+  blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutAuthorInput
 }
 
 export type UserCreateOrConnectWithoutFilesInput = {
@@ -1125,6 +1166,7 @@ export type UserUpdateWithoutFilesInput = {
   unlocks?: Prisma.UserUnlockUpdateManyWithoutUserNestedInput
   profile?: Prisma.ProfileUpdateOneWithoutUserNestedInput
   shortLinks?: Prisma.ShortLinkUpdateManyWithoutOwnerNestedInput
+  blogPosts?: Prisma.BlogPostUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFilesInput = {
@@ -1146,6 +1188,7 @@ export type UserUncheckedUpdateWithoutFilesInput = {
   unlocks?: Prisma.UserUnlockUncheckedUpdateManyWithoutUserNestedInput
   profile?: Prisma.ProfileUncheckedUpdateOneWithoutUserNestedInput
   shortLinks?: Prisma.ShortLinkUncheckedUpdateManyWithoutOwnerNestedInput
+  blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserCreateWithoutUnlocksInput = {
@@ -1167,6 +1210,7 @@ export type UserCreateWithoutUnlocksInput = {
   files?: Prisma.StoredFileCreateNestedManyWithoutOwnerInput
   profile?: Prisma.ProfileCreateNestedOneWithoutUserInput
   shortLinks?: Prisma.ShortLinkCreateNestedManyWithoutOwnerInput
+  blogPosts?: Prisma.BlogPostCreateNestedManyWithoutAuthorInput
 }
 
 export type UserUncheckedCreateWithoutUnlocksInput = {
@@ -1188,6 +1232,7 @@ export type UserUncheckedCreateWithoutUnlocksInput = {
   files?: Prisma.StoredFileUncheckedCreateNestedManyWithoutOwnerInput
   profile?: Prisma.ProfileUncheckedCreateNestedOneWithoutUserInput
   shortLinks?: Prisma.ShortLinkUncheckedCreateNestedManyWithoutOwnerInput
+  blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutAuthorInput
 }
 
 export type UserCreateOrConnectWithoutUnlocksInput = {
@@ -1225,6 +1270,7 @@ export type UserUpdateWithoutUnlocksInput = {
   files?: Prisma.StoredFileUpdateManyWithoutOwnerNestedInput
   profile?: Prisma.ProfileUpdateOneWithoutUserNestedInput
   shortLinks?: Prisma.ShortLinkUpdateManyWithoutOwnerNestedInput
+  blogPosts?: Prisma.BlogPostUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutUnlocksInput = {
@@ -1246,6 +1292,7 @@ export type UserUncheckedUpdateWithoutUnlocksInput = {
   files?: Prisma.StoredFileUncheckedUpdateManyWithoutOwnerNestedInput
   profile?: Prisma.ProfileUncheckedUpdateOneWithoutUserNestedInput
   shortLinks?: Prisma.ShortLinkUncheckedUpdateManyWithoutOwnerNestedInput
+  blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserCreateWithoutProfileInput = {
@@ -1267,6 +1314,7 @@ export type UserCreateWithoutProfileInput = {
   files?: Prisma.StoredFileCreateNestedManyWithoutOwnerInput
   unlocks?: Prisma.UserUnlockCreateNestedManyWithoutUserInput
   shortLinks?: Prisma.ShortLinkCreateNestedManyWithoutOwnerInput
+  blogPosts?: Prisma.BlogPostCreateNestedManyWithoutAuthorInput
 }
 
 export type UserUncheckedCreateWithoutProfileInput = {
@@ -1288,6 +1336,7 @@ export type UserUncheckedCreateWithoutProfileInput = {
   files?: Prisma.StoredFileUncheckedCreateNestedManyWithoutOwnerInput
   unlocks?: Prisma.UserUnlockUncheckedCreateNestedManyWithoutUserInput
   shortLinks?: Prisma.ShortLinkUncheckedCreateNestedManyWithoutOwnerInput
+  blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutAuthorInput
 }
 
 export type UserCreateOrConnectWithoutProfileInput = {
@@ -1325,6 +1374,7 @@ export type UserUpdateWithoutProfileInput = {
   files?: Prisma.StoredFileUpdateManyWithoutOwnerNestedInput
   unlocks?: Prisma.UserUnlockUpdateManyWithoutUserNestedInput
   shortLinks?: Prisma.ShortLinkUpdateManyWithoutOwnerNestedInput
+  blogPosts?: Prisma.BlogPostUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutProfileInput = {
@@ -1346,6 +1396,7 @@ export type UserUncheckedUpdateWithoutProfileInput = {
   files?: Prisma.StoredFileUncheckedUpdateManyWithoutOwnerNestedInput
   unlocks?: Prisma.UserUnlockUncheckedUpdateManyWithoutUserNestedInput
   shortLinks?: Prisma.ShortLinkUncheckedUpdateManyWithoutOwnerNestedInput
+  blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserCreateWithoutShortLinksInput = {
@@ -1367,6 +1418,7 @@ export type UserCreateWithoutShortLinksInput = {
   files?: Prisma.StoredFileCreateNestedManyWithoutOwnerInput
   unlocks?: Prisma.UserUnlockCreateNestedManyWithoutUserInput
   profile?: Prisma.ProfileCreateNestedOneWithoutUserInput
+  blogPosts?: Prisma.BlogPostCreateNestedManyWithoutAuthorInput
 }
 
 export type UserUncheckedCreateWithoutShortLinksInput = {
@@ -1388,6 +1440,7 @@ export type UserUncheckedCreateWithoutShortLinksInput = {
   files?: Prisma.StoredFileUncheckedCreateNestedManyWithoutOwnerInput
   unlocks?: Prisma.UserUnlockUncheckedCreateNestedManyWithoutUserInput
   profile?: Prisma.ProfileUncheckedCreateNestedOneWithoutUserInput
+  blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutAuthorInput
 }
 
 export type UserCreateOrConnectWithoutShortLinksInput = {
@@ -1425,6 +1478,7 @@ export type UserUpdateWithoutShortLinksInput = {
   files?: Prisma.StoredFileUpdateManyWithoutOwnerNestedInput
   unlocks?: Prisma.UserUnlockUpdateManyWithoutUserNestedInput
   profile?: Prisma.ProfileUpdateOneWithoutUserNestedInput
+  blogPosts?: Prisma.BlogPostUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutShortLinksInput = {
@@ -1446,6 +1500,111 @@ export type UserUncheckedUpdateWithoutShortLinksInput = {
   files?: Prisma.StoredFileUncheckedUpdateManyWithoutOwnerNestedInput
   unlocks?: Prisma.UserUnlockUncheckedUpdateManyWithoutUserNestedInput
   profile?: Prisma.ProfileUncheckedUpdateOneWithoutUserNestedInput
+  blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutAuthorNestedInput
+}
+
+export type UserCreateWithoutBlogPostsInput = {
+  id?: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  role?: $Enums.UserRole
+  banned?: boolean
+  banReason?: string | null
+  banExpires?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  links?: Prisma.LinkCreateNestedManyWithoutOwnerInput
+  media?: Prisma.MediaAssetCreateNestedManyWithoutOwnerInput
+  files?: Prisma.StoredFileCreateNestedManyWithoutOwnerInput
+  unlocks?: Prisma.UserUnlockCreateNestedManyWithoutUserInput
+  profile?: Prisma.ProfileCreateNestedOneWithoutUserInput
+  shortLinks?: Prisma.ShortLinkCreateNestedManyWithoutOwnerInput
+}
+
+export type UserUncheckedCreateWithoutBlogPostsInput = {
+  id?: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  role?: $Enums.UserRole
+  banned?: boolean
+  banReason?: string | null
+  banExpires?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  links?: Prisma.LinkUncheckedCreateNestedManyWithoutOwnerInput
+  media?: Prisma.MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
+  files?: Prisma.StoredFileUncheckedCreateNestedManyWithoutOwnerInput
+  unlocks?: Prisma.UserUnlockUncheckedCreateNestedManyWithoutUserInput
+  profile?: Prisma.ProfileUncheckedCreateNestedOneWithoutUserInput
+  shortLinks?: Prisma.ShortLinkUncheckedCreateNestedManyWithoutOwnerInput
+}
+
+export type UserCreateOrConnectWithoutBlogPostsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutBlogPostsInput, Prisma.UserUncheckedCreateWithoutBlogPostsInput>
+}
+
+export type UserUpsertWithoutBlogPostsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutBlogPostsInput, Prisma.UserUncheckedUpdateWithoutBlogPostsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutBlogPostsInput, Prisma.UserUncheckedCreateWithoutBlogPostsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutBlogPostsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutBlogPostsInput, Prisma.UserUncheckedUpdateWithoutBlogPostsInput>
+}
+
+export type UserUpdateWithoutBlogPostsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  links?: Prisma.LinkUpdateManyWithoutOwnerNestedInput
+  media?: Prisma.MediaAssetUpdateManyWithoutOwnerNestedInput
+  files?: Prisma.StoredFileUpdateManyWithoutOwnerNestedInput
+  unlocks?: Prisma.UserUnlockUpdateManyWithoutUserNestedInput
+  profile?: Prisma.ProfileUpdateOneWithoutUserNestedInput
+  shortLinks?: Prisma.ShortLinkUpdateManyWithoutOwnerNestedInput
+}
+
+export type UserUncheckedUpdateWithoutBlogPostsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  links?: Prisma.LinkUncheckedUpdateManyWithoutOwnerNestedInput
+  media?: Prisma.MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
+  files?: Prisma.StoredFileUncheckedUpdateManyWithoutOwnerNestedInput
+  unlocks?: Prisma.UserUnlockUncheckedUpdateManyWithoutUserNestedInput
+  profile?: Prisma.ProfileUncheckedUpdateOneWithoutUserNestedInput
+  shortLinks?: Prisma.ShortLinkUncheckedUpdateManyWithoutOwnerNestedInput
 }
 
 
@@ -1461,6 +1620,7 @@ export type UserCountOutputType = {
   files: number
   unlocks: number
   shortLinks: number
+  blogPosts: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1471,6 +1631,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   files?: boolean | UserCountOutputTypeCountFilesArgs
   unlocks?: boolean | UserCountOutputTypeCountUnlocksArgs
   shortLinks?: boolean | UserCountOutputTypeCountShortLinksArgs
+  blogPosts?: boolean | UserCountOutputTypeCountBlogPostsArgs
 }
 
 /**
@@ -1532,6 +1693,13 @@ export type UserCountOutputTypeCountShortLinksArgs<ExtArgs extends runtime.Types
   where?: Prisma.ShortLinkWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountBlogPostsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.BlogPostWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1553,6 +1721,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   unlocks?: boolean | Prisma.User$unlocksArgs<ExtArgs>
   profile?: boolean | Prisma.User$profileArgs<ExtArgs>
   shortLinks?: boolean | Prisma.User$shortLinksArgs<ExtArgs>
+  blogPosts?: boolean | Prisma.User$blogPostsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -1582,6 +1751,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   unlocks?: boolean | Prisma.User$unlocksArgs<ExtArgs>
   profile?: boolean | Prisma.User$profileArgs<ExtArgs>
   shortLinks?: boolean | Prisma.User$shortLinksArgs<ExtArgs>
+  blogPosts?: boolean | Prisma.User$blogPostsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 
@@ -1596,6 +1766,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     unlocks: Prisma.$UserUnlockPayload<ExtArgs>[]
     profile: Prisma.$ProfilePayload<ExtArgs> | null
     shortLinks: Prisma.$ShortLinkPayload<ExtArgs>[]
+    blogPosts: Prisma.$BlogPostPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1957,6 +2128,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   unlocks<T extends Prisma.User$unlocksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$unlocksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserUnlockPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   profile<T extends Prisma.User$profileArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$profileArgs<ExtArgs>>): Prisma.Prisma__ProfileClient<runtime.Types.Result.GetResult<Prisma.$ProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   shortLinks<T extends Prisma.User$shortLinksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$shortLinksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ShortLinkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  blogPosts<T extends Prisma.User$blogPostsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$blogPostsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BlogPostPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2529,6 +2701,30 @@ export type User$shortLinksArgs<ExtArgs extends runtime.Types.Extensions.Interna
   take?: number
   skip?: number
   distinct?: Prisma.ShortLinkScalarFieldEnum | Prisma.ShortLinkScalarFieldEnum[]
+}
+
+/**
+ * User.blogPosts
+ */
+export type User$blogPostsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the BlogPost
+   */
+  select?: Prisma.BlogPostSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the BlogPost
+   */
+  omit?: Prisma.BlogPostOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BlogPostInclude<ExtArgs> | null
+  where?: Prisma.BlogPostWhereInput
+  orderBy?: Prisma.BlogPostOrderByWithRelationInput | Prisma.BlogPostOrderByWithRelationInput[]
+  cursor?: Prisma.BlogPostWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.BlogPostScalarFieldEnum | Prisma.BlogPostScalarFieldEnum[]
 }
 
 /**

@@ -127,6 +127,7 @@ export const HEADER_MENU_KEYS = [
   'terms',
   'videoCompressor',
   'videoDownloader',
+  'blog',
 ] as const
 
 export type HeaderMenuKey = (typeof HEADER_MENU_KEYS)[number]
@@ -154,6 +155,7 @@ export const HEADER_ICONS = [
   'camera',
   'heart',
   'flame',
+  'newspaper',
 ] as const
 
 export type HeaderIcon = (typeof HEADER_ICONS)[number]

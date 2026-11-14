@@ -47,6 +47,9 @@ export async function SiteFooter({
             compact ? 'justify-center' : 'justify-center lg:justify-start',
           )}
         >
+          <Link href="/blog" className="hover:text-foreground">
+            {nav('blog')}
+          </Link>
           <Link href="/faq" className="hover:text-foreground">
             {nav('faq')}
           </Link>

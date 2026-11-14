@@ -7,7 +7,7 @@ import { getSession } from '@/lib/session'
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('auth.signUp')
-  return { title: t('title') }
+  return { title: t('title'), robots: { index: false, follow: false } }
 }
 
 export default async function SignUpPage() {

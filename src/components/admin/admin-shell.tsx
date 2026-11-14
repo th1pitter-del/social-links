@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import {
   AtSign,
+  ChevronDown,
   ChevronRight,
   DatabaseBackup,
   ExternalLink,
@@ -21,9 +22,9 @@ import {
   LogOut,
   Megaphone,
   Menu,
+  Newspaper,
   NotebookText,
   PanelTop,
-  Scissors,
   ScrollText,
   Settings,
   ShieldCheck,
@@ -47,6 +48,12 @@ import {
 
 type IconType = ComponentType<{ className?: string }>
 
+type NavChild = {
+  href: string
+  label: string
+  badge?: number
+}
+
 type NavItem = {
   href: string
   label: string
@@ -54,6 +61,8 @@ type NavItem = {
   badge?: number
   /** Second line spelling out who the section affects. */
   hint?: string
+  /** Turns the row into a collapsible parent instead of a direct link. */
+  children?: NavChild[]
 }
 type NavGroup = { title: string; items: NavItem[] }
 
@@ -90,6 +99,7 @@ export function AdminShell({
   const t = useTranslations('adminShell')
   const pathname = usePathname()
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [openParents, setOpenParents] = useState<string[]>([])
 
   const groups: NavGroup[] = [
     {
@@ -100,8 +110,15 @@ export function AdminShell({
       title: t('groups.moderation'),
       items: [
         { href: '/admin/reports', label: t('nav.abuseReports'), icon: Flag, badge: openReports },
-        { href: '/admin/links', label: t('nav.links'), icon: Link2 },
-        { href: '/admin/short-links', label: t('nav.shortLinks'), icon: Scissors },
+        {
+          href: '/admin/link-tools',
+          label: t('nav.links'),
+          icon: Link2,
+          children: [
+            { href: '/admin/links', label: t('nav.allLinks') },
+            { href: '/admin/short-links', label: t('nav.shortLinks') },
+          ],
+        },
         { href: '/admin/bio', label: t('nav.bioPages'), icon: AtSign },
         { href: '/admin/users', label: t('nav.users'), icon: Users },
       ],
@@ -110,6 +127,18 @@ export function AdminShell({
       title: t('groups.content'),
       items: [
         { href: '/admin/content', label: t('nav.siteContent'), icon: FileText },
+        {
+          href: '/admin/blog-tools',
+          label: t('nav.blog'),
+          icon: Newspaper,
+          children: [
+            { href: '/admin/blog', label: t('nav.blogOverview') },
+            { href: '/admin/blog/articles', label: t('nav.blogPosts') },
+            { href: '/admin/blog/articles/new', label: t('nav.blogNewPost') },
+            { href: '/admin/blog/categories', label: t('nav.blogCategories') },
+            { href: '/admin/blog/tags', label: t('nav.blogTags') },
+          ],
+        },
         { href: '/admin/platforms', label: t('nav.platforms'), icon: Globe },
         { href: '/admin/media', label: t('nav.mediaLibrary'), icon: Images },
         { href: '/admin/files', label: t('nav.lockedFiles'), icon: FileLock2 },
@@ -150,14 +179,33 @@ export function AdminShell({
     },
   ]
 
-  const allItems = groups.flatMap((group) => group.items)
-  const current = [...allItems]
+  // Parents have no page of their own; matching happens against their children.
+  const topLevelItems = groups.flatMap((group) => group.items)
+  const navEntries = groups.flatMap((group) =>
+    group.items.flatMap((item) => item.children ?? [item]),
+  )
+  const current = [...navEntries]
     .sort((a, b) => b.href.length - a.href.length)
     .find((item) => isActive(pathname, item.href))
+  const currentItem =
+    topLevelItems.find((item) => item.href === current?.href) ??
+    topLevelItems.find((item) => item.children?.some((child) => child.href === current?.href))
   const currentGroup = current
-    ? groups.find((group) => group.items.some((item) => item.href === current.href))?.title
+    ? groups.find((group) =>
+        group.items.some((item) =>
+          item.children
+            ? item.children.some((child) => child.href === current.href)
+            : item.href === current.href,
+        ),
+      )?.title
     : undefined
-  const CurrentIcon = current?.icon
+  const CurrentIcon = currentItem?.icon ?? LayoutDashboard
+
+  function toggleParent(href: string) {
+    setOpenParents((current) =>
+      current.includes(href) ? current.filter((item) => item !== href) : [...current, href],
+    )
+  }
 
   return (
     <div className="admin-theme flex min-h-screen w-full flex-1 bg-background text-foreground">
@@ -207,6 +255,72 @@ export function AdminShell({
               <ul className="space-y-0.5">
                 {group.items.map((item) => {
                   const active = isActive(pathname, item.href)
+
+                  if (item.children) {
+                    const childActive = item.children.some((child) => child.href === current?.href)
+                    const open = childActive || openParents.includes(item.href)
+                    return (
+                      <li key={item.href}>
+                        <button
+                          type="button"
+                          onClick={() => toggleParent(item.href)}
+                          aria-expanded={open}
+                          className={cn(
+                            'group flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
+                            childActive
+                              ? 'bg-sidebar-accent text-sidebar-accent-foreground'
+                              : 'text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
+                          )}
+                        >
+                          <item.icon className="size-4 shrink-0" />
+                          <span className="min-w-0 flex-1 truncate text-start">{item.label}</span>
+                          <ChevronDown
+                            className={cn(
+                              'size-3.5 shrink-0 text-sidebar-foreground/70 transition-transform rtl:-scale-x-100',
+                              open ? '' : '-rotate-90',
+                            )}
+                          />
+                        </button>
+                        {open ? (
+                          <ul className="mt-0.5 mb-1 ms-5 space-y-0.5 border-s border-sidebar-border ps-3">
+                            {item.children.map((child) => {
+                              const childIsActive = child.href === current?.href
+                              return (
+                                <li key={child.href}>
+                                  <Link
+                                    href={child.href}
+                                    onClick={() => setMobileOpen(false)}
+                                    aria-current={childIsActive ? 'page' : undefined}
+                                    className={cn(
+                                      'flex items-center gap-2 rounded-md px-2.5 py-1.5 text-[13px] transition-colors',
+                                      childIsActive
+                                        ? 'bg-primary font-medium text-primary-foreground'
+                                        : 'text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
+                                    )}
+                                  >
+                                    <span className="min-w-0 flex-1 truncate">{child.label}</span>
+                                    {child.badge ? (
+                                      <span
+                                        className={cn(
+                                          'shrink-0 rounded-full px-1.5 py-0.5 text-[10px] font-semibold',
+                                          childIsActive
+                                            ? 'bg-black/15 text-primary-foreground'
+                                            : 'bg-error text-white',
+                                        )}
+                                      >
+                                        {child.badge}
+                                      </span>
+                                    ) : null}
+                                  </Link>
+                                </li>
+                              )
+                            })}
+                          </ul>
+                        ) : null}
+                      </li>
+                    )
+                  }
+
                   return (
                     <li key={item.href}>
                       <Link

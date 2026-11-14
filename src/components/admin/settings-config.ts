@@ -46,6 +46,10 @@ export const SETTINGS_GROUPS: SettingsGroup[] = [
     fields: [
       { key: 'site.name' },
       { key: 'site.tagline' },
+      // Per-locale overrides for the site-wide page description.
+      { key: 'site.tagline.es' },
+      { key: 'site.tagline.pt-br' },
+      { key: 'site.tagline.ar' },
       { key: 'site.logoUrl', image: true },
       { key: 'site.faviconUrl', image: true },
     ],

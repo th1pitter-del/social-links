@@ -16,6 +16,7 @@ const tones: Record<string, string> = {
   RESOLVED: 'bg-success',
   DISMISSED: 'bg-muted-foreground/50',
   PENDING: 'bg-warning',
+  SCHEDULED: 'bg-warning',
   VERIFIED: 'bg-success',
   BANNED: 'bg-error',
   // An expired session is inert rather than wrong, so it stays out of the

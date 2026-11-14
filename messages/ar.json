@@ -39,7 +39,14 @@
       "contentPages": "صفحات المحتوى",
       "customMenus": "قوائم الشريط الجانبي",
       "backups": "النسخ الاحتياطي",
-      "updates": "تحديثات النظام"
+      "updates": "تحديثات النظام",
+      "blog": "المدونة",
+      "allLinks": "كل الروابط",
+      "blogOverview": "نظرة عامة",
+      "blogPosts": "المقالات",
+      "blogNewPost": "مقالة جديدة",
+      "blogCategories": "التصنيفات",
+      "blogTags": "الوسوم"
     },
     "navHints": {
       "usersOnly": "للمستخدمين فقط"
@@ -113,7 +120,8 @@
     "sections": "التنقل",
     "contact": "اتصل بنا",
     "privacy": "الخصوصية",
-    "terms": "الشروط"
+    "terms": "الشروط",
+    "blog": "المدونة"
   },
   "footer": {
     "tagline": "روابط فتح محتوى اجتماعي مجانية تبقيك مسيطرًا على محتواك.",
@@ -459,6 +467,7 @@
     },
     "contact": {
       "metaTitle": "اتصل بنا",
+      "metaDescription": "هل لديك أسئلة حول رابط أو حسابك أو المنصة؟ تواصل مع الفريق. تُعالج بلاغات إساءة الاستخدام أولًا.",
       "title": "اتصل بنا",
       "content": "هل لديك أسئلة حول رابط أو حسابك أو المنصة؟ راسلنا على [support@linkunlock.app](mailto:support@linkunlock.app).\nتُعالَج بلاغات إساءة الاستخدام أولًا. أدرج رابط URL العام للرابط حتى نتمكن من التحقيق بسرعة."
     }
@@ -491,7 +500,13 @@
       "contentPages": "صفحات المحتوى",
       "customMenus": "قوائم الشريط الجانبي المخصصة",
       "backups": "النسخ الاحتياطي",
-      "updates": "تحديثات النظام"
+      "updates": "تحديثات النظام",
+      "blog": "المدونة",
+      "blogArticles": "مقالات المدونة",
+      "blogNewArticle": "مقالة مدونة جديدة",
+      "blogEditArticle": "تعديل مقالة المدونة",
+      "blogCategories": "تصنيفات المدونة",
+      "blogTags": "وسوم المدونة"
     },
     "status": {
       "active": "نشط",
@@ -1138,8 +1153,23 @@
         },
         "site_tagline": {
           "label": "الشعار النصي",
-          "hint": "يظهر في تذييل الصفحة ويُستخدم كوصف افتراضي للصفحة.",
+          "hint": "يظهر في تذييل الصفحة ويُستخدم كوصف افتراضي للصفحة. تتقدم عليه النسخ الخاصة بكل لغة أدناه.",
           "placeholder": "افتح المحتوى بإكمال مهمة سريعة"
+        },
+        "site_tagline_es": {
+          "label": "الشعار النصي — الإسبانية",
+          "hint": "يُستخدم للزائرين بالإسبانية في الموقع وبيانات الصفحة الوصفية. عند تركه فارغًا يُستخدم الشعار الافتراضي.",
+          "placeholder": "Enlaces de desbloqueo social gratis"
+        },
+        "site_tagline_pt-br": {
+          "label": "الشعار النصي — البرتغالية (البرازيل)",
+          "hint": "يُستخدم للزائرين بالبرتغالية في الموقع وبيانات الصفحة الوصفية. عند تركه فارغًا يُستخدم الشعار الافتراضي.",
+          "placeholder": "Links de desbloqueio social grátis"
+        },
+        "site_tagline_ar": {
+          "label": "الشعار النصي — العربية",
+          "hint": "يُستخدم للزائرين بالعربية في الموقع وبيانات الصفحة الوصفية. عند تركه فارغًا يُستخدم الشعار الافتراضي.",
+          "placeholder": "روابط فتح اجتماعية مجانية"
         },
         "theme_light_primary": {
           "label": "الوضع الفاتح — اللون المميز الأساسي",
@@ -1657,6 +1687,241 @@
       "cancel": "إلغاء",
       "applyLink": "تطبيق",
       "uploadFailed": "تعذّر رفع الصورة."
+    },
+    "blog": {
+      "nav": {
+        "overview": "نظرة عامة",
+        "articles": "المقالات",
+        "categories": "التصنيفات",
+        "tags": "الوسوم"
+      },
+      "title": "المدونة",
+      "description": "اكتب المقالات وجدول النشر ونظّم المدونة العامة.",
+      "newArticle": "مقالة جديدة",
+      "viewAll": "عرض الكل",
+      "stats": {
+        "published": "منشور",
+        "drafts": "مسودات",
+        "scheduled": "مجدول",
+        "views": "إجمالي المشاهدات"
+      },
+      "popular": {
+        "title": "الأكثر قراءة",
+        "description": "المقالات التي يفتحها القراء أكثر.",
+        "empty": "لا توجد مشاهدات مسجّلة بعد.",
+        "views": "المشاهدات: {count}"
+      },
+      "recent": {
+        "title": "حُدِّثت مؤخرًا",
+        "description": "أحدث التعديلات في المدونة.",
+        "empty": "لا توجد مقالات بعد."
+      },
+      "status": {
+        "published": "منشور",
+        "draft": "مسودة",
+        "scheduled": "مجدول"
+      },
+      "schedulingNote": "تبقى المقالة المنشورة بتاريخ مستقبلي مخفية حتى ذلك اليوم ثم تظهر من تلقاء نفسها.",
+      "articlesTitle": "المقالات",
+      "articlesDescription": "كل المسودات والمواعيد والمقالات المنشورة.",
+      "filters": {
+        "all": "الكل"
+      },
+      "searchPlaceholder": "ابحث بالعنوان أو الرابط",
+      "categoryFilter": "التصنيف",
+      "allCategories": "كل التصنيفات",
+      "sortLabel": "الترتيب حسب",
+      "sorts": {
+        "updated": "آخر تحديث",
+        "published": "تاريخ النشر",
+        "title": "العنوان",
+        "views": "المشاهدات"
+      },
+      "applyFilters": "تطبيق",
+      "noResults": "لا توجد مقالات تطابق هذه المرشحات.",
+      "clearFilters": "مسح المرشحات",
+      "empty": "لا توجد مقالات بعد. اكتب الأولى.",
+      "columns": {
+        "article": "المقالة",
+        "status": "الحالة",
+        "author": "الكاتب",
+        "category": "التصنيف",
+        "dates": "التواريخ",
+        "views": "المشاهدات",
+        "actions": "الإجراءات"
+      },
+      "updatedLabel": "آخر تحديث",
+      "publishedLabel": "نُشر",
+      "scheduledLabel": "مجدول في",
+      "noAuthor": "بلا كاتب",
+      "uncategorized": "بلا تصنيف",
+      "noImage": "بلا صورة",
+      "pagination": "الصفحة {page} من {pages} · {total} إجمالًا",
+      "previous": "السابق",
+      "next": "التالي",
+      "list": {
+        "previewAria": "معاينة {title}",
+        "openAria": "فتح {title} في الموقع",
+        "editAria": "تعديل المقالة",
+        "deleteAria": "حذف {title}",
+        "preview": "معاينة",
+        "openPublic": "فتح في الموقع",
+        "publishAria": "نشر أو إلغاء نشر {title}",
+        "deleteTitle": "حذف المقالة",
+        "deleteDescription": "حذف «{title}»؟ لا يمكن التراجع.",
+        "toasts": {
+          "published": "تم نشر المقالة.",
+          "unpublished": "عادت المقالة إلى المسودة.",
+          "deleted": "تم حذف المقالة."
+        }
+      },
+      "editor": {
+        "editTitle": "تعديل المقالة",
+        "createTitle": "مقالة جديدة",
+        "formDescription": "المقالة الإنجليزية هي الأساس؛ تستخدمها اللغات الأخرى عند الفراغ.",
+        "preview": "معاينة",
+        "unsavedConfirm": "لديك تغييرات غير محفوظة. هل تريد المغادرة؟",
+        "translationsLabel": "اللغات",
+        "translatedTitleLabel": "العنوان المترجم",
+        "translationFallback": "اتركه فارغًا لعرض النص الإنجليزي.",
+        "titleLabel": "العنوان",
+        "titleRequired": "أضف عنوانًا قبل الحفظ.",
+        "invalidSlug": "استخدم أحرفًا صغيرة وأرقامًا وشرطات في الرابط.",
+        "authorRequired": "اختر كاتبًا.",
+        "excerptLabel": "المقتطف",
+        "excerptHint": "يظهر في البطاقات وأعلى المقالة.",
+        "contentLabel": "المحتوى",
+        "contentHint": "تشكّل عناوين المحرر فهرس المقالة.",
+        "seoForLocale": "تحسين محركات البحث لهذه اللغة",
+        "seoTitle": "المظهر في البحث",
+        "seoTitleLabel": "عنوان SEO",
+        "seoDescriptionLabel": "وصف SEO",
+        "canonicalLabel": "الرابط الأساسي",
+        "canonicalPlaceholder": "/blog/slug أو https://…",
+        "ogImageLabel": "صورة التواصل",
+        "slugLabel": "الرابط اللطيف",
+        "slugPlaceholder": "maqalati",
+        "slugHint": "العنوان العام: {prefix}…",
+        "authorLabel": "الكاتب",
+        "authorPlaceholder": "اختر كاتبًا",
+        "categoryLabel": "التصنيف",
+        "noCategory": "بلا تصنيف",
+        "tagsLabel": "الوسوم",
+        "tagsHint": "مفصولة بفواصل. تُنشأ الوسوم الجديدة تلقائيًا (حتى 8).",
+        "featuredLabel": "مميّزة",
+        "featuredHint": "تتصدر صفحة المدونة أثناء نشرها.",
+        "publishingTitle": "النشر",
+        "autosaveSaving": "جارٍ الحفظ…",
+        "autosaveFailed": "فشل الحفظ التلقائي",
+        "autosaveSaved": "حُفظت المسودة في {time}",
+        "autosaveIdle": "تُحفظ المسودات تلقائيًا",
+        "statusLabel": "الحالة",
+        "statusDraft": "مسودة",
+        "statusPublished": "منشور",
+        "publishDateLabel": "تاريخ النشر",
+        "publishDateHint": "التاريخ المستقبلي يجدول المقالة؛ وتُنشر من تلقاء نفسها.",
+        "statusHint": "أنت وحدك ترى المسودة.",
+        "saveDraft": "حفظ المسودة",
+        "publish": "نشر",
+        "coverLabel": "صورة الغلاف",
+        "imagePlaceholder": "https://… أو /api/media/…",
+        "uploadImage": "رفع",
+        "uploading": "جارٍ الرفع…",
+        "uploadFailed": "تعذّر رفع الصورة.",
+        "chooseFromLibrary": "مكتبة الوسائط",
+        "removeImage": "إزالة",
+        "coverAltLabel": "وصف الغلاف",
+        "coverAltHint": "صف الصورة لقارئات الشاشة ومحركات البحث.",
+        "libraryTitle": "مكتبة الوسائط",
+        "libraryDescription": "اختر صورة رُفعت إلى الموقع.",
+        "libraryEmpty": "لا توجد صور بعد. ارفع واحدة.",
+        "toasts": {
+          "saved": "حُفظت المسودة.",
+          "published": "نُشرت المقالة.",
+          "scheduled": "جُدولت المقالة."
+        },
+        "createdAt": "أُنشئت",
+        "updatedAt": "حُدِّثت",
+        "views": "المشاهدات"
+      },
+      "categories": {
+        "pageTitle": "التصنيفات",
+        "pageDescription": "جمّع المقالات ليقرأها الزوار معًا.",
+        "count": "التصنيفات: {count}",
+        "newCategory": "تصنيف جديد",
+        "empty": "لا توجد تصنيفات بعد.",
+        "columns": {
+          "name": "الاسم",
+          "slug": "الرابط",
+          "posts": "المقالات",
+          "updated": "آخر تحديث",
+          "actions": "الإجراءات"
+        },
+        "editAria": "تعديل {name}",
+        "deleteAria": "حذف {name}",
+        "newTitle": "تصنيف جديد",
+        "editTitle": "تعديل التصنيف",
+        "formDescription": "يمكن أن تختلف الأسماء والأوصاف حسب اللغة.",
+        "translationsLabel": "اللغات",
+        "nameLabel": "الاسم",
+        "translatedNameLabel": "الاسم المترجم",
+        "translationFallback": "اتركه فارغًا لعرض النص الإنجليزي.",
+        "namePlaceholder": "أدلة",
+        "descriptionLabel": "الوصف",
+        "descriptionHint": "يظهر أعلى صفحة التصنيف.",
+        "nameRequired": "أضف اسمًا.",
+        "invalidSlug": "استخدم أحرفًا صغيرة وأرقامًا وشرطات.",
+        "slugLabel": "الرابط اللطيف",
+        "slugPlaceholder": "adla",
+        "slugHint": "يُستخدم في عنوان التصنيف.",
+        "create": "إنشاء تصنيف",
+        "deleteTitle": "حذف التصنيف",
+        "deleteDescription": "حذف «{name}»؟",
+        "deleteKeepsPosts": "تبقى مقالاته منشورة بلا تصنيف.",
+        "toasts": {
+          "updated": "حُدِّث التصنيف.",
+          "created": "أُنشئ التصنيف.",
+          "deleted": "حُذف التصنيف."
+        }
+      },
+      "tags": {
+        "pageTitle": "الوسوم",
+        "pageDescription": "وسوم حرة تعبر التصنيفات.",
+        "count": "الوسوم: {count}",
+        "newTag": "وسم جديد",
+        "empty": "لا توجد وسوم بعد.",
+        "columns": {
+          "name": "الاسم",
+          "slug": "الرابط",
+          "posts": "المقالات",
+          "updated": "آخر تحديث",
+          "actions": "الإجراءات"
+        },
+        "editAria": "تعديل {name}",
+        "deleteAria": "حذف {name}",
+        "newTitle": "وسم جديد",
+        "editTitle": "تعديل الوسم",
+        "formDescription": "يمكن أن تختلف الأسماء حسب اللغة.",
+        "translationsLabel": "اللغات",
+        "nameLabel": "الاسم",
+        "translatedNameLabel": "الاسم المترجم",
+        "translationFallback": "اتركه فارغًا لعرض النص الإنجليزي.",
+        "namePlaceholder": "نصائح",
+        "nameRequired": "أضف اسمًا.",
+        "invalidSlug": "استخدم أحرفًا صغيرة وأرقامًا وشرطات.",
+        "slugLabel": "الرابط اللطيف",
+        "slugPlaceholder": "nasa2ih",
+        "slugHint": "يُستخدم في عنوان الوسم.",
+        "create": "إنشاء وسم",
+        "deleteTitle": "حذف الوسم",
+        "deleteDescription": "حذف «{name}»؟",
+        "deleteUnlinksPosts": "تبقى مقالاته منشورة دون هذا الوسم.",
+        "toasts": {
+          "updated": "حُدِّث الوسم.",
+          "created": "أُنشئ الوسم.",
+          "deleted": "حُذف الوسم."
+        }
+      }
     }
   },
   "dashboard": {
@@ -2043,7 +2308,15 @@
     "invalidOgadsPostbackSecret": "استخدم 16 حرفًا على الأقل لسر الـ postback.",
     "verifyNotDone": "لا يظهر هذا الإجراء على حسابك المصادَق عليه بعد. أكمله ثم أعد الفحص.",
     "telegramCheckinExpired": "انتهت صلاحية هذا التسجيل. افتح البوت مرة أخرى ثم تحقّق من جديد.",
-    "verifyUnavailable": "تعذّر تأكيد هذه الخطوة. ما زالت معلّقة؛ امنح إذن الوصول إذا طُلب ثم حاول مجددًا."
+    "verifyUnavailable": "تعذّر تأكيد هذه الخطوة. ما زالت معلّقة؛ امنح إذن الوصول إذا طُلب ثم حاول مجددًا.",
+    "blogTitleRequired": "أضف عنوانًا قبل الحفظ.",
+    "blogCanonicalInvalid": "أدخل مسارًا أو رابط http(s).",
+    "blogAuthorRequired": "اختر كاتبًا للمقالة.",
+    "blogCategoryNotFound": "هذا التصنيف لم يعد موجودًا.",
+    "blogPublishDateInvalid": "أدخل تاريخ نشر صالحًا.",
+    "blogPostNotFound": "هذه المقالة لم تعد موجودة.",
+    "blogAutosaveDraftOnly": "تُحفظ المسودات تلقائيًا فقط. احفظ المقالة المنشورة يدويًا.",
+    "blogTagNotFound": "هذا الوسم لم يعد موجودًا."
   },
   "linkForm": {
     "uploadFailed": "تعذّر الرفع.",
@@ -2442,5 +2715,96 @@
     "draftNotice": "هذه الصفحة مسودة. لا يراها إلا المسؤولون.",
     "updated": "آخر تحديث",
     "empty": "لا يوجد محتوى في هذه الصفحة بعد."
+  },
+  "blog": {
+    "meta": {
+      "title": "المدونة",
+      "description": "أدلة وتحديثات ونصائح عملية من الفريق."
+    },
+    "index": {
+      "eyebrow": "المدونة",
+      "title": "أدلة وتحديثات وأفكار",
+      "intro": "مقالات عملية عن مشاركة المحتوى ومنصات التواصل وإدارة روابط الفتح.",
+      "categories": "التصنيفات",
+      "allCategories": "الكل",
+      "emptyTitle": "لا شيء منشور بعد",
+      "emptyBody": "أول مقالة في الطريق. عد قريبًا.",
+      "emptyCta": "أنشئ رابطك",
+      "featured": "مميّزة",
+      "readArticle": "اقرأ المقالة",
+      "latest": "أحدث المقالات",
+      "latestIntro": "أحدث الكتابات أولًا."
+    },
+    "pagination": {
+      "previous": "السابق",
+      "next": "التالي",
+      "label": "التصفح"
+    },
+    "article": {
+      "breadcrumbs": "مسار التنقل",
+      "home": "الرئيسية",
+      "blog": "المدونة",
+      "draftBadge": "معاينة مسودة",
+      "readMinutes": "قراءة {minutes} دقيقة",
+      "updated": "حُدِّثت في {date}",
+      "previewNotice": "أنت تعاين هذه المقالة. لا يراها الزوار.",
+      "emptyBody": "لا يوجد نص بعد.",
+      "share": "مشاركة",
+      "copyLink": "نسخ الرابط",
+      "linkCopied": "تم نسخ الرابط.",
+      "linkCopiedShort": "تم النسخ",
+      "copyFailed": "تعذّر نسخ الرابط.",
+      "shareNative": "مشاركة",
+      "moreArticles": "مقالات أخرى",
+      "previousArticle": "المقالة السابقة",
+      "nextArticle": "المقالة التالية",
+      "relatedTitle": "تابع القراءة",
+      "relatedDescription": "مقالات أخرى من المدونة.",
+      "allArticles": "كل المقالات",
+      "sidebar": {
+        "popular": "المقالات الأكثر قراءة",
+        "tags": "الوسوم",
+        "recent": "أحدث المقالات"
+      }
+    },
+    "archive": {
+      "count": "المقالات: {count}",
+      "backToBlog": "عودة إلى المدونة",
+      "tagDescription": "مقالات موسومة بـ «{name}».",
+      "authorDescription": "مقالات بقلم {name}.",
+      "eyebrow": {
+        "category": "تصنيف",
+        "tag": "وسم",
+        "author": "كاتب",
+        "search": "بحث"
+      },
+      "emptyTitle": "لا مقالات هنا",
+      "emptyBody": "جرّب تصنيفًا آخر أو تصفح الكل."
+    },
+    "search": {
+      "title": "ابحث في المدونة",
+      "intro": "اعثر على المقالات بالعنوان أو الملخص أو الوسم.",
+      "placeholder": "ابحث في المقالات",
+      "action": "بحث",
+      "resultsFor": "نتائج «{query}»",
+      "emptyTitle": "لا نتائج",
+      "emptyBody": "لا شيء يطابق «{query}». جرّب كلمة أقصر."
+    },
+    "notFound": {
+      "title": "المقالة غير موجودة",
+      "description": "هذه المقالة غير موجودة أو أُلغيت أو نُقلت.",
+      "backToBlog": "عودة إلى المدونة",
+      "backHome": "العودة إلى الرئيسية"
+    },
+    "error": {
+      "title": "تعذّر تحميل المدونة",
+      "description": "حدث خطأ أثناء تحميل الصفحة. حاول مرة أخرى.",
+      "retry": "إعادة المحاولة"
+    },
+    "home": {
+      "title": "من المدونة",
+      "intro": "أدلة عملية لمشاركة الروابط وتنمية الجمهور وإدارة صفحة فتح.",
+      "viewAll": "عرض كل المقالات"
+    }
   }
 }

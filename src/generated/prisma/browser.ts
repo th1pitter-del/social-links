@@ -194,3 +194,20 @@ export type SystemUpdate = Prisma.SystemUpdateModel
  *  * runner writes progress to a status file that this row is reconciled from.
  */
 export type SystemOperation = Prisma.SystemOperationModel
+/**
+ * Model BlogPost
+ * A public blog article. `publishedAt` in the future keeps a PUBLISHED row out
+ * of the public site until its moment arrives (the admin list calls that
+ * scheduled); no background job is needed to flip it.
+ */
+export type BlogPost = Prisma.BlogPostModel
+/**
+ * Model BlogCategory
+ * One topic bucket per article.
+ */
+export type BlogCategory = Prisma.BlogCategoryModel
+/**
+ * Model BlogTag
+ * Free-form article tags, many per article.
+ */
+export type BlogTag = Prisma.BlogTagModel

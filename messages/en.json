@@ -39,7 +39,14 @@
       "contentPages": "Content pages",
       "customMenus": "Sidebar menus",
       "backups": "Backups",
-      "updates": "System updates"
+      "updates": "System updates",
+      "blog": "Blog",
+      "allLinks": "All links",
+      "blogOverview": "Overview",
+      "blogPosts": "Posts",
+      "blogNewPost": "New post",
+      "blogCategories": "Categories",
+      "blogTags": "Tags"
     },
     "navHints": {
       "usersOnly": "Users only"
@@ -464,7 +471,15 @@
     "invalidOgadsPostbackSecret": "Use at least 16 characters for the postback secret.",
     "verifyNotDone": "Your authenticated account does not show this action yet. Complete it, then check again.",
     "telegramCheckinExpired": "That check-in expired. Open the bot again, then check once more.",
-    "verifyUnavailable": "We could not confirm this step. It is still pending; grant access if asked and try again."
+    "verifyUnavailable": "We could not confirm this step. It is still pending; grant access if asked and try again.",
+    "blogTitleRequired": "Add a title before saving.",
+    "blogCanonicalInvalid": "Enter a path or an http(s) URL.",
+    "blogAuthorRequired": "Choose an author for the article.",
+    "blogCategoryNotFound": "That category no longer exists.",
+    "blogPublishDateInvalid": "Enter a valid publish date.",
+    "blogPostNotFound": "That article no longer exists.",
+    "blogAutosaveDraftOnly": "Only drafts autosave. Save a published article explicitly.",
+    "blogTagNotFound": "That tag no longer exists."
   },
   "common": {
     "siteName": "Link Unlocker",
@@ -499,7 +514,8 @@
     "sections": "Navigation",
     "contact": "Contact",
     "privacy": "Privacy",
-    "terms": "Terms"
+    "terms": "Terms",
+    "blog": "Blog"
   },
   "footer": {
     "tagline": "Free social unlock links that keep you in control of your content.",
@@ -997,6 +1013,7 @@
     },
     "contact": {
       "metaTitle": "Contact",
+      "metaDescription": "Questions about a link, your account or the platform? Contact our team — abuse reports are prioritised.",
       "title": "Contact",
       "content": "Questions about a link, your account or the platform? Email us at [support@linkunlock.app](mailto:support@linkunlock.app).\nAbuse reports are triaged first. Include the public link URL so we can investigate quickly."
     }
@@ -1029,7 +1046,13 @@
       "contentPages": "Content pages",
       "customMenus": "Custom sidebar menus",
       "backups": "Backups",
-      "updates": "System updates"
+      "updates": "System updates",
+      "blog": "Blog",
+      "blogArticles": "Blog articles",
+      "blogNewArticle": "New blog article",
+      "blogEditArticle": "Edit blog article",
+      "blogCategories": "Blog categories",
+      "blogTags": "Blog tags"
     },
     "status": {
       "active": "active",
@@ -1676,8 +1699,23 @@
         },
         "site_tagline": {
           "label": "Tagline",
-          "hint": "Shown in the footer and used as the default page description.",
+          "hint": "Shown in the footer and used as the default page description. The locale overrides below take precedence.",
           "placeholder": "Unlock content by completing a quick task"
+        },
+        "site_tagline_es": {
+          "label": "Tagline — Spanish",
+          "hint": "Used for Spanish visitors on the site and in page metadata. Falls back to the default tagline when empty.",
+          "placeholder": "Desbloquea contenido completando una tarea rápida"
+        },
+        "site_tagline_pt-br": {
+          "label": "Tagline — Portuguese (Brazil)",
+          "hint": "Used for Portuguese visitors on the site and in page metadata. Falls back to the default tagline when empty.",
+          "placeholder": "Desbloqueie conteúdo concluindo uma tarefa rápida"
+        },
+        "site_tagline_ar": {
+          "label": "Tagline — Arabic",
+          "hint": "Used for Arabic visitors on the site and in page metadata. Falls back to the default tagline when empty.",
+          "placeholder": "افتح المحتوى بإكمال مهمة سريعة"
         },
         "theme_light_primary": {
           "label": "Light mode — primary accent",
@@ -2195,6 +2233,241 @@
       "cancel": "Cancel",
       "applyLink": "Apply",
       "uploadFailed": "Could not upload the image."
+    },
+    "blog": {
+      "nav": {
+        "overview": "Overview",
+        "articles": "Articles",
+        "categories": "Categories",
+        "tags": "Tags"
+      },
+      "title": "Blog",
+      "description": "Write articles, schedule releases and organize the public blog.",
+      "newArticle": "New article",
+      "viewAll": "View all",
+      "stats": {
+        "published": "Published",
+        "drafts": "Drafts",
+        "scheduled": "Scheduled",
+        "views": "Total views"
+      },
+      "popular": {
+        "title": "Most read",
+        "description": "The articles readers open most often.",
+        "empty": "No views recorded yet.",
+        "views": "Views: {count}"
+      },
+      "recent": {
+        "title": "Recently updated",
+        "description": "The latest edits across the blog.",
+        "empty": "No articles yet."
+      },
+      "status": {
+        "published": "Published",
+        "draft": "Draft",
+        "scheduled": "Scheduled"
+      },
+      "schedulingNote": "A published article with a future date stays hidden until that date, then appears on its own.",
+      "articlesTitle": "Articles",
+      "articlesDescription": "Every draft, scheduled release and published article.",
+      "filters": {
+        "all": "All"
+      },
+      "searchPlaceholder": "Search title or slug",
+      "categoryFilter": "Category",
+      "allCategories": "All categories",
+      "sortLabel": "Sort by",
+      "sorts": {
+        "updated": "Last updated",
+        "published": "Publish date",
+        "title": "Title",
+        "views": "Views"
+      },
+      "applyFilters": "Apply",
+      "noResults": "No articles match these filters.",
+      "clearFilters": "Clear filters",
+      "empty": "No articles yet. Write the first one.",
+      "columns": {
+        "article": "Article",
+        "status": "Status",
+        "author": "Author",
+        "category": "Category",
+        "dates": "Dates",
+        "views": "Views",
+        "actions": "Actions"
+      },
+      "updatedLabel": "Updated",
+      "publishedLabel": "Published",
+      "scheduledLabel": "Scheduled for",
+      "noAuthor": "No author",
+      "uncategorized": "Uncategorized",
+      "noImage": "No image",
+      "pagination": "Page {page} of {pages} · {total} total",
+      "previous": "Previous",
+      "next": "Next",
+      "list": {
+        "previewAria": "Preview {title}",
+        "openAria": "Open {title} on the site",
+        "editAria": "Edit article",
+        "deleteAria": "Delete {title}",
+        "preview": "Preview",
+        "openPublic": "Open on the site",
+        "publishAria": "Publish or unpublish {title}",
+        "deleteTitle": "Delete article",
+        "deleteDescription": "Delete “{title}”? This cannot be undone.",
+        "toasts": {
+          "published": "Article published.",
+          "unpublished": "Article moved back to draft.",
+          "deleted": "Article deleted."
+        }
+      },
+      "editor": {
+        "editTitle": "Edit article",
+        "createTitle": "New article",
+        "formDescription": "The English article is the base; other languages fall back to it when empty.",
+        "preview": "Preview",
+        "unsavedConfirm": "You have unsaved changes. Leave anyway?",
+        "translationsLabel": "Languages",
+        "translatedTitleLabel": "Translated title",
+        "translationFallback": "Leave empty to show the English text.",
+        "titleLabel": "Title",
+        "titleRequired": "Add a title before saving.",
+        "invalidSlug": "Use lowercase letters, numbers and hyphens in the slug.",
+        "authorRequired": "Choose an author.",
+        "excerptLabel": "Excerpt",
+        "excerptHint": "Shown on cards and at the top of the article.",
+        "contentLabel": "Content",
+        "contentHint": "Headings from the editor become the article table of contents.",
+        "seoForLocale": "SEO for this language",
+        "seoTitle": "Search appearance",
+        "seoTitleLabel": "SEO title",
+        "seoDescriptionLabel": "SEO description",
+        "canonicalLabel": "Canonical URL",
+        "canonicalPlaceholder": "/blog/slug or https://…",
+        "ogImageLabel": "Social image",
+        "slugLabel": "Slug",
+        "slugPlaceholder": "my-article",
+        "slugHint": "Public address: {prefix}…",
+        "authorLabel": "Author",
+        "authorPlaceholder": "Choose an author",
+        "categoryLabel": "Category",
+        "noCategory": "No category",
+        "tagsLabel": "Tags",
+        "tagsHint": "Comma separated. New tags are created automatically (up to 8).",
+        "featuredLabel": "Featured",
+        "featuredHint": "Leads the blog index while it is published.",
+        "publishingTitle": "Publishing",
+        "autosaveSaving": "Saving…",
+        "autosaveFailed": "Autosave failed",
+        "autosaveSaved": "Draft saved at {time}",
+        "autosaveIdle": "Drafts autosave",
+        "statusLabel": "Status",
+        "statusDraft": "Draft",
+        "statusPublished": "Published",
+        "publishDateLabel": "Publish date",
+        "publishDateHint": "A future date schedules the article; it goes live on its own.",
+        "statusHint": "Only you can see a draft.",
+        "saveDraft": "Save draft",
+        "publish": "Publish",
+        "coverLabel": "Cover image",
+        "imagePlaceholder": "https://… or /api/media/…",
+        "uploadImage": "Upload",
+        "uploading": "Uploading…",
+        "uploadFailed": "The image could not be uploaded.",
+        "chooseFromLibrary": "Media library",
+        "removeImage": "Remove",
+        "coverAltLabel": "Cover description",
+        "coverAltHint": "Describe the image for screen readers and search engines.",
+        "libraryTitle": "Media library",
+        "libraryDescription": "Pick an image already uploaded to the site.",
+        "libraryEmpty": "No images in the library yet. Upload one instead.",
+        "toasts": {
+          "saved": "Draft saved.",
+          "published": "Article published.",
+          "scheduled": "Article scheduled."
+        },
+        "createdAt": "Created",
+        "updatedAt": "Updated",
+        "views": "Views"
+      },
+      "categories": {
+        "pageTitle": "Categories",
+        "pageDescription": "Group articles so readers can browse them together.",
+        "count": "Categories: {count}",
+        "newCategory": "New category",
+        "empty": "No categories yet.",
+        "columns": {
+          "name": "Name",
+          "slug": "Slug",
+          "posts": "Articles",
+          "updated": "Updated",
+          "actions": "Actions"
+        },
+        "editAria": "Edit {name}",
+        "deleteAria": "Delete {name}",
+        "newTitle": "New category",
+        "editTitle": "Edit category",
+        "formDescription": "Names and descriptions can differ per language.",
+        "translationsLabel": "Languages",
+        "nameLabel": "Name",
+        "translatedNameLabel": "Translated name",
+        "translationFallback": "Leave empty to show the English text.",
+        "namePlaceholder": "Guides",
+        "descriptionLabel": "Description",
+        "descriptionHint": "Shown at the top of the category page.",
+        "nameRequired": "Add a name.",
+        "invalidSlug": "Use lowercase letters, numbers and hyphens.",
+        "slugLabel": "Slug",
+        "slugPlaceholder": "guides",
+        "slugHint": "Used in the category address.",
+        "create": "Create category",
+        "deleteTitle": "Delete category",
+        "deleteDescription": "Delete “{name}”?",
+        "deleteKeepsPosts": "Its articles stay published without a category.",
+        "toasts": {
+          "updated": "Category updated.",
+          "created": "Category created.",
+          "deleted": "Category deleted."
+        }
+      },
+      "tags": {
+        "pageTitle": "Tags",
+        "pageDescription": "Free-form labels that cut across categories.",
+        "count": "Tags: {count}",
+        "newTag": "New tag",
+        "empty": "No tags yet.",
+        "columns": {
+          "name": "Name",
+          "slug": "Slug",
+          "posts": "Articles",
+          "updated": "Updated",
+          "actions": "Actions"
+        },
+        "editAria": "Edit {name}",
+        "deleteAria": "Delete {name}",
+        "newTitle": "New tag",
+        "editTitle": "Edit tag",
+        "formDescription": "Names can differ per language.",
+        "translationsLabel": "Languages",
+        "nameLabel": "Name",
+        "translatedNameLabel": "Translated name",
+        "translationFallback": "Leave empty to show the English text.",
+        "namePlaceholder": "Unlock tips",
+        "nameRequired": "Add a name.",
+        "invalidSlug": "Use lowercase letters, numbers and hyphens.",
+        "slugLabel": "Slug",
+        "slugPlaceholder": "unlock-tips",
+        "slugHint": "Used in the tag address.",
+        "create": "Create tag",
+        "deleteTitle": "Delete tag",
+        "deleteDescription": "Delete “{name}”?",
+        "deleteUnlinksPosts": "Its articles stay published without this tag.",
+        "toasts": {
+          "updated": "Tag updated.",
+          "created": "Tag created.",
+          "deleted": "Tag deleted."
+        }
+      }
     }
   },
   "motion": {
@@ -2443,5 +2716,96 @@
     "draftNotice": "This page is a draft. Only administrators can see it.",
     "updated": "Updated",
     "empty": "This page has no content yet."
+  },
+  "blog": {
+    "meta": {
+      "title": "Blog",
+      "description": "Guides, updates and practical advice from the team."
+    },
+    "index": {
+      "eyebrow": "Blog",
+      "title": "Guides, updates and ideas",
+      "intro": "Practical writing about sharing content, social platforms and running an unlock link.",
+      "categories": "Categories",
+      "allCategories": "All",
+      "emptyTitle": "Nothing published yet",
+      "emptyBody": "The first article is on its way. Come back soon.",
+      "emptyCta": "Create your link",
+      "featured": "Featured",
+      "readArticle": "Read article",
+      "latest": "Latest articles",
+      "latestIntro": "Fresh writing, newest first."
+    },
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next",
+      "label": "Pagination"
+    },
+    "article": {
+      "breadcrumbs": "Breadcrumb",
+      "home": "Home",
+      "blog": "Blog",
+      "draftBadge": "Draft preview",
+      "readMinutes": "{minutes} min read",
+      "updated": "Updated {date}",
+      "previewNotice": "You are previewing this article. Drafts are invisible to visitors.",
+      "emptyBody": "This article has no text yet.",
+      "share": "Share",
+      "copyLink": "Copy link",
+      "linkCopied": "Link copied.",
+      "linkCopiedShort": "Copied",
+      "copyFailed": "The link could not be copied.",
+      "shareNative": "Share",
+      "moreArticles": "More articles",
+      "previousArticle": "Previous article",
+      "nextArticle": "Next article",
+      "relatedTitle": "Keep reading",
+      "relatedDescription": "More articles from the blog.",
+      "allArticles": "All articles",
+      "sidebar": {
+        "popular": "Popular articles",
+        "tags": "Tags",
+        "recent": "Recent articles"
+      }
+    },
+    "archive": {
+      "count": "Articles: {count}",
+      "backToBlog": "Back to the blog",
+      "tagDescription": "Articles tagged “{name}”.",
+      "authorDescription": "Articles written by {name}.",
+      "eyebrow": {
+        "category": "Category",
+        "tag": "Tag",
+        "author": "Author",
+        "search": "Search"
+      },
+      "emptyTitle": "No articles here",
+      "emptyBody": "Try another category or browse everything."
+    },
+    "search": {
+      "title": "Search the blog",
+      "intro": "Find articles by title, summary or tag.",
+      "placeholder": "Search articles",
+      "action": "Search",
+      "resultsFor": "Results for “{query}”",
+      "emptyTitle": "No results",
+      "emptyBody": "Nothing matches “{query}”. Try a shorter word."
+    },
+    "notFound": {
+      "title": "Article not found",
+      "description": "This article does not exist, was unpublished, or has moved.",
+      "backToBlog": "Back to the blog",
+      "backHome": "Back to home"
+    },
+    "error": {
+      "title": "The blog could not load",
+      "description": "Something went wrong while loading this page. Try again.",
+      "retry": "Try again"
+    },
+    "home": {
+      "title": "From the blog",
+      "intro": "Practical guides for sharing links, growing an audience and running an unlock page.",
+      "viewAll": "View all articles"
+    }
   }
 }

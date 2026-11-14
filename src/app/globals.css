@@ -420,6 +420,11 @@
   margin-top: 0.5em;
 }
 
+/* Anchored headings stop below the floating glass header, not under it. */
+.rich-text :is(h2, h3)[id] {
+  scroll-margin-top: 6rem;
+}
+
 .rich-text a {
   color: var(--primary);
   text-decoration: underline;

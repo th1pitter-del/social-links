@@ -39,7 +39,14 @@
       "contentPages": "Páginas de conteúdo",
       "customMenus": "Menus laterais",
       "backups": "Backups",
-      "updates": "Atualizações"
+      "updates": "Atualizações",
+      "blog": "Blog",
+      "allLinks": "Todos os links",
+      "blogOverview": "Visão geral",
+      "blogPosts": "Artigos",
+      "blogNewPost": "Novo artigo",
+      "blogCategories": "Categorias",
+      "blogTags": "Tags"
     },
     "navHints": {
       "usersOnly": "Somente para usuários"
@@ -113,7 +120,8 @@
     "sections": "Navegação",
     "contact": "Contato",
     "privacy": "Privacidade",
-    "terms": "Termos"
+    "terms": "Termos",
+    "blog": "Blog"
   },
   "footer": {
     "tagline": "Links de desbloqueio social grátis que mantêm você no controle do seu conteúdo.",
@@ -459,6 +467,7 @@
     },
     "contact": {
       "metaTitle": "Contato",
+      "metaDescription": "Perguntas sobre um link, sua conta ou a plataforma? Fale com a equipe. Relatórios de abuso têm prioridade.",
       "title": "Contato",
       "content": "Perguntas sobre um link, sua conta ou a plataforma? Envie um e-mail para [support@linkunlock.app](mailto:support@linkunlock.app).\nRelatórios de abuso têm prioridade no atendimento. Inclua a URL pública do link para que possamos investigar rapidamente."
     }
@@ -491,7 +500,13 @@
       "contentPages": "Páginas de conteúdo",
       "customMenus": "Menus laterais personalizados",
       "backups": "Backups",
-      "updates": "Atualizações do sistema"
+      "updates": "Atualizações do sistema",
+      "blog": "Blog",
+      "blogArticles": "Artigos do blog",
+      "blogNewArticle": "Novo artigo do blog",
+      "blogEditArticle": "Editar artigo do blog",
+      "blogCategories": "Categorias do blog",
+      "blogTags": "Tags do blog"
     },
     "status": {
       "active": "ativo",
@@ -1138,8 +1153,23 @@
         },
         "site_tagline": {
           "label": "Slogan",
-          "hint": "Exibido no rodapé e usado como descrição padrão da página.",
+          "hint": "Exibido no rodapé e usado como descrição padrão da página. As versões por idioma abaixo têm prioridade.",
           "placeholder": "Desbloqueie conteúdo concluindo uma tarefa rápida"
+        },
+        "site_tagline_es": {
+          "label": "Slogan — Espanhol",
+          "hint": "Usado para visitantes em espanhol no site e nos metadados. Quando vazio, usa o slogan padrão.",
+          "placeholder": "Enlaces de desbloqueo social gratis"
+        },
+        "site_tagline_pt-br": {
+          "label": "Slogan — Português (Brasil)",
+          "hint": "Usado para visitantes em português no site e nos metadados. Quando vazio, usa o slogan padrão.",
+          "placeholder": "Links de desbloqueio social grátis"
+        },
+        "site_tagline_ar": {
+          "label": "Slogan — Árabe",
+          "hint": "Usado para visitantes em árabe no site e nos metadados. Quando vazio, usa o slogan padrão.",
+          "placeholder": "روابط فتح اجتماعية مجانية"
         },
         "theme_light_primary": {
           "label": "Modo claro — destaque principal",
@@ -1657,6 +1687,241 @@
       "cancel": "Cancelar",
       "applyLink": "Aplicar",
       "uploadFailed": "Não foi possível enviar a imagem."
+    },
+    "blog": {
+      "nav": {
+        "overview": "Visão geral",
+        "articles": "Artigos",
+        "categories": "Categorias",
+        "tags": "Tags"
+      },
+      "title": "Blog",
+      "description": "Escreva artigos, agende publicações e organize o blog público.",
+      "newArticle": "Novo artigo",
+      "viewAll": "Ver tudo",
+      "stats": {
+        "published": "Publicados",
+        "drafts": "Rascunhos",
+        "scheduled": "Agendados",
+        "views": "Visualizações totais"
+      },
+      "popular": {
+        "title": "Mais lidos",
+        "description": "Os artigos que os leitores mais abrem.",
+        "empty": "Nenhuma visualização registrada ainda.",
+        "views": "Visualizações: {count}"
+      },
+      "recent": {
+        "title": "Atualizados recentemente",
+        "description": "As últimas edições do blog.",
+        "empty": "Nenhum artigo ainda."
+      },
+      "status": {
+        "published": "Publicado",
+        "draft": "Rascunho",
+        "scheduled": "Agendado"
+      },
+      "schedulingNote": "Um artigo publicado com data futura fica oculto até esse dia e então aparece sozinho.",
+      "articlesTitle": "Artigos",
+      "articlesDescription": "Todos os rascunhos, agendamentos e artigos publicados.",
+      "filters": {
+        "all": "Todos"
+      },
+      "searchPlaceholder": "Buscar por título ou slug",
+      "categoryFilter": "Categoria",
+      "allCategories": "Todas as categorias",
+      "sortLabel": "Ordenar por",
+      "sorts": {
+        "updated": "Última atualização",
+        "published": "Data de publicação",
+        "title": "Título",
+        "views": "Visualizações"
+      },
+      "applyFilters": "Aplicar",
+      "noResults": "Nenhum artigo corresponde a estes filtros.",
+      "clearFilters": "Limpar filtros",
+      "empty": "Nenhum artigo ainda. Escreva o primeiro.",
+      "columns": {
+        "article": "Artigo",
+        "status": "Status",
+        "author": "Autor",
+        "category": "Categoria",
+        "dates": "Datas",
+        "views": "Visualizações",
+        "actions": "Ações"
+      },
+      "updatedLabel": "Atualizado",
+      "publishedLabel": "Publicado",
+      "scheduledLabel": "Agendado para",
+      "noAuthor": "Sem autor",
+      "uncategorized": "Sem categoria",
+      "noImage": "Sem imagem",
+      "pagination": "Página {page} de {pages} · {total} no total",
+      "previous": "Anterior",
+      "next": "Próxima",
+      "list": {
+        "previewAria": "Prévia de {title}",
+        "openAria": "Abrir {title} no site",
+        "editAria": "Editar artigo",
+        "deleteAria": "Excluir {title}",
+        "preview": "Prévia",
+        "openPublic": "Abrir no site",
+        "publishAria": "Publicar ou despublicar {title}",
+        "deleteTitle": "Excluir artigo",
+        "deleteDescription": "Excluir “{title}”? Isso não pode ser desfeito.",
+        "toasts": {
+          "published": "Artigo publicado.",
+          "unpublished": "O artigo voltou para rascunho.",
+          "deleted": "Artigo excluído."
+        }
+      },
+      "editor": {
+        "editTitle": "Editar artigo",
+        "createTitle": "Novo artigo",
+        "formDescription": "O artigo em inglês é a base; os outros idiomas o usam quando vazios.",
+        "preview": "Prévia",
+        "unsavedConfirm": "Você tem alterações não salvas. Sair mesmo assim?",
+        "translationsLabel": "Idiomas",
+        "translatedTitleLabel": "Título traduzido",
+        "translationFallback": "Deixe vazio para mostrar o texto em inglês.",
+        "titleLabel": "Título",
+        "titleRequired": "Adicione um título antes de salvar.",
+        "invalidSlug": "Use letras minúsculas, números e hífens no slug.",
+        "authorRequired": "Escolha um autor.",
+        "excerptLabel": "Resumo",
+        "excerptHint": "Aparece nos cartões e no início do artigo.",
+        "contentLabel": "Conteúdo",
+        "contentHint": "Os títulos do editor formam o índice do artigo.",
+        "seoForLocale": "SEO para este idioma",
+        "seoTitle": "Aparência na busca",
+        "seoTitleLabel": "Título de SEO",
+        "seoDescriptionLabel": "Descrição de SEO",
+        "canonicalLabel": "URL canônica",
+        "canonicalPlaceholder": "/blog/slug ou https://…",
+        "ogImageLabel": "Imagem social",
+        "slugLabel": "Slug",
+        "slugPlaceholder": "meu-artigo",
+        "slugHint": "Endereço público: {prefix}…",
+        "authorLabel": "Autor",
+        "authorPlaceholder": "Escolha um autor",
+        "categoryLabel": "Categoria",
+        "noCategory": "Sem categoria",
+        "tagsLabel": "Tags",
+        "tagsHint": "Separadas por vírgulas. Tags novas são criadas automaticamente (até 8).",
+        "featuredLabel": "Destaque",
+        "featuredHint": "Lidera o índice do blog enquanto estiver publicado.",
+        "publishingTitle": "Publicação",
+        "autosaveSaving": "Salvando…",
+        "autosaveFailed": "Falha ao salvar automaticamente",
+        "autosaveSaved": "Rascunho salvo às {time}",
+        "autosaveIdle": "Rascunhos são salvos automaticamente",
+        "statusLabel": "Status",
+        "statusDraft": "Rascunho",
+        "statusPublished": "Publicado",
+        "publishDateLabel": "Data de publicação",
+        "publishDateHint": "Uma data futura agenda o artigo; ele entra no ar sozinho.",
+        "statusHint": "Só você vê um rascunho.",
+        "saveDraft": "Salvar rascunho",
+        "publish": "Publicar",
+        "coverLabel": "Imagem de capa",
+        "imagePlaceholder": "https://… ou /api/media/…",
+        "uploadImage": "Enviar",
+        "uploading": "Enviando…",
+        "uploadFailed": "Não foi possível enviar a imagem.",
+        "chooseFromLibrary": "Biblioteca de mídia",
+        "removeImage": "Remover",
+        "coverAltLabel": "Descrição da capa",
+        "coverAltHint": "Descreva a imagem para leitores de tela e buscadores.",
+        "libraryTitle": "Biblioteca de mídia",
+        "libraryDescription": "Escolha uma imagem já enviada ao site.",
+        "libraryEmpty": "Ainda não há imagens. Envie uma.",
+        "toasts": {
+          "saved": "Rascunho salvo.",
+          "published": "Artigo publicado.",
+          "scheduled": "Artigo agendado."
+        },
+        "createdAt": "Criado",
+        "updatedAt": "Atualizado",
+        "views": "Visualizações"
+      },
+      "categories": {
+        "pageTitle": "Categorias",
+        "pageDescription": "Agrupe artigos para os leitores navegarem juntos.",
+        "count": "Categorias: {count}",
+        "newCategory": "Nova categoria",
+        "empty": "Nenhuma categoria ainda.",
+        "columns": {
+          "name": "Nome",
+          "slug": "Slug",
+          "posts": "Artigos",
+          "updated": "Atualizado",
+          "actions": "Ações"
+        },
+        "editAria": "Editar {name}",
+        "deleteAria": "Excluir {name}",
+        "newTitle": "Nova categoria",
+        "editTitle": "Editar categoria",
+        "formDescription": "Nomes e descrições podem variar por idioma.",
+        "translationsLabel": "Idiomas",
+        "nameLabel": "Nome",
+        "translatedNameLabel": "Nome traduzido",
+        "translationFallback": "Deixe vazio para mostrar o texto em inglês.",
+        "namePlaceholder": "Guias",
+        "descriptionLabel": "Descrição",
+        "descriptionHint": "Aparece no topo da página da categoria.",
+        "nameRequired": "Adicione um nome.",
+        "invalidSlug": "Use letras minúsculas, números e hífens.",
+        "slugLabel": "Slug",
+        "slugPlaceholder": "guias",
+        "slugHint": "Usado no endereço da categoria.",
+        "create": "Criar categoria",
+        "deleteTitle": "Excluir categoria",
+        "deleteDescription": "Excluir “{name}”?",
+        "deleteKeepsPosts": "Os artigos continuam publicados sem categoria.",
+        "toasts": {
+          "updated": "Categoria atualizada.",
+          "created": "Categoria criada.",
+          "deleted": "Categoria excluída."
+        }
+      },
+      "tags": {
+        "pageTitle": "Tags",
+        "pageDescription": "Etiquetas livres que atravessam categorias.",
+        "count": "Tags: {count}",
+        "newTag": "Nova tag",
+        "empty": "Nenhuma tag ainda.",
+        "columns": {
+          "name": "Nome",
+          "slug": "Slug",
+          "posts": "Artigos",
+          "updated": "Atualizado",
+          "actions": "Ações"
+        },
+        "editAria": "Editar {name}",
+        "deleteAria": "Excluir {name}",
+        "newTitle": "Nova tag",
+        "editTitle": "Editar tag",
+        "formDescription": "Os nomes podem variar por idioma.",
+        "translationsLabel": "Idiomas",
+        "nameLabel": "Nome",
+        "translatedNameLabel": "Nome traduzido",
+        "translationFallback": "Deixe vazio para mostrar o texto em inglês.",
+        "namePlaceholder": "Dicas",
+        "nameRequired": "Adicione um nome.",
+        "invalidSlug": "Use letras minúsculas, números e hífens.",
+        "slugLabel": "Slug",
+        "slugPlaceholder": "dicas",
+        "slugHint": "Usado no endereço da tag.",
+        "create": "Criar tag",
+        "deleteTitle": "Excluir tag",
+        "deleteDescription": "Excluir “{name}”?",
+        "deleteUnlinksPosts": "Os artigos continuam publicados sem esta tag.",
+        "toasts": {
+          "updated": "Tag atualizada.",
+          "created": "Tag criada.",
+          "deleted": "Tag excluída."
+        }
+      }
     }
   },
   "dashboard": {
@@ -2043,7 +2308,15 @@
     "invalidOgadsPostbackSecret": "Use pelo menos 16 caracteres para o segredo do postback.",
     "verifyNotDone": "Sua conta autenticada ainda não mostra esta ação. Conclua a ação e verifique novamente.",
     "telegramCheckinExpired": "Esse check-in expirou. Abra o bot novamente e verifique mais uma vez.",
-    "verifyUnavailable": "Não foi possível confirmar esta etapa. Ela continua pendente; autorize o acesso se solicitado e tente novamente."
+    "verifyUnavailable": "Não foi possível confirmar esta etapa. Ela continua pendente; autorize o acesso se solicitado e tente novamente.",
+    "blogTitleRequired": "Adicione um título antes de salvar.",
+    "blogCanonicalInvalid": "Informe um caminho ou uma URL http(s).",
+    "blogAuthorRequired": "Escolha um autor para o artigo.",
+    "blogCategoryNotFound": "Essa categoria não existe mais.",
+    "blogPublishDateInvalid": "Informe uma data de publicação válida.",
+    "blogPostNotFound": "Esse artigo não existe mais.",
+    "blogAutosaveDraftOnly": "Apenas rascunhos são salvos automaticamente. Salve um artigo publicado explicitamente.",
+    "blogTagNotFound": "Essa tag não existe mais."
   },
   "linkForm": {
     "uploadFailed": "Falha no envio.",
@@ -2442,5 +2715,96 @@
     "draftNotice": "Esta página é um rascunho. Apenas administradores podem vê-la.",
     "updated": "Atualizada",
     "empty": "Esta página ainda não tem conteúdo."
+  },
+  "blog": {
+    "meta": {
+      "title": "Blog",
+      "description": "Guias, novidades e dicas práticas da equipe."
+    },
+    "index": {
+      "eyebrow": "Blog",
+      "title": "Guias, novidades e ideias",
+      "intro": "Textos práticos sobre compartilhar conteúdo, plataformas sociais e administrar um link de desbloqueio.",
+      "categories": "Categorias",
+      "allCategories": "Todas",
+      "emptyTitle": "Nada publicado ainda",
+      "emptyBody": "O primeiro artigo está a caminho. Volte em breve.",
+      "emptyCta": "Crie seu link",
+      "featured": "Destaque",
+      "readArticle": "Ler artigo",
+      "latest": "Últimos artigos",
+      "latestIntro": "O mais recente primeiro."
+    },
+    "pagination": {
+      "previous": "Anterior",
+      "next": "Próxima",
+      "label": "Paginação"
+    },
+    "article": {
+      "breadcrumbs": "Trilha de navegação",
+      "home": "Início",
+      "blog": "Blog",
+      "draftBadge": "Prévia de rascunho",
+      "readMinutes": "{minutes} min de leitura",
+      "updated": "Atualizado em {date}",
+      "previewNotice": "Você está vendo uma prévia. Rascunhos não aparecem para visitantes.",
+      "emptyBody": "Este artigo ainda não tem texto.",
+      "share": "Compartilhar",
+      "copyLink": "Copiar link",
+      "linkCopied": "Link copiado.",
+      "linkCopiedShort": "Copiado",
+      "copyFailed": "Não foi possível copiar o link.",
+      "shareNative": "Compartilhar",
+      "moreArticles": "Mais artigos",
+      "previousArticle": "Artigo anterior",
+      "nextArticle": "Próximo artigo",
+      "relatedTitle": "Continue lendo",
+      "relatedDescription": "Mais artigos do blog.",
+      "allArticles": "Todos os artigos",
+      "sidebar": {
+        "popular": "Artigos populares",
+        "tags": "Tags",
+        "recent": "Artigos recentes"
+      }
+    },
+    "archive": {
+      "count": "Artigos: {count}",
+      "backToBlog": "Voltar ao blog",
+      "tagDescription": "Artigos com a etiqueta “{name}”.",
+      "authorDescription": "Artigos escritos por {name}.",
+      "eyebrow": {
+        "category": "Categoria",
+        "tag": "Tag",
+        "author": "Autor",
+        "search": "Busca"
+      },
+      "emptyTitle": "Nenhum artigo aqui",
+      "emptyBody": "Tente outra categoria ou explore tudo."
+    },
+    "search": {
+      "title": "Buscar no blog",
+      "intro": "Encontre artigos por título, resumo ou tag.",
+      "placeholder": "Buscar artigos",
+      "action": "Buscar",
+      "resultsFor": "Resultados para “{query}”",
+      "emptyTitle": "Sem resultados",
+      "emptyBody": "Nada corresponde a “{query}”. Tente uma palavra mais curta."
+    },
+    "notFound": {
+      "title": "Artigo não encontrado",
+      "description": "Este artigo não existe, foi despublicado ou mudou de lugar.",
+      "backToBlog": "Voltar ao blog",
+      "backHome": "Voltar ao início"
+    },
+    "error": {
+      "title": "Não foi possível carregar o blog",
+      "description": "Algo deu errado ao carregar esta página. Tente de novo.",
+      "retry": "Tentar de novo"
+    },
+    "home": {
+      "title": "Do blog",
+      "intro": "Guias práticas para compartilhar links, crescer sua audiência e administrar uma página de desbloqueio.",
+      "viewAll": "Ver todos os artigos"
+    }
   }
 }

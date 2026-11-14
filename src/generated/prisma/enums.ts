@@ -164,3 +164,11 @@ export const OperationStatus = {
 } as const
 
 export type OperationStatus = (typeof OperationStatus)[keyof typeof OperationStatus]
+
+
+export const BlogPostStatus = {
+  DRAFT: 'DRAFT',
+  PUBLISHED: 'PUBLISHED'
+} as const
+
+export type BlogPostStatus = (typeof BlogPostStatus)[keyof typeof BlogPostStatus]

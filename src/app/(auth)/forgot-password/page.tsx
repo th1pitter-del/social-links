@@ -5,7 +5,7 @@ import { ForgotPasswordForm } from '@/components/auth/forgot-password-form'
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('auth.forgot')
-  return { title: t('title') }
+  return { title: t('title'), robots: { index: false, follow: false } }
 }
 
 export default async function ForgotPasswordPage() {

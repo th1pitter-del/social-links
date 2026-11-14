@@ -1,8 +1,9 @@
 import 'server-only'
 
 import { cache } from 'react'
-import { getMessages } from 'next-intl/server'
+import { getLocale, getMessages } from 'next-intl/server'
 
+import { isLocale, locales, type Locale } from '@/i18n/config'
 import { prisma } from '@/lib/prisma'
 import { DEFAULT_PAGE_CONTENT } from '@/lib/default-page-content'
 
@@ -204,6 +205,7 @@ export const getSettingMap = cache(async (): Promise<Record<string, string>> => 
           in: [
             'site.name',
             'site.tagline',
+            ...locales.map((locale) => `site.tagline.${locale}`),
             'site.logoUrl',
             'site.faviconUrl',
             'rules.socialPlatforms',
@@ -240,12 +242,19 @@ export type SiteSettings = {
 }
 
 export const getSiteSettings = cache(async (): Promise<SiteSettings> => {
-  const [map, defaults] = await Promise.all([getSettingMap(), getLocalizedDefaults()])
-  const tagline = map['site.tagline']?.trim() ?? ''
+  const [map, defaults, rawLocale] = await Promise.all([
+    getSettingMap(),
+    getLocalizedDefaults(),
+    getLocale(),
+  ])
+  const locale: Locale = isLocale(rawLocale) ? rawLocale : 'en'
+  // The base key is the English copy and the fallback for every other locale.
+  const baseTagline = map['site.tagline']?.trim() ?? ''
+  const customTagline = map[`site.tagline.${locale}`]?.trim() || baseTagline
   return {
     name: map['site.name']?.trim() || defaults.name,
-    tagline: tagline || defaults.tagline,
-    hasCustomTagline: tagline.length > 0,
+    tagline: customTagline || defaults.tagline,
+    hasCustomTagline: customTagline.length > 0,
     logoUrl: isMediaOrHttpUrl(map['site.logoUrl']) ? (map['site.logoUrl'] as string) : '',
     faviconUrl: isMediaOrHttpUrl(map['site.faviconUrl']) ? (map['site.faviconUrl'] as string) : '',
     allowedPlatforms: (map['rules.socialPlatforms'] ?? '')

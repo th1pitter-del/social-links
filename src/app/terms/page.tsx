@@ -4,11 +4,12 @@ import { getLocale, getTranslations } from 'next-intl/server'
 import { ContentPage } from '@/components/content-page'
 import { SiteFooter } from '@/components/site-footer'
 import { SiteHeader } from '@/components/site-header'
+import { pageMetadata } from '@/lib/seo'
 import { getPageContent } from '@/lib/settings'
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('pages.terms')
-  return { title: t('metaTitle'), description: t('intro'), alternates: { canonical: '/terms' } }
+  return pageMetadata({ title: t('metaTitle'), description: t('intro'), path: '/terms' })
 }
 
 export default async function TermsPage() {

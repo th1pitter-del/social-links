@@ -54,7 +54,11 @@ export async function generateMetadata(): Promise<Metadata> {
       url: SITE_URL,
       siteName: site.name,
     },
-    twitter: { card: 'summary_large_image' },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${site.name} — ${t('title')}`,
+      description,
+    },
   }
 }
 

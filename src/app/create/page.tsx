@@ -10,11 +10,12 @@ import { AdSlot } from '@/components/ads/ad-slot'
 import { getEnabledActionOptions } from '@/lib/action-catalog'
 import { getGuestToken } from '@/lib/guest'
 import { prisma } from '@/lib/prisma'
+import { pageMetadata } from '@/lib/seo'
 import { getSession } from '@/lib/session'
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('create')
-  return { title: t('title'), alternates: { canonical: '/create' } }
+  return pageMetadata({ title: t('title'), description: t('subtitle'), path: '/create' })
 }
 
 export const dynamic = 'force-dynamic'

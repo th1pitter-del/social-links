@@ -9,6 +9,7 @@ import { getLocale, getTranslations } from 'next-intl/server'
 import { SiteFooter } from '@/components/site-footer'
 import { SiteHeader } from '@/components/site-header'
 import { BrandIcon } from '@/components/brand-icon'
+import { BlogPostCard } from '@/components/blog/blog-post-card'
 import { Button } from '@/components/ui/button'
 import { AdSlot } from '@/components/ads/ad-slot'
 import { AnalyticsSpotlight } from '@/components/home/analytics-spotlight'
@@ -22,11 +23,13 @@ import { StepRail } from '@/components/home/step-rail'
 import { UnlockDemo, type DemoStep } from '@/components/home/unlock-demo'
 import { Reveal } from '@/components/motion/reveal'
 import { getSession } from '@/lib/session'
+import { getLatestBlogPosts } from '@/lib/blog-data'
 import { getEnabledPlatforms } from '@/lib/action-catalog'
 import { actionLabel, platformLabel } from '@/lib/action-label'
 import { formatNumber } from '@/lib/format'
 import { SITE_URL } from '@/lib/seo'
 import { getSiteSettings } from '@/lib/settings'
+import type { Locale } from '@/i18n/config'
 
 export const dynamic = 'force-dynamic'
 export const metadata: Metadata = { alternates: { canonical: '/' } }
@@ -69,6 +72,8 @@ export default async function HomePage() {
     session,
     platformRows,
     locale,
+    blogCopy,
+    latestPosts,
   ] = await Promise.all([
       getTranslations('home'),
       getTranslations('nav'),
@@ -81,6 +86,8 @@ export default async function HomePage() {
       getSession(),
       getEnabledPlatforms(),
       getLocale(),
+      getTranslations('blog'),
+      getLatestBlogPosts(3),
     ])
   const signedIn = Boolean(session)
 
@@ -319,6 +326,36 @@ export default async function HomePage() {
         </Reveal>
 
         <BioLinksHero href={signedIn ? '/dashboard/profile' : '/sign-up'} />
+
+        {latestPosts.length > 0 ? (
+          <section id="blog">
+            <div className="mx-auto w-full max-w-[1200px] px-4 py-16 sm:py-20">
+              <Reveal>
+                <div className="flex flex-wrap items-end justify-between gap-4">
+                  <div>
+                    <h2 className="text-3xl font-semibold tracking-tight">
+                      {blogCopy('home.title')}
+                    </h2>
+                    <p className="mt-3 max-w-2xl text-muted-foreground">
+                      {blogCopy('home.intro')}
+                    </p>
+                  </div>
+                  <Button variant="outline" size="sm" asChild>
+                    <Link href="/blog">
+                      {blogCopy('home.viewAll')}
+                      <ArrowRight className="rtl:rotate-180" />
+                    </Link>
+                  </Button>
+                </div>
+              </Reveal>
+              <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {latestPosts.map((post) => (
+                  <BlogPostCard key={post.id} post={post} locale={locale as Locale} />
+                ))}
+              </div>
+            </div>
+          </section>
+        ) : null}
 
         <section className="relative overflow-hidden border-t bg-card">
           {/* The closing ask is a full-width invitation rather than another
