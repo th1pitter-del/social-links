@@ -3,7 +3,7 @@ import { ArrowRight, CalendarDays, Sparkles } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { formatBlogDate } from '@/components/blog/blog-post-card'
-import { blogPostHref, blogPostText, type BlogPostSummary } from '@/lib/blog'
+import { blogCategoryName, blogPostHref, blogPostText, type BlogPostSummary } from '@/lib/blog'
 import type { Locale } from '@/i18n/config'
 
 /** The index leads with one article; the composition is deliberately unlike the grid. */
@@ -52,7 +52,9 @@ export async function BlogFeaturedPost({
               {eyebrow}
             </span>
             {post.category ? (
-              <span className="text-muted-foreground">{post.category.name}</span>
+              <span className="text-muted-foreground">
+                {blogCategoryName(post.category, locale)}
+              </span>
             ) : null}
           </div>
           <h2 className="text-2xl leading-tight font-semibold tracking-tight text-balance sm:text-3xl">

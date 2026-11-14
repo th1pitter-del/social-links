@@ -2,7 +2,6 @@
 
 import type { CSSProperties } from 'react'
 import { useTranslations } from 'next-intl'
-import { useTheme } from 'next-themes'
 import { cn } from 'cn'
 
 import { PlatformGlyph, brandAccentFor } from '@/components/brand-icon'
@@ -31,9 +30,7 @@ export function PlatformShowcase({
   label: string
 }) {
   const t = useTranslations('motion')
-  const { resolvedTheme } = useTheme()
   const rotator = useRotator(platforms.length, 4600)
-  const dark = resolvedTheme !== 'light'
   const selected = platforms[rotator.active]
 
   if (!selected) return null
@@ -112,7 +109,10 @@ export function PlatformShowcase({
       <div className="grid self-start">
         {platforms.map((platform) => {
           const active = platform.key === selected.key
-          const accent = brandAccentFor(platform.key, dark) ?? 'var(--primary)'
+          /* Both theme variants go out in the markup; `.brand-accent` in
+             globals.css resolves `--brand` for whichever one is active. */
+          const accent = brandAccentFor(platform.key, false) ?? 'var(--primary)'
+          const accentDark = brandAccentFor(platform.key, true) ?? 'var(--primary)'
           return (
             <div
               key={platform.key}
@@ -121,12 +121,17 @@ export function PlatformShowcase({
               aria-labelledby={`platform-tab-${platform.key}`}
               aria-hidden={!active}
               className={cn(
-                'col-start-1 row-start-1 relative overflow-hidden rounded-2xl border bg-card transition-[opacity,transform] duration-300 ease-out motion-reduce:transition-none',
+                'brand-accent col-start-1 row-start-1 relative overflow-hidden rounded-2xl border bg-card transition-[opacity,transform] duration-300 ease-out motion-reduce:transition-none',
                 active
                   ? 'translate-y-0 opacity-100'
                   : 'pointer-events-none translate-y-1 opacity-0',
               )}
-              style={{ '--brand': accent } as CSSProperties}
+              style={
+                {
+                  '--brand-light': accent,
+                  '--brand-dark': accentDark,
+                } as CSSProperties
+              }
             >
               <div
                 aria-hidden

@@ -182,6 +182,19 @@
 }
 
 /*
+ * A brand accent's brightness depends on the page theme: a pale mark is
+ * darkened on the light page so it stays legible. The theme only exists in the
+ * browser, so the markup carries both variants and CSS picks one — server HTML
+ * and the first client render always agree, with no post-hydration flash.
+ */
+.brand-accent {
+  --brand: var(--brand-light);
+}
+.dark .brand-accent {
+  --brand: var(--brand-dark);
+}
+
+/*
  * Keyframes for the marketing demonstrations. Everything that loops is used
  * behind a `motion-safe:` utility, so a visitor who asked for reduced motion
  * never sees these run; the components that use them render their final state

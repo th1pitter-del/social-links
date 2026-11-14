@@ -15,6 +15,7 @@ import { BlogShare } from '@/components/blog/blog-share'
 import { BlogViewBeacon } from '@/components/blog/blog-view-beacon'
 import {
   blogAuthorHref,
+  blogCategoryName,
   blogPostHref,
   blogPostText,
   blogTagHref,
@@ -89,7 +90,7 @@ export async function BlogArticleView({
                   </li>
                   <li>
                     <Link href={`/blog/category/${post.category.slug}`} className="hover:text-foreground">
-                      {post.category.name}
+                      {blogCategoryName(post.category, locale)}
                     </Link>
                   </li>
                 </>
@@ -99,7 +100,10 @@ export async function BlogArticleView({
 
           <div className="mt-6 flex flex-wrap items-center gap-2">
             {post.category ? (
-              <BlogCategoryChip name={post.category.name} slug={post.category.slug} />
+              <BlogCategoryChip
+                name={blogCategoryName(post.category, locale)}
+                slug={post.category.slug}
+              />
             ) : null}
             {post.status !== 'PUBLISHED' ? (
               <span className="rounded-full border border-warning/40 bg-warning/10 px-2.5 py-1 text-xs font-medium">

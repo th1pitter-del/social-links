@@ -2,7 +2,13 @@ import Link from 'next/link'
 import { ArrowUpRight, CalendarDays, ImageIcon, UserRound } from 'lucide-react'
 
 import { cn } from 'cn'
-import { blogCategoryHref, blogPostHref, blogPostText, type BlogPostSummary } from '@/lib/blog'
+import {
+  blogCategoryHref,
+  blogCategoryName,
+  blogPostHref,
+  blogPostText,
+  type BlogPostSummary,
+} from '@/lib/blog'
 import type { Locale } from '@/i18n/config'
 
 export function formatBlogDate(locale: string, iso: string | null) {
@@ -100,7 +106,7 @@ export async function BlogPostCard({
             {post.category ? (
               <span className="inline-flex items-center gap-1.5 rounded-full border bg-card px-2.5 py-1 text-xs font-medium text-muted-foreground">
                 <span className="size-1.5 rounded-full bg-primary" aria-hidden />
-                {post.category.name}
+                {blogCategoryName(post.category, locale)}
               </span>
             ) : null}
             <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">

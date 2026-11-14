@@ -44,6 +44,8 @@ export type BlogAuthorRef = { id: string; name: string }
 export type BlogTermRef = { id: string; name: string; slug: string }
 /** Tag refs carry their translations so chips can render the visitor's locale. */
 export type BlogTagRef = BlogTermRef & { translations: BlogTagTranslations | null }
+/** Categories travel the same way: cards and the article header show a name. */
+export type BlogCategoryRef = BlogTermRef & { translations: BlogCategoryTranslations | null }
 
 /** One image offered by the media library picker in the editor. */
 export type BlogCoverOption = { id: string; url: string; filename: string }
@@ -62,7 +64,7 @@ export type BlogPostSummary = {
   createdAt: string
   updatedAt: string
   author: BlogAuthorRef | null
-  category: BlogTermRef | null
+  category: BlogCategoryRef | null
   tags: BlogTagRef[]
   translations: BlogPostTranslations | null
 }
@@ -184,6 +186,15 @@ export function blogTagText(
   locale: Locale,
 ) {
   return tag.translations?.[locale]?.trim() || tag.name
+}
+
+/** Category name for a post row, which carries no description of its own. */
+export function blogCategoryName(
+  category: { name: string; translations?: BlogCategoryTranslations | null } | null | undefined,
+  locale: Locale,
+) {
+  if (!category) return ''
+  return category.translations?.[locale]?.name?.trim() || category.name
 }
 
 export function blogPostHref(slug: string) {

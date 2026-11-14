@@ -7,7 +7,13 @@ import { BlogArticleView } from '@/components/blog/blog-article-view'
 import { JsonLd } from '@/components/json-ld'
 import { SiteFooter } from '@/components/site-footer'
 import { SiteHeader } from '@/components/site-header'
-import { blogAuthorHref, blogPostHref, blogPostText, readingMinutes } from '@/lib/blog'
+import {
+  blogAuthorHref,
+  blogCategoryName,
+  blogPostHref,
+  blogPostText,
+  readingMinutes,
+} from '@/lib/blog'
 import {
   getAdjacentBlogPosts,
   getLatestBlogPosts,
@@ -109,7 +115,7 @@ export default async function BlogArticlePage({
       url: absoluteUrl('/'),
       logo: { '@type': 'ImageObject', url: logo },
     },
-    articleSection: post.category?.name,
+    articleSection: blogCategoryName(post.category, locale) || undefined,
     keywords: post.tags.map((tag) => tag.name),
   }
   const breadcrumbLd = {

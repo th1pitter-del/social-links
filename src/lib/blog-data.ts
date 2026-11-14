@@ -34,7 +34,7 @@ type PostRow = {
   updatedAt: Date
   translations: unknown
   author: { id: string; name: string } | null
-  category: { id: string; name: string; slug: string } | null
+  category: { id: string; name: string; slug: string; translations: unknown } | null
   tags: { id: string; name: string; slug: string; translations: unknown }[]
 }
 
@@ -104,7 +104,9 @@ function toSummary(row: PostRow): BlogPostSummary {
     createdAt: row.createdAt.toISOString(),
     updatedAt: row.updatedAt.toISOString(),
     author: row.author,
-    category: row.category,
+    category: row.category
+      ? { ...row.category, translations: toCategoryTranslations(row.category.translations) }
+      : null,
     tags: row.tags.map((tag) => ({ ...tag, translations: toTagTranslations(tag.translations) })),
     translations: toPostTranslations(row.translations),
   }
@@ -136,7 +138,7 @@ const summarySelect = {
   updatedAt: true,
   translations: true,
   author: { select: { id: true, name: true } },
-  category: { select: { id: true, name: true, slug: true } },
+  category: { select: { id: true, name: true, slug: true, translations: true } },
   tags: { select: { id: true, name: true, slug: true, translations: true }, orderBy: { name: 'asc' } },
 } as const
 
