@@ -5,12 +5,15 @@ import { PrismaMariaDb } from '@prisma/adapter-mariadb'
 import { PrismaClient } from '../src/generated/prisma/client'
 import { categories, tags, posts } from './seed-blog-content'
 import { morePosts } from './seed-blog-content-more'
+import { morePosts2 } from './seed-blog-content-more-2'
+import { morePosts3 } from './seed-blog-content-more-3'
 
 /**
- * Demo blog content: four categories, nine translated tags and ten articles
- * (nine published, one scheduled a few days ahead so the admin list shows the
- * SCHEDULED state). English copy with Spanish, Portuguese and Arabic overrides.
- * Cover images come from picsum.photos, so nothing local is required.
+ * Demo blog content: four categories, eleven translated tags and ten long-form
+ * articles, all published on different days. English copy with full Spanish,
+ * Portuguese and Arabic versions of every title, excerpt and body. Cover and
+ * inline images are hotlinked from the Unsplash CDN, so nothing local is
+ * required.
  *
  * Upsert semantics: re-running RESETS the demo rows to the content below —
  * edits made to these slugs in the admin editor are overwritten. Run with
@@ -86,7 +89,7 @@ async function main() {
     console.info(`[blog] Tag "${tag.name}" ready.`)
   }
 
-  for (const post of [...posts, ...morePosts]) {
+  for (const post of [...posts, ...morePosts, ...morePosts2, ...morePosts3]) {
     const publishedAt = new Date(now - post.publishedDaysAgo * DAY)
     const tagConnect = post.tags.map((slug) => ({ id: tagIds.get(slug) as string }))
     const data = {
