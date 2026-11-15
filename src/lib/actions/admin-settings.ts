@@ -5,6 +5,8 @@ import { getTranslations } from 'next-intl/server'
 
 import { setSetting, writeAudit } from '@/lib/admin-utils'
 import { AD_NETWORK_SCRIPT_MAX_LENGTH } from '@/lib/ads'
+import { BRAND_NAME_SPLIT_MAX } from '@/lib/brand-name'
+import { isBrandMarkIcon } from '@/lib/brand-mark-icons'
 import { isMediaOrHttpUrl, sanitizeHex, DEFAULT_STEP_HOLD_SECONDS, STEP_HOLD_MAX_SECONDS } from '@/lib/settings'
 import { CONTENT_VALUE_MAX_LENGTH } from '@/lib/validation'
 import { requireAdmin } from '@/lib/session'
@@ -124,6 +126,59 @@ function prepareSetting(key: string, rawValue: string, t: ErrorTranslator): Prep
       return { ok: false, key: trimmedKey, error: t('invalidImageUrl') }
     }
     value = trimmedValue
+  }
+  if (trimmedKey === 'site.logoIcon') {
+    // Empty keeps the shipped built-in mark.
+    const trimmedValue = value.trim()
+    if (trimmedValue !== '' && !isBrandMarkIcon(trimmedValue)) {
+      return { ok: false, key: trimmedKey, error: t('invalidBrandIcon') }
+    }
+    value = trimmedValue
+  }
+  if (trimmedKey === 'brand.color1' || trimmedKey === 'brand.color2') {
+    // Empty inherits the surrounding text color.
+    const trimmedValue = value.trim()
+    if (trimmedValue !== '' && !sanitizeHex(trimmedValue)) {
+      return { ok: false, key: trimmedKey, error: t('invalidHexColor') }
+    }
+    value = sanitizeHex(trimmedValue) ?? ''
+  }
+  if (trimmedKey === 'brand.splitChars') {
+    const trimmedValue = value.trim() || '0'
+    const parsed = Number(trimmedValue)
+    if (!Number.isInteger(parsed) || parsed < 0 || parsed > BRAND_NAME_SPLIT_MAX) {
+      return { ok: false, key: trimmedKey, error: t('invalidBrandSplit') }
+    }
+    value = String(parsed)
+  }
+  // Per-locale keys share the base key plus a `.locale` suffix.
+  const isSiteKey = (base: string) =>
+    trimmedKey === base || trimmedKey.startsWith(`${base}.`)
+  if (isSiteKey('site.seoImage') || isSiteKey('site.seoIcon')) {
+    const trimmedValue = value.trim()
+    if (trimmedValue !== '' && !isMediaOrHttpUrl(trimmedValue)) {
+      return { ok: false, key: trimmedKey, error: t('invalidImageUrl') }
+    }
+    value = trimmedValue
+  }
+  if (isSiteKey('site.name')) {
+    // One stored name string, even though the panel edits it in two parts.
+    value = value.trim().replace(/\s+/g, ' ')
+    if (value.length > 80) {
+      return { ok: false, key: trimmedKey, error: t('contentTooLong', { max: 80 }) }
+    }
+  }
+  if (isSiteKey('site.seoTitle')) {
+    value = value.trim().replace(/\s+/g, ' ')
+    if (value.length > 120) {
+      return { ok: false, key: trimmedKey, error: t('contentTooLong', { max: 120 }) }
+    }
+  }
+  if (isSiteKey('site.seoDescription')) {
+    value = value.trim().replace(/\s+/g, ' ')
+    if (value.length > 320) {
+      return { ok: false, key: trimmedKey, error: t('contentTooLong', { max: 320 }) }
+    }
   }
   if (trimmedKey.startsWith('verification.')) {
     // The callback address is computed from the site URL, never typed by hand.

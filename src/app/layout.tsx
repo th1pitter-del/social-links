@@ -25,23 +25,27 @@ const geistMono = Geist_Mono({
 export async function generateMetadata(): Promise<Metadata> {
   const site = await getSiteSettings()
   const t = await getTranslations('meta')
-  const description = site.hasCustomTagline ? site.tagline : t('description')
+  // Admin copy wins per locale; empty fields keep the generated defaults.
+  const title = site.seoTitle || `${site.name} — ${t('title')}`
+  const description = site.seoDescription || (site.hasCustomTagline ? site.tagline : t('description'))
+  const shareImage = site.seoImage ? absoluteUrl(site.seoImage) : undefined
+  const icon = site.seoIcon || site.faviconUrl
 
   return {
     metadataBase: new URL(SITE_URL),
     title: {
-      default: `${site.name} — ${t('title')}`,
+      default: title,
       template: `%s · ${site.name}`,
     },
     description,
     applicationName: site.name,
-    // Single source of truth for the tab icon: the admin upload when set, the
-    // shipped SVG (SVG first, ICO fallback for older tabs) otherwise. Keeping it
-    // in metadata avoids a second file-convention `<link rel="icon">` outranking
-    // the admin value.
+    // Single source of truth for the tab icon: the admin SEO icon, then the
+    // uploaded favicon, then the shipped SVG (SVG first, ICO fallback for older
+    // tabs) otherwise. Keeping it in metadata avoids a second file-convention
+    // `<link rel="icon">` outranking the admin value.
     icons: {
-      icon: site.faviconUrl
-        ? [{ url: site.faviconUrl }]
+      icon: icon
+        ? [{ url: icon }]
         : [
             { url: '/brand/link-unlocker-favicon.svg', type: 'image/svg+xml' },
             { url: '/favicon.ico', sizes: '16x16 24x24 32x32 48x48' },
@@ -49,15 +53,17 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     openGraph: {
       type: 'website',
-      title: `${site.name} — ${t('title')}`,
+      title,
       description,
       url: SITE_URL,
       siteName: site.name,
+      images: shareImage ? [{ url: shareImage, width: 1200, height: 630 }] : undefined,
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${site.name} — ${t('title')}`,
+      title,
       description,
+      images: shareImage ? [shareImage] : undefined,
     },
   }
 }
@@ -73,7 +79,8 @@ export default async function RootLayout({ children }: LayoutProps<'/'>) {
   const themeCss = getThemeOverrideCss(settingMap)
   const adNetworkCode = settingMap['ads.headScripts']?.trim() ?? ''
   const locale: Locale = isLocale(rawLocale) ? rawLocale : 'en'
-  const description = site.hasCustomTagline ? site.tagline : meta('description')
+  const description =
+    site.seoDescription || (site.hasCustomTagline ? site.tagline : meta('description'))
   const jsonLd = {
     '@context': 'https://schema.org',
     '@graph': [
@@ -82,7 +89,9 @@ export default async function RootLayout({ children }: LayoutProps<'/'>) {
         '@id': `${SITE_URL}/#organization`,
         name: site.name,
         url: SITE_URL,
-        logo: absoluteUrl(site.logoUrl || site.faviconUrl || '/brand/link-unlocker-mark.svg'),
+        logo: absoluteUrl(
+          site.logoUrl || site.seoIcon || site.faviconUrl || '/brand/link-unlocker-mark.svg',
+        ),
       },
       {
         '@type': 'WebSite',

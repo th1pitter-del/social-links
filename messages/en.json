@@ -435,7 +435,10 @@
     "platformInUse": "This platform is used by {count} link action(s). Remove or reassign them first.",
     "actionBuiltIn": "Built-in actions cannot be deleted. Disable it instead.",
     "actionInUse": "This action is used by {count} link(s). Remove it from them first.",
-    "invalidImageUrl": "Logo and favicon must be an uploaded image or an http(s) URL.",
+    "invalidImageUrl": "Images must be an uploaded image or an http(s) URL.",
+    "invalidHexColor": "Enter a hex color like #d5ff2f, or leave it empty.",
+    "invalidBrandIcon": "Choose an icon from the list.",
+    "invalidBrandSplit": "Enter a whole number between 0 and 40.",
     "nameRequired": "Add a name",
     "invalidAdPlacement": "Invalid ad placement",
     "invalidAdType": "Invalid ad type",
@@ -1766,8 +1769,8 @@
           "warning": "Only change these values if you know how this server is set up. If the branch, process manager or process name does not match the server, an update will build the new code but never install or restart it."
         },
         "site-content": {
-          "title": "Site content",
-          "description": "Displayed across the public site."
+          "title": "Site identity",
+          "description": "Brand name, logo and how the site appears in search results."
         },
         "appearance": {
           "title": "Appearance",
@@ -1817,27 +1820,15 @@
       "fields": {
         "site_name": {
           "label": "Site name",
+          "hint": "Shown next to the logo across the site and in page titles. Enter one or two parts; leaving the second empty creates a single-word name.",
+          "part1": "First part",
+          "part2": "Second part",
           "placeholder": "Link Unlocker"
         },
         "site_tagline": {
           "label": "Tagline",
-          "hint": "Shown in the footer and used as the default page description. The locale overrides below take precedence.",
+          "hint": "Shown in the footer and used as the default page description.",
           "placeholder": "Unlock content by completing a quick task"
-        },
-        "site_tagline_es": {
-          "label": "Tagline — Spanish",
-          "hint": "Used for Spanish visitors on the site and in page metadata. Falls back to the default tagline when empty.",
-          "placeholder": "Desbloquea contenido completando una tarea rápida"
-        },
-        "site_tagline_pt-br": {
-          "label": "Tagline — Portuguese (Brazil)",
-          "hint": "Used for Portuguese visitors on the site and in page metadata. Falls back to the default tagline when empty.",
-          "placeholder": "Desbloqueie conteúdo concluindo uma tarefa rápida"
-        },
-        "site_tagline_ar": {
-          "label": "Tagline — Arabic",
-          "hint": "Used for Arabic visitors on the site and in page metadata. Falls back to the default tagline when empty.",
-          "placeholder": "افتح المحتوى بإكمال مهمة سريعة"
         },
         "theme_light_primary": {
           "label": "Light mode — primary accent",
@@ -1948,13 +1939,50 @@
         },
         "site_logoUrl": {
           "label": "Logo",
-          "hint": "Shown in the header, dashboard and unlock pages. Upload an image or paste an http(s) URL. Empty = built-in mark.",
+          "hint": "Shown in the header, dashboard and unlock pages. Upload an image or paste an http(s) URL. Empty = the selected built-in icon.",
           "placeholder": "https://example.com/logo.png"
+        },
+        "site_logoIcon": {
+          "label": "Logo icon",
+          "hint": "Used when no logo image is uploaded. The icon sits on the brand-colored circle and stays legible in light and dark modes."
         },
         "site_faviconUrl": {
           "label": "Favicon",
-          "hint": "Browser tab icon. Upload a square PNG or paste an http(s) URL. Empty = default icon.",
+          "hint": "Browser tab icon. Upload a square PNG or paste an http(s) URL. Empty = the SEO icon, then the default icon.",
           "placeholder": "https://example.com/favicon.png"
+        },
+        "brand_color1": {
+          "label": "Name color — first part",
+          "hint": "Color of the first word, or of the first characters of a single-word name. Empty = inherit the text color."
+        },
+        "brand_color2": {
+          "label": "Name color — second part",
+          "hint": "Color of the second word, or of the remaining characters of a single-word name. Empty = inherit the text color."
+        },
+        "brand_splitChars": {
+          "label": "First color length",
+          "hint": "For a single-word name, how many characters use the first color. The rest use the second color. 0 = the whole word uses the first color.",
+          "placeholder": "0"
+        },
+        "site_seoTitle": {
+          "label": "SEO title",
+          "hint": "Browser tab and search-result title. Empty = the site name plus a short summary.",
+          "placeholder": "Link Unlocker — free social unlock links"
+        },
+        "site_seoDescription": {
+          "label": "SEO description",
+          "hint": "Search-result summary. Empty = the tagline above.",
+          "placeholder": "Create social unlock links that require followers, subscriptions or a quick task before sharing your content."
+        },
+        "site_seoImage": {
+          "label": "SEO image",
+          "hint": "Share-card image for links to the site (1200×630 recommended). Upload an image or paste an http(s) URL. Empty = the generated card.",
+          "placeholder": "https://example.com/share.png"
+        },
+        "site_seoIcon": {
+          "label": "SEO icon",
+          "hint": "Tab and search-result icon. Upload a square PNG or paste an http(s) URL. Empty = the favicon above.",
+          "placeholder": "https://example.com/icon.png"
         },
         "email_webhookUrl": {
           "label": "Webhook URL",
@@ -2023,6 +2051,29 @@
           "hint": "Limits visitor account-check requests for YouTube via Google OAuth, GitHub via OAuth and Telegram via private bot check-in. Lower this if provider quotas or rate limits are reached.",
           "placeholder": "8"
         }
+      },
+      "localized": {
+        "label": "Language",
+        "hint": "Each language keeps its own name, tagline and search settings. Empty fields fall back to the default language."
+      },
+      "brandSection": "Logo & brand colors",
+      "brandIcons": {
+        "classic": "Default mark",
+        "unlock": "Unlock",
+        "lock-open": "Open lock",
+        "unlock-keyhole": "Unlocked keyhole",
+        "lock-keyhole-open": "Open keyhole",
+        "key": "Key",
+        "key-round": "Access key",
+        "link": "Link",
+        "chain": "Chain",
+        "globe": "Globe",
+        "globe-lock": "Locked globe",
+        "folder-open": "Open folder",
+        "folder-key": "Folder key",
+        "file-key": "File key",
+        "qr-code": "Access code",
+        "door-open": "Open door"
       },
       "uploadImage": "Upload image",
       "imageUploadedToast": "Image uploaded. Save to apply.",

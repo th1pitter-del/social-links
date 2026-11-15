@@ -1,7 +1,10 @@
+import { createElement } from 'react'
 import { ImageResponse } from 'next/og'
 import { getTranslations } from 'next-intl/server'
 
-import { SITE_URL } from '@/lib/seo'
+import { brandMarkIcon } from '@/lib/brand-mark-icons'
+import { splitBrandName } from '@/lib/brand-name'
+import { absoluteUrl, SITE_URL } from '@/lib/seo'
 import { getSiteSettings } from '@/lib/settings'
 
 export const alt = 'Create a short link that unlocks after a visitor completes social steps'
@@ -13,6 +16,24 @@ export const dynamic = 'force-dynamic'
 
 const platforms = ['YouTube', 'Instagram', 'Facebook', 'TikTok', 'Discord', 'Spotify', 'Website']
 
+/**
+ * Uploaded logo as an inline image, or null so the card falls back to the
+ * built-in mark. Only raster formats are inlined; the card renderer does not
+ * draw SVG uploads.
+ */
+async function loadLogo(url: string): Promise<string | null> {
+  if (!url) return null
+  try {
+    const response = await fetch(absoluteUrl(url))
+    const type = response.headers.get('content-type') ?? ''
+    if (!response.ok || !/^image\/(png|jpe?g|webp|gif)$/i.test(type)) return null
+    const bytes = Buffer.from(await response.arrayBuffer())
+    return `data:${type};base64,${bytes.toString('base64')}`
+  } catch {
+    return null
+  }
+}
+
 export default async function Image() {
   const [site, t] = await Promise.all([
     getSiteSettings(),
@@ -20,6 +41,9 @@ export default async function Image() {
     getTranslations({ locale: 'en', namespace: 'meta' }),
   ])
   const host = new URL(SITE_URL).host
+  const nameParts = splitBrandName(site.name, site.brand.splitChars)
+  const MarkIcon = brandMarkIcon(site.logoIcon)
+  const logo = await loadLogo(site.logoUrl)
 
   return new ImageResponse(
     (
@@ -52,39 +76,75 @@ export default async function Image() {
         />
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
-          <div
-            style={{
-              width: 64,
-              height: 64,
-              borderRadius: 18,
-              background: '#D5FF2F',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              position: 'relative',
-            }}
-          >
+          {logo ? (
+            <img
+              src={logo}
+              width={64}
+              height={64}
+              alt=""
+              style={{ borderRadius: 18, objectFit: 'contain' }}
+            />
+          ) : (
             <div
               style={{
-                position: 'absolute',
-                width: 32,
-                height: 6,
-                borderRadius: 3,
-                background: '#050505',
+                width: 64,
+                height: 64,
+                borderRadius: 18,
+                background: '#D5FF2F',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
               }}
-            />
-            <div
-              style={{
-                position: 'absolute',
-                width: 6,
-                height: 32,
-                borderRadius: 3,
-                background: '#050505',
-              }}
-            />
-          </div>
+            >
+              {MarkIcon ? (
+                createElement(MarkIcon, {
+                  width: 36,
+                  height: 36,
+                  strokeWidth: 2.4,
+                  color: '#050505',
+                })
+              ) : (
+                <div style={{ display: 'flex', position: 'relative', width: 36, height: 36 }}>
+                  <div
+                    style={{
+                      position: 'absolute',
+                      top: 15,
+                      left: 2,
+                      width: 32,
+                      height: 6,
+                      borderRadius: 3,
+                      background: '#050505',
+                    }}
+                  />
+                  <div
+                    style={{
+                      position: 'absolute',
+                      top: 2,
+                      left: 15,
+                      width: 6,
+                      height: 32,
+                      borderRadius: 3,
+                      background: '#050505',
+                    }}
+                  />
+                </div>
+              )}
+            </div>
+          )}
           <div style={{ display: 'flex', fontSize: 34, fontWeight: 600, letterSpacing: -0.5 }}>
-            {site.name}
+            <div
+              style={{
+                display: 'flex',
+                color: site.brand.color1 || '#FFFFFF',
+              }}
+            >
+              {nameParts.first}
+            </div>
+            {nameParts.second ? (
+              <div style={{ display: 'flex', marginLeft: 9, color: site.brand.color2 || '#FFFFFF' }}>
+                {nameParts.second}
+              </div>
+            ) : null}
           </div>
         </div>
 

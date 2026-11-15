@@ -1,8 +1,12 @@
 import { notFound } from 'next/navigation'
 import { getTranslations } from 'next-intl/server'
 
-import { getSettingsGroup } from '@/components/admin/settings-config'
+import {
+  getSettingsGroup,
+  localizedSettingsKey,
+} from '@/components/admin/settings-config'
 import { SettingsGroupForm } from '@/components/admin/settings-form'
+import { locales } from '@/i18n/config'
 import { getSettings } from '@/lib/admin-utils'
 import { getOgadsConfig, ogadsPostbackUrl } from '@/lib/ogads'
 import { defaultSettingValue } from '@/lib/settings'
@@ -35,7 +39,16 @@ export default async function AdminSettingsGroupPage({
   const all = await getSettings()
   const settings: Record<string, string> = {}
   const configured: Record<string, boolean> = {}
-  for (const field of group.fields) {
+  const fields = [
+    ...group.fields,
+    ...(group.localizedFields ?? []).flatMap((field) =>
+      locales.map((locale) => ({
+        ...field,
+        key: localizedSettingsKey(field.key, locale),
+      })),
+    ),
+  ]
+  for (const field of fields) {
     const stored = all[field.key]
     if (field.secret) {
       // A credential is write-only: report that one exists, never what it is.

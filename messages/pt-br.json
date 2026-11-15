@@ -1219,8 +1219,8 @@
           "warning": "Altere estes valores apenas se souber como este servidor está configurado. Se o branch, o gerenciador de processos ou o nome do processo não corresponderem ao servidor, uma atualização compilará o código novo, mas nunca o instalará nem o reiniciará."
         },
         "site-content": {
-          "title": "Conteúdo do site",
-          "description": "Exibido em todo o site público."
+          "title": "Identidade do site",
+          "description": "Nome da marca, logotipo e como o site aparece nos resultados de busca."
         },
         "appearance": {
           "title": "Aparência",
@@ -1270,27 +1270,15 @@
       "fields": {
         "site_name": {
           "label": "Nome do site",
+          "hint": "Exibido ao lado do logotipo em todo o site e nos títulos das páginas. Informe uma ou duas partes; deixar a segunda vazia cria um nome de uma só palavra.",
+          "part1": "Primeira parte",
+          "part2": "Segunda parte",
           "placeholder": "Link Unlocker"
         },
         "site_tagline": {
           "label": "Slogan",
-          "hint": "Exibido no rodapé e usado como descrição padrão da página. As versões por idioma abaixo têm prioridade.",
+          "hint": "Exibido no rodapé e usado como descrição padrão da página.",
           "placeholder": "Desbloqueie conteúdo concluindo uma tarefa rápida"
-        },
-        "site_tagline_es": {
-          "label": "Slogan — Espanhol",
-          "hint": "Usado para visitantes em espanhol no site e nos metadados. Quando vazio, usa o slogan padrão.",
-          "placeholder": "Enlaces de desbloqueo social gratis"
-        },
-        "site_tagline_pt-br": {
-          "label": "Slogan — Português (Brasil)",
-          "hint": "Usado para visitantes em português no site e nos metadados. Quando vazio, usa o slogan padrão.",
-          "placeholder": "Links de desbloqueio social grátis"
-        },
-        "site_tagline_ar": {
-          "label": "Slogan — Árabe",
-          "hint": "Usado para visitantes em árabe no site e nos metadados. Quando vazio, usa o slogan padrão.",
-          "placeholder": "روابط فتح اجتماعية مجانية"
         },
         "theme_light_primary": {
           "label": "Modo claro — destaque principal",
@@ -1401,13 +1389,50 @@
         },
         "site_logoUrl": {
           "label": "Logotipo",
-          "hint": "Exibido no cabeçalho, no painel e nas páginas de desbloqueio. Envie uma imagem ou cole uma URL http(s). Vazio = marca padrão.",
+          "hint": "Exibido no cabeçalho, no painel e nas páginas de desbloqueio. Envie uma imagem ou cole uma URL http(s). Vazio = o ícone integrado selecionado.",
           "placeholder": "https://exemplo.com/logo.png"
+        },
+        "site_logoIcon": {
+          "label": "Ícone do logotipo",
+          "hint": "Usado quando não há imagem de logotipo. O ícone fica sobre o círculo da cor da marca e continua legível nos modos claro e escuro."
         },
         "site_faviconUrl": {
           "label": "Favicon",
-          "hint": "Ícone da aba do navegador. Envie um PNG quadrado ou cole uma URL http(s). Vazio = ícone padrão.",
+          "hint": "Ícone da aba do navegador. Envie um PNG quadrado ou cole uma URL http(s). Vazio = o ícone de SEO e depois o ícone padrão.",
           "placeholder": "https://exemplo.com/favicon.png"
+        },
+        "brand_color1": {
+          "label": "Cor do nome — primeira parte",
+          "hint": "Cor da primeira palavra, ou dos primeiros caracteres de um nome de uma só palavra. Vazio = herda a cor do texto."
+        },
+        "brand_color2": {
+          "label": "Cor do nome — segunda parte",
+          "hint": "Cor da segunda palavra, ou do restante dos caracteres de um nome de uma só palavra. Vazio = herda a cor do texto."
+        },
+        "brand_splitChars": {
+          "label": "Comprimento da primeira cor",
+          "hint": "Em um nome de uma só palavra, quantos caracteres usam a primeira cor. O restante usa a segunda. 0 = a palavra inteira usa a primeira cor.",
+          "placeholder": "0"
+        },
+        "site_seoTitle": {
+          "label": "Título de SEO",
+          "hint": "Título da aba e dos resultados de busca. Vazio = nome do site e um resumo curto.",
+          "placeholder": "Link Unlocker — links de desbloqueio social grátis"
+        },
+        "site_seoDescription": {
+          "label": "Descrição de SEO",
+          "hint": "Resumo nos resultados de busca. Vazio = o slogan acima.",
+          "placeholder": "Crie links de desbloqueio social que exigem seguidores, inscrições ou uma tarefa rápida antes de compartilhar seu conteúdo."
+        },
+        "site_seoImage": {
+          "label": "Imagem de SEO",
+          "hint": "Imagem do cartão ao compartilhar links do site (recomendado 1200×630). Envie uma imagem ou cole uma URL http(s). Vazio = cartão gerado.",
+          "placeholder": "https://exemplo.com/compartilhar.png"
+        },
+        "site_seoIcon": {
+          "label": "Ícone de SEO",
+          "hint": "Ícone da aba e dos resultados de busca. Envie um PNG quadrado ou cole uma URL http(s). Vazio = o favicon acima.",
+          "placeholder": "https://exemplo.com/icone.png"
         },
         "email_webhookUrl": {
           "label": "URL do webhook",
@@ -1476,6 +1501,29 @@
           "hint": "Limita solicitações de verificação de contas: YouTube via Google OAuth, GitHub via OAuth e Telegram via bot privado. Reduza o limite se as cotas ou limites do provedor forem atingidos.",
           "placeholder": "8"
         }
+      },
+      "localized": {
+        "label": "Idioma",
+        "hint": "Cada idioma mantém seu próprio nome, slogan e configurações de busca. Campos vazios usam o idioma padrão."
+      },
+      "brandSection": "Logotipo e cores da marca",
+      "brandIcons": {
+        "classic": "Marca padrão",
+        "unlock": "Desbloquear",
+        "lock-open": "Cadeado aberto",
+        "unlock-keyhole": "Fechadura aberta",
+        "lock-keyhole-open": "Fechadura com abertura",
+        "key": "Chave",
+        "key-round": "Chave de acesso",
+        "link": "Link",
+        "chain": "Corrente",
+        "globe": "Globo",
+        "globe-lock": "Globo bloqueado",
+        "folder-open": "Pasta aberta",
+        "folder-key": "Pasta com chave",
+        "file-key": "Arquivo com chave",
+        "qr-code": "Código de acesso",
+        "door-open": "Porta aberta"
       },
       "uploadImage": "Enviar imagem",
       "imageUploadedToast": "Imagem enviada. Salve para aplicar.",
@@ -2397,7 +2445,10 @@
     "platformInUse": "Esta plataforma é usada por {count} ação(ões) de link. Remova-as ou realoque-as primeiro.",
     "actionBuiltIn": "As ações integradas não podem ser excluídas. Desative-as.",
     "actionInUse": "Esta ação é usada por {count} link(s). Remova-a deles primeiro.",
-    "invalidImageUrl": "O logotipo e o favicon devem ser uma imagem enviada ou uma URL http(s).",
+    "invalidImageUrl": "As imagens devem ser um arquivo enviado ou uma URL http(s).",
+    "invalidHexColor": "Informe uma cor hex como #d5ff2f ou deixe vazio.",
+    "invalidBrandIcon": "Escolha um ícone da lista.",
+    "invalidBrandSplit": "Informe um número inteiro entre 0 e 40.",
     "nameRequired": "Adicione um nome",
     "invalidAdPlacement": "Posição de anúncio inválida",
     "invalidAdType": "Tipo de anúncio inválido",

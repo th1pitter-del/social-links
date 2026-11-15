@@ -4,6 +4,12 @@ import { cache } from 'react'
 import { getLocale, getMessages } from 'next-intl/server'
 
 import { isLocale, locales, type Locale } from '@/i18n/config'
+import {
+  BRAND_NAME_SPLIT_MAX,
+  DEFAULT_BRAND_NAME_STYLE,
+  type BrandNameStyle,
+} from '@/lib/brand-name'
+import { isBrandMarkIcon } from '@/lib/brand-mark-icons'
 import { prisma } from '@/lib/prisma'
 import { DEFAULT_PAGE_CONTENT } from '@/lib/default-page-content'
 
@@ -13,6 +19,20 @@ export const DEFAULT_TAGLINE = 'Free social unlock links'
 
 export const CONTENT_PAGES = ['faq', 'privacy', 'terms', 'contact'] as const
 export type ContentPage = (typeof CONTENT_PAGES)[number]
+
+/**
+ * Site identity and search-appearance keys that every locale may override.
+ * The base key holds the English copy and is the fallback for other locales
+ * (`site.tagline` → `site.tagline.es`).
+ */
+export const SITE_LOCALIZED_KEYS = [
+  'site.name',
+  'site.tagline',
+  'site.seoTitle',
+  'site.seoDescription',
+  'site.seoImage',
+  'site.seoIcon',
+] as const
 
 export const DEFAULT_CONTENT: Record<ContentPage, string> = DEFAULT_PAGE_CONTENT
 
@@ -54,7 +74,8 @@ async function getLocalizedDefaults(): Promise<LocalizedDefaults> {
 /**
  * Admin-configurable theme colors, per color mode. Defaults mirror the shipped
  * Pulse palette in `globals.css`.
- */export const DEFAULT_THEME = {
+ */
+export const DEFAULT_THEME = {
   light: { primary: '#c9f72a', background: '#f6f7f2', accentText: '#5f7a0a' },
   dark: { primary: '#d5ff2f', background: '#050505', accentText: '#d5ff2f' },
 } as const
@@ -109,6 +130,7 @@ export function getStepHoldMs(map: Record<string, string>): number {
 /** Shipped default for a settings field, as the admin form should show it. */
 export function defaultSettingValue(key: string): string | null {
   if (key === 'unlock.stepHoldSeconds') return String(DEFAULT_STEP_HOLD_SECONDS)
+  if (key === 'brand.splitChars') return String(DEFAULT_BRAND_NAME_STYLE.splitChars)
   return defaultThemeValue(key)
 }
 
@@ -116,6 +138,20 @@ export function defaultSettingValue(key: string): string | null {
 export function sanitizeHex(value: string | undefined | null): string | null {
   const trimmed = value?.trim().toLowerCase() ?? ''
   return HEX_PATTERN.test(trimmed) ? trimmed : null
+}
+
+/** Brand name colors and single-word split, sanitized from the DB map. */
+export function getBrandNameStyle(map: Record<string, string>): BrandNameStyle {
+  const raw = map['brand.splitChars']?.trim()
+  const parsed = raw ? Number(raw) : DEFAULT_BRAND_NAME_STYLE.splitChars
+  const splitChars = Number.isFinite(parsed)
+    ? Math.min(Math.max(Math.round(parsed), 0), BRAND_NAME_SPLIT_MAX)
+    : DEFAULT_BRAND_NAME_STYLE.splitChars
+  return {
+    color1: sanitizeHex(map['brand.color1']) ?? '',
+    color2: sanitizeHex(map['brand.color2']) ?? '',
+    splitChars,
+  }
 }
 
 function channel(hex: string, offset: number) {
@@ -225,11 +261,18 @@ export const getSettingMap = cache(async (): Promise<Record<string, string>> => 
       where: {
         key: {
           in: [
-            'site.name',
-            'site.tagline',
-            ...locales.map((locale) => `site.tagline.${locale}`),
+            // Site identity, public details and search appearance. The base key
+            // is the English copy and every locale may override it.
+            ...SITE_LOCALIZED_KEYS.flatMap((key) => [
+              key,
+              ...locales.map((locale) => `${key}.${locale}`),
+            ]),
             'site.logoUrl',
+            'site.logoIcon',
             'site.faviconUrl',
+            'brand.color1',
+            'brand.color2',
+            'brand.splitChars',
             'rules.socialPlatforms',
             'rules.contentPolicy',
             'ads.headScripts',
@@ -256,10 +299,22 @@ export type SiteSettings = {
   tagline: string
   /** True when an admin saved `site.tagline`; otherwise the localized default is in use. */
   hasCustomTagline: boolean
+  /** Per-locale search title; '' = the generated title. */
+  seoTitle: string
+  /** Per-locale search description; '' = the tagline or catalog description. */
+  seoDescription: string
+  /** Per-locale share-card image (`/api/media/<id>` or http(s)); '' = generated card. */
+  seoImage: string
+  /** Per-locale tab/search icon; '' = the site favicon. */
+  seoIcon: string
   /** Admin-managed custom logo (`/api/media/<id>` or http(s) URL); '' = built-in mark. */
   logoUrl: string
+  /** Selected built-in mark icon key; '' = the shipped glyph. */
+  logoIcon: string
   /** Admin-managed favicon URL; '' = the shipped brand favicon. */
   faviconUrl: string
+  /** Two-tone colors and single-word split for the name shown next to the logo. */
+  brand: BrandNameStyle
   allowedPlatforms: string[]
   contentPolicy: string
 }
@@ -272,14 +327,25 @@ export const getSiteSettings = cache(async (): Promise<SiteSettings> => {
   ])
   const locale: Locale = isLocale(rawLocale) ? rawLocale : 'en'
   // The base key is the English copy and the fallback for every other locale.
+  const localized = (key: string) => map[`${key}.${locale}`]?.trim() ?? ''
   const baseTagline = map['site.tagline']?.trim() ?? ''
-  const customTagline = map[`site.tagline.${locale}`]?.trim() || baseTagline
+  const customTagline = localized('site.tagline') || baseTagline
+  const seoImage = localized('site.seoImage') || map['site.seoImage']?.trim() || ''
+  const seoIcon = localized('site.seoIcon') || map['site.seoIcon']?.trim() || ''
+  const logoIcon = map['site.logoIcon']?.trim() ?? ''
   return {
-    name: map['site.name']?.trim() || defaults.name,
+    name: localized('site.name') || map['site.name']?.trim() || defaults.name,
     tagline: customTagline || defaults.tagline,
     hasCustomTagline: customTagline.length > 0,
+    seoTitle: localized('site.seoTitle') || map['site.seoTitle']?.trim() || '',
+    seoDescription:
+      localized('site.seoDescription') || map['site.seoDescription']?.trim() || '',
+    seoImage: isMediaOrHttpUrl(seoImage) ? seoImage : '',
+    seoIcon: isMediaOrHttpUrl(seoIcon) ? seoIcon : '',
     logoUrl: isMediaOrHttpUrl(map['site.logoUrl']) ? (map['site.logoUrl'] as string) : '',
+    logoIcon: isBrandMarkIcon(logoIcon) ? logoIcon : '',
     faviconUrl: isMediaOrHttpUrl(map['site.faviconUrl']) ? (map['site.faviconUrl'] as string) : '',
+    brand: getBrandNameStyle(map),
     allowedPlatforms: (map['rules.socialPlatforms'] ?? '')
       .split(',')
       .map((platform) => platform.trim())

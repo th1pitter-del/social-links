@@ -1,6 +1,8 @@
 import type { ComponentType } from 'react'
 import { Database, Gift, Globe, Mail, Megaphone, Palette, Server, ShieldCheck, Timer, Unlock, Upload } from 'lucide-react'
 
+import { defaultLocale, type Locale } from '@/i18n/config'
+
 type IconType = ComponentType<{ className?: string }>
 
 export type SettingsField = {
@@ -20,6 +22,12 @@ export type SettingsField = {
   secret?: boolean
   /** Computed server-side and shown with a copy button; never saved from here. */
   readonly?: boolean
+  /** Two text inputs (first/second part) that compose one stored name value. */
+  brandName?: boolean
+  /** Visual grid for choosing a built-in site-mark icon. */
+  iconPicker?: boolean
+  /** Whole-number input. */
+  integer?: boolean
 }
 
 export type SettingsGroup = {
@@ -30,6 +38,17 @@ export type SettingsGroup = {
   /** Keeps the field definitions but hides them until the feature is in use. */
   fieldsHidden?: boolean
   fields: SettingsField[]
+  /**
+   * Field definitions repeated inside a tab for every enabled locale. The
+   * stored key gains the locale suffix (`site.name` → `site.name.es`), except
+   * for the default locale, which uses the base key.
+   */
+  localizedFields?: SettingsField[]
+}
+
+/** Stored key for a per-locale field: base key for the default locale. */
+export function localizedSettingsKey(base: string, locale: Locale) {
+  return locale === defaultLocale ? base : `${base}.${locale}`
 }
 
 /**
@@ -44,14 +63,22 @@ export const SETTINGS_GROUPS: SettingsGroup[] = [
     id: 'site-content',
     icon: Globe,
     fields: [
-      { key: 'site.name' },
-      { key: 'site.tagline' },
-      // Per-locale overrides for the site-wide page description.
-      { key: 'site.tagline.es' },
-      { key: 'site.tagline.pt-br' },
-      { key: 'site.tagline.ar' },
       { key: 'site.logoUrl', image: true },
+      { key: 'site.logoIcon', iconPicker: true },
       { key: 'site.faviconUrl', image: true },
+      { key: 'brand.color1', color: true },
+      { key: 'brand.color2', color: true },
+      { key: 'brand.splitChars', integer: true },
+    ],
+    // One tab per enabled locale; every locale may carry its own name, tagline
+    // and search appearance. Empty fields fall back to the base (English) copy.
+    localizedFields: [
+      { key: 'site.name', brandName: true },
+      { key: 'site.tagline' },
+      { key: 'site.seoTitle' },
+      { key: 'site.seoDescription', multiline: true },
+      { key: 'site.seoImage', image: true },
+      { key: 'site.seoIcon', image: true },
     ],
   },
   {

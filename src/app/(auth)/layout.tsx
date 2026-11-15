@@ -1,15 +1,14 @@
 import Link from 'next/link'
 import { getTranslations } from 'next-intl/server'
 
-import { BrandMark } from '@/components/site-header'
+import { BrandMark, BrandName } from '@/components/brand-mark'
 import { AdSlot } from '@/components/ads/ad-slot'
 import { getSiteSettings } from '@/lib/settings'
 
 export default async function AuthLayout({ children }: { children: React.ReactNode }) {
-  const [t, nav, common, site] = await Promise.all([
+  const [t, nav, site] = await Promise.all([
     getTranslations('auth.layout'),
     getTranslations('nav'),
-    getTranslations('common'),
     getSiteSettings(),
   ])
 
@@ -27,8 +26,8 @@ export default async function AuthLayout({ children }: { children: React.ReactNo
       />
       <div className="w-full max-w-sm">
         <Link href="/" className="mb-8 flex items-center justify-center gap-2 font-semibold">
-          <BrandMark className="size-6" src={site.logoUrl || null} />
-          {common('siteName')}
+          <BrandMark className="size-6" src={site.logoUrl || null} icon={site.logoIcon} />
+          <BrandName name={site.name} brand={site.brand} />
         </Link>
         <div className="rounded-2xl border bg-card p-6 shadow-sm sm:p-8 motion-safe:animate-in motion-safe:fade-in-0 motion-safe:slide-in-from-bottom-2 motion-safe:duration-300">
           {children}

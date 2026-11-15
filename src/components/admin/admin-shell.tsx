@@ -34,6 +34,8 @@ import {
 } from 'lucide-react'
 
 import { cn } from 'cn'
+import { BrandName } from '@/components/brand-mark'
+import type { BrandNameStyle } from '@/lib/brand-name'
 import { signOutAction } from '@/lib/actions/auth'
 import { LanguageSwitcher } from '@/components/language-switcher'
 import { ThemeSwitcher } from '@/components/theme-switcher'
@@ -88,11 +90,13 @@ function isActive(pathname: string, href: string) {
 export function AdminShell({
   user,
   siteName,
+  brand,
   openReports,
   children,
 }: {
   user: AdminShellUser
   siteName: string
+  brand?: BrandNameStyle
   openReports: number
   children: ReactNode
 }) {
@@ -234,7 +238,9 @@ export function AdminShell({
           </span>
           <div className="min-w-0">
             <p className="truncate text-sm font-semibold text-sidebar-accent-foreground">{t('adminConsole')}</p>
-            <p className="truncate text-[11px] text-sidebar-foreground">{siteName}</p>
+            <p className="truncate text-[11px] text-sidebar-foreground">
+              <BrandName name={siteName} brand={brand} />
+            </p>
           </div>
           <button
             type="button"

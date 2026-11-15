@@ -28,7 +28,8 @@ import {
 } from 'lucide-react'
 
 import { cn } from 'cn'
-import { BrandMark } from '@/components/brand-mark'
+import { BrandMark, BrandName } from '@/components/brand-mark'
+import type { BrandNameStyle } from '@/lib/brand-name'
 import { CustomSidebarMenu } from '@/components/dashboard/custom-sidebar-menu'
 import { LanguageSwitcher } from '@/components/language-switcher'
 import { navIcons } from '@/components/site-nav-icons'
@@ -104,12 +105,16 @@ export function DashboardShell({
   user,
   siteName,
   logoUrl,
+  logoIcon,
+  brand,
   customMenus = [],
   children,
 }: {
   user: DashboardShellUser
   siteName: string
   logoUrl?: string
+  logoIcon?: string
+  brand?: BrandNameStyle
   customMenus?: CustomMenuNode[]
   children: ReactNode
 }) {
@@ -218,10 +223,16 @@ export function DashboardShell({
             collapsed ? 'lg:justify-center lg:px-3' : '',
           )}
         >
-          <BrandMark className="size-9 shrink-0" src={logoUrl || null} />
+          <BrandMark
+            className="size-9 shrink-0"
+            src={logoUrl || null}
+            icon={logoIcon}
+          />
           <div className={cn('min-w-0', collapsed ? 'lg:hidden' : '')}>
             <p className="truncate text-sm font-semibold text-foreground">{t('brandName')}</p>
-            <p className="truncate text-[11px] text-muted-foreground">{siteName}</p>
+            <p className="truncate text-[11px] text-muted-foreground">
+              <BrandName name={siteName} brand={brand} />
+            </p>
           </div>
           <button
             type="button"

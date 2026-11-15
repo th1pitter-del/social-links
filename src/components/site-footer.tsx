@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { getTranslations } from 'next-intl/server'
 
-import { BrandMark } from '@/components/site-header'
+import { BrandMark, BrandName } from '@/components/brand-mark'
 import { getSiteSettings } from '@/lib/settings'
 import { cn } from 'cn'
 
@@ -33,8 +33,12 @@ export async function SiteFooter({
         {showBrand ? (
           <div className="space-y-2 text-center lg:text-left">
             <div className="flex items-center justify-center gap-2 font-semibold lg:justify-start">
-              <BrandMark className="size-5" src={site.logoUrl || null} />
-              {site.name}
+              <BrandMark
+                className="size-5"
+                src={site.logoUrl || null}
+                icon={site.logoIcon}
+              />
+              <BrandName name={site.name} brand={site.brand} />
             </div>
             <p className="mx-auto max-w-xs text-sm text-muted-foreground lg:mx-0">
               {site.hasCustomTagline ? site.tagline : t('tagline')}

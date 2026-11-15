@@ -23,6 +23,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     <AdminShell
       user={{ id: session.user.id, name: session.user.name, email: session.user.email }}
       siteName={site.name}
+      brand={site.brand}
       openReports={openReports}
     >
       {children}

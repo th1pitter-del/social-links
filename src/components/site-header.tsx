@@ -3,7 +3,7 @@ import { ChevronDown } from 'lucide-react'
 import { getLocale, getTranslations } from 'next-intl/server'
 
 import { BioMenuAccount } from '@/components/bio-menu-account'
-import { BrandMark } from '@/components/brand-mark'
+import { BrandMark, BrandName } from '@/components/brand-mark'
 import { FloatingHeader } from '@/components/floating-header'
 import { LanguageSwitcher } from '@/components/language-switcher'
 import { navIcons } from '@/components/site-nav-icons'
@@ -194,8 +194,12 @@ export async function SiteHeader({
         {/* min-w-0 + truncate: the site name is admin-set, so a long one has to
             give way here rather than push the nav and actions out of the row. */}
         <Link href="/" className="flex min-w-0 items-center gap-2 font-semibold">
-          <BrandMark className="size-6 shrink-0" src={site.logoUrl || null} />
-          <span className="hidden truncate sm:inline">{site.name}</span>
+          <BrandMark
+            className="size-6 shrink-0"
+            src={site.logoUrl || null}
+            icon={site.logoIcon}
+          />
+          <BrandName name={site.name} brand={site.brand} className="hidden truncate sm:inline" />
         </Link>
         {/* Wide screens: the admin-managed menus live inline in the row. Account
             actions do not — they are in the user menu at every width. */}

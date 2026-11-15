@@ -96,7 +96,8 @@ export default async function HomePage() {
     '@type': 'WebApplication',
     name: site.name,
     url: SITE_URL,
-    description: site.hasCustomTagline ? site.tagline : meta('description'),
+    description:
+      site.seoDescription || (site.hasCustomTagline ? site.tagline : meta('description')),
     applicationCategory: 'BusinessApplication',
     operatingSystem: 'Any',
     inLanguage: new Intl.Locale(locale).toString(),

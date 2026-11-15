@@ -24,6 +24,8 @@ export default async function DashboardLayout({ children }: { children: React.Re
       }}
       siteName={site.name}
       logoUrl={site.logoUrl}
+      logoIcon={site.logoIcon}
+      brand={site.brand}
       customMenus={customMenus}
     >
       <AdSlot placement="dashboard-top" />
