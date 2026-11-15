@@ -77,6 +77,7 @@ export default async function Image() {
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
           {logo ? (
+            // eslint-disable-next-line @next/next/no-img-element -- satori renders this card
             <img
               src={logo}
               width={64}

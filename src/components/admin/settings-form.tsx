@@ -15,7 +15,7 @@ import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Textarea } from '@/components/ui/textarea'
-import { defaultLocale, localeLabels, locales, type Locale } from '@/i18n/config'
+import { defaultLocale, locales, type Locale } from '@/i18n/config'
 import { BRAND_MARK_ICONS } from '@/lib/brand-mark-icons'
 import { composeBrandName, splitBrandName, type BrandNameStyle } from '@/lib/brand-name'
 import { updateSettings } from '@/lib/actions/admin-settings'
@@ -229,10 +229,36 @@ export function SettingsGroupForm({
     }
   }
 
+  // Shared color/name-length controls, drawn inside the site-name block so the
+  // live preview sits next to what changes it. Stored once for every language.
+  function renderColorControl(key: string) {
+    const value = values[key] ?? ''
+    const label = t(`fields.${settingsFieldKey(key)}.label`)
+    return (
+      <div className="flex items-center gap-2">
+        <input
+          type="color"
+          aria-label={label}
+          title={label}
+          value={/^#[0-9a-fA-F]{6}$/.test(value) ? value : '#d5ff2f'}
+          onChange={(event) => setValues((v) => ({ ...v, [key]: event.target.value }))}
+          className="size-8 shrink-0 cursor-pointer rounded-md border border-border bg-transparent p-1"
+        />
+        <Input
+          id={key}
+          className="h-8 max-w-28 font-mono text-xs"
+          value={value}
+          placeholder="#d5ff2f"
+          onChange={(event) => setValues((v) => ({ ...v, [key]: event.target.value }))}
+        />
+      </div>
+    )
+  }
+
   function renderBrandName(field: SettingsField) {
     const parts = nameParts[field.key] ?? splitBrandName(values[field.key] ?? '', 0)
     return (
-      <div className="space-y-2">
+      <div className="space-y-3">
         <div className="grid gap-3 sm:grid-cols-2">
           <div className="space-y-1.5">
             <Label
@@ -246,6 +272,10 @@ export function SettingsGroupForm({
               value={parts.first}
               onChange={(event) => changeNamePart(field.key, 'first', event.target.value)}
             />
+            <span className="block text-[11px] text-muted-foreground">
+              {t('fields.brand_color1.label')}
+            </span>
+            {renderColorControl('brand.color1')}
           </div>
           <div className="space-y-1.5">
             <Label
@@ -259,7 +289,28 @@ export function SettingsGroupForm({
               value={parts.second}
               onChange={(event) => changeNamePart(field.key, 'second', event.target.value)}
             />
+            <span className="block text-[11px] text-muted-foreground">
+              {t('fields.brand_color2.label')}
+            </span>
+            {renderColorControl('brand.color2')}
           </div>
+        </div>
+        <div className="space-y-1.5">
+          <Label htmlFor="brand.splitChars" className="text-xs text-muted-foreground">
+            {t('fields.brand_splitChars.label')}
+          </Label>
+          <Input
+            id="brand.splitChars"
+            type="number"
+            min={0}
+            step={1}
+            className="h-8 max-w-24"
+            value={values['brand.splitChars'] ?? ''}
+            placeholder="0"
+            onChange={(event) =>
+              setValues((v) => ({ ...v, 'brand.splitChars': event.target.value }))
+            }
+          />
         </div>
         <div className="flex min-w-0 items-center gap-2 rounded-lg border border-border bg-muted/40 px-3 py-2">
           <BrandMark
@@ -273,6 +324,7 @@ export function SettingsGroupForm({
             className="min-w-0 truncate text-base font-semibold"
           />
         </div>
+        <p className="text-xs text-muted-foreground">{t('fields.site_name.colorsHint')}</p>
       </div>
     )
   }
@@ -574,7 +626,7 @@ export function SettingsGroupForm({
                     value={locale}
                     className="flex-none gap-1.5 px-3 py-1.5"
                   >
-                    {localeLabels[locale]}
+                    {t(`localeNames.${locale}`)}
                     {localeDirty(locale) ? (
                       <span className="size-1.5 rounded-full bg-primary" aria-hidden />
                     ) : null}
@@ -604,7 +656,7 @@ export function SettingsGroupForm({
           </div>
         ) : null}
 
-        {fields.map(renderField)}
+        {fields.filter((field) => !field.embedded).map(renderField)}
       </div>
       {fieldInstances.length > 0 ? (
         <div className="sticky bottom-0 z-20 -mx-5 -mb-5 mt-4 rounded-b-xl border-t border-border bg-card/95 px-5 py-3 shadow-[0_-8px_24px_-16px_rgba(0,0,0,0.4)] backdrop-blur">

@@ -1823,7 +1823,8 @@
           "hint": "Shown next to the logo across the site and in page titles. Enter one or two parts; leaving the second empty creates a single-word name.",
           "part1": "First part",
           "part2": "Second part",
-          "placeholder": "Link Unlocker"
+          "placeholder": "Link Unlocker",
+          "colorsHint": "Colors apply to every language. Leaving a color empty inherits the text color; the length splits a single-word name."
         },
         "site_tagline": {
           "label": "Tagline",
@@ -2052,11 +2053,17 @@
           "placeholder": "8"
         }
       },
+      "localeNames": {
+        "en": "English",
+        "es": "Spanish",
+        "pt-br": "Portuguese (Brazil)",
+        "ar": "Arabic"
+      },
       "localized": {
         "label": "Language",
         "hint": "Each language keeps its own name, tagline and search settings. Empty fields fall back to the default language."
       },
-      "brandSection": "Logo & brand colors",
+      "brandSection": "Logo",
       "brandIcons": {
         "classic": "Default mark",
         "unlock": "Unlock",

@@ -28,6 +28,8 @@ export type SettingsField = {
   iconPicker?: boolean
   /** Whole-number input. */
   integer?: boolean
+  /** Loaded and saved with the group, but drawn inside another field's block. */
+  embedded?: boolean
 }
 
 export type SettingsGroup = {
@@ -66,9 +68,10 @@ export const SETTINGS_GROUPS: SettingsGroup[] = [
       { key: 'site.logoUrl', image: true },
       { key: 'site.logoIcon', iconPicker: true },
       { key: 'site.faviconUrl', image: true },
-      { key: 'brand.color1', color: true },
-      { key: 'brand.color2', color: true },
-      { key: 'brand.splitChars', integer: true },
+      // Shared by every language, so they sit inside the site-name block.
+      { key: 'brand.color1', color: true, embedded: true },
+      { key: 'brand.color2', color: true, embedded: true },
+      { key: 'brand.splitChars', integer: true, embedded: true },
     ],
     // One tab per enabled locale; every locale may carry its own name, tagline
     // and search appearance. Empty fields fall back to the base (English) copy.

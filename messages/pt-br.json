@@ -1273,7 +1273,8 @@
           "hint": "Exibido ao lado do logotipo em todo o site e nos títulos das páginas. Informe uma ou duas partes; deixar a segunda vazia cria um nome de uma só palavra.",
           "part1": "Primeira parte",
           "part2": "Segunda parte",
-          "placeholder": "Link Unlocker"
+          "placeholder": "Link Unlocker",
+          "colorsHint": "As cores valem para todos os idiomas. Deixar uma cor vazia herda a cor do texto; o comprimento divide um nome de uma só palavra."
         },
         "site_tagline": {
           "label": "Slogan",
@@ -1502,11 +1503,17 @@
           "placeholder": "8"
         }
       },
+      "localeNames": {
+        "en": "Inglês",
+        "es": "Espanhol",
+        "pt-br": "Português (Brasil)",
+        "ar": "Árabe"
+      },
       "localized": {
         "label": "Idioma",
         "hint": "Cada idioma mantém seu próprio nome, slogan e configurações de busca. Campos vazios usam o idioma padrão."
       },
-      "brandSection": "Logotipo e cores da marca",
+      "brandSection": "Logotipo",
       "brandIcons": {
         "classic": "Marca padrão",
         "unlock": "Desbloquear",
