@@ -1,15 +1,17 @@
 import type { Metadata } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
+import { Geist, Geist_Mono, Orbitron } from 'next/font/google'
 import { NextIntlClientProvider } from 'next-intl'
 import { getLocale, getMessages, getTranslations } from 'next-intl/server'
 
 import { JsonLd } from '@/components/json-ld'
 import { AdNetworkCode } from '@/components/ads/ad-network-code'
+import { BootLoader } from '@/components/boot-loader'
 import { ThemeProvider } from '@/components/theme-provider'
 import { Toaster } from '@/components/ui/sonner'
 import { isLocale, localeDirection, type Locale } from '@/i18n/config'
 import { absoluteUrl, SITE_URL } from '@/lib/seo'
-import { getSettingMap, getSiteSettings, getThemeOverrideCss } from '@/lib/settings'
+import { getSettingMap, getSiteSettings } from '@/lib/settings'
+import { getThemeOverrideCss } from '@/lib/theme-palette'
 import './globals.css'
 
 const geistSans = Geist({
@@ -19,6 +21,14 @@ const geistSans = Geist({
 
 const geistMono = Geist_Mono({
   variable: '--font-geist-mono',
+  subsets: ['latin'],
+})
+
+// Wordmark face: the techno geometric display used by bigame.ma for its brand.
+// Only the brand name uses it; body copy stays on Geist.
+const orbitron = Orbitron({
+  variable: '--font-brand-family',
+  weight: '900',
   subsets: ['latin'],
 })
 
@@ -69,12 +79,13 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function RootLayout({ children }: LayoutProps<'/'>) {
-  const [rawLocale, messages, settingMap, site, meta] = await Promise.all([
+  const [rawLocale, messages, settingMap, site, meta, common] = await Promise.all([
     getLocale(),
     getMessages(),
     getSettingMap(),
     getSiteSettings(),
     getTranslations('meta'),
+    getTranslations('common'),
   ])
   const themeCss = getThemeOverrideCss(settingMap)
   const adNetworkCode = settingMap['ads.headScripts']?.trim() ?? ''
@@ -108,7 +119,7 @@ export default async function RootLayout({ children }: LayoutProps<'/'>) {
     <html
       lang={locale}
       dir={localeDirection(locale)}
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${orbitron.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       {/* Browser extensions write attributes onto body before React arrives, so
@@ -119,6 +130,9 @@ export default async function RootLayout({ children }: LayoutProps<'/'>) {
         <AdNetworkCode code={adNetworkCode} />
         <NextIntlClientProvider messages={messages}>
           <ThemeProvider attribute="class" defaultTheme="dark" disableTransitionOnChange>
+            {/* After next-themes' blocking script, before the page, so the
+                splash paints in the right theme and owns the first paint. */}
+            <BootLoader label={common('loading')} />
             {children}
             <Toaster position="top-center" richColors />
           </ThemeProvider>

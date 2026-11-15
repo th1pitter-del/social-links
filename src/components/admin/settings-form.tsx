@@ -1,10 +1,20 @@
 'use client'
 
-import { useRef, useState, useTransition } from 'react'
+import { useRef, useState, useTransition, type CSSProperties } from 'react'
 import { useRouter } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import { toast } from 'sonner'
-import { Copy, Info, Loader2, ShieldAlert, Upload } from 'lucide-react'
+import {
+  Copy,
+  Image as ImageIcon,
+  Info,
+  Loader2,
+  Moon,
+  Shapes,
+  ShieldAlert,
+  Sun,
+  Upload,
+} from 'lucide-react'
 import { cn } from 'cn'
 
 import { BrandMark, BrandName } from '@/components/brand-mark'
@@ -17,7 +27,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Textarea } from '@/components/ui/textarea'
 import { defaultLocale, locales, type Locale } from '@/i18n/config'
 import { BRAND_MARK_ICONS } from '@/lib/brand-mark-icons'
-import { composeBrandName, splitBrandName, type BrandNameStyle } from '@/lib/brand-name'
+import {
+  BRAND_FAVICON_LIBRARY,
+  BRAND_LOGO_LIBRARY,
+  isBrandFaviconSrc,
+  isBrandLogoSrc,
+} from '@/lib/brand-marks'
+import { BRAND_NAME_SPLIT_MAX, type BrandNameStyle } from '@/lib/brand-name'
+import { DEFAULT_THEME, foregroundFor, sanitizeHex, shade } from '@/lib/theme-palette'
 import { updateSettings } from '@/lib/actions/admin-settings'
 import {
   getSettingsGroup,
@@ -26,21 +43,8 @@ import {
   type SettingsField,
 } from './settings-config'
 
-type NameParts = Record<string, { first: string; second: string }>
-
-function seedNameParts(groupId: string, values: Record<string, string>): NameParts {
-  const group = getSettingsGroup(groupId)
-  const splitChars = Number(values['brand.splitChars']) || 0
-  const parts: NameParts = {}
-  for (const field of group?.localizedFields ?? []) {
-    if (!field.brandName) continue
-    for (const locale of locales) {
-      const key = localizedSettingsKey(field.key, locale)
-      parts[key] = splitBrandName(values[key] ?? '', splitChars)
-    }
-  }
-  return parts
-}
+type LogoTab = 'upload' | 'icons' | 'logos'
+type FaviconTab = 'upload' | 'icons'
 
 export function SettingsGroupForm({
   groupId,
@@ -63,15 +67,15 @@ export function SettingsGroupForm({
   const [removeSecrets, setRemoveSecrets] = useState<string[]>([])
   const [uploadingKey, setUploadingKey] = useState<string | null>(null)
   const [activeLocale, setActiveLocale] = useState<Locale>(defaultLocale)
-  // Edited halves of the composed site name, kept apart so a space typed in the
-  // first part does not immediately move the word to the second input.
-  const [nameParts, setNameParts] = useState<NameParts>(() => seedNameParts(groupId, settings))
+  const [logoTab, setLogoTab] = useState<LogoTab | null>(null)
+  const [faviconTab, setFaviconTab] = useState<FaviconTab | null>(null)
   const [pending, startTransition] = useTransition()
   const fileInputs = useRef<Record<string, HTMLInputElement | null>>({})
 
   const group = getSettingsGroup(groupId)
   const fields = group?.fieldsHidden ? [] : (group?.fields ?? [])
   const localizedFields = group?.localizedFields ?? []
+  const fallbackLocalizedKey = localizedSettingsKey('site.name', defaultLocale)
   const fieldInstances: SettingsField[] = [
     ...fields,
     ...locales.flatMap((locale) =>
@@ -92,6 +96,8 @@ export function SettingsGroupForm({
   }
 
   if (!group) return null
+
+  const isBranding = group.id === 'site-content'
 
   // A rejected field may live in a tab that is not open. The tab state changes
   // first, so the field is focused on a later frame once it is in the DOM.
@@ -169,7 +175,6 @@ export function SettingsGroupForm({
   function discard() {
     setValues(saved)
     setRemoveSecrets([])
-    setNameParts(seedNameParts(groupId, saved))
   }
 
   function toggleRemoveSecret(key: string) {
@@ -177,13 +182,6 @@ export function SettingsGroupForm({
       current.includes(key) ? current.filter((item) => item !== key) : [...current, key],
     )
     setValues((current) => ({ ...current, [key]: '' }))
-  }
-
-  function changeNamePart(key: string, part: 'first' | 'second', text: string) {
-    const current = nameParts[key] ?? splitBrandName(values[key] ?? '', 0)
-    const next = { ...current, [part]: text }
-    setNameParts((all) => ({ ...all, [key]: next }))
-    setValues((all) => ({ ...all, [key]: composeBrandName(next.first, next.second) }))
   }
 
   // Upload failures arrive as a stable code plus legacy English text; the code
@@ -229,6 +227,26 @@ export function SettingsGroupForm({
     }
   }
 
+  /** Short values share a row; anything long or structural takes the width. */
+  function spansBothColumns(field: SettingsField) {
+    return Boolean(field.wide || field.multiline || field.brandName || field.readonly)
+  }
+
+  function renderFieldGrid(list: SettingsField[]) {
+    return (
+      <div className="grid gap-4 sm:grid-cols-2">
+        {list.map((field) => (
+          <div
+            key={field.key}
+            className={spansBothColumns(field) ? 'sm:col-span-2' : undefined}
+          >
+            {renderField(field)}
+          </div>
+        ))}
+      </div>
+    )
+  }
+
   // Shared color/name-length controls, drawn inside the site-name block so the
   // live preview sits next to what changes it. Stored once for every language.
   function renderColorControl(key: string) {
@@ -246,7 +264,7 @@ export function SettingsGroupForm({
         />
         <Input
           id={key}
-          className="h-8 max-w-28 font-mono text-xs"
+          className="h-8 font-mono text-xs"
           value={value}
           placeholder="#d5ff2f"
           onChange={(event) => setValues((v) => ({ ...v, [key]: event.target.value }))}
@@ -256,39 +274,27 @@ export function SettingsGroupForm({
   }
 
   function renderBrandName(field: SettingsField) {
-    const parts = nameParts[field.key] ?? splitBrandName(values[field.key] ?? '', 0)
+    const name = values[field.key] ?? ''
+    // The slider counts characters of the name as typed, spaces included.
+    const length = Array.from(name.trim()).length
+    const max = Math.max(1, Math.min(length, BRAND_NAME_SPLIT_MAX))
+    const split = Math.min(Number(values['brand.splitChars']) || 0, max)
     return (
       <div className="space-y-3">
+        <Input
+          id={field.key}
+          value={name}
+          placeholder={t('fields.site_name.placeholder')}
+          onChange={(event) => setValues((v) => ({ ...v, [field.key]: event.target.value }))}
+        />
         <div className="grid gap-3 sm:grid-cols-2">
           <div className="space-y-1.5">
-            <Label
-              htmlFor={`${field.key}-first`}
-              className="text-xs text-muted-foreground"
-            >
-              {t('fields.site_name.part1')}
-            </Label>
-            <Input
-              id={`${field.key}-first`}
-              value={parts.first}
-              onChange={(event) => changeNamePart(field.key, 'first', event.target.value)}
-            />
             <span className="block text-[11px] text-muted-foreground">
               {t('fields.brand_color1.label')}
             </span>
             {renderColorControl('brand.color1')}
           </div>
           <div className="space-y-1.5">
-            <Label
-              htmlFor={`${field.key}-second`}
-              className="text-xs text-muted-foreground"
-            >
-              {t('fields.site_name.part2')}
-            </Label>
-            <Input
-              id={`${field.key}-second`}
-              value={parts.second}
-              onChange={(event) => changeNamePart(field.key, 'second', event.target.value)}
-            />
             <span className="block text-[11px] text-muted-foreground">
               {t('fields.brand_color2.label')}
             </span>
@@ -296,106 +302,474 @@ export function SettingsGroupForm({
           </div>
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="brand.splitChars" className="text-xs text-muted-foreground">
-            {t('fields.brand_splitChars.label')}
-          </Label>
-          <Input
+          <div className="flex items-center justify-between gap-3">
+            <Label htmlFor="brand.splitChars" className="text-xs text-muted-foreground">
+              {t('fields.brand_splitChars.label')}
+            </Label>
+            <span className="rounded bg-muted px-1.5 py-0.5 font-mono text-[11px] text-foreground">
+              {split}
+            </span>
+          </div>
+          <input
             id="brand.splitChars"
-            type="number"
+            type="range"
             min={0}
+            max={max}
             step={1}
-            className="h-8 max-w-24"
-            value={values['brand.splitChars'] ?? ''}
-            placeholder="0"
+            value={split}
             onChange={(event) =>
               setValues((v) => ({ ...v, 'brand.splitChars': event.target.value }))
             }
+            className="w-full accent-primary"
           />
-        </div>
-        <div className="flex min-w-0 items-center gap-2 rounded-lg border border-border bg-muted/40 px-3 py-2">
-          <BrandMark
-            className="size-7 shrink-0"
-            src={values['site.logoUrl'] || null}
-            icon={values['site.logoIcon']}
-          />
-          <BrandName
-            name={values[field.key] ?? ''}
-            brand={previewBrand}
-            className="min-w-0 truncate text-base font-semibold"
-          />
+          <div className="flex justify-between text-[11px] text-muted-foreground">
+            <span>0</span>
+            <span>{max}</span>
+          </div>
         </div>
         <p className="text-xs text-muted-foreground">{t('fields.site_name.colorsHint')}</p>
       </div>
     )
   }
 
-  function renderIconPicker(field: SettingsField) {
-    const selected = values[field.key] ?? ''
-    const label = t(`fields.${settingsFieldKey(field.key)}.label`)
-    const optionClass = (active: boolean) =>
-      cn(
-        'flex size-9 items-center justify-center rounded-md border transition-colors',
-        active
-          ? 'border-primary bg-primary/10 text-foreground'
-          : 'border-border text-muted-foreground hover:border-primary/40 hover:text-foreground',
-      )
+  function filePicker(key: string) {
     return (
-      <div className="space-y-2">
-        <div className="flex min-w-0 items-center gap-2 rounded-lg border border-border bg-muted/40 px-3 py-2">
-          <BrandMark
-            className="size-8 shrink-0"
-            src={values['site.logoUrl'] || null}
-            icon={selected}
-          />
-          <BrandName
-            name={values['site.name'] ?? ''}
-            brand={previewBrand}
-            className="min-w-0 truncate font-semibold"
-          />
-        </div>
-        <div
-          className="grid grid-cols-6 gap-1.5 sm:grid-cols-8"
-          role="radiogroup"
-          aria-label={label}
+      <>
+        <input
+          ref={(el) => {
+            fileInputs.current[key] = el
+          }}
+          type="file"
+          accept="image/png,image/jpeg,image/webp,image/gif,image/svg+xml,.svg"
+          className="hidden"
+          onChange={(e) => {
+            const file = e.target.files?.[0]
+            if (file) void uploadImage(key, file)
+            e.target.value = ''
+          }}
+        />
+        <Button
+          type="button"
+          size="icon"
+          variant="outline"
+          className="shrink-0"
+          aria-label={t('uploadImage')}
+          title={t('uploadImage')}
+          disabled={uploadingKey === key}
+          onClick={() => fileInputs.current[key]?.click()}
         >
-          <button
-            type="button"
-            role="radio"
-            aria-checked={selected === ''}
-            aria-label={t('brandIcons.classic')}
-            title={t('brandIcons.classic')}
-            onClick={() => setValues((v) => ({ ...v, [field.key]: '' }))}
-            className={optionClass(selected === '')}
-          >
-            <BrandMark className="size-6" />
-          </button>
-          {BRAND_MARK_ICONS.map((entry) => {
-            const Icon = entry.icon
-            const active = selected === entry.key
-            return (
+          {uploadingKey === key ? (
+            <Loader2 className="size-4 animate-spin" />
+          ) : (
+            <Upload className="size-4" />
+          )}
+        </Button>
+      </>
+    )
+  }
+
+  function renderImageUpload(key: string, labelKey: string) {
+    return (
+      <div className="flex items-center gap-2">
+        {values[key] ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={values[key]}
+            alt=""
+            className="size-9 shrink-0 rounded-md border border-border bg-background object-contain"
+            referrerPolicy="no-referrer"
+          />
+        ) : null}
+        <Input
+          id={key}
+          value={values[key] ?? ''}
+          placeholder={t(`fields.${labelKey}.placeholder`)}
+          onChange={(e) => setValues((v) => ({ ...v, [key]: e.target.value }))}
+        />
+        {filePicker(key)}
+      </div>
+    )
+  }
+
+  function optionClass(active: boolean) {
+    return cn(
+      'flex size-9 items-center justify-center rounded-md border transition-colors',
+      active
+        ? 'border-primary bg-primary/10 text-foreground'
+        : 'border-border text-muted-foreground hover:border-primary/40 hover:text-foreground',
+    )
+  }
+
+  function renderIconGrid(selected: string, onSelect: (key: string) => void) {
+    return (
+      <div
+        className="grid grid-cols-6 gap-1.5 sm:grid-cols-8"
+        role="radiogroup"
+        aria-label={t('fields.site_logoIcon.label')}
+      >
+        <button
+          type="button"
+          role="radio"
+          aria-checked={selected === ''}
+          aria-label={t('brandIcons.classic')}
+          title={t('brandIcons.classic')}
+          onClick={() => onSelect('')}
+          className={optionClass(selected === '')}
+        >
+          <BrandMark className="size-6" />
+        </button>
+        {BRAND_MARK_ICONS.map((entry) => {
+          const Icon = entry.icon
+          const active = selected === entry.key
+          return (
+            <button
+              key={entry.key}
+              type="button"
+              role="radio"
+              aria-checked={active}
+              aria-label={t(`brandIcons.${entry.key}`)}
+              title={t(`brandIcons.${entry.key}`)}
+              onClick={() => onSelect(entry.key)}
+              className={optionClass(active)}
+            >
+              <span className="flex size-6 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                <Icon className="size-3.5" strokeWidth={2.4} />
+              </span>
+            </button>
+          )
+        })}
+      </div>
+    )
+  }
+
+  function markTileClass(active: boolean) {
+    return cn(
+      'flex aspect-square items-center justify-center rounded-md border p-1 transition-colors',
+      active
+        ? 'border-primary ring-2 ring-primary/30'
+        : 'border-border hover:border-primary/40',
+    )
+  }
+
+  function renderLogoSources() {
+    const url = values['site.logoUrl'] ?? ''
+    const icon = values['site.logoIcon'] ?? ''
+    const source: LogoTab = isBrandLogoSrc(url) ? 'logos' : url ? 'upload' : 'icons'
+    const tab = logoTab ?? source
+    return (
+      <div className="space-y-3 border-t border-border pt-4">
+        <Label>{t('fields.site_logoUrl.label')}</Label>
+        <Tabs value={tab} onValueChange={(value) => setLogoTab(value as LogoTab)}>
+          <TabsList className="h-auto w-full justify-start p-1">
+            <TabsTrigger value="upload" className="flex-1 gap-1.5 px-3 py-1.5">
+              <Upload className="size-3.5" />
+              {t('sources.upload')}
+            </TabsTrigger>
+            <TabsTrigger value="icons" className="flex-1 gap-1.5 px-3 py-1.5">
+              <Shapes className="size-3.5" />
+              {t('sources.icons')}
+            </TabsTrigger>
+            <TabsTrigger value="logos" className="flex-1 gap-1.5 px-3 py-1.5">
+              <ImageIcon className="size-3.5" />
+              {t('sources.logos')}
+            </TabsTrigger>
+          </TabsList>
+          <TabsContent value="upload" className="pt-3">
+            {renderImageUpload('site.logoUrl', 'site_logoUrl')}
+          </TabsContent>
+          <TabsContent value="icons" className="pt-3">
+            {renderIconGrid(icon, (key) => {
+              setValues((v) => ({ ...v, 'site.logoIcon': key, 'site.logoUrl': '' }))
+              setLogoTab('icons')
+            })}
+          </TabsContent>
+          <TabsContent value="logos" className="pt-3">
+            <div
+              className="grid grid-cols-6 gap-2 sm:grid-cols-8"
+              role="radiogroup"
+              aria-label={t('sources.logos')}
+            >
+              {BRAND_LOGO_LIBRARY.map((entry) => {
+                const active = url === entry.src
+                return (
+                  <button
+                    key={entry.key}
+                    type="button"
+                    role="radio"
+                    aria-checked={active}
+                    aria-label={t(`markLibrary.${entry.key}`)}
+                    title={t(`markLibrary.${entry.key}`)}
+                    onClick={() => {
+                      setValues((v) => ({ ...v, 'site.logoUrl': entry.src }))
+                      setLogoTab('logos')
+                    }}
+                    className={markTileClass(active)}
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={entry.src} alt="" className="size-8" />
+                  </button>
+                )
+              })}
+            </div>
+          </TabsContent>
+        </Tabs>
+        <p className="text-xs text-muted-foreground">{t('fields.site_logoUrl.hint')}</p>
+      </div>
+    )
+  }
+
+  function renderFaviconSources() {
+    const url = values['site.faviconUrl'] ?? ''
+    const source: FaviconTab = isBrandFaviconSrc(url) ? 'icons' : 'upload'
+    const tab = faviconTab ?? source
+    return (
+      <div className="space-y-3">
+        <div className="border-t border-border pt-4">
+          <Label>{t('fields.site_faviconUrl.label')}</Label>
+        </div>
+        <Tabs value={tab} onValueChange={(value) => setFaviconTab(value as FaviconTab)}>
+          <TabsList className="h-auto w-full justify-start p-1">
+            <TabsTrigger value="upload" className="flex-1 gap-1.5 px-3 py-1.5">
+              <Upload className="size-3.5" />
+              {t('sources.upload')}
+            </TabsTrigger>
+            <TabsTrigger value="icons" className="flex-1 gap-1.5 px-3 py-1.5">
+              <Shapes className="size-3.5" />
+              {t('sources.icons')}
+            </TabsTrigger>
+          </TabsList>
+          <TabsContent value="upload" className="pt-3">
+            {renderImageUpload('site.faviconUrl', 'site_faviconUrl')}
+          </TabsContent>
+          <TabsContent value="icons" className="pt-3">
+            <div
+              className="grid grid-cols-6 gap-2 sm:grid-cols-8"
+              role="radiogroup"
+              aria-label={t('fields.site_faviconUrl.label')}
+            >
               <button
-                key={entry.key}
                 type="button"
                 role="radio"
-                aria-checked={active}
-                aria-label={t(`brandIcons.${entry.key}`)}
-                title={t(`brandIcons.${entry.key}`)}
-                onClick={() => setValues((v) => ({ ...v, [field.key]: entry.key }))}
-                className={optionClass(active)}
+                aria-checked={url === ''}
+                aria-label={t('markLibrary.default')}
+                title={t('markLibrary.default')}
+                onClick={() => {
+                  setValues((v) => ({ ...v, 'site.faviconUrl': '' }))
+                  setFaviconTab('icons')
+                }}
+                className={markTileClass(url === '')}
               >
-                <span className="flex size-6 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                  <Icon className="size-3.5" strokeWidth={2.4} />
-                </span>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/brand/link-unlocker-favicon.svg" alt="" className="size-7" />
               </button>
-            )
-          })}
+              {BRAND_FAVICON_LIBRARY.map((entry) => {
+                const active = url === entry.src
+                return (
+                  <button
+                    key={entry.key}
+                    type="button"
+                    role="radio"
+                    aria-checked={active}
+                    aria-label={t(`markLibrary.${entry.key}`)}
+                    title={t(`markLibrary.${entry.key}`)}
+                    onClick={() => {
+                      setValues((v) => ({ ...v, 'site.faviconUrl': entry.src }))
+                      setFaviconTab('icons')
+                    }}
+                    className={markTileClass(active)}
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={entry.src} alt="" className="size-7" />
+                  </button>
+                )
+              })}
+            </div>
+          </TabsContent>
+        </Tabs>
+        <p className="text-xs text-muted-foreground">{t('fields.site_faviconUrl.hint')}</p>
+      </div>
+    )
+  }
+
+  // The name and tagline the previews show: the open language's copy, falling
+  // back to the base (English) values.
+  function currentName() {
+    return (
+      values[localizedSettingsKey('site.name', activeLocale)] ||
+      values[fallbackLocalizedKey] ||
+      ''
+    )
+  }
+
+  function currentTagline() {
+    return (
+      values[localizedSettingsKey('site.tagline', activeLocale)] ||
+      values[localizedSettingsKey('site.tagline', defaultLocale)] ||
+      ''
+    )
+  }
+
+  /**
+   * The three configurable colors of one mode, as the token values the public
+   * site would use. The neutral tokens come from the `.theme-preview` rule in
+   * globals.css, so a preview shows its own mode regardless of the console's.
+   */
+  function themePreviewStyle(area: 'light' | 'dark'): CSSProperties {
+    const primary = sanitizeHex(values[`theme.${area}.primary`]) ?? DEFAULT_THEME[area].primary
+    const background =
+      sanitizeHex(values[`theme.${area}.background`]) ?? DEFAULT_THEME[area].background
+    const accentText =
+      sanitizeHex(values[`theme.${area}.accentText`]) ?? DEFAULT_THEME[area].accentText
+    return {
+      '--primary': primary,
+      '--primary-foreground': foregroundFor(primary),
+      '--background': background,
+      '--accent-text': accentText,
+      '--ring': area === 'light' ? shade(primary, 0.78) : primary,
+    } as CSSProperties
+  }
+
+  // A slice of the public home page — header row and hero — painted with the
+  // theme being edited.
+  function ThemePreview({ area }: { area: 'light' | 'dark' }) {
+    const name = currentName()
+    const logoUrl = values['site.logoUrl'] || null
+    const logoIcon = values['site.logoIcon'] || null
+    return (
+      <div
+        className={cn(
+          'theme-preview overflow-hidden rounded-lg border border-border bg-background text-foreground',
+          area === 'dark' && 'dark',
+        )}
+        style={themePreviewStyle(area)}
+        role="img"
+        aria-label={`${t(`appearance.${area}`)} — ${t('appearance.previewCaption')}`}
+      >
+        <div className="flex items-center gap-2 border-b border-border px-3 py-2">
+          <BrandMark className="size-4 shrink-0" src={logoUrl} icon={logoIcon} />
+          <BrandName
+            name={name}
+            brand={previewBrand}
+            className="min-w-0 truncate text-[10px]"
+          />
+          <span className="ms-auto hidden items-center gap-2.5 text-[9px] text-muted-foreground sm:flex">
+            <span>{t('appearancePreview.navLinks')}</span>
+            <span>{t('appearancePreview.navPricing')}</span>
+            <span>{t('appearancePreview.navBlog')}</span>
+          </span>
+        </div>
+        <div className="px-3 py-4">
+          <p className="text-[8px] font-semibold tracking-[0.18em] text-accent-text uppercase">
+            {t('appearancePreview.eyebrow')}
+          </p>
+          <p className="mt-1.5 text-[13px] leading-snug font-semibold">
+            {t('appearancePreview.heading')}
+          </p>
+          <p className="mt-1 text-[10px] leading-relaxed text-muted-foreground">
+            {t('appearancePreview.body')}
+          </p>
+          <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
+            <span className="rounded-md bg-primary px-2.5 py-1 text-[9px] font-semibold text-primary-foreground">
+              {t('appearancePreview.cta')}
+            </span>
+            <span className="rounded-md border border-border px-2.5 py-1 text-[9px] font-medium">
+              {t('appearancePreview.secondary')}
+            </span>
+          </div>
         </div>
       </div>
     )
   }
 
+  // Light mode edits on the left, dark mode on the right, each with its own
+  // header + hero preview underneath the color fields.
+  function renderAppearance() {
+    return (
+      <div className="grid gap-4 xl:grid-cols-2 xl:items-start">
+        {(['light', 'dark'] as const).map((area) => {
+          const AreaIcon = area === 'light' ? Sun : Moon
+          return (
+            <div
+              key={area}
+              className="flex flex-col gap-3 rounded-lg border border-border p-3.5"
+            >
+              <div className="flex items-center gap-2">
+                <AreaIcon className="size-3.5 text-muted-foreground" aria-hidden />
+                <p className="text-sm font-medium">{t(`appearance.${area}`)}</p>
+              </div>
+              <div className="grid gap-3 sm:grid-cols-3">
+                {(['primary', 'background', 'accentText'] as const).map((part) => {
+                  const key = `theme.${area}.${part}`
+                  return (
+                    <div key={key} className="space-y-1.5">
+                      <Label htmlFor={key} className="text-[11px] text-muted-foreground">
+                        {t(`appearance.${part}`)}
+                      </Label>
+                      {renderColorControl(key)}
+                    </div>
+                  )
+                })}
+              </div>
+              <div className="mt-auto space-y-1.5 pt-1">
+                <p className="text-[10px] font-semibold tracking-widest text-muted-foreground uppercase">
+                  {t('appearance.previewCaption')}
+                </p>
+                <ThemePreview area={area} />
+              </div>
+            </div>
+          )
+        })}
+      </div>
+    )
+  }
+
+  // Mirrors the public tab strip, header and tagline with the values currently
+  // in the form — including unsaved edits.
+  function renderPreview() {
+    const name = currentName()
+    const tagline = currentTagline()
+    const logoUrl = values['site.logoUrl'] || null
+    const logoIcon = values['site.logoIcon'] || null
+    const favicon = values['site.faviconUrl'] || ''
+    return (
+      <aside className="xl:sticky xl:top-24">
+        <div className="rounded-xl border border-border bg-card p-4 shadow-sm">
+          <p className="text-[10px] font-semibold tracking-widest text-muted-foreground uppercase">
+            {t('preview.title')}
+          </p>
+          <div className="mt-3 overflow-hidden rounded-lg border border-border bg-background p-2.5">
+            <div className="flex items-center gap-1.5 pb-2.5">
+              <span className="size-2 rounded-full bg-muted-foreground/25" />
+              <span className="size-2 rounded-full bg-muted-foreground/25" />
+              <span className="size-2 rounded-full bg-muted-foreground/25" />
+            </div>
+            <div className="flex items-center gap-1.5 rounded-md border border-border bg-card px-2 py-1">
+              {favicon ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={favicon} alt="" className="size-3.5 shrink-0 rounded-[3px]" />
+              ) : (
+                <BrandMark className="size-3.5 shrink-0" />
+              )}
+              <span className="min-w-0 truncate text-[10px] text-muted-foreground">
+                {name}
+              </span>
+            </div>
+            <div className="mt-3 flex items-center gap-2 rounded-xl border border-border bg-card px-2.5 py-2 shadow-sm">
+              <BrandMark className="size-7 shrink-0" src={logoUrl} icon={logoIcon} />
+              <BrandName name={name} brand={previewBrand} className="min-w-0 truncate text-base" />
+            </div>
+            <p className="mt-3 line-clamp-2 min-h-8 text-xs text-muted-foreground">
+              {tagline}
+            </p>
+          </div>
+          <p className="mt-2 text-[11px] text-muted-foreground">{t('preview.hint')}</p>
+        </div>
+      </aside>
+    )
+  }
+
   function renderField(field: SettingsField) {
-    const fieldKey = settingsFieldKey(field.key)
+    const fieldKey = settingsFieldKey(field.labelKey ?? field.key)
     const label = t(`fields.${fieldKey}.label`)
     const hasHint = t.has(`fields.${fieldKey}.hint`)
     const hasPlaceholder = t.has(`fields.${fieldKey}.placeholder`)
@@ -403,9 +777,7 @@ export function SettingsGroupForm({
     const removing = field.secret && removeSecrets.includes(field.key)
     return (
       <div key={field.key} className="space-y-1.5">
-        <Label htmlFor={field.brandName || field.iconPicker ? undefined : field.key}>
-          {label}
-        </Label>
+        <Label htmlFor={field.key}>{label}</Label>
         {field.readonly ? (
           <div className="flex items-center gap-2">
             <Input
@@ -431,8 +803,6 @@ export function SettingsGroupForm({
           </div>
         ) : field.brandName ? (
           renderBrandName(field)
-        ) : field.iconPicker ? (
-          renderIconPicker(field)
         ) : field.color ? (
           <div className="flex items-center gap-2">
             <input
@@ -446,7 +816,7 @@ export function SettingsGroupForm({
             />
             <Input
               id={field.key}
-              className="max-w-40 font-mono"
+              className="font-mono"
               value={values[field.key] ?? ''}
               placeholder="#d5ff2f"
               onChange={(e) => setValues((v) => ({ ...v, [field.key]: e.target.value }))}
@@ -495,54 +865,7 @@ export function SettingsGroupForm({
             </Badge>
           </div>
         ) : field.image ? (
-          <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              {values[field.key] ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={values[field.key]}
-                  alt=""
-                  className="size-9 shrink-0 rounded-md border object-contain"
-                  referrerPolicy="no-referrer"
-                />
-              ) : null}
-              <Input
-                id={field.key}
-                value={values[field.key] ?? ''}
-                placeholder={hasPlaceholder ? t(`fields.${fieldKey}.placeholder`) : undefined}
-                onChange={(e) => setValues((v) => ({ ...v, [field.key]: e.target.value }))}
-              />
-              <input
-                ref={(el) => {
-                  fileInputs.current[field.key] = el
-                }}
-                type="file"
-                accept="image/png,image/jpeg,image/webp,image/gif,image/svg+xml,.svg"
-                className="hidden"
-                onChange={(e) => {
-                  const file = e.target.files?.[0]
-                  if (file) void uploadImage(field.key, file)
-                  e.target.value = ''
-                }}
-              />
-              <Button
-                type="button"
-                size="icon"
-                variant="outline"
-                className="shrink-0"
-                aria-label={t('uploadImage')}
-                title={t('uploadImage')}
-                disabled={uploadingKey === field.key}
-                onClick={() => fileInputs.current[field.key]?.click()}
-              >
-                {uploadingKey === field.key ? (
-                  <Loader2 className="size-4 animate-spin" />
-                ) : (
-                  <Upload className="size-4" />
-                )}
-              </Button>
-            </div>
-          </div>
+          renderImageUpload(field.key, fieldKey)
         ) : field.integer ? (
           <Input
             id={field.key}
@@ -592,72 +915,84 @@ export function SettingsGroupForm({
 
   return (
     <section className="rounded-xl border border-border bg-card p-5 shadow-sm">
-      <div className="space-y-4">
-        {group.notice ? (
-          <div className="flex items-start gap-3 rounded-lg border border-primary/40 bg-primary/10 px-3 py-2.5">
-            <Info className="mt-0.5 size-4 shrink-0 text-accent-text" aria-hidden="true" />
-            <div className="space-y-1 text-sm">
-              <p className="font-medium text-foreground">{t(`groups.${groupId}.notice.title`)}</p>
-              <p className="text-foreground/85">{t(`groups.${groupId}.notice.body`)}</p>
+      <div
+        className={
+          isBranding
+            ? 'grid gap-6 xl:grid-cols-[minmax(0,1fr)_320px] xl:items-start'
+            : undefined
+        }
+      >
+        <div className="min-w-0 space-y-5">
+          {group.notice ? (
+            <div className="flex items-start gap-3 rounded-lg border border-primary/40 bg-primary/10 px-3 py-2.5">
+              <Info className="mt-0.5 size-4 shrink-0 text-accent-text" aria-hidden="true" />
+              <div className="space-y-1 text-sm">
+                <p className="font-medium text-foreground">{t(`groups.${groupId}.notice.title`)}</p>
+                <p className="text-foreground/85">{t(`groups.${groupId}.notice.body`)}</p>
+              </div>
             </div>
-          </div>
-        ) : null}
-        {groupId === 'system-ops' ? (
-          <div className="flex items-start gap-3 rounded-lg border border-warning/40 bg-warning/10 px-3 py-2.5">
-            <ShieldAlert className="mt-0.5 size-4 shrink-0 text-amber-700 dark:text-warning" aria-hidden="true" />
-            <p className="text-sm text-amber-800 dark:text-warning">{t('groups.system-ops.warning')}</p>
-          </div>
-        ) : null}
-
-        {localizedFields.length > 0 ? (
-          <Tabs
-            value={activeLocale}
-            onValueChange={(value) => setActiveLocale(value as Locale)}
-            className="gap-4"
-          >
-            <div className="space-y-1.5">
-              <TabsList
-                aria-label={t('localized.label')}
-                className="h-auto w-full justify-start overflow-x-auto p-1"
-              >
-                {locales.map((locale) => (
-                  <TabsTrigger
-                    key={locale}
-                    value={locale}
-                    className="flex-none gap-1.5 px-3 py-1.5"
-                  >
-                    {t(`localeNames.${locale}`)}
-                    {localeDirty(locale) ? (
-                      <span className="size-1.5 rounded-full bg-primary" aria-hidden />
-                    ) : null}
-                  </TabsTrigger>
-                ))}
-              </TabsList>
-              <p className="text-xs text-muted-foreground">{t('localized.hint')}</p>
+          ) : null}
+          {groupId === 'system-ops' ? (
+            <div className="flex items-start gap-3 rounded-lg border border-warning/40 bg-warning/10 px-3 py-2.5">
+              <ShieldAlert className="mt-0.5 size-4 shrink-0 text-amber-700 dark:text-warning" aria-hidden="true" />
+              <p className="text-sm text-amber-800 dark:text-warning">{t('groups.system-ops.warning')}</p>
             </div>
-            {locales.map((locale) => (
-              <TabsContent key={locale} value={locale} className="space-y-4">
-                {localizedFields.map((field) =>
-                  renderField({
-                    ...field,
-                    key: localizedSettingsKey(field.key, locale),
-                  }),
-                )}
-              </TabsContent>
-            ))}
-          </Tabs>
-        ) : null}
+          ) : null}
 
-        {localizedFields.length > 0 && fields.length > 0 ? (
-          <div className="border-t border-border pt-4">
-            <p className="text-[10px] font-semibold tracking-widest text-muted-foreground uppercase">
-              {t('brandSection')}
-            </p>
-          </div>
-        ) : null}
+          {localizedFields.length > 0 ? (
+            <Tabs
+              value={activeLocale}
+              onValueChange={(value) => setActiveLocale(value as Locale)}
+              className="gap-4"
+            >
+              <div className="space-y-1.5">
+                <TabsList
+                  aria-label={t('localized.label')}
+                  className="h-auto w-full justify-start overflow-x-auto p-1"
+                >
+                  {locales.map((locale) => (
+                    <TabsTrigger
+                      key={locale}
+                      value={locale}
+                      className="flex-none gap-1.5 px-3 py-1.5"
+                    >
+                      {t(`localeNames.${locale}`)}
+                      {localeDirty(locale) ? (
+                        <span className="size-1.5 rounded-full bg-primary" aria-hidden />
+                      ) : null}
+                    </TabsTrigger>
+                  ))}
+                </TabsList>
+                <p className="text-xs text-muted-foreground">{t('localized.hint')}</p>
+              </div>
+              {locales.map((locale) => (
+                <TabsContent key={locale} value={locale}>
+                  {renderFieldGrid(
+                    localizedFields.map((field) => ({
+                      ...field,
+                      key: localizedSettingsKey(field.key, locale),
+                      labelKey: field.key,
+                    })),
+                  )}
+                </TabsContent>
+              ))}
+            </Tabs>
+          ) : null}
 
-        {fields.filter((field) => !field.embedded).map(renderField)}
+          {isBranding ? renderLogoSources() : null}
+          {isBranding ? renderFaviconSources() : null}
+
+          {!isBranding ? (
+            groupId === 'appearance' ? (
+              renderAppearance()
+            ) : (
+              renderFieldGrid(fields.filter((field) => !field.embedded))
+            )
+          ) : null}
+        </div>
+        {isBranding ? renderPreview() : null}
       </div>
+
       {fieldInstances.length > 0 ? (
         <div className="sticky bottom-0 z-20 -mx-5 -mb-5 mt-4 rounded-b-xl border-t border-border bg-card/95 px-5 py-3 shadow-[0_-8px_24px_-16px_rgba(0,0,0,0.4)] backdrop-blur">
           <div className="flex flex-wrap items-center justify-between gap-3">

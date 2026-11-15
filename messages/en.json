@@ -1772,6 +1772,10 @@
           "title": "Site identity",
           "description": "Brand name, logo and how the site appears in search results."
         },
+        "seo": {
+          "title": "Search & sharing",
+          "description": "Per-language page title, search description, share card and tab icon."
+        },
         "appearance": {
           "title": "Appearance",
           "description": "Brand colors for light and dark modes, applied across the whole site."
@@ -1820,11 +1824,11 @@
       "fields": {
         "site_name": {
           "label": "Site name",
-          "hint": "Shown next to the logo across the site and in page titles. Enter one or two parts; leaving the second empty creates a single-word name.",
+          "hint": "Shown next to the logo and in page titles. Each language has its own name.",
           "part1": "First part",
           "part2": "Second part",
           "placeholder": "Link Unlocker",
-          "colorsHint": "Colors apply to every language. Leaving a color empty inherits the text color; the length splits a single-word name."
+          "colorsHint": "Colors apply to every language. Leaving a color empty inherits the text color; the length sets how many leading characters use the first color."
         },
         "site_tagline": {
           "label": "Tagline",
@@ -1940,7 +1944,7 @@
         },
         "site_logoUrl": {
           "label": "Logo",
-          "hint": "Shown in the header, dashboard and unlock pages. Upload an image or paste an http(s) URL. Empty = the selected built-in icon.",
+          "hint": "Shown in the header, dashboard and unlock pages. Pick a built-in icon or logo, or upload your own. Empty = the default mark.",
           "placeholder": "https://example.com/logo.png"
         },
         "site_logoIcon": {
@@ -1949,7 +1953,7 @@
         },
         "site_faviconUrl": {
           "label": "Favicon",
-          "hint": "Browser tab icon. Upload a square PNG or paste an http(s) URL. Empty = the SEO icon, then the default icon.",
+          "hint": "Browser tab icon. Pick a built-in icon or upload a square PNG or SVG. Empty = the SEO icon, then the default icon.",
           "placeholder": "https://example.com/favicon.png"
         },
         "brand_color1": {
@@ -1962,7 +1966,7 @@
         },
         "brand_splitChars": {
           "label": "First color length",
-          "hint": "For a single-word name, how many characters use the first color. The rest use the second color. 0 = the whole word uses the first color.",
+          "hint": "How many leading characters take the first color. The rest take the second. 0 = the whole name uses the first color.",
           "placeholder": "0"
         },
         "site_seoTitle": {
@@ -2063,7 +2067,6 @@
         "label": "Language",
         "hint": "Each language keeps its own name, tagline and search settings. Empty fields fall back to the default language."
       },
-      "brandSection": "Logo",
       "brandIcons": {
         "classic": "Default mark",
         "unlock": "Unlock",
@@ -2081,6 +2084,46 @@
         "file-key": "File key",
         "qr-code": "Access code",
         "door-open": "Open door"
+      },
+      "sources": {
+        "upload": "Upload",
+        "icons": "Icons",
+        "logos": "Logo library"
+      },
+      "preview": {
+        "title": "Live preview",
+        "hint": "Shows unsaved edits. Save to apply them across the site."
+      },
+      "markLibrary": {
+        "chain": "Chain",
+        "unlock": "Unlock",
+        "key": "Key",
+        "bolt": "Bolt",
+        "shield": "Keyhole shield",
+        "orbit": "Link orbit",
+        "spark": "Spark",
+        "target": "Target",
+        "keyhole": "Keyhole",
+        "arrow": "Arrow",
+        "default": "Default icon"
+      },
+      "appearance": {
+        "light": "Light theme",
+        "dark": "Dark theme",
+        "primary": "Primary accent",
+        "background": "Page background",
+        "accentText": "Accent text",
+        "previewCaption": "Live preview"
+      },
+      "appearancePreview": {
+        "eyebrow": "Unlock links",
+        "heading": "Get more from every link",
+        "body": "One fair step, then the file opens.",
+        "cta": "Create a link",
+        "secondary": "How it works",
+        "navLinks": "Links",
+        "navPricing": "Pricing",
+        "navBlog": "Blog"
       },
       "uploadImage": "Upload image",
       "imageUploadedToast": "Image uploaded. Save to apply.",

@@ -2,10 +2,11 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { useTranslations } from 'next-intl'
-import { Loader2, Send } from 'lucide-react'
+import { Send } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { PlatformGlyph } from '@/components/brand-icon'
+import { PulseLoader } from '@/components/pulse-loader'
 import {
   beginTelegramCheckin,
   pollTelegramStep,
@@ -99,7 +100,7 @@ export function StepConfirm({ token, actionId, verification, platformLabel, disa
       ) : (
         <Button type="button" size="sm" variant="outline" className="mt-2 w-full bg-background"
           disabled={busy} onClick={() => void checkIn()}>
-          {pending || waiting ? <Loader2 className="animate-spin" /> : <Send />}
+          {pending || waiting ? <PulseLoader size={16} /> : <Send />}
           {waiting ? t('verifyCheckinWaiting') : t('verifyCheckinButton')}
         </Button>
       )}

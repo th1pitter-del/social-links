@@ -1222,6 +1222,10 @@
           "title": "Identidade do site",
           "description": "Nome da marca, logotipo e como o site aparece nos resultados de busca."
         },
+        "seo": {
+          "title": "Busca e compartilhamento",
+          "description": "Título, descrição de busca, cartão de compartilhamento e ícone da aba por idioma."
+        },
         "appearance": {
           "title": "Aparência",
           "description": "Cores da marca para os modos claro e escuro, aplicadas em todo o site."
@@ -1270,11 +1274,11 @@
       "fields": {
         "site_name": {
           "label": "Nome do site",
-          "hint": "Exibido ao lado do logotipo em todo o site e nos títulos das páginas. Informe uma ou duas partes; deixar a segunda vazia cria um nome de uma só palavra.",
+          "hint": "Exibido ao lado do logotipo e nos títulos das páginas. Cada idioma tem seu próprio nome.",
           "part1": "Primeira parte",
           "part2": "Segunda parte",
           "placeholder": "Link Unlocker",
-          "colorsHint": "As cores valem para todos os idiomas. Deixar uma cor vazia herda a cor do texto; o comprimento divide um nome de uma só palavra."
+          "colorsHint": "As cores valem para todos os idiomas. Deixar uma cor vazia herda a cor do texto; o comprimento define quantos caracteres iniciais usam a primeira cor."
         },
         "site_tagline": {
           "label": "Slogan",
@@ -1390,7 +1394,7 @@
         },
         "site_logoUrl": {
           "label": "Logotipo",
-          "hint": "Exibido no cabeçalho, no painel e nas páginas de desbloqueio. Envie uma imagem ou cole uma URL http(s). Vazio = o ícone integrado selecionado.",
+          "hint": "Exibido no cabeçalho, no painel e nas páginas de desbloqueio. Escolha um ícone ou logotipo integrado, ou envie o seu. Vazio = a marca padrão.",
           "placeholder": "https://exemplo.com/logo.png"
         },
         "site_logoIcon": {
@@ -1399,7 +1403,7 @@
         },
         "site_faviconUrl": {
           "label": "Favicon",
-          "hint": "Ícone da aba do navegador. Envie um PNG quadrado ou cole uma URL http(s). Vazio = o ícone de SEO e depois o ícone padrão.",
+          "hint": "Ícone da aba do navegador. Escolha um ícone integrado ou envie um PNG ou SVG quadrado. Vazio = o ícone de SEO e depois o ícone padrão.",
           "placeholder": "https://exemplo.com/favicon.png"
         },
         "brand_color1": {
@@ -1412,7 +1416,7 @@
         },
         "brand_splitChars": {
           "label": "Comprimento da primeira cor",
-          "hint": "Em um nome de uma só palavra, quantos caracteres usam a primeira cor. O restante usa a segunda. 0 = a palavra inteira usa a primeira cor.",
+          "hint": "Quantos caracteres iniciais usam a primeira cor. O restante usa a segunda. 0 = o nome inteiro usa a primeira cor.",
           "placeholder": "0"
         },
         "site_seoTitle": {
@@ -1513,7 +1517,6 @@
         "label": "Idioma",
         "hint": "Cada idioma mantém seu próprio nome, slogan e configurações de busca. Campos vazios usam o idioma padrão."
       },
-      "brandSection": "Logotipo",
       "brandIcons": {
         "classic": "Marca padrão",
         "unlock": "Desbloquear",
@@ -1531,6 +1534,46 @@
         "file-key": "Arquivo com chave",
         "qr-code": "Código de acesso",
         "door-open": "Porta aberta"
+      },
+      "sources": {
+        "upload": "Enviar",
+        "icons": "Ícones",
+        "logos": "Biblioteca de logotipos"
+      },
+      "preview": {
+        "title": "Prévia",
+        "hint": "Mostra alterações não salvas. Salve para aplicá-las no site."
+      },
+      "markLibrary": {
+        "chain": "Corrente",
+        "unlock": "Desbloqueio",
+        "key": "Chave",
+        "bolt": "Raio",
+        "shield": "Escudo com fechadura",
+        "orbit": "Órbita de link",
+        "spark": "Faísca",
+        "target": "Alvo",
+        "keyhole": "Fechadura",
+        "arrow": "Seta",
+        "default": "Ícone padrão"
+      },
+      "appearance": {
+        "light": "Tema claro",
+        "dark": "Tema escuro",
+        "primary": "Acento principal",
+        "background": "Fundo da página",
+        "accentText": "Texto de destaque",
+        "previewCaption": "Prévia"
+      },
+      "appearancePreview": {
+        "eyebrow": "Links desbloqueados",
+        "heading": "Aproveite mais cada link",
+        "body": "Um passo justo e o arquivo abre.",
+        "cta": "Criar um link",
+        "secondary": "Como funciona",
+        "navLinks": "Links",
+        "navPricing": "Preços",
+        "navBlog": "Blog"
       },
       "uploadImage": "Enviar imagem",
       "imageUploadedToast": "Imagem enviada. Salve para aplicar.",

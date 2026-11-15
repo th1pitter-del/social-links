@@ -1,10 +1,10 @@
 /** Colors and split for the two-tone brand name shown next to the logo. */
 export type BrandNameStyle = {
-  /** First word (or the first N characters of a single-word name); '' = inherit. */
+  /** Color of the leading characters; '' = inherit. */
   color1: string
-  /** Second word (or the rest of a single-word name); '' = inherit. */
+  /** Color of the remaining characters; '' = inherit. */
   color2: string
-  /** Characters of a single-word name that take the first color; 0 = none. */
+  /** Leading characters that take the first color; 0 = no split. */
   splitChars: number
 }
 
@@ -17,10 +17,12 @@ export const DEFAULT_BRAND_NAME_STYLE: BrandNameStyle = {
 }
 
 /**
- * Splits a brand name into its two displayed parts. A name with whitespace is
- * split after the first word; a single word is split after `splitChars`
- * characters (0 keeps it whole). Characters are counted as code points so an
- * emoji or a surrogate pair is never cut in half.
+ * Splits a brand name after `splitChars` characters into the two colored parts.
+ * The slider is authoritative even when the name contains spaces, so the split
+ * can land mid-word or exactly on a separator (the space then stays in the
+ * second part). Characters are counted as code points so an emoji or a
+ * surrogate pair is never cut in half. 0, or the whole length, keeps the name
+ * in one color.
  */
 export function splitBrandName(
   name: string,
@@ -28,14 +30,6 @@ export function splitBrandName(
 ): { first: string; second: string } {
   const text = name.trim()
   if (!text) return { first: '', second: '' }
-
-  const firstSpace = text.search(/\s/)
-  if (firstSpace !== -1) {
-    return {
-      first: text.slice(0, firstSpace),
-      second: text.slice(firstSpace).trimStart(),
-    }
-  }
 
   const characters = Array.from(text)
   const count = Math.max(0, Math.min(Math.floor(splitChars), characters.length))
@@ -46,10 +40,4 @@ export function splitBrandName(
     first: characters.slice(0, count).join(''),
     second: characters.slice(count).join(''),
   }
-}
-
-/** Joins the two edited parts into the single stored site-name string. */
-export function composeBrandName(first: string, second: string): string {
-  const tail = second.trimStart()
-  return tail ? `${first.trimEnd()} ${tail}` : first
 }

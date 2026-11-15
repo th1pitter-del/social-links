@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from '
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useLocale, useTranslations } from 'next-intl'
-import { Check, CheckCircle2, Download, ExternalLink, Eye, FileLock, FileText, Loader2, Lock, Mail, Share2, Unlock } from 'lucide-react'
+import { Check, CheckCircle2, Download, ExternalLink, Eye, FileLock, FileText, Lock, Mail, Share2, Unlock } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -23,6 +23,7 @@ import {
   type UnlockState,
 } from '@/lib/actions/unlock'
 import { StepConfirm } from '@/components/unlock/step-confirm'
+import { PulseLoader } from '@/components/pulse-loader'
 
 type ClaimedContent =
   | { contentType: 'URL'; targetUrl: string | null }
@@ -644,10 +645,7 @@ export function UnlockExperience({
                                   <Check className="size-3 shrink-0 strokeWidth={3}" />
                                 </span>
                               ) : holding ? (
-                                <Loader2
-                                  className="size-4 shrink-0 animate-spin text-muted-foreground"
-                                  aria-hidden
-                                />
+                                <PulseLoader size={16} />
                               ) : null}
                             </div>
                             {!done ? (
@@ -694,11 +692,9 @@ export function UnlockExperience({
                           className="pointer-events-none absolute inset-y-0 end-4 flex items-center"
                         >
                           {holding ? (
-                            <Loader2
-                              className={cn(
-                                'size-4 shrink-0 animate-spin',
-                                fill ? 'text-[var(--action-fg)]' : 'text-muted-foreground',
-                              )}
+                            <PulseLoader
+                              size={16}
+                              className={fill ? 'text-[var(--action-fg)]' : undefined}
                             />
                           ) : (
                             <span
@@ -827,7 +823,7 @@ export function UnlockExperience({
                               className={surface}
                             >
                               {waiting ? (
-                                <Loader2 className="size-6 shrink-0 animate-spin text-white" />
+                                <PulseLoader size={24} className="text-white" />
                               ) : (
                                 <PlatformGlyph
                                   platform={null}
@@ -892,7 +888,7 @@ export function UnlockExperience({
                     )}
                   >
                     {busy ? (
-                      <Loader2 className="animate-spin" />
+                      <PulseLoader size={16} className="text-primary-foreground" />
                     ) : ready ? (
                       <Unlock />
                     ) : (

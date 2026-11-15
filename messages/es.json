@@ -1222,6 +1222,10 @@
           "title": "Identidad del sitio",
           "description": "Nombre de marca, logotipo y cómo aparece el sitio en los resultados de búsqueda."
         },
+        "seo": {
+          "title": "Búsqueda y compartir",
+          "description": "Título, descripción de búsqueda, tarjeta al compartir e icono de pestaña por idioma."
+        },
         "appearance": {
           "title": "Apariencia",
           "description": "Colores de marca para los modos claro y oscuro, aplicados en todo el sitio."
@@ -1270,11 +1274,11 @@
       "fields": {
         "site_name": {
           "label": "Nombre del sitio",
-          "hint": "Se muestra junto al logotipo en todo el sitio y en los títulos de página. Introduce una o dos partes; si dejas la segunda vacía, el nombre será una sola palabra.",
+          "hint": "Se muestra junto al logotipo y en los títulos de página. Cada idioma tiene su propio nombre.",
           "part1": "Primera parte",
           "part2": "Segunda parte",
           "placeholder": "Link Unlocker",
-          "colorsHint": "Los colores se aplican a todos los idiomas. Si dejas un color vacío, hereda el color del texto; la longitud divide un nombre de una sola palabra."
+          "colorsHint": "Los colores se aplican a todos los idiomas. Si dejas un color vacío, hereda el color del texto; la longitud indica cuántos caracteres iniciales usan el primer color."
         },
         "site_tagline": {
           "label": "Eslogan",
@@ -1390,7 +1394,7 @@
         },
         "site_logoUrl": {
           "label": "Logotipo",
-          "hint": "Se muestra en el encabezado, el panel y las páginas de desbloqueo. Sube una imagen o pega una URL http(s). Vacío = el icono integrado seleccionado.",
+          "hint": "Se muestra en el encabezado, el panel y las páginas de desbloqueo. Elige un icono o logotipo integrado, o sube el tuyo. Vacío = la marca predeterminada.",
           "placeholder": "https://ejemplo.com/logo.png"
         },
         "site_logoIcon": {
@@ -1399,7 +1403,7 @@
         },
         "site_faviconUrl": {
           "label": "Favicon",
-          "hint": "Icono de la pestaña del navegador. Sube un PNG cuadrado o pega una URL http(s). Vacío = el icono SEO y luego el icono predeterminado.",
+          "hint": "Icono de la pestaña del navegador. Elige un icono integrado o sube un PNG o SVG cuadrado. Vacío = el icono SEO y luego el icono predeterminado.",
           "placeholder": "https://ejemplo.com/favicon.png"
         },
         "brand_color1": {
@@ -1412,7 +1416,7 @@
         },
         "brand_splitChars": {
           "label": "Longitud del primer color",
-          "hint": "En un nombre de una sola palabra, cuántos caracteres usan el primer color. El resto usa el segundo. 0 = toda la palabra usa el primer color.",
+          "hint": "Cuántos caracteres iniciales usan el primer color. El resto usa el segundo. 0 = todo el nombre usa el primer color.",
           "placeholder": "0"
         },
         "site_seoTitle": {
@@ -1513,7 +1517,6 @@
         "label": "Idioma",
         "hint": "Cada idioma conserva su propio nombre, eslogan y ajustes de búsqueda. Los campos vacíos usan el idioma predeterminado."
       },
-      "brandSection": "Logotipo",
       "brandIcons": {
         "classic": "Marca predeterminada",
         "unlock": "Desbloquear",
@@ -1531,6 +1534,46 @@
         "file-key": "Archivo con llave",
         "qr-code": "Código de acceso",
         "door-open": "Puerta abierta"
+      },
+      "sources": {
+        "upload": "Subir",
+        "icons": "Iconos",
+        "logos": "Biblioteca de logotipos"
+      },
+      "preview": {
+        "title": "Vista previa",
+        "hint": "Muestra los cambios sin guardar. Guarda para aplicarlos en el sitio."
+      },
+      "markLibrary": {
+        "chain": "Cadena",
+        "unlock": "Desbloqueo",
+        "key": "Llave",
+        "bolt": "Rayo",
+        "shield": "Escudo con cerradura",
+        "orbit": "Órbita de enlace",
+        "spark": "Destello",
+        "target": "Diana",
+        "keyhole": "Cerradura",
+        "arrow": "Flecha",
+        "default": "Icono predeterminado"
+      },
+      "appearance": {
+        "light": "Tema claro",
+        "dark": "Tema oscuro",
+        "primary": "Acento principal",
+        "background": "Fondo de página",
+        "accentText": "Texto de acento",
+        "previewCaption": "Vista previa"
+      },
+      "appearancePreview": {
+        "eyebrow": "Enlaces desbloqueados",
+        "heading": "Saca más partido a cada enlace",
+        "body": "Un paso justo y el archivo se abre.",
+        "cta": "Crear un enlace",
+        "secondary": "Cómo funciona",
+        "navLinks": "Enlaces",
+        "navPricing": "Precios",
+        "navBlog": "Blog"
       },
       "uploadImage": "Subir imagen",
       "imageUploadedToast": "Imagen subida. Guarda para aplicar.",

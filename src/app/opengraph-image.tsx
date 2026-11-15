@@ -16,17 +16,48 @@ export const dynamic = 'force-dynamic'
 
 const platforms = ['YouTube', 'Instagram', 'Facebook', 'TikTok', 'Discord', 'Spotify', 'Website']
 
+// Same wordmark face as the site (Orbitron 900). The card renderer needs the
+// font binaries, so they are fetched once and inlined. Inter carries the rest
+// of the card: satori falls back to the first registered face for everything,
+// so a body font has to be present or the whole card would turn techno.
+const BRAND_FONT_URL =
+  'https://fonts.gstatic.com/s/orbitron/v35/yMJMMIlzdpvBhQQL_SC3X9yhF25-T1nysimxpg.ttf'
+const TEXT_FONT_URL =
+  'https://fonts.gstatic.com/s/inter/v20/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuLyfMZg.ttf'
+const TEXT_BOLD_FONT_URL =
+  'https://fonts.gstatic.com/s/inter/v20/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuGKYMZg.ttf'
+
+async function fetchFont(url: string): Promise<ArrayBuffer | null> {
+  try {
+    const response = await fetch(url)
+    if (!response.ok) return null
+    return await response.arrayBuffer()
+  } catch {
+    return null
+  }
+}
+
+const fontsPromise = Promise.all([
+  fetchFont(BRAND_FONT_URL),
+  fetchFont(TEXT_FONT_URL),
+  fetchFont(TEXT_BOLD_FONT_URL),
+]).then(([brand, text, textBold]) => ({ brand, text, textBold }))
+
+function loadFonts() {
+  return fontsPromise
+}
+
 /**
- * Uploaded logo as an inline image, or null so the card falls back to the
- * built-in mark. Only raster formats are inlined; the card renderer does not
- * draw SVG uploads.
+ * The configured logo (upload or bundled mark) as an inline image, or null so
+ * the card falls back to the built-in mark. Formats the card renderer cannot
+ * draw are skipped rather than breaking the whole image.
  */
 async function loadLogo(url: string): Promise<string | null> {
   if (!url) return null
   try {
     const response = await fetch(absoluteUrl(url))
-    const type = response.headers.get('content-type') ?? ''
-    if (!response.ok || !/^image\/(png|jpe?g|webp|gif)$/i.test(type)) return null
+    const type = (response.headers.get('content-type') ?? '').split(';')[0].trim()
+    if (!response.ok || !/^image\/(png|jpe?g|webp|gif|svg\+xml)$/i.test(type)) return null
     const bytes = Buffer.from(await response.arrayBuffer())
     return `data:${type};base64,${bytes.toString('base64')}`
   } catch {
@@ -44,6 +75,10 @@ export default async function Image() {
   const nameParts = splitBrandName(site.name, site.brand.splitChars)
   const MarkIcon = brandMarkIcon(site.logoIcon)
   const logo = await loadLogo(site.logoUrl)
+  const { brand: brandFont, text: textFont, textBold: textBoldFont } = await loadFonts()
+  const brandFontFamily = brandFont ? 'Orbitron' : textFont ? 'Inter' : 'sans-serif'
+  // Arabic script is joined; tracking it breaks the letter connections.
+  const brandTracking = /[\u0600-\u06FF]/.test(site.name) ? 0 : 4
 
   return new ImageResponse(
     (
@@ -59,7 +94,7 @@ export default async function Image() {
           padding: 72,
           background: 'linear-gradient(135deg, #0B0C09 0%, #050505 55%, #12160A 100%)',
           color: '#FFFFFF',
-          fontFamily: 'sans-serif',
+          fontFamily: textFont ? 'Inter' : 'sans-serif',
         }}
       >
         <div
@@ -132,20 +167,18 @@ export default async function Image() {
               )}
             </div>
           )}
-          <div style={{ display: 'flex', fontSize: 34, fontWeight: 600, letterSpacing: -0.5 }}>
-            <div
-              style={{
-                display: 'flex',
-                color: site.brand.color1 || '#FFFFFF',
-              }}
-            >
-              {nameParts.first}
-            </div>
-            {nameParts.second ? (
-              <div style={{ display: 'flex', marginLeft: 9, color: site.brand.color2 || '#FFFFFF' }}>
-                {nameParts.second}
-              </div>
-            ) : null}
+          <div
+            style={{
+              display: 'flex',
+              fontFamily: brandFontFamily,
+              fontSize: 30,
+              fontWeight: 900,
+              letterSpacing: brandTracking,
+              textTransform: 'uppercase',
+            }}
+          >
+            <span style={{ color: site.brand.color1 || '#FFFFFF' }}>{nameParts.first}</span>
+            <span style={{ color: site.brand.color2 || '#FFFFFF' }}>{nameParts.second}</span>
           </div>
         </div>
 
@@ -207,6 +240,19 @@ export default async function Image() {
         </div>
       </div>
     ),
-    size,
+    {
+      ...size,
+      fonts: [
+        ...(textFont
+          ? [{ name: 'Inter', data: textFont, weight: 400 as const, style: 'normal' as const }]
+          : []),
+        ...(textBoldFont
+          ? [{ name: 'Inter', data: textBoldFont, weight: 600 as const, style: 'normal' as const }]
+          : []),
+        ...(brandFont
+          ? [{ name: 'Orbitron', data: brandFont, weight: 900 as const, style: 'normal' as const }]
+          : []),
+      ],
+    },
   )
 }

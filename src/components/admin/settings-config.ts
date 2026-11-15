@@ -1,5 +1,5 @@
 import type { ComponentType } from 'react'
-import { Database, Gift, Globe, Mail, Megaphone, Palette, Server, ShieldCheck, Timer, Unlock, Upload } from 'lucide-react'
+import { Database, Gift, Globe, Mail, Megaphone, Palette, Search, Server, ShieldCheck, Timer, Unlock, Upload } from 'lucide-react'
 
 import { defaultLocale, type Locale } from '@/i18n/config'
 
@@ -24,12 +24,18 @@ export type SettingsField = {
   readonly?: boolean
   /** Two text inputs (first/second part) that compose one stored name value. */
   brandName?: boolean
-  /** Visual grid for choosing a built-in site-mark icon. */
-  iconPicker?: boolean
   /** Whole-number input. */
   integer?: boolean
+  /**
+   * Occupies the full width of the two-column field grid. Short values (a
+   * number, a color, a switch) share a row; URLs, sentences and credentials
+   * need the room.
+   */
+  wide?: boolean
   /** Loaded and saved with the group, but drawn inside another field's block. */
   embedded?: boolean
+  /** Catalog key a localized instance points at (the unsuffixed base key). */
+  labelKey?: string
 }
 
 export type SettingsGroup = {
@@ -64,21 +70,32 @@ export const SETTINGS_GROUPS: SettingsGroup[] = [
   {
     id: 'site-content',
     icon: Globe,
+    // The mark sources are drawn as tabbed blocks beside the live preview, so
+    // these keys only supply the values and the dirty tracking.
     fields: [
-      { key: 'site.logoUrl', image: true },
-      { key: 'site.logoIcon', iconPicker: true },
-      { key: 'site.faviconUrl', image: true },
+      { key: 'site.logoUrl', image: true, embedded: true },
+      { key: 'site.logoIcon', embedded: true },
+      { key: 'site.faviconUrl', image: true, embedded: true },
       // Shared by every language, so they sit inside the site-name block.
       { key: 'brand.color1', color: true, embedded: true },
       { key: 'brand.color2', color: true, embedded: true },
       { key: 'brand.splitChars', integer: true, embedded: true },
     ],
-    // One tab per enabled locale; every locale may carry its own name, tagline
-    // and search appearance. Empty fields fall back to the base (English) copy.
+    // One tab per enabled locale; every locale may carry its own name and
+    // tagline. Empty fields fall back to the base (English) copy.
     localizedFields: [
       { key: 'site.name', brandName: true },
-      { key: 'site.tagline' },
-      { key: 'site.seoTitle' },
+      { key: 'site.tagline', wide: true },
+    ],
+  },
+  {
+    id: 'seo',
+    icon: Search,
+    fields: [],
+    // Search appearance is copy per language, so it lives on its own page
+    // instead of crowding the branding fields.
+    localizedFields: [
+      { key: 'site.seoTitle', wide: true },
       { key: 'site.seoDescription', multiline: true },
       { key: 'site.seoImage', image: true },
       { key: 'site.seoIcon', image: true },
@@ -126,9 +143,9 @@ export const SETTINGS_GROUPS: SettingsGroup[] = [
     icon: Mail,
     notice: true,
     fields: [
-      { key: 'email.webhookUrl' },
-      { key: 'email.webhookToken', secret: true },
-      { key: 'email.from' },
+      { key: 'email.webhookUrl', wide: true },
+      { key: 'email.webhookToken', secret: true, wide: true },
+      { key: 'email.from', wide: true },
     ],
   },
   {
@@ -144,11 +161,11 @@ export const SETTINGS_GROUPS: SettingsGroup[] = [
     fields: [
       { key: 'verification.enabled', toggle: true },
       { key: 'verification.oauthRedirectUrl', readonly: true },
-      { key: 'verification.googleClientId' },
-      { key: 'verification.googleClientSecret', secret: true },
-      { key: 'verification.githubClientId' },
-      { key: 'verification.githubClientSecret', secret: true },
-      { key: 'verification.telegramBotToken', secret: true },
+      { key: 'verification.googleClientId', wide: true },
+      { key: 'verification.googleClientSecret', secret: true, wide: true },
+      { key: 'verification.githubClientId', wide: true },
+      { key: 'verification.githubClientSecret', secret: true, wide: true },
+      { key: 'verification.telegramBotToken', secret: true, wide: true },
     ],
   },
   {
@@ -171,12 +188,12 @@ export const SETTINGS_GROUPS: SettingsGroup[] = [
     icon: Gift,
     fields: [
       { key: 'ogads.enabled', toggle: true },
-      { key: 'ogads.apiKey', secret: true },
-      { key: 'ogads.endpoint' },
-      { key: 'ogads.affiliateId' },
+      { key: 'ogads.apiKey', secret: true, wide: true },
+      { key: 'ogads.endpoint', wide: true },
+      { key: 'ogads.affiliateId', wide: true },
       { key: 'ogads.ctype' },
       { key: 'ogads.offersShown' },
-      { key: 'ogads.postbackSecret', secret: true },
+      { key: 'ogads.postbackSecret', secret: true, wide: true },
       { key: 'ogads.postbackUrl', readonly: true },
     ],
   },

@@ -91,14 +91,16 @@ export function BrandName({
   const color2 = brand?.color2 ? { color: brand.color2 } : undefined
 
   return (
-    <span className={className}>
+    <span
+      className={cn(
+        // bigame.ma wordmark: heavy geometric display face, wide caps. Arabic
+        // letters must not be tracked — spacing tears the joins apart.
+        'font-brand font-black uppercase tracking-[0.1em] rtl:tracking-normal',
+        className,
+      )}
+    >
       <span style={color1}>{first}</span>
-      {second ? (
-        <>
-          {' '}
-          <span style={color2}>{second}</span>
-        </>
-      ) : null}
+      <span style={color2}>{second}</span>
     </span>
   )
 }

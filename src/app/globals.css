@@ -17,6 +17,7 @@
   --font-sans: var(--font-sans);
   --font-mono: var(--font-geist-mono);
   --font-heading: var(--font-sans);
+  --font-brand: var(--font-brand-family);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -67,8 +68,13 @@
 /*
  * Pulse light theme — off-white surfaces, white cards, dark text, lime accent.
  * `--primary` is the lime accent with dark foreground text (dark-on-lime).
+ *
+ * `.theme-preview` reuses the same declarations: the settings previews pin a
+ * whole token set on themselves so each one shows its own mode even while the
+ * console around it is in the other mode.
  */
-:root {
+:root,
+.theme-preview {
   --background: #f6f7f2;
   --foreground: #171812;
   --card: #ffffff;
@@ -106,8 +112,10 @@
 
 /*
  * Pulse dark theme — near-black backgrounds, charcoal panels, neon-lime accent.
+ * `.theme-preview.dark` is the preview counterpart, see the light block above.
  */
-.dark {
+.dark,
+.theme-preview.dark {
   --background: #050505;
   --foreground: #ffffff;
   --card: #151614;
@@ -169,6 +177,14 @@
   }
   html {
     @apply font-sans;
+  }
+  /*
+   * Text selection takes the brand accent instead of the browser's default
+   * blue. The paired foreground keeps the accent legible in both themes.
+   */
+  ::selection {
+    background-color: var(--primary);
+    color: var(--primary-foreground);
   }
   /*
    * Browsers centre `th` by themselves and a text-align on an ancestor cannot
@@ -350,6 +366,96 @@
   to {
     opacity: 1;
     transform: scale(1);
+  }
+}
+
+/*
+ * The site loader: four dots swept out of the mark and back while the next
+ * page arrives. It paints `currentColor`, so a `text-*` utility is all it
+ * takes to brand it; every length derives from `--loader-size` so callers ask
+ * for a pixel size and get the same shape at any scale.
+ */
+.pulse-loader {
+  display: inline-flex;
+  flex: none;
+  width: var(--loader-size, 44.8px);
+  height: var(--loader-size, 44.8px);
+  position: relative;
+  background: radial-gradient(
+    calc(var(--loader-size, 44.8px) / 4),
+    currentColor 94%,
+    transparent
+  );
+}
+
+.pulse-loader::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background:
+    radial-gradient(
+        calc(var(--loader-size, 44.8px) * 0.225) at bottom right,
+        transparent 94%,
+        currentColor
+      )
+      top left,
+    radial-gradient(
+        calc(var(--loader-size, 44.8px) * 0.225) at bottom left,
+        transparent 94%,
+        currentColor
+      )
+      top right,
+    radial-gradient(
+        calc(var(--loader-size, 44.8px) * 0.225) at top right,
+        transparent 94%,
+        currentColor
+      )
+      bottom left,
+    radial-gradient(
+        calc(var(--loader-size, 44.8px) * 0.225) at top left,
+        transparent 94%,
+        currentColor
+      )
+      bottom right;
+  background-size: calc(var(--loader-size, 44.8px) / 2) calc(var(--loader-size, 44.8px) / 2);
+  background-repeat: no-repeat;
+  /* Unlike the marketing loops this one is never gated on reduced motion:
+     it is the only progress signal while a page streams in. */
+  animation: pulse-loader 2s infinite cubic-bezier(0.3, 1, 0, 1);
+}
+
+/*
+ * The boot splash sits over the first paint so the loader gets one full
+ * rotation before the page shows. It releases itself from CSS after that
+ * rotation, so the site is never held hostage by a script; the client
+ * component in `boot-loader.tsx` only clears the node afterwards.
+ */
+.boot-loader {
+  animation: boot-loader-release 300ms ease 2s forwards;
+}
+
+@keyframes boot-loader-release {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+@keyframes pulse-loader {
+  33% {
+    inset: calc(var(--loader-size, 44.8px) * -0.25);
+    transform: rotate(0deg);
+  }
+
+  66% {
+    inset: calc(var(--loader-size, 44.8px) * -0.25);
+    transform: rotate(90deg);
+  }
+
+  100% {
+    inset: 0;
+    transform: rotate(90deg);
   }
 }
 
