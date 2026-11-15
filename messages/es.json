@@ -352,8 +352,8 @@
     "share": "Compartir",
     "stepsTitle": "Pasos de desbloqueo",
     "stepsCount": "{done} de {total}",
-    "intro": "Para desbloquear {title}, completa los {total} pasos rápidos de la derecha. Cada paso es gratis.",
-    "introOne": "Para desbloquear {title}, completa el paso rápido de la derecha. Es gratis.",
+    "intro": "Para desbloquear {title}, completa los {total} pasos rápidos. Cada paso es gratis.",
+    "introOne": "Para desbloquear {title}, completa el paso rápido. Es gratis.",
     "completed": "Completado",
     "emailPlaceholder": "tu@ejemplo.com",
     "consent": "Acepto recibir novedades de este creador. Mi dirección solo se comparte con él.",
@@ -1418,6 +1418,10 @@
           "label": "Longitud del primer color",
           "hint": "Cuántos caracteres iniciales usan el primer color. El resto usa el segundo. 0 = todo el nombre usa el primer color.",
           "placeholder": "0"
+        },
+        "brand_nameChars": {
+          "label": "Longitud del nombre",
+          "hint": "Cuántos caracteres del nombre aparecen junto al logo; el resto se sustituye por puntos suspensivos. 0 = el nombre completo."
         },
         "site_seoTitle": {
           "label": "Título SEO",
@@ -2499,6 +2503,7 @@
     "invalidHexColor": "Introduce un color hex como #d5ff2f o déjalo vacío.",
     "invalidBrandIcon": "Elige un icono de la lista.",
     "invalidBrandSplit": "Introduce un número entero entre 0 y 40.",
+    "invalidBrandNameLength": "Introduce un número entero entre 0 y 40.",
     "nameRequired": "Añade un nombre",
     "invalidAdPlacement": "Ubicación de anuncio no válida",
     "invalidAdType": "Tipo de anuncio no válido",

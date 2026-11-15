@@ -5,6 +5,7 @@ import { getLocale, getMessages } from 'next-intl/server'
 
 import { isLocale, locales, type Locale } from '@/i18n/config'
 import {
+  BRAND_NAME_LENGTH_MAX,
   BRAND_NAME_SPLIT_MAX,
   DEFAULT_BRAND_NAME_STYLE,
   type BrandNameStyle,
@@ -116,6 +117,7 @@ export function getStepHoldMs(map: Record<string, string>): number {
 export function defaultSettingValue(key: string): string | null {
   if (key === 'unlock.stepHoldSeconds') return String(DEFAULT_STEP_HOLD_SECONDS)
   if (key === 'brand.splitChars') return String(DEFAULT_BRAND_NAME_STYLE.splitChars)
+  if (key === 'brand.nameChars') return String(DEFAULT_BRAND_NAME_STYLE.nameChars)
   return defaultThemeValue(key)
 }
 
@@ -126,10 +128,18 @@ export function getBrandNameStyle(map: Record<string, string>): BrandNameStyle {
   const splitChars = Number.isFinite(parsed)
     ? Math.min(Math.max(Math.round(parsed), 0), BRAND_NAME_SPLIT_MAX)
     : DEFAULT_BRAND_NAME_STYLE.splitChars
+  const rawNameChars = map['brand.nameChars']?.trim()
+  const parsedNameChars = rawNameChars
+    ? Number(rawNameChars)
+    : DEFAULT_BRAND_NAME_STYLE.nameChars
+  const nameChars = Number.isFinite(parsedNameChars)
+    ? Math.min(Math.max(Math.round(parsedNameChars), 0), BRAND_NAME_LENGTH_MAX)
+    : DEFAULT_BRAND_NAME_STYLE.nameChars
   return {
     color1: sanitizeHex(map['brand.color1']) ?? '',
     color2: sanitizeHex(map['brand.color2']) ?? '',
     splitChars,
+    nameChars,
   }
 }
 
@@ -155,6 +165,7 @@ export const getSettingMap = cache(async (): Promise<Record<string, string>> => 
             'brand.color1',
             'brand.color2',
             'brand.splitChars',
+            'brand.nameChars',
             'rules.socialPlatforms',
             'rules.contentPolicy',
             'ads.headScripts',

@@ -5,7 +5,7 @@ import { getTranslations } from 'next-intl/server'
 
 import { setSetting, writeAudit } from '@/lib/admin-utils'
 import { AD_NETWORK_SCRIPT_MAX_LENGTH } from '@/lib/ads'
-import { BRAND_NAME_SPLIT_MAX } from '@/lib/brand-name'
+import { BRAND_NAME_LENGTH_MAX, BRAND_NAME_SPLIT_MAX } from '@/lib/brand-name'
 import { isBrandMarkIcon } from '@/lib/brand-mark-icons'
 import { DEFAULT_STEP_HOLD_SECONDS, STEP_HOLD_MAX_SECONDS, isMediaOrHttpUrl } from '@/lib/settings'
 import { sanitizeHex } from '@/lib/theme-palette'
@@ -149,6 +149,14 @@ function prepareSetting(key: string, rawValue: string, t: ErrorTranslator): Prep
     const parsed = Number(trimmedValue)
     if (!Number.isInteger(parsed) || parsed < 0 || parsed > BRAND_NAME_SPLIT_MAX) {
       return { ok: false, key: trimmedKey, error: t('invalidBrandSplit') }
+    }
+    value = String(parsed)
+  }
+  if (trimmedKey === 'brand.nameChars') {
+    const trimmedValue = value.trim() || '0'
+    const parsed = Number(trimmedValue)
+    if (!Number.isInteger(parsed) || parsed < 0 || parsed > BRAND_NAME_LENGTH_MAX) {
+      return { ok: false, key: trimmedKey, error: t('invalidBrandNameLength') }
     }
     value = String(parsed)
   }

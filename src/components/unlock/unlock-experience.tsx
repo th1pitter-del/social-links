@@ -421,7 +421,7 @@ export function UnlockExperience({
 
   return (
     <div className="mx-auto w-full max-w-2xl px-4 py-8 sm:py-12">
-      <div className="grid items-start gap-6 overflow-hidden rounded-2xl border bg-card shadow-sm lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)]">
+      <div className="grid grid-cols-1 items-start gap-6 overflow-hidden rounded-2xl border bg-card shadow-sm lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)]">
         {/* Left: the shared content and its public stats. */}
         <div>
           <div className="px-5 pt-5 sm:px-6 sm:pt-6">

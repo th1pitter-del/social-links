@@ -439,6 +439,7 @@
     "invalidHexColor": "Enter a hex color like #d5ff2f, or leave it empty.",
     "invalidBrandIcon": "Choose an icon from the list.",
     "invalidBrandSplit": "Enter a whole number between 0 and 40.",
+    "invalidBrandNameLength": "Enter a whole number between 0 and 40.",
     "nameRequired": "Add a name",
     "invalidAdPlacement": "Invalid ad placement",
     "invalidAdType": "Invalid ad type",
@@ -898,8 +899,8 @@
     "share": "Share",
     "stepsTitle": "Unlock steps",
     "stepsCount": "{done} of {total}",
-    "intro": "To unlock {title}, complete the {total} quick steps on the right. Each step is free.",
-    "introOne": "To unlock {title}, complete the quick step on the right. It is free.",
+    "intro": "To unlock {title}, complete the {total} quick steps. Each step is free.",
+    "introOne": "To unlock {title}, complete the quick step. It is free.",
     "completed": "Completed",
     "emailPlaceholder": "you@example.com",
     "consent": "I agree to receive updates from this creator. My address is only shared with them.",
@@ -1968,6 +1969,10 @@
           "label": "First color length",
           "hint": "How many leading characters take the first color. The rest take the second. 0 = the whole name uses the first color.",
           "placeholder": "0"
+        },
+        "brand_nameChars": {
+          "label": "Name length",
+          "hint": "How many characters of the name appear next to the logo; the rest is replaced with an ellipsis. 0 = the full name."
         },
         "site_seoTitle": {
           "label": "SEO title",

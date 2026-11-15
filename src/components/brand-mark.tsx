@@ -2,7 +2,7 @@ import { createElement } from 'react'
 import { cn } from 'cn'
 
 import { brandMarkIcon } from '@/lib/brand-mark-icons'
-import { splitBrandName, type BrandNameStyle } from '@/lib/brand-name'
+import { splitBrandName, truncateBrandName, type BrandNameStyle } from '@/lib/brand-name'
 
 /**
  * The site mark. When an admin has uploaded a custom logo (`site.logoUrl`
@@ -84,7 +84,10 @@ export function BrandName({
   brand?: BrandNameStyle
   className?: string
 }) {
-  const { first, second } = splitBrandName(name, brand?.splitChars ?? 0)
+  const { first, second } = splitBrandName(
+    truncateBrandName(name, brand?.nameChars ?? 0),
+    brand?.splitChars ?? 0,
+  )
   if (!first && !second) return null
 
   const color1 = brand?.color1 ? { color: brand.color1 } : undefined
