@@ -112,6 +112,7 @@ export function UnlockExperience({
   steps = [],
   offers = [],
   verifyOutcome = null,
+  stepHoldMs,
 }: {
   slug: string
   title: string
@@ -127,6 +128,12 @@ export function UnlockExperience({
   offers?: UnlockOfferPreview[]
   /** What an account consent round trip reported on the way back. */
   verifyOutcome?: string | null
+  /**
+   * Admin-set pause between pressing a step and the row reading as completed.
+   * The completion is recorded immediately; only the row's settled state waits,
+   * so the visitor registers the action finishing. 0 completes on press.
+   */
+  stepHoldMs: number
 }) {
   const t = useTranslations('unlock')
   const actionT = useTranslations('actions')
@@ -147,10 +154,13 @@ export function UnlockExperience({
   const [consent, setConsent] = useState(false)
   const [claimed, setClaimed] = useState<ClaimedContent>(null)
   const [offerPending, setOfferPending] = useState<string | null>(null)
+  /** The step the visitor just pressed, held on its spinner before it settles. */
+  const [holdingId, setHoldingId] = useState<string | null>(null)
   const shareUrl = useShareUrl(slug)
   /** Token already loaded or created locally; keeps a route refresh from re-fetching it. */
   const loadedTokenRef = useRef<string | null>(null)
   const offerTimerRef = useRef<number | null>(null)
+  const holdTimerRef = useRef<number | null>(null)
   const applyState = useCallback((next: UnlockState) => {
     loadedTokenRef.current = next.token
     setState(next)
@@ -175,6 +185,7 @@ export function UnlockExperience({
   useEffect(
     () => () => {
       if (offerTimerRef.current) window.clearInterval(offerTimerRef.current)
+      if (holdTimerRef.current) window.clearTimeout(holdTimerRef.current)
     },
     [],
   )
@@ -223,6 +234,7 @@ export function UnlockExperience({
 
   /** Opens the step and records it in the same press. */
   async function handleComplete(actionId: string, isEmail = false) {
+    if (holdingId) return
     const session = await ensureSession()
     if (!session) return
     setBusy(true)
@@ -238,7 +250,16 @@ export function UnlockExperience({
       setError(result.error)
       return
     }
-    applyState(result.state)
+    if (stepHoldMs <= 0) {
+      applyState(result.state)
+      return
+    }
+    setHoldingId(actionId)
+    holdTimerRef.current = window.setTimeout(() => {
+      holdTimerRef.current = null
+      setHoldingId(null)
+      applyState(result.state)
+    }, stepHoldMs)
   }
 
   /**
@@ -521,8 +542,11 @@ export function UnlockExperience({
                   {actionSteps.map((action) => {
                     const isEmail = action.behavior === 'EMAIL'
                     const done = action.completed
+                    const holding = holdingId === action.id
                     const fill = platformActionColor(action.platform, action.type)
-                    const clickable = !done && !expired && !busy
+                    // The list pauses while a pressed step shows its wait, so a
+                    // second row never looks tappable but swallow the press.
+                    const clickable = !done && !expired && !busy && holdingId === null
                     const interactive = clickable
                     // A subscription row lands on the channel with the subscribe
                     // prompt already open; the channel link itself still works.
@@ -619,6 +643,11 @@ export function UnlockExperience({
                                 <span className={ROW_CHECK}>
                                   <Check className="size-3 shrink-0 strokeWidth={3}" />
                                 </span>
+                              ) : holding ? (
+                                <Loader2
+                                  className="size-4 shrink-0 animate-spin text-muted-foreground"
+                                  aria-hidden
+                                />
                               ) : null}
                             </div>
                             {!done ? (
@@ -643,7 +672,7 @@ export function UnlockExperience({
                                 <Button
                                   size="sm"
                                   onClick={() => void handleComplete(action.id, true)}
-                                  disabled={busy || !email || !consent}
+                                  disabled={busy || !email || !consent || holdingId !== null}
                                 >
                                   {t('submitEmail')}
                                 </Button>
@@ -664,16 +693,25 @@ export function UnlockExperience({
                           aria-hidden
                           className="pointer-events-none absolute inset-y-0 end-4 flex items-center"
                         >
-                          <span
-                            className={cn(
-                              ROW_CHECK,
-                              done
-                                ? 'motion-safe:animate-[demo-check_0.24s_ease-out]'
-                                : 'opacity-0',
-                            )}
-                          >
-                            <Check className="size-3 shrink-0 strokeWidth={3}" />
-                          </span>
+                          {holding ? (
+                            <Loader2
+                              className={cn(
+                                'size-4 shrink-0 animate-spin',
+                                fill ? 'text-[var(--action-fg)]' : 'text-muted-foreground',
+                              )}
+                            />
+                          ) : (
+                            <span
+                              className={cn(
+                                ROW_CHECK,
+                                done
+                                  ? 'motion-safe:animate-[demo-check_0.24s_ease-out]'
+                                  : 'opacity-0',
+                              )}
+                            >
+                              <Check className="size-3 shrink-0 strokeWidth={3}" />
+                            </span>
+                          )}
                         </span>
                         {done ? <span className="sr-only">{t('completed')}</span> : null}
                       </>
@@ -694,7 +732,7 @@ export function UnlockExperience({
                             <button
                               type="button"
                               onClick={() => void handleVisit(action.id)}
-                              disabled={busy}
+                              disabled={busy || holdingId !== null}
                               style={fillVars}
                               className={surface}
                             >
@@ -708,7 +746,13 @@ export function UnlockExperience({
                               href={href}
                               target="_blank"
                               rel="noopener noreferrer"
-                              onClick={() => void handleComplete(action.id)}
+                              onClick={(event) => {
+                                if (busy || holdingId) {
+                                  event.preventDefault()
+                                  return
+                                }
+                                void handleComplete(action.id)
+                              }}
                               style={fillVars}
                               className={cn(surface, 'no-underline')}
                             >

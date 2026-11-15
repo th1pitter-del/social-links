@@ -1109,6 +1109,10 @@
           "title": "Aparência",
           "description": "Cores da marca para os modos claro e escuro, aplicadas em todo o site."
         },
+        "unlock": {
+          "title": "Página de desbloqueio",
+          "description": "Como o cartão de desbloqueio se comporta para os visitantes que concluem as etapas."
+        },
         "rate-limits": {
           "title": "Limites de taxa",
           "description": "Aplicados por usuário ou por endereço de origem. Alterações valem para solicitações futuras."
@@ -1191,6 +1195,11 @@
         },
         "theme_dark_accentText": {
           "label": "Modo escuro — texto de destaque"
+        },
+        "unlock_stepHoldSeconds": {
+          "label": "Espera ao concluir uma etapa (segundos)",
+          "hint": "Por quanto tempo uma etapa pressionada mostra o indicador de carregamento antes de aparecer como concluída. 0 conclui as etapas na hora.",
+          "placeholder": "3"
         },
         "limits_linkCreatePerHour": {
           "label": "Criações de links por hora (por usuário)",
@@ -2163,6 +2172,7 @@
   "errors": {
     "invalidGitBranch": "Informe um nome de branch sem espaços, '..' ou hífen no início.",
     "invalidBackupRetention": "Informe um número inteiro entre 1 e 100.",
+    "invalidStepHold": "Informe um número inteiro de segundos entre 0 e 15.",
     "invalidProcessManager": "Escolha pm2, systemctl ou none.",
     "invalidProcessName": "Use letras, números, pontos, sublinhados, @ ou hífens.",
     "opsUnavailable": "As operações do sistema não estão disponíveis neste host.",

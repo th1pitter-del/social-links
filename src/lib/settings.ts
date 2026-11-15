@@ -90,6 +90,28 @@ export function defaultThemeValue(key: string): string | null {
 
 export const HEX_PATTERN = /^#[0-9a-fA-F]{6}$/
 
+export const DEFAULT_STEP_HOLD_SECONDS = 3
+export const STEP_HOLD_MAX_SECONDS = 15
+
+/**
+ * How long a pressed unlock step shows its spinner before it reads as
+ * completed. The admin sets it in whole seconds; 0 turns the hold off.
+ */
+export function getStepHoldMs(map: Record<string, string>): number {
+  const raw = map['unlock.stepHoldSeconds']?.trim()
+  const parsed = raw ? Number(raw) : DEFAULT_STEP_HOLD_SECONDS
+  const seconds = Number.isFinite(parsed)
+    ? Math.min(Math.max(Math.round(parsed), 0), STEP_HOLD_MAX_SECONDS)
+    : DEFAULT_STEP_HOLD_SECONDS
+  return seconds * 1000
+}
+
+/** Shipped default for a settings field, as the admin form should show it. */
+export function defaultSettingValue(key: string): string | null {
+  if (key === 'unlock.stepHoldSeconds') return String(DEFAULT_STEP_HOLD_SECONDS)
+  return defaultThemeValue(key)
+}
+
 /** Returns a normalized lowercase hex color, or null when invalid. */
 export function sanitizeHex(value: string | undefined | null): string | null {
   const trimmed = value?.trim().toLowerCase() ?? ''
@@ -211,6 +233,7 @@ export const getSettingMap = cache(async (): Promise<Record<string, string>> => 
             'rules.socialPlatforms',
             'rules.contentPolicy',
             'ads.headScripts',
+            'unlock.stepHoldSeconds',
             ...THEME_KEYS,
             ...CONTENT_PAGES.map((page) => `content.${page}`),
           ],

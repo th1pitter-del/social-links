@@ -1,5 +1,5 @@
 import type { ComponentType } from 'react'
-import { Database, Gift, Globe, Mail, Megaphone, Palette, Server, ShieldCheck, Timer, Upload } from 'lucide-react'
+import { Database, Gift, Globe, Mail, Megaphone, Palette, Server, ShieldCheck, Timer, Unlock, Upload } from 'lucide-react'
 
 type IconType = ComponentType<{ className?: string }>
 
@@ -64,6 +64,13 @@ export const SETTINGS_GROUPS: SettingsGroup[] = [
       { key: 'theme.dark.primary', color: true },
       { key: 'theme.dark.background', color: true },
       { key: 'theme.dark.accentText', color: true },
+    ],
+  },
+  {
+    id: 'unlock',
+    icon: Unlock,
+    fields: [
+      { key: 'unlock.stepHoldSeconds' },
     ],
   },
   {

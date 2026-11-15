@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button'
 import { actionLabel } from '@/lib/action-label'
 import { fetchOgadsOffers, getOgadsConfig, getVisitorTargeting, isOgadsReady } from '@/lib/ogads'
 import { getSession } from '@/lib/session'
+import { getStepHoldMs, getSettingMap } from '@/lib/settings'
 import { getPublicUnlockLink, isExpired, recordShortLinkVisit, type PublicUnlockLink } from '@/lib/unlock'
 
 type PageProps = {
@@ -41,6 +42,7 @@ export default async function UnlockPage({ params, searchParams }: PageProps) {
 
   const steps = toSteps(link, await getTranslations('actions'))
   const stats = { viewCount: link.viewCount, unlockCount: link.unlockCount }
+  const stepHoldMs = getStepHoldMs(await getSettingMap())
 
   if (link.status === 'DISABLED') {
     return (
@@ -77,6 +79,7 @@ export default async function UnlockPage({ params, searchParams }: PageProps) {
         steps={steps}
         offers={await getOfferPreviews(link)}
         verifyOutcome={verify ?? null}
+        stepHoldMs={stepHoldMs}
         {...stats}
         preview
       />
@@ -111,6 +114,7 @@ export default async function UnlockPage({ params, searchParams }: PageProps) {
       steps={steps}
       offers={await getOfferPreviews(link)}
       verifyOutcome={verify ?? null}
+      stepHoldMs={stepHoldMs}
       {...stats}
     />
   )

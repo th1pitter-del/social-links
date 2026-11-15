@@ -5,7 +5,7 @@ import { getSettingsGroup } from '@/components/admin/settings-config'
 import { SettingsGroupForm } from '@/components/admin/settings-form'
 import { getSettings } from '@/lib/admin-utils'
 import { getOgadsConfig, ogadsPostbackUrl } from '@/lib/ogads'
-import { defaultThemeValue } from '@/lib/settings'
+import { defaultSettingValue } from '@/lib/settings'
 import { SITE_URL } from '@/lib/seo'
 import { requireAdmin } from '@/lib/session'
 
@@ -42,7 +42,7 @@ export default async function AdminSettingsGroupPage({
       settings[field.key] = ''
       configured[field.key] = Boolean(stored?.trim())
     } else {
-      settings[field.key] = stored ?? defaultThemeValue(field.key) ?? ''
+      settings[field.key] = stored ?? defaultSettingValue(field.key) ?? ''
     }
   }
 

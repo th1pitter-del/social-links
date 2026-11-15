@@ -5,7 +5,7 @@ import { getTranslations } from 'next-intl/server'
 
 import { setSetting, writeAudit } from '@/lib/admin-utils'
 import { AD_NETWORK_SCRIPT_MAX_LENGTH } from '@/lib/ads'
-import { isMediaOrHttpUrl, sanitizeHex } from '@/lib/settings'
+import { isMediaOrHttpUrl, sanitizeHex, DEFAULT_STEP_HOLD_SECONDS, STEP_HOLD_MAX_SECONDS } from '@/lib/settings'
 import { CONTENT_VALUE_MAX_LENGTH } from '@/lib/validation'
 import { requireAdmin } from '@/lib/session'
 
@@ -93,6 +93,20 @@ function prepareSetting(key: string, rawValue: string, t: ErrorTranslator): Prep
       if (!/^[A-Za-z0-9._@-]{1,100}$/.test(value)) {
         return { ok: false, key: trimmedKey, error: t('invalidProcessName') }
       }
+    }
+  }
+  if (trimmedKey === 'unlock.stepHoldSeconds') {
+    // Empty falls back to the shipped default; the value is whole seconds so
+    // the field cannot hold a fraction the step timer would round away.
+    value = value.trim()
+    if (value === '') {
+      value = String(DEFAULT_STEP_HOLD_SECONDS)
+    } else {
+      const parsed = Number(value)
+      if (!Number.isInteger(parsed) || parsed < 0 || parsed > STEP_HOLD_MAX_SECONDS) {
+        return { ok: false, key: trimmedKey, error: t('invalidStepHold') }
+      }
+      value = String(parsed)
     }
   }
   if (trimmedKey.startsWith('theme.')) {

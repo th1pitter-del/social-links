@@ -326,6 +326,7 @@
   "errors": {
     "invalidGitBranch": "Enter a branch name without spaces, '..' or a leading dash.",
     "invalidBackupRetention": "Enter a whole number between 1 and 100.",
+    "invalidStepHold": "Enter a whole number of seconds between 0 and 15.",
     "invalidProcessManager": "Choose pm2, systemctl or none.",
     "invalidProcessName": "Use letters, numbers, dots, underscores, @ or dashes.",
     "opsUnavailable": "System operations are not available on this host.",
@@ -1655,6 +1656,10 @@
           "title": "Appearance",
           "description": "Brand colors for light and dark modes, applied across the whole site."
         },
+        "unlock": {
+          "title": "Unlock page",
+          "description": "How the unlock card behaves for visitors working through the steps."
+        },
         "rate-limits": {
           "title": "Rate limits",
           "description": "Enforced per user or per source address. Changes apply to future requests."
@@ -1737,6 +1742,11 @@
         },
         "theme_dark_accentText": {
           "label": "Dark mode — accent text"
+        },
+        "unlock_stepHoldSeconds": {
+          "label": "Step completion wait (seconds)",
+          "hint": "How long a pressed step shows its spinner before it reads as completed. 0 marks steps complete immediately.",
+          "placeholder": "3"
         },
         "limits_linkCreatePerHour": {
           "label": "Link creations per hour (per user)",

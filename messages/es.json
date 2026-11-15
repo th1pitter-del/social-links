@@ -1109,6 +1109,10 @@
           "title": "Apariencia",
           "description": "Colores de marca para los modos claro y oscuro, aplicados en todo el sitio."
         },
+        "unlock": {
+          "title": "Página de desbloqueo",
+          "description": "Cómo se comporta la tarjeta de desbloqueo con los visitantes que completan los pasos."
+        },
         "rate-limits": {
           "title": "Límites de frecuencia",
           "description": "Se aplican por usuario o por dirección de origen. Los cambios afectan a solicitudes futuras."
@@ -1191,6 +1195,11 @@
         },
         "theme_dark_accentText": {
           "label": "Modo oscuro — texto de acento"
+        },
+        "unlock_stepHoldSeconds": {
+          "label": "Espera al completar un paso (segundos)",
+          "hint": "Cuánto tiempo muestra el indicador de carga un paso pulsado antes de marcarse como completado. 0 completa los pasos al instante.",
+          "placeholder": "3"
         },
         "limits_linkCreatePerHour": {
           "label": "Creaciones de enlaces por hora (por usuario)",
@@ -2163,6 +2172,7 @@
   "errors": {
     "invalidGitBranch": "Introduce una rama sin espacios, '..' ni guion inicial.",
     "invalidBackupRetention": "Introduce un número entero entre 1 y 100.",
+    "invalidStepHold": "Introduce un número entero de segundos entre 0 y 15.",
     "invalidProcessManager": "Elige pm2, systemctl o none.",
     "invalidProcessName": "Usa letras, números, puntos, guiones bajos, @ o guiones.",
     "opsUnavailable": "Las operaciones del sistema no están disponibles en este servidor.",
