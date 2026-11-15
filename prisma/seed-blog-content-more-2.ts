@@ -3,9 +3,9 @@
 import type { DemoPost } from './seed-blog-content'
 
 const cover = (id: string) =>
-  `https://images.unsplash.com/photo-?auto=format&fit=crop&w=1200&h=675&q=80`
+  `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=1200&h=675&q=80`
 const inline = (id: string) =>
-  `https://images.unsplash.com/photo-?auto=format&fit=crop&w=1000&h=560&q=80`
+  `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=1000&h=560&q=80`
 
 export const morePosts2: DemoPost[] = [
   {

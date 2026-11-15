@@ -79,6 +79,21 @@ export default async function AdminBlogPage() {
                   <span className="w-5 shrink-0 text-sm font-semibold text-muted-foreground tabular-nums">
                     {index + 1}
                   </span>
+                  {post.coverImage ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={post.coverImage}
+                      alt=""
+                      className="h-10 w-16 shrink-0 rounded border border-border object-cover"
+                    />
+                  ) : (
+                    <span
+                      aria-hidden
+                      className="flex h-10 w-16 shrink-0 items-center justify-center rounded border border-dashed border-border text-[10px] text-muted-foreground"
+                    >
+                      {t('noImage')}
+                    </span>
+                  )}
                   <div className="min-w-0 flex-1">
                     <Link
                       href={`/admin/blog/articles/${post.id}`}
@@ -114,6 +129,21 @@ export default async function AdminBlogPage() {
                 const status = effectiveBlogPostStatus(post)
                 return (
                   <li key={post.id} className="flex items-center gap-3 px-5 py-3">
+                    {post.coverImage ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={post.coverImage}
+                        alt=""
+                        className="h-10 w-16 shrink-0 rounded border border-border object-cover"
+                      />
+                    ) : (
+                      <span
+                        aria-hidden
+                        className="flex h-10 w-16 shrink-0 items-center justify-center rounded border border-dashed border-border text-[10px] text-muted-foreground"
+                      >
+                        {t('noImage')}
+                      </span>
+                    )}
                     <div className="min-w-0 flex-1">
                       <Link
                         href={`/admin/blog/articles/${post.id}`}
