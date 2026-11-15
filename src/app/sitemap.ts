@@ -24,6 +24,30 @@ const STATIC_ENTRIES: MetadataRoute.Sitemap = [
     priority: 0.7,
   },
   {
+    url: absoluteUrl('/how-it-works'),
+    lastModified: CONTENT_UPDATED_AT,
+    changeFrequency: 'monthly',
+    priority: 0.7,
+  },
+  ...['create', 'share', 'unlock'].map((topic) => ({
+    url: absoluteUrl(`/how-it-works/${topic}`),
+    lastModified: CONTENT_UPDATED_AT,
+    changeFrequency: 'monthly' as const,
+    priority: 0.6,
+  })),
+  {
+    url: absoluteUrl('/about'),
+    lastModified: CONTENT_UPDATED_AT,
+    changeFrequency: 'monthly',
+    priority: 0.6,
+  },
+  ...['story', 'what-we-do', 'values'].map((topic) => ({
+    url: absoluteUrl(`/about/${topic}`),
+    lastModified: CONTENT_UPDATED_AT,
+    changeFrequency: 'monthly' as const,
+    priority: 0.5,
+  })),
+  {
     url: absoluteUrl('/contact'),
     lastModified: CONTENT_UPDATED_AT,
     changeFrequency: 'yearly',

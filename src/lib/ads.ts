@@ -128,6 +128,17 @@ export const HEADER_MENU_KEYS = [
   'videoCompressor',
   'videoDownloader',
   'blog',
+  // Page menus and their submenus (About / How it works / Contact).
+  'about',
+  'aboutStory',
+  'aboutWhat',
+  'aboutValues',
+  'hiwCreate',
+  'hiwShare',
+  'hiwUnlock',
+  'contactSupport',
+  'contactReport',
+  'contactFaq',
 ] as const
 
 export type HeaderMenuKey = (typeof HEADER_MENU_KEYS)[number]
@@ -156,6 +167,10 @@ export const HEADER_ICONS = [
   'heart',
   'flame',
   'newspaper',
+  'users',
+  'info',
+  'mail',
+  'shieldCheck',
 ] as const
 
 export type HeaderIcon = (typeof HEADER_ICONS)[number]

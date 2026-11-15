@@ -121,7 +121,17 @@
     "contact": "Contato",
     "privacy": "Privacidade",
     "terms": "Termos",
-    "blog": "Blog"
+    "blog": "Blog",
+    "about": "Sobre nós",
+    "aboutStory": "Nossa história",
+    "aboutWhat": "O que fazemos",
+    "aboutValues": "Nossos valores",
+    "hiwCreate": "Crie seu link",
+    "hiwShare": "Compartilhe onde quiser",
+    "hiwUnlock": "Desbloqueie uma recompensa",
+    "contactSupport": "Fale com o suporte",
+    "contactReport": "Denunciar um link",
+    "contactFaq": "Ler as perguntas frequentes"
   },
   "footer": {
     "tagline": "Links de desbloqueio social grátis que mantêm você no controle do seu conteúdo.",
@@ -470,6 +480,113 @@
       "metaDescription": "Perguntas sobre um link, sua conta ou a plataforma? Fale com a equipe. Relatórios de abuso têm prioridade.",
       "title": "Contato",
       "content": "Perguntas sobre um link, sua conta ou a plataforma? Envie um e-mail para [support@linkunlock.app](mailto:support@linkunlock.app).\nRelatórios de abuso têm prioridade no atendimento. Inclua a URL pública do link para que possamos investigar rapidamente."
+    },
+    "marketing": {
+      "relatedLabel": "Continue explorando",
+      "cardCta": "Saiba mais",
+      "ctaTitle": "Crie seu primeiro link em minutos",
+      "ctaBody": "O primeiro link é grátis, os visitantes nunca precisam de uma conta e cada conclusão aparece no seu painel.",
+      "ctaButton": "Criar um link grátis"
+    },
+    "about": {
+      "metaTitle": "Sobre nós",
+      "metaDescription": "O que o Link Unlocker faz, por que existe e os princípios por trás de cada página de desbloqueio.",
+      "eyebrow": "Sobre nós",
+      "title": "Desbloqueios sociais deveriam levar segundos, não desvios",
+      "intro": "O Link Unlocker transforma um pequeno gesto de apoio — um follow, uma inscrição, uma escuta rápida — em acesso ao arquivo, ao link ou à oferta por trás dele. Os visitantes nunca criam conta e os criadores veem exatamente o que ganham.",
+      "cards": {
+        "story": { "title": "Nossa história", "body": "Por que criamos uma página que pede um passo honesto em vez de um labirinto." },
+        "what": { "title": "O que fazemos", "body": "Páginas de desbloqueio, links curtos, páginas bio e as análises que conectam tudo." },
+        "values": { "title": "Nossos valores", "body": "Visitante primeiro, regras claras e sem padrões escuros: os princípios que mantemos." }
+      },
+      "topics": {
+        "story": {
+          "metaTitle": "Nossa história",
+          "metaDescription": "Por que o Link Unlocker existe: um passo honesto entre o visitante e o conteúdo compartilhado por um criador.",
+          "eyebrow": "Sobre nós",
+          "title": "Nascemos porque as páginas de desbloqueio atrapalhavam",
+          "intro": "A maioria das ferramentas de desbloqueio pede extensões, desafios ou uma conta antes de abrir qualquer coisa. Queríamos o contrário: um passo justo que apoia o criador e abre a porta.",
+          "sections": [
+            { "title": "O problema que víamos sempre", "body": "Um link é compartilhado, o conteúdo importa e o único jeito de abri-lo pede cinco passos sem relação entre si. Os visitantes desistem, os criadores perdem confiança e todo mundo aprende a desconfiar da palavra desbloqueio." },
+            { "title": "Um caminho mais curto", "body": "O Link Unlocker mantém a recompensa e elimina o labirinto. Cada passo é uma ação social real e com nome: inscreva-se naquele canal, siga aquela conta, entre naquele servidor. O visitante toca uma vez e a página se lembra." },
+            { "title": "Onde estamos hoje", "body": "Criadores usam páginas de desbloqueio para arquivos, downloads, ofertas e acesso antecipado. Tudo ao redor segue uma regra: a página precisa ser justa com quem clica." }
+          ]
+        },
+        "what": {
+          "metaTitle": "O que fazemos",
+          "metaDescription": "Páginas de desbloqueio, links curtos, páginas bio, análises e espaços de anúncio em uma só plataforma.",
+          "eyebrow": "Sobre nós",
+          "title": "Ferramentas simples que conectam criadores e visitantes",
+          "intro": "Tudo começa com um link. Em volta dele construímos as peças que tornam compartilhar, desbloquear e medir algo natural.",
+          "sections": [
+            { "title": "Páginas de desbloqueio", "body": "Escolha uma URL, um texto ou um arquivo e peça as ações sociais que você realmente quer. Os passos usam os nomes reais dos seus canais, então o visitante sabe o que está apoiando." },
+            { "title": "Links curtos e páginas bio", "body": "Links compactos para bios e mensagens, além de páginas bio que reúnem todos os links que você compartilha. Cada um mantém suas próprias análises." },
+            { "title": "Análises e alcance", "body": "Visualizações, desbloqueios e conclusões por link e por dia, contatos de e-mail quando você pede um endereço e espaços de anúncio opcionais se quiser ganhar com o tráfego." }
+          ]
+        },
+        "values": {
+          "metaTitle": "Nossos valores",
+          "metaDescription": "Visitante primeiro, regras claras e sem padrões escuros: os princípios de cada página do Link Unlocker.",
+          "eyebrow": "Sobre nós",
+          "title": "Justos por padrão",
+          "intro": "Páginas de desbloqueio só funcionam enquanto as pessoas confiam nelas. Estas são as regras que seguimos, mesmo quando um atalho converteria melhor.",
+          "sections": [
+            { "title": "O visitante vem primeiro", "body": "Um passo é registrado no momento em que é tocado, o progresso é salvo e nenhuma conta é necessária para desbloquear nada. Sem contagens regressivas falsas e sem voltas extras." },
+            { "title": "Regras claras, termos visíveis", "body": "Somente ações sociais reais do catálogo de plataformas, um botão público de denúncia em cada link e termos que qualquer pessoa pode ler antes de compartilhar." },
+            { "title": "Privacidade com propósito", "body": "Coletamos o que um link precisa para funcionar, agregamos o resto e deixamos o dono do site encurtar o tempo de armazenamento das análises." }
+          ]
+        }
+      }
+    },
+    "howItWorks": {
+      "metaTitle": "Como funciona",
+      "metaDescription": "Crie uma página de desbloqueio, compartilhe o link e deixe os visitantes abrirem com um clique.",
+      "eyebrow": "Como funciona",
+      "title": "Uma página, um clique, desbloqueado",
+      "intro": "Uma página de desbloqueio é um único link com uma lista curta de ações sociais. O visitante conclui uma, a recompensa abre e cada conclusão aparece no seu painel.",
+      "cards": {
+        "create": { "title": "Crie seu link", "body": "Escolha o que fica atrás da página e as ações que você pede em troca." },
+        "share": { "title": "Compartilhe onde quiser", "body": "Publique o link na bio, em uma mensagem ou em um story. Sem instalação para o visitante." },
+        "unlock": { "title": "Desbloqueie uma recompensa", "body": "Um clique abre o passo e marca como feito; então o conteúdo aparece." }
+      },
+      "topics": {
+        "create": {
+          "metaTitle": "Crie sua página de desbloqueio",
+          "metaDescription": "Escolha a recompensa, adicione ações sociais e publique um link de desbloqueio.",
+          "eyebrow": "Como funciona",
+          "title": "Crie sua página de desbloqueio",
+          "intro": "Comece pelo que você vai desbloquear e depois adicione os passos que quer em troca. A página inteira leva alguns minutos.",
+          "sections": [
+            { "title": "Escolha a recompensa", "body": "Uma URL de destino, um bloco de texto ou um arquivo que você envia. A página mostra um título claro, uma capa opcional e os passos que a protegem." },
+            { "title": "Adicione os passos", "body": "Escolha no catálogo de plataformas: inscreva-se no YouTube, siga no Instagram ou TikTok, entre em um servidor do Discord, ouça no Spotify, visite um site, e defina a ordem." },
+            { "title": "Publique e copie o link", "body": "Publique uma vez e o link fica ativo. Visitantes podem criar um grátis pelo mesmo fluxo, e você pode desativar ou expirar um link quando quiser." }
+          ]
+        },
+        "share": {
+          "metaTitle": "Compartilhe seu link de desbloqueio",
+          "metaDescription": "Onde um link de desbloqueio funciona, como links curtos e páginas bio se encaixam e como manter o controle.",
+          "eyebrow": "Como funciona",
+          "title": "Compartilhe onde seu público já está",
+          "intro": "Um link de desbloqueio é uma URL normal, então cabe onde você publica: bios, legendas, mensagens, stories e descrições.",
+          "sections": [
+            { "title": "Todos os canais", "body": "Cole o link direto ou encurte antes para manter a bio organizada e contar cliques. Páginas bio reúnem todos os seus links em um só endereço." },
+            { "title": "Visitantes também podem criar", "body": "Quem não tem conta pode criar um link e compartilhá-lo pela página de criação. O link pertence a uma sessão do navegador, então é gerenciado no mesmo dispositivo." },
+            { "title": "Mantenha o controle", "body": "Cada link pode ser desativado, receber data de expiração ou ser denunciado por um visitante. As denúncias chegam à equipe do site e links abusivos são removidos." }
+          ]
+        },
+        "unlock": {
+          "metaTitle": "Como os visitantes desbloqueiam",
+          "metaDescription": "O que um visitante vê em uma página de desbloqueio, por que os passos têm nome e quando a recompensa abre.",
+          "eyebrow": "Como funciona",
+          "title": "O que o clique do visitante faz",
+          "intro": "O cartão de desbloqueio lista cada passo com o nome real do canal ou da página, então ninguém precisa adivinhar o que um botão vai fazer.",
+          "sections": [
+            { "title": "Passos com nome, sem jargão", "body": "Uma linha diz “Inscreva-se em” e o nome do canal, ou “Siga” e o da conta, abre em uma nova aba e deixa a página de desbloqueio onde estava. Os passos nunca escondem o destino." },
+            { "title": "Um progresso que fica salvo", "body": "Tocar em um passo registra na hora e a página pode mostrar uma breve espera antes de marcá-lo como feito. Recarregar nunca perde o progresso." },
+            { "title": "O que o visitante recebe", "body": "Quando todos os passos terminam, a recompensa — um link, um texto ou um arquivo — abre na mesma página. Se o dono pedir um e-mail, ele é solicitado uma vez e nunca bloqueia o conteúdo." }
+          ]
+        }
+      }
     }
   },
   "bio": {

@@ -516,7 +516,17 @@
     "contact": "Contact",
     "privacy": "Privacy",
     "terms": "Terms",
-    "blog": "Blog"
+    "blog": "Blog",
+    "about": "About",
+    "aboutStory": "Our story",
+    "aboutWhat": "What we do",
+    "aboutValues": "Our values",
+    "hiwCreate": "Create your link",
+    "hiwShare": "Share it anywhere",
+    "hiwUnlock": "Unlock a reward",
+    "contactSupport": "Contact support",
+    "contactReport": "Report a link",
+    "contactFaq": "Read the FAQ"
   },
   "footer": {
     "tagline": "Free social unlock links that keep you in control of your content.",
@@ -1017,6 +1027,113 @@
       "metaDescription": "Questions about a link, your account or the platform? Contact our team — abuse reports are prioritised.",
       "title": "Contact",
       "content": "Questions about a link, your account or the platform? Email us at [support@linkunlock.app](mailto:support@linkunlock.app).\nAbuse reports are triaged first. Include the public link URL so we can investigate quickly."
+    },
+    "marketing": {
+      "relatedLabel": "Keep exploring",
+      "cardCta": "Learn more",
+      "ctaTitle": "Create your first link in minutes",
+      "ctaBody": "The first link is free, visitors never need an account, and every completion shows up in your dashboard.",
+      "ctaButton": "Create a free link"
+    },
+    "about": {
+      "metaTitle": "About",
+      "metaDescription": "What Link Unlocker does, why it exists and the principles behind every unlock page.",
+      "eyebrow": "About us",
+      "title": "Social unlocks should take seconds, not detours",
+      "intro": "Link Unlocker turns one small act of support — a follow, a subscribe, a quick listen — into access to the file, link or offer behind it. Visitors never create an account, and creators see exactly what they earn.",
+      "cards": {
+        "story": { "title": "Our story", "body": "Why we built a page that asks for one honest step instead of a maze." },
+        "what": { "title": "What we do", "body": "Unlock pages, short links, bio pages and the analytics that connect them." },
+        "values": { "title": "Our values", "body": "Visitor first, clear rules and no dark patterns — the principles we keep." }
+      },
+      "topics": {
+        "story": {
+          "metaTitle": "Our story",
+          "metaDescription": "Why Link Unlocker exists: one honest step between a visitor and the content a creator shared.",
+          "eyebrow": "About us",
+          "title": "Built because unlock pages were getting in the way",
+          "intro": "Most unlock tools ask for add-ons, puzzles or an account before anything opens. We wanted the opposite: one fair step that supports the creator and opens the door.",
+          "sections": [
+            { "title": "The problem we kept seeing", "body": "A link gets shared, the content matters, and the only way to open it asks for five unrelated steps. Visitors give up, creators lose trust and everyone learns to distrust the word unlock." },
+            { "title": "A shorter path", "body": "Link Unlocker keeps the reward and drops the maze. Every step is a real, named social action: subscribe to that channel, follow that account, join that server. The visitor presses once and the page remembers it." },
+            { "title": "Where we are today", "body": "Creators use unlock pages for files, downloads, offers and early access. Everything around them follows one rule: the page has to be fair to the person clicking." }
+          ]
+        },
+        "what": {
+          "metaTitle": "What we do",
+          "metaDescription": "Unlock pages, short links, bio pages, analytics and ad placements from one platform.",
+          "eyebrow": "About us",
+          "title": "Simple tools that connect creators and visitors",
+          "intro": "Everything starts with one link. Around it we build the pieces that make sharing, unlocking and measuring feel effortless.",
+          "sections": [
+            { "title": "Unlock pages", "body": "Choose a URL, a piece of text or a file, then ask for the social actions you actually want. Steps use the real names of your channels, so visitors know exactly what they are supporting." },
+            { "title": "Short links and bio pages", "body": "Compact links for bios and messages, plus bio pages that hold every link you share. Both keep their own analytics." },
+            { "title": "Analytics and reach", "body": "Views, unlocks and completions per link and per day, email leads when you ask for an address, and optional ad placements when you want to earn from traffic." }
+          ]
+        },
+        "values": {
+          "metaTitle": "Our values",
+          "metaDescription": "Visitor first, clear rules and no dark patterns: the principles behind every Link Unlocker page.",
+          "eyebrow": "About us",
+          "title": "Fair by default",
+          "intro": "Unlock pages only work while people trust them. These are the rules we hold ourselves to, even when a shortcut would convert better.",
+          "sections": [
+            { "title": "The visitor comes first", "body": "A step is recorded the moment it is pressed, progress is saved, and no account is required to unlock anything. No fake countdowns and no extra hoops." },
+            { "title": "Clear rules, visible terms", "body": "Only real social actions from the platform catalog, a public report button on every link, and terms anyone can read before sharing." },
+            { "title": "Privacy with a purpose", "body": "We collect what a link needs to work, aggregate the rest, and let the site owner shorten how long analytics are kept." }
+          ]
+        }
+      }
+    },
+    "howItWorks": {
+      "metaTitle": "How it works",
+      "metaDescription": "Create an unlock page, share the link and let visitors open it with one click.",
+      "eyebrow": "How it works",
+      "title": "One page, one click, unlocked",
+      "intro": "An unlock page is a single link with a short list of social actions. A visitor completes one, the reward opens, and every completion lands in your dashboard.",
+      "cards": {
+        "create": { "title": "Create your link", "body": "Pick what sits behind the page and the actions you ask for in return." },
+        "share": { "title": "Share it anywhere", "body": "Post the link in a bio, a message or a story. No install for visitors." },
+        "unlock": { "title": "Unlock a reward", "body": "One click opens the step and marks it done, then the content appears." }
+      },
+      "topics": {
+        "create": {
+          "metaTitle": "Create your unlock page",
+          "metaDescription": "Choose the reward, add social actions and publish an unlock link.",
+          "eyebrow": "How it works",
+          "title": "Create your unlock page",
+          "intro": "Start with what you are unlocking, then add the steps you want in return. The whole page takes a few minutes.",
+          "sections": [
+            { "title": "Pick the reward", "body": "A destination URL, a block of text or a file you upload. The page shows a clear title, an optional cover and the steps that guard it." },
+            { "title": "Add the steps", "body": "Choose from the platform catalog — subscribe on YouTube, follow on Instagram or TikTok, join a Discord server, listen on Spotify, visit a website — and set their order." },
+            { "title": "Publish and copy the link", "body": "Publish once and the link is live. Guests can create one for free from the same flow, and you can disable or expire a link at any time." }
+          ]
+        },
+        "share": {
+          "metaTitle": "Share your unlock link",
+          "metaDescription": "Where an unlock link works, how short links and bio pages fit, and how to keep control of it.",
+          "eyebrow": "How it works",
+          "title": "Share it anywhere your audience already is",
+          "intro": "An unlock link is a normal URL, so it fits wherever you post: bios, descriptions, messages, stories and comments.",
+          "sections": [
+            { "title": "Every channel", "body": "Paste the link directly, or shorten it first to keep bios tidy and count clicks. Bio pages collect all of your links on one address." },
+            { "title": "Guests can create too", "body": "People without an account can build a link and share it from the create page. The link belongs to a browser session, so it is managed from the same device." },
+            { "title": "Keep control", "body": "Every link can be disabled, given an expiry date or reported by a visitor. Reports go to the site team and abusive links are removed." }
+          ]
+        },
+        "unlock": {
+          "metaTitle": "How visitors unlock content",
+          "metaDescription": "What a visitor sees on an unlock page, why steps are named, and when the reward opens.",
+          "eyebrow": "How it works",
+          "title": "What the visitor's one click does",
+          "intro": "The unlock card lists each step with the real channel or page name, so nobody has to guess what a button will do.",
+          "sections": [
+            { "title": "Named steps, no jargon", "body": "A row reads “Subscribe to” with the channel name, or “Follow” with the account name. It opens in a new tab and leaves the unlock page where it was, so a step never hides its destination." },
+            { "title": "Completion that is remembered", "body": "Pressing a step records it immediately, and the page can show a short settling wait before the row reads as done. Refreshing never loses progress." },
+            { "title": "What the visitor gets", "body": "When every step is complete the reward — a link, a text or a file — opens on the same page. If the owner asks for an email address, it is requested once and never blocks the content." }
+          ]
+        }
+      }
     }
   },
   "bio": {
