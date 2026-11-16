@@ -439,7 +439,7 @@
     "invalidHexColor": "Enter a hex color like #d5ff2f, or leave it empty.",
     "invalidBrandIcon": "Choose an icon from the list.",
     "invalidBrandSplit": "Enter a whole number between 0 and 40.",
-    "invalidBrandNameLength": "Enter a whole number between 0 and 40.",
+    "invalidBrandSize": "Enter a whole number between 60 and 160.",
     "nameRequired": "Add a name",
     "invalidAdPlacement": "Invalid ad placement",
     "invalidAdType": "Invalid ad type",
@@ -1970,9 +1970,9 @@
           "hint": "How many leading characters take the first color. The rest take the second. 0 = the whole name uses the first color.",
           "placeholder": "0"
         },
-        "brand_nameChars": {
-          "label": "Name length",
-          "hint": "How many characters of the name appear next to the logo; the rest is replaced with an ellipsis. 0 = the full name."
+        "brand_nameSize": {
+          "label": "Name size",
+          "hint": "Scales the name shown next to the logo. 100% keeps the size each layout already uses."
         },
         "site_seoTitle": {
           "label": "SEO title",

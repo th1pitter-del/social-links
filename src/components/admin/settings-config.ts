@@ -80,7 +80,7 @@ export const SETTINGS_GROUPS: SettingsGroup[] = [
       { key: 'brand.color1', color: true, embedded: true },
       { key: 'brand.color2', color: true, embedded: true },
       { key: 'brand.splitChars', integer: true, embedded: true },
-      { key: 'brand.nameChars', integer: true, embedded: true },
+      { key: 'brand.nameSize', integer: true, embedded: true },
     ],
     // One tab per enabled locale; every locale may carry its own name and
     // tagline. Empty fields fall back to the base (English) copy.

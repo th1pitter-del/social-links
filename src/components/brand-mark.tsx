@@ -2,7 +2,7 @@ import { createElement } from 'react'
 import { cn } from 'cn'
 
 import { brandMarkIcon } from '@/lib/brand-mark-icons'
-import { splitBrandName, truncateBrandName, type BrandNameStyle } from '@/lib/brand-name'
+import { DEFAULT_BRAND_NAME_STYLE, splitBrandName, type BrandNameStyle } from '@/lib/brand-name'
 
 /**
  * The site mark. When an admin has uploaded a custom logo (`site.logoUrl`
@@ -73,7 +73,8 @@ export function BrandMark({
  * The brand name with its two configured colors. A multi-word name colors the
  * first word and the remainder; a single word splits after `splitChars`
  * characters. Empty colors inherit the surrounding text color, so an
- * unconfigured site looks exactly as before.
+ * unconfigured site looks exactly as before. `nameSize` scales the face as a
+ * percentage of whatever size the surrounding surface gives the name.
  */
 export function BrandName({
   name,
@@ -84,14 +85,19 @@ export function BrandName({
   brand?: BrandNameStyle
   className?: string
 }) {
-  const { first, second } = splitBrandName(
-    truncateBrandName(name, brand?.nameChars ?? 0),
-    brand?.splitChars ?? 0,
-  )
+  const { first, second } = splitBrandName(name, brand?.splitChars ?? 0)
   if (!first && !second) return null
 
   const color1 = brand?.color1 ? { color: brand.color1 } : undefined
   const color2 = brand?.color2 ? { color: brand.color2 } : undefined
+  const nameSize = brand?.nameSize ?? DEFAULT_BRAND_NAME_STYLE.nameSize
+  // Only an admin-set size overrides the surface's own text class. Inline
+  // font-size wins over that class, so 100% must stay unset to render each
+  // surface exactly as it did before the control existed.
+  const sizeStyle =
+    nameSize === DEFAULT_BRAND_NAME_STYLE.nameSize
+      ? undefined
+      : { fontSize: `${nameSize}%` }
 
   return (
     <span
@@ -101,6 +107,7 @@ export function BrandName({
         'font-brand font-black uppercase tracking-[0.1em] rtl:tracking-normal',
         className,
       )}
+      style={sizeStyle}
     >
       <span style={color1}>{first}</span>
       <span style={color2}>{second}</span>

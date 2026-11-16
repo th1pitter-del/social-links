@@ -1,4 +1,4 @@
-/** Colors and split for the two-tone brand name shown next to the logo. */
+/** Colors, split and size for the two-tone brand name shown next to the logo. */
 export type BrandNameStyle = {
   /** Color of the leading characters; '' = inherit. */
   color1: string
@@ -6,18 +6,20 @@ export type BrandNameStyle = {
   color2: string
   /** Leading characters that take the first color; 0 = no split. */
   splitChars: number
-  /** Characters of the name shown next to the logo; 0 = the full name. */
-  nameChars: number
+  /** Size of the name as a percentage of the surface's own text size. */
+  nameSize: number
 }
 
 export const BRAND_NAME_SPLIT_MAX = 40
-export const BRAND_NAME_LENGTH_MAX = 40
+export const BRAND_NAME_SIZE_MIN = 60
+export const BRAND_NAME_SIZE_MAX = 160
+export const BRAND_NAME_SIZE_DEFAULT = 100
 
 export const DEFAULT_BRAND_NAME_STYLE: BrandNameStyle = {
   color1: '',
   color2: '',
   splitChars: 0,
-  nameChars: 0,
+  nameSize: BRAND_NAME_SIZE_DEFAULT,
 }
 
 /**
@@ -44,16 +46,4 @@ export function splitBrandName(
     first: characters.slice(0, count).join(''),
     second: characters.slice(count).join(''),
   }
-}
-
-/**
- * Shortens the name shown next to the logo to `nameChars` characters and marks
- * the cut with an ellipsis. 0, or a limit past the end, keeps the full name.
- */
-export function truncateBrandName(name: string, nameChars: number) {
-  const text = name.trim()
-  const characters = Array.from(text)
-  const limit = Math.floor(nameChars)
-  if (!text || limit <= 0 || limit >= characters.length) return text
-  return `${characters.slice(0, limit).join('').trimEnd()}…`
 }

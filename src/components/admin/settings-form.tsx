@@ -33,7 +33,13 @@ import {
   isBrandFaviconSrc,
   isBrandLogoSrc,
 } from '@/lib/brand-marks'
-import { BRAND_NAME_LENGTH_MAX, BRAND_NAME_SPLIT_MAX, type BrandNameStyle } from '@/lib/brand-name'
+import {
+  BRAND_NAME_SIZE_DEFAULT,
+  BRAND_NAME_SIZE_MAX,
+  BRAND_NAME_SIZE_MIN,
+  BRAND_NAME_SPLIT_MAX,
+  type BrandNameStyle,
+} from '@/lib/brand-name'
 import { DEFAULT_THEME, foregroundFor, sanitizeHex, shade } from '@/lib/theme-palette'
 import { updateSettings } from '@/lib/actions/admin-settings'
 import {
@@ -93,7 +99,7 @@ export function SettingsGroupForm({
     color1: values['brand.color1'] ?? '',
     color2: values['brand.color2'] ?? '',
     splitChars: Number(values['brand.splitChars']) || 0,
-    nameChars: Number(values['brand.nameChars']) || 0,
+    nameSize: Number(values['brand.nameSize']) || BRAND_NAME_SIZE_DEFAULT,
   }
 
   if (!group) return null
@@ -248,7 +254,7 @@ export function SettingsGroupForm({
     )
   }
 
-  // Shared color/name-length controls, drawn inside the site-name block so the
+  // Shared color/name-size controls, drawn inside the site-name block so the
   // live preview sits next to what changes it. Stored once for every language.
   function renderColorControl(key: string) {
     const value = values[key] ?? ''
@@ -280,8 +286,10 @@ export function SettingsGroupForm({
     const length = Array.from(name.trim()).length
     const max = Math.max(1, Math.min(length, BRAND_NAME_SPLIT_MAX))
     const split = Math.min(Number(values['brand.splitChars']) || 0, max)
-    const maxChars = Math.max(1, Math.min(length, BRAND_NAME_LENGTH_MAX))
-    const shownChars = Math.min(Number(values['brand.nameChars']) || 0, maxChars)
+    const nameSize = Math.min(
+      Math.max(Number(values['brand.nameSize']) || BRAND_NAME_SIZE_DEFAULT, BRAND_NAME_SIZE_MIN),
+      BRAND_NAME_SIZE_MAX,
+    )
     return (
       <div className="space-y-3">
         <Input
@@ -332,31 +340,31 @@ export function SettingsGroupForm({
         </div>
         <div className="space-y-1.5">
           <div className="flex items-center justify-between gap-3">
-            <Label htmlFor="brand.nameChars" className="text-xs text-muted-foreground">
-              {t('fields.brand_nameChars.label')}
+            <Label htmlFor="brand.nameSize" className="text-xs text-muted-foreground">
+              {t('fields.brand_nameSize.label')}
             </Label>
             <span className="rounded bg-muted px-1.5 py-0.5 font-mono text-[11px] text-foreground">
-              {shownChars}
+              {nameSize}%
             </span>
           </div>
           <input
-            id="brand.nameChars"
+            id="brand.nameSize"
             type="range"
-            min={0}
-            max={maxChars}
-            step={1}
-            value={shownChars}
+            min={BRAND_NAME_SIZE_MIN}
+            max={BRAND_NAME_SIZE_MAX}
+            step={5}
+            value={nameSize}
             onChange={(event) =>
-              setValues((v) => ({ ...v, 'brand.nameChars': event.target.value }))
+              setValues((v) => ({ ...v, 'brand.nameSize': event.target.value }))
             }
             className="w-full accent-primary"
           />
           <div className="flex justify-between text-[11px] text-muted-foreground">
-            <span>0</span>
-            <span>{maxChars}</span>
+            <span>{BRAND_NAME_SIZE_MIN}%</span>
+            <span>{BRAND_NAME_SIZE_MAX}%</span>
           </div>
           <p className="text-[11px] text-muted-foreground">
-            {t('fields.brand_nameChars.hint')}
+            {t('fields.brand_nameSize.hint')}
           </p>
         </div>
         <p className="text-xs text-muted-foreground">{t('fields.site_name.colorsHint')}</p>
