@@ -57,7 +57,9 @@ export function LanguageSwitcher({
         )}
       >
         <Globe className="size-4" />
-        <span className="hidden text-xs font-medium uppercase sm:inline">{locale}</span>
+        <span className="hidden text-xs font-medium uppercase sm:inline">
+          {locale.split('-')[0]}
+        </span>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-48">
         <DropdownMenuLabel>{t('language')}</DropdownMenuLabel>

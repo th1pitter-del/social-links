@@ -29,10 +29,13 @@ export { BrandMark }
 export async function SiteHeader({
   variant = 'default',
   transparent,
+  showTheme = true,
 }: {
   variant?: 'default' | 'bio'
   /** Clear rail for pages that paint their own theme; bio pages default to it. */
   transparent?: boolean
+  /** Pages painted by a creator theme cannot honour a light/dark toggle. */
+  showTheme?: boolean
 }) {
   const [site, nav, common, session, headerLinks, locale] = await Promise.all([
     getSiteSettings(),
@@ -49,9 +52,7 @@ export async function SiteHeader({
   // guests, the bio editor once signed in) instead of the unlock-link form.
   const cta = isBio
     ? { href: user ? '/dashboard/profile' : '/sign-up', label: common('createBio') }
-    : user
-      ? { href: '/dashboard/links/new', label: common('createLink') }
-      : { href: '/create', label: common('getStarted') }
+    : { href: user ? '/dashboard/links/new' : '/create', label: common('getStarted') }
   // The public header menu is fully admin-managed (Header links manager).
   // Built-in and admin-keyed rows resolve their label through the nav catalogs,
   // so every locale reads the menu in its own language.
@@ -112,6 +113,8 @@ export async function SiteHeader({
         },
       ]
     : []
+
+  const themeControl = showTheme ? <ThemeSwitcher /> : null
 
   const linkClass = (item: SiteNavItem) =>
     cn(
@@ -253,7 +256,7 @@ export async function SiteHeader({
               home of the nav there. */}
           <div className="hidden items-center gap-1.5 sm:flex sm:gap-2">
             <LanguageSwitcher />
-            <ThemeSwitcher />
+            {themeControl}
           </div>
           {user ? (
             <>
@@ -292,7 +295,7 @@ export async function SiteHeader({
               controls={
                 <>
                   <LanguageSwitcher />
-                  <ThemeSwitcher />
+                  {themeControl}
                 </>
               }
               extra={

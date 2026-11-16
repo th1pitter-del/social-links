@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from '
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useLocale, useTranslations } from 'next-intl'
-import { Check, CheckCircle2, Download, ExternalLink, Eye, FileLock, FileText, Lock, Mail, Share2, Unlock } from 'lucide-react'
+import { Check, CheckCircle2, Download, ExternalLink, Eye, FileText, Lock, Mail, Share2, Unlock } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -422,28 +422,20 @@ export function UnlockExperience({
   return (
     <div className="mx-auto w-full max-w-2xl px-4 py-8 sm:py-12">
       <div className="grid grid-cols-1 items-start gap-6 overflow-hidden rounded-2xl border bg-card shadow-sm lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)]">
+        {/* The creator's cover heads the card across both columns, so it sits
+            above the tasks rather than beside them. Without one the card starts
+            straight at its content; no empty frame is reserved. */}
+        {coverImage ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={coverImage}
+            alt=""
+            className="h-48 w-full object-cover sm:h-56 lg:col-span-2"
+            referrerPolicy="no-referrer"
+          />
+        ) : null}
         {/* Left: the shared content and its public stats. */}
         <div>
-          <div className="px-5 pt-5 sm:px-6 sm:pt-6">
-            {coverImage ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={coverImage}
-                alt=""
-                className="h-48 w-full rounded-xl object-cover sm:h-56"
-                referrerPolicy="no-referrer"
-              />
-            ) : (
-              <div className="relative h-48 w-full overflow-hidden rounded-xl bg-gradient-to-br from-primary/15 via-pulse-lime-soft/10 to-primary/5 sm:h-56">
-                <div className="absolute inset-0 flex items-center justify-center text-muted-foreground">
-                  {/* What sits inside this link is a locked drop, not the site's
-                      brand, so an empty frame shows a sealed document. */}
-                  <FileLock className="size-20 sm:size-24" />
-                </div>
-              </div>
-            )}
-          </div>
-
           <div className="space-y-4">
             <div className="px-5 pt-5 sm:px-6 sm:pt-6">
               {preview ? (

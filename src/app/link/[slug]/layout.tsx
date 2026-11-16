@@ -18,13 +18,14 @@ export default async function UnlockLayout({ children, params }: LayoutProps) {
 
   // The creator's theme paints the whole surface, chrome included: the header
   // rail stays transparent and it plus the footer resolve their colours from
-  // the same palette. The unlock flow itself is untouched.
+  // the same palette, so the light/dark toggle would be dead here and is left out.
+  // The unlock flow itself is untouched.
   return (
     <div
       className="flex min-h-full flex-1 flex-col"
       style={link ? bioThemeSurfaceStyle(link.theme, null) : undefined}
     >
-      <SiteHeader transparent />
+      <SiteHeader transparent showTheme={false} />
 
       <div className="flex flex-1 flex-col">
         <AdSlot placement="unlock-top" className="mx-auto w-full max-w-5xl px-4 pt-6" />
