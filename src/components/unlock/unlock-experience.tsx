@@ -421,85 +421,81 @@ export function UnlockExperience({
 
   return (
     <div className="mx-auto w-full max-w-2xl px-4 py-8 sm:py-12">
-      <div className="grid grid-cols-1 items-start gap-6 overflow-hidden rounded-2xl border bg-card shadow-sm lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)]">
-        {/* The creator's cover heads the card across both columns, so it sits
-            above the tasks rather than beside them. Without one the card starts
-            straight at its content; no empty frame is reserved. */}
+      <div className="overflow-hidden rounded-2xl border bg-card shadow-sm">
         {coverImage ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={coverImage}
-            alt=""
-            className="h-48 w-full object-cover sm:h-56 lg:col-span-2"
-            referrerPolicy="no-referrer"
-          />
-        ) : null}
-        {/* Left: the shared content and its public stats. */}
-        <div>
-          <div className="space-y-4">
-            <div className="px-5 pt-5 sm:px-6 sm:pt-6">
-              {preview ? (
-                <p className="rounded-lg border border-dashed border-amber-500/50 bg-amber-500/5 px-3 py-2 text-xs text-amber-700 dark:text-amber-400">
-                  {t('previewBanner')}
-                </p>
-              ) : null}
-
-              <div className="space-y-2">
-                <h1
-                  className="text-2xl font-semibold tracking-tight"
-                  style={bioHeadingStyle(resolveBioTheme(theme))}
-                >
-                  {title}
-                </h1>
-                {description ? (
-                  <p className="text-sm font-medium text-foreground whitespace-pre-line">{description}</p>
-                ) : null}
-              </div>
-            </div>
-            <div className="flex flex-wrap items-center justify-between gap-4 px-5 pb-5 sm:px-6 sm:pb-6">
-              <div className="flex items-center gap-6">
-                <div className="flex items-center gap-1.5">
-                  <Unlock className="size-3.5 text-muted-foreground" />
-                  <span className="text-sm font-medium tabular-nums">
-                    {formatNumber(locale, unlockCount)}
-                  </span>
-                  <span className="text-xs text-muted-foreground">{t('unlocks')}</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <Eye className="size-3.5 text-muted-foreground" />
-                  <span className="text-sm font-medium tabular-nums">
-                    {formatNumber(locale, viewCount)}
-                  </span>
-                  <span className="text-xs text-muted-foreground">{t('views')}</span>
-                </div>
-              </div>
-              <Button size="sm" variant="outline" asChild>
-                <a
-                  href={`https://x.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(
-                    shareUrl,
-                  )}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Share2 className="size-3.5" />
-                  {t('share')}
-                </a>
-              </Button>
-            </div>
+          <div className="px-5 pt-5 sm:px-6 sm:pt-6">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={coverImage}
+              alt=""
+              className="mx-auto h-40 w-full max-w-80 rounded-xl object-cover sm:h-44"
+              referrerPolicy="no-referrer"
+            />
           </div>
-        </div>
+        ) : null}
+        {/* One centred column, the way the link editor's preview card reads:
+            the header first, then the steps underneath it. */}
+        <div className="space-y-5 p-5 sm:p-6">
+          {preview ? (
+            <p className="rounded-lg border border-dashed border-amber-500/50 bg-amber-500/5 px-3 py-2 text-center text-xs text-amber-700 dark:text-amber-400">
+              {t('previewBanner')}
+            </p>
+          ) : null}
 
-        {/* Right: the ordered unlock steps. */}
-        <div className="p-5 sm:p-6">
+          <div className="space-y-2 text-center">
+            <h1
+              className="text-2xl font-semibold tracking-tight text-balance"
+              style={bioHeadingStyle(resolveBioTheme(theme))}
+            >
+              {title}
+            </h1>
+            {description ? (
+              <p className="text-sm font-medium text-foreground whitespace-pre-line text-pretty">
+                {description}
+              </p>
+            ) : null}
+          </div>
+
+          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3">
+            <div className="flex items-center gap-6">
+              <div className="flex items-center gap-1.5">
+                <Unlock className="size-3.5 text-muted-foreground" />
+                <span className="text-sm font-medium tabular-nums">
+                  {formatNumber(locale, unlockCount)}
+                </span>
+                <span className="text-xs text-muted-foreground">{t('unlocks')}</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <Eye className="size-3.5 text-muted-foreground" />
+                <span className="text-sm font-medium tabular-nums">
+                  {formatNumber(locale, viewCount)}
+                </span>
+                <span className="text-xs text-muted-foreground">{t('views')}</span>
+              </div>
+            </div>
+            <Button size="sm" variant="outline" asChild>
+              <a
+                href={`https://x.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(
+                  shareUrl,
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Share2 className="size-3.5" />
+                {t('share')}
+              </a>
+            </Button>
+          </div>
+
           {!claimed ? (
             <>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-center text-sm text-muted-foreground">
                 {totalSteps === 1
                   ? t('introOne', { title })
                   : t('intro', { title, total: totalSteps })}
               </p>
 
-              <div className="mt-4">
+              <div>
                 <div className="flex items-center justify-between gap-2">
                   <h3 className="text-[0.65rem] font-medium tracking-wider text-muted-foreground uppercase">
                     {t('stepsTitle')}
