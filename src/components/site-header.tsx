@@ -190,7 +190,7 @@ export async function SiteHeader({
       {/* Logo left, navigation centred, actions right. Once the inline row is
           shown, equal side columns keep the links on the container's centre
           line regardless of how wide the logo or account actions grow. */}
-      <div className="grid w-full grid-cols-[auto_1fr_auto] items-center gap-2 sm:gap-4 xl:grid-cols-[1fr_auto_1fr]">
+      <div className="grid w-full grid-cols-[auto_1fr_auto] items-center gap-1.5 sm:gap-4 xl:grid-cols-[1fr_auto_1fr]">
         {/* min-w-0 + truncate: the site name is admin-set, so a long one has to
             give way here rather than push the nav and actions out of the row. */}
         <Link href="/" className="flex min-w-0 items-center gap-2 font-semibold">
@@ -199,7 +199,10 @@ export async function SiteHeader({
             src={site.logoUrl || null}
             icon={site.logoIcon}
           />
-          <BrandName name={site.name} brand={site.brand} className="hidden truncate sm:inline" />
+          {/* The name shows at every width. The header grid lets this column
+              give way to the actions, so a long admin-set name truncates here
+              instead of pushing the buttons out of the pill. */}
+          <BrandName name={site.name} brand={site.brand} className="min-w-0 truncate" />
         </Link>
         {/* Wide screens: the admin-managed menus live inline in the row. Account
             actions do not — they are in the user menu at every width. */}
@@ -245,8 +248,13 @@ export async function SiteHeader({
           {/* Bio pages keep the account menu inside the hamburger at every
               width and the CTA in the row; the rest of the site keeps its
               user menu here below xl. */}
-          <LanguageSwitcher />
-          <ThemeSwitcher />
+          {/* On a phone the switchers step into the hamburger: the row needs
+              that width for the site name, and the menu is already the only
+              home of the nav there. */}
+          <div className="hidden items-center gap-1.5 sm:flex sm:gap-2">
+            <LanguageSwitcher />
+            <ThemeSwitcher />
+          </div>
           {user ? (
             <>
               <form id="site-signout" action={signOutAction} className="hidden" />
@@ -281,6 +289,12 @@ export async function SiteHeader({
               it also carries the account controls. */}
           <div className={cn(!isBio && 'xl:hidden')}>
             <SiteNavMenu
+              controls={
+                <>
+                  <LanguageSwitcher />
+                  <ThemeSwitcher />
+                </>
+              }
               extra={
                 isBio ? (
                   <BioMenuAccount

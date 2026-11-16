@@ -1,9 +1,9 @@
 'use client'
 
-import type * as React from 'react'
+import * as React from 'react'
 import Link from 'next/link'
 import { useLocale } from 'next-intl'
-import { Menu } from 'lucide-react'
+import { ChevronDown, Menu } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { localeDirection, type Locale } from '@/i18n/config'
@@ -14,9 +14,6 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { cn } from 'cn'
@@ -127,30 +124,72 @@ export function NavRow({ item, className, ref, style, ...rest }: NavRowProps) {
   )
 }
 
-function NavGroup({ label, items, labelledBy }: { label: string; items: SiteNavItem[]; labelledBy: string }) {
+/**
+ * Rows for the hamburger panel. A parent expands its children in place instead
+ * of opening a side flyout: on a phone a flyout lands under the thumb, can be
+ * clipped by the screen edge, and gives no obvious way back. One group stays
+ * open at a time so the panel never grows past the viewport.
+ */
+function NavGroup({
+  label,
+  items,
+  labelledBy,
+  openKey,
+  onToggle,
+}: {
+  label: string
+  items: SiteNavItem[]
+  labelledBy: string
+  openKey: string | null
+  onToggle: (key: string | null) => void
+}) {
   return (
     <DropdownMenuGroup aria-labelledby={labelledBy}>
       <DropdownMenuLabel id={labelledBy}>{label}</DropdownMenuLabel>
-      {items.map((item, index) =>
-        item.children?.length ? (
-          <DropdownMenuSub key={`${item.label}-${index}`}>
-            <DropdownMenuSubTrigger style={rowToneStyle(item)} className={rowClasses(item)}>
+      {items.map((item, index) => {
+        const key = `${item.label}-${index}`
+        if (!item.children?.length) {
+          return (
+            <DropdownMenuItem key={key} asChild>
+              <NavRow item={item} />
+            </DropdownMenuItem>
+          )
+        }
+        const open = openKey === key
+        return (
+          <div key={key}>
+            <DropdownMenuItem
+              aria-expanded={open}
+              style={rowToneStyle(item)}
+              className={cn(rowClasses(item), 'justify-between')}
+              // Keep the panel open: this row expands its children instead of
+              // navigating, so Radix must not treat the press as a selection.
+              onSelect={(event) => {
+                event.preventDefault()
+                onToggle(open ? null : key)
+              }}
+            >
               <RowContent item={item} />
-            </DropdownMenuSubTrigger>
-            <DropdownMenuSubContent className="w-56">
-              {item.children.map((child, childIndex) => (
-                <DropdownMenuItem key={`${child.label}-${childIndex}`} asChild>
-                  <NavRow item={child} />
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuSubContent>
-          </DropdownMenuSub>
-        ) : (
-          <DropdownMenuItem key={`${item.label}-${index}`} asChild>
-            <NavRow item={item} />
-          </DropdownMenuItem>
-        ),
-      )}
+              <ChevronDown
+                className={cn(
+                  'ms-auto size-4 shrink-0 text-muted-foreground transition-transform duration-200 motion-reduce:transition-none',
+                  open && 'rotate-180',
+                )}
+                aria-hidden="true"
+              />
+            </DropdownMenuItem>
+            {open ? (
+              <div className="ms-4 border-s border-border/60 ps-1.5">
+                {item.children.map((child, childIndex) => (
+                  <DropdownMenuItem key={`${child.label}-${childIndex}`} asChild>
+                    <NavRow item={child} />
+                  </DropdownMenuItem>
+                ))}
+              </div>
+            ) : null}
+          </div>
+        )
+      })}
     </DropdownMenuGroup>
   )
 }
@@ -165,20 +204,30 @@ export function SiteNavMenu({
   menuLabel,
   navLabel,
   links,
+  controls,
   extra,
 }: {
   menuLabel: string
   navLabel: string
   links: SiteNavItem[]
+  /** Switchers the header row hides below sm, so the site name gets the room. */
+  controls?: React.ReactNode
   /** Controls that only exist in the menu (bio header account actions). */
   extra?: React.ReactNode
 }) {
   // Radix pins dir="ltr" on the portalled content unless the root says otherwise,
   // which left the Arabic panel anchored to the wrong edge with icons on the left.
   const direction = localeDirection(useLocale() as Locale)
+  const [openKey, setOpenKey] = React.useState<string | null>(null)
 
   return (
-    <DropdownMenu dir={direction}>
+    <DropdownMenu
+      dir={direction}
+      // Reopening starts collapsed, so the panel always reads top to bottom.
+      onOpenChange={(open) => {
+        if (!open) setOpenKey(null)
+      }}
+    >
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="icon" aria-label={menuLabel}>
           <Menu className="size-5" />
@@ -187,9 +236,22 @@ export function SiteNavMenu({
       <DropdownMenuContent
         align="end"
         aria-label={menuLabel}
-        className="flex w-60 flex-col gap-1 text-sm"
+        className="flex max-h-[calc(100dvh-6rem)] w-64 max-w-[calc(100vw-1.5rem)] flex-col gap-1 overflow-y-auto text-sm"
       >
-        <NavGroup label={navLabel} items={links} labelledBy="site-nav-menu-navigation" />
+        <NavGroup
+          label={navLabel}
+          items={links}
+          labelledBy="site-nav-menu-navigation"
+          openKey={openKey}
+          onToggle={setOpenKey}
+        />
+        {controls ? (
+          // sm:hidden because the row shows these again from sm up; a bio page
+          // keeps this menu at every width, and duplicates would read twice.
+          <div className="mt-1 flex items-center gap-1.5 border-t border-border/60 px-2 pt-2 sm:hidden">
+            {controls}
+          </div>
+        ) : null}
         {extra}
       </DropdownMenuContent>
     </DropdownMenu>

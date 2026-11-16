@@ -46,7 +46,7 @@ export function FloatingHeader({
       )}
       <div
         className={cn(
-          'mx-auto flex h-14 w-full max-w-[1200px] items-center rounded-2xl border px-3 sm:h-16 sm:px-4 transition-[background-color,border-color,box-shadow] duration-300 ease-out motion-reduce:transition-none',
+          'mx-auto flex h-14 w-full max-w-[1200px] items-center rounded-2xl border px-2.5 sm:h-16 sm:px-4 transition-[background-color,border-color,box-shadow] duration-300 ease-out motion-reduce:transition-none',
           scrolled
             ? 'border-border/70 bg-background/70 shadow-lg shadow-black/5 backdrop-blur-xl backdrop-saturate-150 dark:shadow-black/30'
             : 'border-transparent bg-transparent shadow-none',
