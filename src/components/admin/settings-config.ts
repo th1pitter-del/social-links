@@ -152,10 +152,8 @@ export const SETTINGS_GROUPS: SettingsGroup[] = [
   {
     id: 'custom-code',
     icon: Code,
-    fields: [
-      { key: 'ads.headScripts', multiline: true },
-      { key: 'ads.footerScripts', multiline: true },
-    ],
+    // The group renders its own snippet manager instead of generic fields.
+    fields: [],
   },
   {
     id: 'step-verification',

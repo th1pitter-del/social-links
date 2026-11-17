@@ -1155,6 +1155,49 @@
         "disabled": "Anuncio desactivado."
       }
     },
+    "customCode": {
+      "slots": {
+        "header": {
+          "title": "Código de encabezado",
+          "description": "Se ejecuta en el encabezado de las páginas públicas: analíticas, etiquetas de verificación y cargadores de redes publicitarias."
+        },
+        "footer": {
+          "title": "Código de pie de página",
+          "description": "Se ejecuta al final del cuerpo de las páginas públicas: widgets de chat, píxeles de conversión y otros scripts."
+        }
+      },
+      "add": "Añadir fragmento",
+      "empty": "Aún no hay fragmentos. Añade uno para ejecutar código en esta posición.",
+      "nameLabel": "Nombre",
+      "namePlaceholder": "p. ej. Google Analytics",
+      "slotLabel": "Ubicación",
+      "codeLabel": "Código",
+      "codePlaceholder": "p. ej. etiqueta script, meta o código de píxel",
+      "codeHint": "Pega la etiqueta completa. Los fragmentos se ejecutan en el orden que ves aquí.",
+      "enabledLabel": "Activo en páginas públicas",
+      "newTitle": "Nuevo fragmento",
+      "editTitle": "Editar fragmento",
+      "formDescription": "Cada fragmento se guarda por separado para que puedas editarlo, reordenarlo, desactivarlo o eliminarlo después.",
+      "deleteTitle": "¿Eliminar fragmento?",
+      "deleteDescription": "{name} dejará de ejecutarse de inmediato. Esta acción no se puede deshacer.",
+      "moveUpAria": "Subir {name}",
+      "moveDownAria": "Bajar {name}",
+      "editAria": "Editar {name}",
+      "deleteAria": "Eliminar {name}",
+      "enableAria": "Activar o desactivar {name}",
+      "toasts": {
+        "created": "Fragmento añadido",
+        "updated": "Fragmento guardado",
+        "enabled": "Fragmento activado",
+        "disabled": "Fragmento desactivado",
+        "deleted": "Fragmento eliminado",
+        "imported": "Código existente importado"
+      },
+      "legacy": {
+        "notice": "El código guardado antes en el campo único de código personalizado se puede importar aquí como fragmento editable.",
+        "import": "Importar código existente"
+      }
+    },
     "headerLinks": {
       "title": "Enlaces del menú del encabezado",
       "description": "Enlaces personalizados que se muestran en el menú del encabezado del sitio en todas las páginas públicas. Útiles para tus propias promociones u ofertas.",
@@ -1252,7 +1295,7 @@
         },
         "custom-code": {
           "title": "Código personalizado",
-          "description": "Fragmentos para todo el sitio: analítica, etiquetas de verificación o cualquier otro script. El código de cabecera se ejecuta en el encabezado de la página y el de pie al final. Ambos se cargan solo en las páginas públicas."
+          "description": "Fragmentos separados para el encabezado y el pie de las páginas públicas. Añade, edita, reordena, desactiva o elimina cada uno por separado."
         },
         "data-retention": {
           "title": "Retención de datos",
@@ -2554,7 +2597,10 @@
     "blogPublishDateInvalid": "Introduce una fecha de publicación válida.",
     "blogPostNotFound": "Ese artículo ya no existe.",
     "blogAutosaveDraftOnly": "Solo los borradores se guardan solos. Guarda un artículo publicado de forma explícita.",
-    "blogTagNotFound": "Esa etiqueta ya no existe."
+    "blogTagNotFound": "Esa etiqueta ya no existe.",
+    "invalidCodeSlot": "Elige la ubicación: encabezado o pie de página.",
+    "codeRequired": "Pega el código que se debe ejecutar.",
+    "customCodeNotFound": "No se encontró el fragmento."
   },
   "linkForm": {
     "uploadFailed": "Error al subir.",

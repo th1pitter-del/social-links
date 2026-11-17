@@ -128,6 +128,11 @@ export type Setting = Prisma.SettingModel
  */
 export type AdUnit = Prisma.AdUnitModel
 /**
+ * Model CustomCode
+ * 
+ */
+export type CustomCode = Prisma.CustomCodeModel
+/**
  * Model HeaderLink
  * 
  */

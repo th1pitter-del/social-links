@@ -9,6 +9,7 @@ import { BootLoader } from '@/components/boot-loader'
 import { ThemeProvider } from '@/components/theme-provider'
 import { Toaster } from '@/components/ui/sonner'
 import { isLocale, localeDirection, type Locale } from '@/i18n/config'
+import { getEnabledCustomCodes } from '@/lib/custom-code-data'
 import { absoluteUrl, SITE_URL } from '@/lib/seo'
 import { getSettingMap, getSiteSettings } from '@/lib/settings'
 import { getThemeOverrideCss } from '@/lib/theme-palette'
@@ -79,17 +80,26 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function RootLayout({ children }: LayoutProps<'/'>) {
-  const [rawLocale, messages, settingMap, site, meta, common] = await Promise.all([
+  const [rawLocale, messages, settingMap, site, meta, common, snippets] = await Promise.all([
     getLocale(),
     getMessages(),
     getSettingMap(),
     getSiteSettings(),
     getTranslations('meta'),
     getTranslations('common'),
+    getEnabledCustomCodes(),
   ])
   const themeCss = getThemeOverrideCss(settingMap)
-  const headCode = settingMap['ads.headScripts']?.trim() ?? ''
-  const footerCode = settingMap['ads.footerScripts']?.trim() ?? ''
+  const headCodes = snippets.filter((row) => row.slot === 'header').map((row) => row.code)
+  const footerCodes = snippets.filter((row) => row.slot === 'footer').map((row) => row.code)
+  // Saved snippets own each slot once one exists; the single legacy field still
+  // runs while its slot is empty so nothing already pasted goes dark.
+  if (headCodes.length === 0 && settingMap['ads.headScripts']?.trim()) {
+    headCodes.push(settingMap['ads.headScripts'])
+  }
+  if (footerCodes.length === 0 && settingMap['ads.footerScripts']?.trim()) {
+    footerCodes.push(settingMap['ads.footerScripts'])
+  }
   const locale: Locale = isLocale(rawLocale) ? rawLocale : 'en'
   const description =
     site.seoDescription || (site.hasCustomTagline ? site.tagline : meta('description'))
@@ -128,7 +138,7 @@ export default async function RootLayout({ children }: LayoutProps<'/'>) {
       <body className="flex min-h-full flex-col" suppressHydrationWarning>
         <JsonLd data={jsonLd} />
         {themeCss ? <style dangerouslySetInnerHTML={{ __html: themeCss }} /> : null}
-        <SiteCode headCode={headCode} footerCode={footerCode} />
+        <SiteCode headCodes={headCodes} footerCodes={footerCodes} />
         <NextIntlClientProvider messages={messages}>
           <ThemeProvider attribute="class" defaultTheme="dark" disableTransitionOnChange>
             {/* After next-themes' blocking script, before the page, so the

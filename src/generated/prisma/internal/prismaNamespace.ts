@@ -413,6 +413,7 @@ export const ModelName = {
   AbuseReport: 'AbuseReport',
   Setting: 'Setting',
   AdUnit: 'AdUnit',
+  CustomCode: 'CustomCode',
   HeaderLink: 'HeaderLink',
   CustomPage: 'CustomPage',
   CustomMenuItem: 'CustomMenuItem',
@@ -447,7 +448,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "session" | "account" | "verification" | "link" | "linkAction" | "unlockSession" | "ogadsOfferClick" | "unlockActionStart" | "unlockActionCompletion" | "analyticsEvent" | "emailLead" | "rateLimitBucket" | "abuseReport" | "setting" | "adUnit" | "headerLink" | "customPage" | "customMenuItem" | "auditLog" | "platform" | "actionOption" | "mediaAsset" | "storedFile" | "userUnlock" | "profile" | "bioLink" | "telegramCheckin" | "shortLink" | "systemBackup" | "systemUpdate" | "systemOperation" | "blogPost" | "blogCategory" | "blogTag"
+    modelProps: "user" | "session" | "account" | "verification" | "link" | "linkAction" | "unlockSession" | "ogadsOfferClick" | "unlockActionStart" | "unlockActionCompletion" | "analyticsEvent" | "emailLead" | "rateLimitBucket" | "abuseReport" | "setting" | "adUnit" | "customCode" | "headerLink" | "customPage" | "customMenuItem" | "auditLog" | "platform" | "actionOption" | "mediaAsset" | "storedFile" | "userUnlock" | "profile" | "bioLink" | "telegramCheckin" | "shortLink" | "systemBackup" | "systemUpdate" | "systemOperation" | "blogPost" | "blogCategory" | "blogTag"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1504,6 +1505,72 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.AdUnitCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.AdUnitCountAggregateOutputType> | number
+        }
+      }
+    }
+    CustomCode: {
+      payload: Prisma.$CustomCodePayload<ExtArgs>
+      fields: Prisma.CustomCodeFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CustomCodeFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomCodePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CustomCodeFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomCodePayload>
+        }
+        findFirst: {
+          args: Prisma.CustomCodeFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomCodePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CustomCodeFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomCodePayload>
+        }
+        findMany: {
+          args: Prisma.CustomCodeFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomCodePayload>[]
+        }
+        create: {
+          args: Prisma.CustomCodeCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomCodePayload>
+        }
+        createMany: {
+          args: Prisma.CustomCodeCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.CustomCodeDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomCodePayload>
+        }
+        update: {
+          args: Prisma.CustomCodeUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomCodePayload>
+        }
+        deleteMany: {
+          args: Prisma.CustomCodeDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CustomCodeUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.CustomCodeUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomCodePayload>
+        }
+        aggregate: {
+          args: Prisma.CustomCodeAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCustomCode>
+        }
+        groupBy: {
+          args: Prisma.CustomCodeGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CustomCodeGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CustomCodeCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CustomCodeCountAggregateOutputType> | number
         }
       }
     }
@@ -3040,6 +3107,20 @@ export const AdUnitScalarFieldEnum = {
 export type AdUnitScalarFieldEnum = (typeof AdUnitScalarFieldEnum)[keyof typeof AdUnitScalarFieldEnum]
 
 
+export const CustomCodeScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  slot: 'slot',
+  code: 'code',
+  enabled: 'enabled',
+  position: 'position',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CustomCodeScalarFieldEnum = (typeof CustomCodeScalarFieldEnum)[keyof typeof CustomCodeScalarFieldEnum]
+
+
 export const HeaderLinkScalarFieldEnum = {
   id: 'id',
   label: 'label',
@@ -3560,6 +3641,16 @@ export const AdUnitOrderByRelevanceFieldEnum = {
 } as const
 
 export type AdUnitOrderByRelevanceFieldEnum = (typeof AdUnitOrderByRelevanceFieldEnum)[keyof typeof AdUnitOrderByRelevanceFieldEnum]
+
+
+export const CustomCodeOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  slot: 'slot',
+  code: 'code'
+} as const
+
+export type CustomCodeOrderByRelevanceFieldEnum = (typeof CustomCodeOrderByRelevanceFieldEnum)[keyof typeof CustomCodeOrderByRelevanceFieldEnum]
 
 
 export const HeaderLinkOrderByRelevanceFieldEnum = {
@@ -4150,6 +4241,7 @@ export type GlobalOmitConfig = {
   abuseReport?: Prisma.AbuseReportOmit
   setting?: Prisma.SettingOmit
   adUnit?: Prisma.AdUnitOmit
+  customCode?: Prisma.CustomCodeOmit
   headerLink?: Prisma.HeaderLinkOmit
   customPage?: Prisma.CustomPageOmit
   customMenuItem?: Prisma.CustomMenuItemOmit

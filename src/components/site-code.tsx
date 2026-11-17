@@ -36,28 +36,39 @@ function inject(code: string, target: 'head' | 'body') {
 }
 
 /**
- * Site-wide custom code managed in the admin settings: `headCode` runs in the
- * page head (analytics, ad-network loaders, verification tags) and `footerCode`
- * at the end of the page body (chat widgets, conversion pixels). Both are kept
- * off the admin and dashboard surfaces.
+ * Site-wide custom code managed in the admin settings: every enabled header
+ * snippet runs in the page head (analytics, ad-network loaders, verification
+ * tags) and every footer snippet at the end of the page body (chat widgets,
+ * conversion pixels), in their saved order. All of it is kept off the admin
+ * and dashboard surfaces.
  */
-export function SiteCode({ headCode, footerCode }: { headCode: string; footerCode: string }) {
+export function SiteCode({
+  headCodes,
+  footerCodes,
+}: {
+  headCodes: string[]
+  footerCodes: string[]
+}) {
   const pathname = usePathname()
   const privateSurface = pathname.startsWith('/admin') || pathname.startsWith('/dashboard')
 
   useEffect(() => {
     if (privateSurface) return
     const slots = [
-      { target: 'head' as const, code: headCode.trim() },
-      { target: 'body' as const, code: footerCode.trim() },
+      { target: 'head' as const, codes: headCodes },
+      { target: 'body' as const, codes: footerCodes },
     ]
-    for (const { target, code } of slots) {
-      const key = `${target}:${code}`
-      if (!code || injected.has(key)) continue
-      injected.add(key)
-      inject(code, target)
+    for (const { target, codes } of slots) {
+      for (const raw of codes) {
+        const code = raw.trim()
+        if (!code) continue
+        const key = `${target}:${code}`
+        if (injected.has(key)) continue
+        injected.add(key)
+        inject(code, target)
+      }
     }
-  }, [headCode, footerCode, privateSurface])
+  }, [headCodes, footerCodes, privateSurface])
 
   return null
 }

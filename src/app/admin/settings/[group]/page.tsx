@@ -5,9 +5,11 @@ import {
   getSettingsGroup,
   localizedSettingsKey,
 } from '@/components/admin/settings-config'
+import { CustomCodeManager } from '@/components/admin/custom-code-manager'
 import { SettingsGroupForm } from '@/components/admin/settings-form'
 import { locales } from '@/i18n/config'
 import { getSettings } from '@/lib/admin-utils'
+import { getAllCustomCodes } from '@/lib/custom-code-data'
 import { getOgadsConfig, ogadsPostbackUrl } from '@/lib/ogads'
 import { defaultSettingValue } from '@/lib/settings'
 import { SITE_URL } from '@/lib/seo'
@@ -72,6 +74,22 @@ export default async function AdminSettingsGroupPage({
     settings['verification.oauthRedirectUrl'] = `${SITE_URL}/api/verify/callback`
     // The switch is on until an administrator turns it off.
     settings['verification.enabled'] = all['verification.enabled'] === 'false' ? 'false' : 'true'
+  }
+
+  if (group.id === 'custom-code') {
+    // Saved snippets, not settings rows: the list supports add/edit/delete and
+    // per-snippet enable and order. `all` still supplies the retired settings
+    // values so an unused one can be imported into the list.
+    const codes = await getAllCustomCodes()
+    return (
+      <CustomCodeManager
+        initial={codes}
+        legacy={{
+          header: all['ads.headScripts']?.trim() ?? '',
+          footer: all['ads.footerScripts']?.trim() ?? '',
+        }}
+      />
+    )
   }
 
   return <SettingsGroupForm groupId={group.id} settings={settings} configured={configured} />

@@ -484,7 +484,10 @@
     "blogPublishDateInvalid": "Enter a valid publish date.",
     "blogPostNotFound": "That article no longer exists.",
     "blogAutosaveDraftOnly": "Only drafts autosave. Save a published article explicitly.",
-    "blogTagNotFound": "That tag no longer exists."
+    "blogTagNotFound": "That tag no longer exists.",
+    "invalidCodeSlot": "Choose a header or footer placement.",
+    "codeRequired": "Paste the code to run.",
+    "customCodeNotFound": "Snippet not found."
   },
   "common": {
     "siteName": "Link Unlocker",
@@ -1706,6 +1709,49 @@
         "disabled": "Ad disabled."
       }
     },
+    "customCode": {
+      "slots": {
+        "header": {
+          "title": "Header code",
+          "description": "Runs inside the page head on public pages: analytics, verification tags, ad-network loaders."
+        },
+        "footer": {
+          "title": "Footer code",
+          "description": "Runs at the end of the page body on public pages: chat widgets, conversion pixels, other scripts."
+        }
+      },
+      "add": "Add snippet",
+      "empty": "No snippets yet. Add one to run code in this slot.",
+      "nameLabel": "Name",
+      "namePlaceholder": "e.g. Google Analytics",
+      "slotLabel": "Placement",
+      "codeLabel": "Code",
+      "codePlaceholder": "e.g. script tag, meta tag or pixel code",
+      "codeHint": "Paste the full tag. Snippets run in the order shown here.",
+      "enabledLabel": "Active on public pages",
+      "newTitle": "New snippet",
+      "editTitle": "Edit snippet",
+      "formDescription": "Each snippet is saved on its own so you can edit, reorder, disable or delete it later.",
+      "deleteTitle": "Delete snippet?",
+      "deleteDescription": "{name} will stop running immediately. This cannot be undone.",
+      "moveUpAria": "Move {name} up",
+      "moveDownAria": "Move {name} down",
+      "editAria": "Edit {name}",
+      "deleteAria": "Delete {name}",
+      "enableAria": "Toggle {name}",
+      "toasts": {
+        "created": "Snippet added",
+        "updated": "Snippet saved",
+        "enabled": "Snippet enabled",
+        "disabled": "Snippet disabled",
+        "deleted": "Snippet deleted",
+        "imported": "Existing code imported"
+      },
+      "legacy": {
+        "notice": "The code previously saved in the single custom code field can be imported here as an editable snippet.",
+        "import": "Import existing code"
+      }
+    },
     "headerLinks": {
       "title": "Site header menu links",
       "description": "Custom links shown in the site header menu on every public page. Useful for your own promos or offer links.",
@@ -1803,7 +1849,7 @@
         },
         "custom-code": {
           "title": "Custom code",
-          "description": "Site-wide snippets for analytics, verification tags or any other script. Header code runs in the page head and footer code at the end of the page. Both load on public pages only."
+          "description": "Separate snippets for the header and footer of public pages. Add, edit, reorder, disable or delete each one on its own."
         },
         "data-retention": {
           "title": "Data retention",

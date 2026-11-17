@@ -364,6 +364,22 @@ model AdUnit {
   @@index([placement, position])
 }
 
+// Admin-managed code snippets injected into the public page. `slot` is
+// 'header' (page head) or 'footer' (end of body); rows load in `position`
+// order within their slot and only while `enabled`.
+model CustomCode {
+  id        String   @id @default(cuid())
+  name      String
+  slot      String
+  code      String   @db.Text
+  enabled   Boolean  @default(true)
+  position  Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([slot, position])
+}
+
 // Admin-managed link shown in the public site header menu on every page.
 // labelKey rows are built-in menus whose label comes from the nav translations.
 // parentId turns a link into a sub-link of a top-level menu (one level deep).

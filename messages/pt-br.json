@@ -1155,6 +1155,49 @@
         "disabled": "Anúncio desativado."
       }
     },
+    "customCode": {
+      "slots": {
+        "header": {
+          "title": "Código do cabeçalho",
+          "description": "Executado no cabeçalho das páginas públicas: analytics, tags de verificação e carregadores de redes de anúncios."
+        },
+        "footer": {
+          "title": "Código do rodapé",
+          "description": "Executado ao final do corpo das páginas públicas: widgets de chat, pixels de conversão e outros scripts."
+        }
+      },
+      "add": "Adicionar snippet",
+      "empty": "Nenhum snippet ainda. Adicione um para executar código neste local.",
+      "nameLabel": "Nome",
+      "namePlaceholder": "ex.: Google Analytics",
+      "slotLabel": "Posição",
+      "codeLabel": "Código",
+      "codePlaceholder": "ex.: tag script, meta ou código de pixel",
+      "codeHint": "Cole a tag completa. Os snippets são executados na ordem exibida aqui.",
+      "enabledLabel": "Ativo nas páginas públicas",
+      "newTitle": "Novo snippet",
+      "editTitle": "Editar snippet",
+      "formDescription": "Cada snippet é salvo separadamente para você editar, reordenar, desativar ou excluir depois.",
+      "deleteTitle": "Excluir snippet?",
+      "deleteDescription": "{name} deixará de ser executado imediatamente. Isso não pode ser desfeito.",
+      "moveUpAria": "Mover {name} para cima",
+      "moveDownAria": "Mover {name} para baixo",
+      "editAria": "Editar {name}",
+      "deleteAria": "Excluir {name}",
+      "enableAria": "Ativar ou desativar {name}",
+      "toasts": {
+        "created": "Snippet adicionado",
+        "updated": "Snippet salvo",
+        "enabled": "Snippet ativado",
+        "disabled": "Snippet desativado",
+        "deleted": "Snippet excluído",
+        "imported": "Código existente importado"
+      },
+      "legacy": {
+        "notice": "O código salvo antes no campo único de código personalizado pode ser importado aqui como snippet editável.",
+        "import": "Importar código existente"
+      }
+    },
     "headerLinks": {
       "title": "Links do menu do cabeçalho",
       "description": "Links personalizados exibidos no menu do cabeçalho do site em todas as páginas públicas. Úteis para suas próprias promoções ou ofertas.",
@@ -1252,7 +1295,7 @@
         },
         "custom-code": {
           "title": "Código personalizado",
-          "description": "Snippets para todo o site: analytics, tags de verificação ou qualquer outro script. O código do cabeçalho roda no head da página e o do rodapé no final. Ambos carregam apenas nas páginas públicas."
+          "description": "Snippets separados para o cabeçalho e o rodapé das páginas públicas. Adicione, edite, reordene, desative ou exclua cada um individualmente."
         },
         "data-retention": {
           "title": "Retenção de dados",
@@ -2554,7 +2597,10 @@
     "blogPublishDateInvalid": "Informe uma data de publicação válida.",
     "blogPostNotFound": "Esse artigo não existe mais.",
     "blogAutosaveDraftOnly": "Apenas rascunhos são salvos automaticamente. Salve um artigo publicado explicitamente.",
-    "blogTagNotFound": "Essa tag não existe mais."
+    "blogTagNotFound": "Essa tag não existe mais.",
+    "invalidCodeSlot": "Escolha o posicionamento: cabeçalho ou rodapé.",
+    "codeRequired": "Cole o código que deve ser executado.",
+    "customCodeNotFound": "Snippet não encontrado."
   },
   "linkForm": {
     "uploadFailed": "Falha no envio.",

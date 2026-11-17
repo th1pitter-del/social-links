@@ -67,6 +67,7 @@ export const ModelName = {
   AbuseReport: 'AbuseReport',
   Setting: 'Setting',
   AdUnit: 'AdUnit',
+  CustomCode: 'CustomCode',
   HeaderLink: 'HeaderLink',
   CustomPage: 'CustomPage',
   CustomMenuItem: 'CustomMenuItem',
@@ -342,6 +343,20 @@ export const AdUnitScalarFieldEnum = {
 } as const
 
 export type AdUnitScalarFieldEnum = (typeof AdUnitScalarFieldEnum)[keyof typeof AdUnitScalarFieldEnum]
+
+
+export const CustomCodeScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  slot: 'slot',
+  code: 'code',
+  enabled: 'enabled',
+  position: 'position',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CustomCodeScalarFieldEnum = (typeof CustomCodeScalarFieldEnum)[keyof typeof CustomCodeScalarFieldEnum]
 
 
 export const HeaderLinkScalarFieldEnum = {
@@ -864,6 +879,16 @@ export const AdUnitOrderByRelevanceFieldEnum = {
 } as const
 
 export type AdUnitOrderByRelevanceFieldEnum = (typeof AdUnitOrderByRelevanceFieldEnum)[keyof typeof AdUnitOrderByRelevanceFieldEnum]
+
+
+export const CustomCodeOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  slot: 'slot',
+  code: 'code'
+} as const
+
+export type CustomCodeOrderByRelevanceFieldEnum = (typeof CustomCodeOrderByRelevanceFieldEnum)[keyof typeof CustomCodeOrderByRelevanceFieldEnum]
 
 
 export const HeaderLinkOrderByRelevanceFieldEnum = {
