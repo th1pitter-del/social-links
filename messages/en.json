@@ -1687,7 +1687,7 @@
       "labelHint": "Shown as the button text (link) or the image alt text (banner).",
       "htmlLabel": "Ad code",
       "htmlPlaceholder": "'<'!-- Paste the ad network snippet here --'>'",
-      "htmlHint": "Paste the unit snippet from any ad network — AdSense, Ezoic, Monetag, Adsterra and others. Scripts run on load; the site-wide loader goes in Settings → Ad network.",
+      "htmlHint": "Paste the unit snippet from any ad network — AdSense, Ezoic, Monetag, Adsterra and others. Scripts run on load; the site-wide loader goes in Settings → Custom code.",
       "newTabLabel": "Open in a new tab",
       "createAd": "Create ad",
       "htmlPreview": "Ad network code",
@@ -1801,9 +1801,9 @@
             "body": "No webhook is configured, so password reset emails are not sent and reset requests only appear in the server log. The rest of the site works without email. Fill in the fields below once you have a relay or automation endpoint ready and delivery starts immediately."
           }
         },
-        "ad-network": {
-          "title": "Ad network",
-          "description": "Site-wide code from any ad network — AdSense, Ezoic, Monetag, Adsterra or a direct campaign — loads on public pages once the site is ready."
+        "custom-code": {
+          "title": "Custom code",
+          "description": "Site-wide snippets for analytics, verification tags or any other script. Header code runs in the page head and footer code at the end of the page. Both load on public pages only."
         },
         "data-retention": {
           "title": "Data retention",
@@ -2000,9 +2000,14 @@
           "placeholder": "https://relay.example.com/mail"
         },
         "ads_headScripts": {
-          "label": "Site-wide ad code",
-          "hint": "Paste the network head snippet (loader, auto ads, verification). It runs once per page and never loads in the admin area or the dashboard. Empty disables it.",
-          "placeholder": "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-…"
+          "label": "Header code",
+          "hint": "Inserted into the page head on public pages, once per load. For analytics, ad-network loaders and verification tags. Never runs in the admin area or the dashboard. Empty disables it.",
+          "placeholder": "Paste the snippet to load in the page head"
+        },
+        "ads_footerScripts": {
+          "label": "Footer code",
+          "hint": "Runs at the end of the page body on public pages, once per load. For chat widgets, conversion pixels and scripts that need the page rendered first. Never runs in the admin area or the dashboard. Empty disables it.",
+          "placeholder": "Paste the snippet to run at the end of the page"
         },
         "email_webhookToken": {
           "label": "Webhook token",

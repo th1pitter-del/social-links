@@ -4,7 +4,7 @@ import { NextIntlClientProvider } from 'next-intl'
 import { getLocale, getMessages, getTranslations } from 'next-intl/server'
 
 import { JsonLd } from '@/components/json-ld'
-import { AdNetworkCode } from '@/components/ads/ad-network-code'
+import { SiteCode } from '@/components/site-code'
 import { BootLoader } from '@/components/boot-loader'
 import { ThemeProvider } from '@/components/theme-provider'
 import { Toaster } from '@/components/ui/sonner'
@@ -88,7 +88,8 @@ export default async function RootLayout({ children }: LayoutProps<'/'>) {
     getTranslations('common'),
   ])
   const themeCss = getThemeOverrideCss(settingMap)
-  const adNetworkCode = settingMap['ads.headScripts']?.trim() ?? ''
+  const headCode = settingMap['ads.headScripts']?.trim() ?? ''
+  const footerCode = settingMap['ads.footerScripts']?.trim() ?? ''
   const locale: Locale = isLocale(rawLocale) ? rawLocale : 'en'
   const description =
     site.seoDescription || (site.hasCustomTagline ? site.tagline : meta('description'))
@@ -127,7 +128,7 @@ export default async function RootLayout({ children }: LayoutProps<'/'>) {
       <body className="flex min-h-full flex-col" suppressHydrationWarning>
         <JsonLd data={jsonLd} />
         {themeCss ? <style dangerouslySetInnerHTML={{ __html: themeCss }} /> : null}
-        <AdNetworkCode code={adNetworkCode} />
+        <SiteCode headCode={headCode} footerCode={footerCode} />
         <NextIntlClientProvider messages={messages}>
           <ThemeProvider attribute="class" defaultTheme="dark" disableTransitionOnChange>
             {/* After next-themes' blocking script, before the page, so the

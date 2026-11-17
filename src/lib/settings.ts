@@ -168,6 +168,7 @@ export const getSettingMap = cache(async (): Promise<Record<string, string>> => 
             'rules.socialPlatforms',
             'rules.contentPolicy',
             'ads.headScripts',
+            'ads.footerScripts',
             'unlock.stepHoldSeconds',
             ...THEME_KEYS,
             ...CONTENT_PAGES.map((page) => `content.${page}`),

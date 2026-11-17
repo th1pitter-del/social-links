@@ -1136,7 +1136,7 @@
       "labelHint": "Exibido como texto do botão (link) ou texto alternativo da imagem (banner).",
       "htmlLabel": "Código do anúncio",
       "htmlPlaceholder": "'<'!-- Cole aqui o snippet da sua rede de anúncios --'>'",
-      "htmlHint": "Cole o snippet da unidade de qualquer rede de anúncios — AdSense, Ezoic, Monetag, Adsterra e outras. Os scripts rodam ao carregar; o carregador global fica em Configurações → Rede de anúncios.",
+      "htmlHint": "Cole o snippet da unidade de qualquer rede de anúncios — AdSense, Ezoic, Monetag, Adsterra e outras. Os scripts rodam ao carregar; o carregador global fica em Configurações → Código personalizado.",
       "newTabLabel": "Abrir em uma nova aba",
       "createAd": "Criar anúncio",
       "htmlPreview": "Código da rede de anúncios",
@@ -1250,9 +1250,9 @@
             "body": "Nenhum webhook está configurado, então os e-mails de redefinição de senha não são enviados e as solicitações só aparecem no log do servidor. O restante do site funciona sem e-mail. Preencha os campos abaixo quando tiver um relay ou endpoint de automação pronto e o envio começará na hora."
           }
         },
-        "ad-network": {
-          "title": "Rede de anúncios",
-          "description": "O código global de qualquer rede de anúncios — AdSense, Ezoic, Monetag, Adsterra ou uma campanha direta — carrega nas páginas públicas quando o site está pronto."
+        "custom-code": {
+          "title": "Código personalizado",
+          "description": "Snippets para todo o site: analytics, tags de verificação ou qualquer outro script. O código do cabeçalho roda no head da página e o do rodapé no final. Ambos carregam apenas nas páginas públicas."
         },
         "data-retention": {
           "title": "Retenção de dados",
@@ -1449,9 +1449,14 @@
           "placeholder": "https://relay.example.com/mail"
         },
         "ads_headScripts": {
-          "label": "Código global de anúncios",
-          "hint": "Cole o snippet de cabeçalho da rede (carregador, anúncios automáticos, verificação). Roda uma vez por página e nunca carrega na área administrativa nem no painel. Vazio desativa.",
-          "placeholder": "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-…"
+          "label": "Código do cabeçalho",
+          "hint": "Inserido no head da página nas páginas públicas, uma vez por carregamento. Para analytics, carregadores de rede de anúncios e tags de verificação. Nunca roda na área administrativa nem no painel. Vazio desativa.",
+          "placeholder": "Cole o snippet que deve carregar no cabeçalho"
+        },
+        "ads_footerScripts": {
+          "label": "Código do rodapé",
+          "hint": "Roda no final do body nas páginas públicas, uma vez por carregamento. Para widgets de chat, pixels de conversão e scripts que precisam da página renderizada. Nunca roda na área administrativa nem no painel. Vazio desativa.",
+          "placeholder": "Cole o snippet que deve rodar no final da página"
         },
         "email_webhookToken": {
           "label": "Token do webhook",

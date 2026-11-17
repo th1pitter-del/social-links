@@ -46,8 +46,8 @@ export const AD_NAME_MAX_LENGTH = 80
 export const AD_LABEL_MAX_LENGTH = 60
 export const AD_URL_MAX_LENGTH = 2048
 export const AD_HTML_MAX_LENGTH = 20000
-/** Site-wide ad-network snippet (loader, auto ads, verification) pasted in settings. */
-export const AD_NETWORK_SCRIPT_MAX_LENGTH = 20000
+/** Site-wide custom code pasted in settings (header or footer slot). */
+export const SITE_CODE_MAX_LENGTH = 20000
 export const HEADER_LINK_LABEL_MAX_LENGTH = 60
 
 /** Serializable ad unit shape shared by admin UI and public renderers. */

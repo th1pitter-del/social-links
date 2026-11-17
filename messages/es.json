@@ -1136,7 +1136,7 @@
       "labelHint": "Se muestra como texto del botón (enlace) o texto alternativo de la imagen (banner).",
       "htmlLabel": "Código del anuncio",
       "htmlPlaceholder": "'<'!-- Pega aquí el fragmento de tu red de anuncios --'>'",
-      "htmlHint": "Pega el fragmento de la unidad de cualquier red de anuncios: AdSense, Ezoic, Monetag, Adsterra y otras. Los scripts se ejecutan al cargar; el cargador global va en Ajustes → Red de anuncios.",
+      "htmlHint": "Pega el fragmento de la unidad de cualquier red de anuncios: AdSense, Ezoic, Monetag, Adsterra y otras. Los scripts se ejecutan al cargar; el cargador global va en Ajustes → Código personalizado.",
       "newTabLabel": "Abrir en una pestaña nueva",
       "createAd": "Crear anuncio",
       "htmlPreview": "Código de red de anuncios",
@@ -1250,9 +1250,9 @@
             "body": "No hay ningún webhook configurado, así que los correos de restablecimiento de contraseña no se envían y las solicitudes solo aparecen en el registro del servidor. El resto del sitio funciona sin correo. Rellena los campos de abajo cuando tengas listo un relay o un endpoint de automatización y el envío empezará de inmediato."
           }
         },
-        "ad-network": {
-          "title": "Red de anuncios",
-          "description": "El código global de cualquier red de anuncios — AdSense, Ezoic, Monetag, Adsterra o una campaña directa — se carga en las páginas públicas cuando el sitio está listo."
+        "custom-code": {
+          "title": "Código personalizado",
+          "description": "Fragmentos para todo el sitio: analítica, etiquetas de verificación o cualquier otro script. El código de cabecera se ejecuta en el encabezado de la página y el de pie al final. Ambos se cargan solo en las páginas públicas."
         },
         "data-retention": {
           "title": "Retención de datos",
@@ -1449,9 +1449,14 @@
           "placeholder": "https://relay.example.com/mail"
         },
         "ads_headScripts": {
-          "label": "Código global de anuncios",
-          "hint": "Pega el fragmento de cabecera de la red (cargador, anuncios automáticos, verificación). Se ejecuta una vez por página y nunca se carga en el área de administración ni en el panel. Vacío lo desactiva.",
-          "placeholder": "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-…"
+          "label": "Código de cabecera",
+          "hint": "Se inserta en el encabezado de la página en las páginas públicas, una vez por carga. Para analítica, cargadores de redes de anuncios y etiquetas de verificación. Nunca se ejecuta en el área de administración ni en el panel. Vacío lo desactiva.",
+          "placeholder": "Pega el fragmento que debe cargarse en el encabezado"
+        },
+        "ads_footerScripts": {
+          "label": "Código de pie de página",
+          "hint": "Se ejecuta al final del cuerpo de la página en las páginas públicas, una vez por carga. Para widgets de chat, píxeles de conversión y scripts que necesitan la página ya renderizada. Nunca se ejecuta en el área de administración ni en el panel. Vacío lo desactiva.",
+          "placeholder": "Pega el fragmento que debe ejecutarse al final de la página"
         },
         "email_webhookToken": {
           "label": "Token del webhook",

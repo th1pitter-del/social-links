@@ -1,5 +1,5 @@
 import type { ComponentType } from 'react'
-import { Database, Gift, Globe, Mail, Megaphone, Palette, Search, Server, ShieldCheck, Timer, Unlock, Upload } from 'lucide-react'
+import { Code, Database, Gift, Globe, Mail, Palette, Search, Server, ShieldCheck, Timer, Unlock, Upload } from 'lucide-react'
 
 import { defaultLocale, type Locale } from '@/i18n/config'
 
@@ -150,9 +150,12 @@ export const SETTINGS_GROUPS: SettingsGroup[] = [
     ],
   },
   {
-    id: 'ad-network',
-    icon: Megaphone,
-    fields: [{ key: 'ads.headScripts', multiline: true }],
+    id: 'custom-code',
+    icon: Code,
+    fields: [
+      { key: 'ads.headScripts', multiline: true },
+      { key: 'ads.footerScripts', multiline: true },
+    ],
   },
   {
     id: 'step-verification',

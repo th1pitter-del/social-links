@@ -4,7 +4,7 @@ import { revalidatePath } from 'next/cache'
 import { getTranslations } from 'next-intl/server'
 
 import { setSetting, writeAudit } from '@/lib/admin-utils'
-import { AD_NETWORK_SCRIPT_MAX_LENGTH } from '@/lib/ads'
+import { SITE_CODE_MAX_LENGTH } from '@/lib/ads'
 import {
   BRAND_NAME_SIZE_DEFAULT,
   BRAND_NAME_SIZE_MAX,
@@ -213,15 +213,15 @@ function prepareSetting(key: string, rawValue: string, t: ErrorTranslator): Prep
       return { ok: false, key: trimmedKey, error: t('invalidWebhookUrl') }
     }
   }
-  if (trimmedKey === 'ads.headScripts') {
-    // Ad-network snippets are pasted verbatim; only surrounding whitespace is
+  if (trimmedKey === 'ads.headScripts' || trimmedKey === 'ads.footerScripts') {
+    // Custom snippets are pasted verbatim; only surrounding whitespace is
     // dropped so the injected code keeps its own formatting.
     value = value.trim()
   }
   const maxLength = trimmedKey.startsWith('content.')
     ? CONTENT_VALUE_MAX_LENGTH
-    : trimmedKey === 'ads.headScripts'
-      ? AD_NETWORK_SCRIPT_MAX_LENGTH
+    : trimmedKey === 'ads.headScripts' || trimmedKey === 'ads.footerScripts'
+      ? SITE_CODE_MAX_LENGTH
       : 2000
   if (value.length > maxLength) {
     return { ok: false, key: trimmedKey, error: t('contentTooLong', { max: maxLength }) }
