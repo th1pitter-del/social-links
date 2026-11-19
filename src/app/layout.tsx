@@ -41,6 +41,10 @@ export async function generateMetadata(): Promise<Metadata> {
   const description = site.seoDescription || (site.hasCustomTagline ? site.tagline : t('description'))
   const shareImage = site.seoImage ? absoluteUrl(site.seoImage) : undefined
   const icon = site.seoIcon || site.faviconUrl
+  const keywords = t('keywords')
+    .split(',')
+    .map((keyword) => keyword.trim())
+    .filter(Boolean)
 
   return {
     metadataBase: new URL(SITE_URL),
@@ -49,6 +53,7 @@ export async function generateMetadata(): Promise<Metadata> {
       template: `%s · ${site.name}`,
     },
     description,
+    keywords,
     applicationName: site.name,
     // Single source of truth for the tab icon: the admin SEO icon, then the
     // uploaded favicon, then the shipped SVG (SVG first, ICO fallback for older
